@@ -30,6 +30,7 @@
 			'items'=>array(
 				array('label'=>'Home', 'url'=>array('/site/index')),
 				array('label'=>'Nzb', 'url'=>array('/nzb/index')),
+				array('label'=>'Customer', 'url'=>array('/customer/index')),
 			),
 		)); ?>
 	</div><!-- mainmenu -->
