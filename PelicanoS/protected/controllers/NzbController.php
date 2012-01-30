@@ -171,6 +171,8 @@ class NzbController extends Controller
 			
 			if($modelUpload->validate())
 			{
+				$modelRelation = NzbCustomer::model()->findAllByAttributes(array('Id_nzb'=>$id));
+				
 				if($file != null)
 				{
 					$model->url = Yii::app()->request->getBaseUrl(). '/nzb/'.rawurlencode($file->getName());
@@ -190,15 +192,19 @@ class NzbController extends Controller
 				if(isset($_POST['Nzb']))
 					$model->attributes=$_POST['Nzb'];
 				
-				$modelNew = new Nzb;
-				$modelNew->attributes = $model->attributes;
-				
-				$transaction = $modelNew->dbConnection->beginTransaction();
+				$transaction = $model->dbConnection->beginTransaction();
 				try {
-					$model->delete();
-					$transaction->commit();
-					if($modelNew->save())
-						$this->redirect(array('view','id'=>$modelNew->Id));
+					if($model->save()){
+						if(!empty($modelRelation) )
+						{
+							foreach ($modelRelation as $modelRel){
+								$modelRel->need_update = true;
+								$modelRel->save();
+							}
+						}
+						$transaction->commit();
+						$this->redirect(array('view','id'=>$model->Id));
+					}
 					
 				} catch (Exception $e) {
 					$transaction->rollback();
@@ -229,18 +235,35 @@ class NzbController extends Controller
 			// we only allow deletion via POST request
 			$model = $this->loadModel($id);
 
-			$file = Yii::app()->file->set('./nzb/'.$model->file_name, true);
-			if($file != null)
-				$file->delete();
-			
-			$subt_file = Yii::app()->file->set('./subtitles/'.$model->subt_file_name, true);
-			if($subt_file != null)
-				$subt_file->delete();
-			
-			$model->delete();
-			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-			if(!isset($_GET['ajax']))
-				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+			$transaction = $model->dbConnection->beginTransaction();
+			try {
+
+				$file = Yii::app()->file->set('./nzb/'.$model->file_name, true);
+				if($file != null)
+					$file->delete();
+					
+				$subt_file = Yii::app()->file->set('./subtitles/'.$model->subt_file_name, true);
+				if($subt_file != null)
+					$subt_file->delete();
+
+				$modelRelation = NzbCustomer::model()->findAllByAttributes(array('Id_nzb'=>$id));
+				if(!empty($modelRelation) )
+				{
+					foreach ($modelRelation as $modelRel){
+						$modelRel->delete();
+					}
+				}
+				
+				$model->delete();
+				
+				$transaction->commit();
+				// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+				if(!isset($_GET['ajax']))
+					$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+				
+			} catch (Exception $e) {
+				$transaction->rollback();
+			}
 		}
 		else
 			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
