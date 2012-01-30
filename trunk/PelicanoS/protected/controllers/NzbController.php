@@ -11,7 +11,7 @@ class NzbController extends Controller
 	public function actions()
 	{
 		return array(
-		            'quote'=>array(
+		            'wsdl'=>array(
 		                'class'=>'CWebServiceAction',
 					'classMap'=>array(
 			                    'SNzb'=>'SNzb',  // or simply 'Post'
@@ -41,7 +41,6 @@ class NzbController extends Controller
 		$criteria=new CDbCriteria;
 		$criteria->addCondition(' Id > ' . $id);
 		return Nzb::model()->findAll($criteria);
-		// 		return "hola";
 	}
 	
 	/**
@@ -109,7 +108,7 @@ class NzbController extends Controller
 			{				
 				if($file != null)
 				{
-					$model->url = Yii::app()->request->getBaseUrl(). '/nzb/'.$file->getName();
+					$model->url = Yii::app()->request->getBaseUrl(). '/nzb/'.rawurlencode($file->getName());
 					$model->file_name = $file->getName();
 						
 					$this->saveFile($file, 'nzb');
@@ -117,7 +116,7 @@ class NzbController extends Controller
 				
 				if($file_subt != null)
 				{
-					$model->subt_url = Yii::app()->request->getBaseUrl(). '/subtitles/'.$file_subt->getName();
+					$model->subt_url = Yii::app()->request->getBaseUrl(). '/subtitles/'.rawurlencode($file_subt->getName());
 					$model->subt_file_name = $file_subt->getName();
 
 					$this->saveFile($file_subt, 'subtitles');
@@ -174,7 +173,7 @@ class NzbController extends Controller
 			{
 				if($file != null)
 				{
-					$model->url = Yii::app()->request->getBaseUrl(). '/nzb/'.$file->getName();
+					$model->url = Yii::app()->request->getBaseUrl(). '/nzb/'.rawurlencode($file->getName());
 					$model->file_name = $file->getName();
 					
 					$this->saveFile($file, 'nzb');
@@ -182,7 +181,7 @@ class NzbController extends Controller
 				
 				if($file_subt != null)
 				{
-					$model->subt_url = Yii::app()->request->getBaseUrl(). '/subtitles/'.$file_subt->getName();
+					$model->subt_url = Yii::app()->request->getBaseUrl(). '/subtitles/'.rawurlencode($file_subt->getName());
 					$model->subt_file_name = $file_subt->getName();
 
 					$this->saveFile($file_subt, 'subtitles');
