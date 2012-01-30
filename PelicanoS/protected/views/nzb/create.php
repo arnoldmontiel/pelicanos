@@ -12,4 +12,4 @@ $this->menu=array(
 
 <h1>Create Nzb</h1>
 
-<?php echo $this->renderPartial('_form', array('model'=>$model,'modelUpload'=>$modelUpload)); ?>
+<?php echo $this->renderPartial('_form', array('model'=>$model,'modelUpload'=>$modelUpload, 'modelImdb'=>$modelImdb)); ?>

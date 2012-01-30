@@ -97,36 +97,50 @@ class NzbController extends Controller
 	{
 		$model=new Nzb;
 		$modelUpload=new Upload;
+		$modelImdb = new Imdbdata;
 		
-		if(isset($_POST['Upload']))
+		
+		if(isset($_POST['Upload']) && isset($_POST['Imdbdata']))
 		{
 			$modelUpload->attributes=$_POST['Upload'];
+			$modelImdb->attributes=$_POST['Imdbdata'];
 			$file=CUploadedFile::getInstance($modelUpload,'file');
 			$file_subt=CUploadedFile::getInstance($modelUpload,'subt_file');
 			
 			if($modelUpload->validate())
-			{				
-				if($file != null)
-				{
-					$model->url = Yii::app()->request->getBaseUrl(). '/nzb/'.rawurlencode($file->getName());
-					$model->file_name = $file->getName();
-						
-					$this->saveFile($file, 'nzb');
-				}
-				
-				if($file_subt != null)
-				{
-					$model->subt_url = Yii::app()->request->getBaseUrl(). '/subtitles/'.rawurlencode($file_subt->getName());
-					$model->subt_file_name = $file_subt->getName();
-
-					$this->saveFile($file_subt, 'subtitles');
-				}
-				
-				if(isset($_POST['Nzb']))
-					$model->attributes=$_POST['Nzb'];
-				
-				if($model->save())
-					$this->redirect(array('view','id'=>$model->Id));
+			{		
+				$transaction = $model->dbConnection->beginTransaction();
+				try {
+					if($file != null)
+					{
+						$model->url = Yii::app()->request->getBaseUrl(). '/nzb/'.rawurlencode($file->getName());
+						$model->file_name = $file->getName();
+					
+						$this->saveFile($file, 'nzb');
+					}
+					
+					if($file_subt != null)
+					{
+						$model->subt_url = Yii::app()->request->getBaseUrl(). '/subtitles/'.rawurlencode($file_subt->getName());
+						$model->subt_file_name = $file_subt->getName();
+					
+						$this->saveFile($file_subt, 'subtitles');
+					}
+					
+					if(isset($_POST['Nzb']))
+						$model->attributes=$_POST['Nzb'];
+					$modelImdb->save();
+					
+					$model->Id_imdbdata = $modelImdb->ID;
+					
+					if($model->save()){
+						$transaction->commit();
+						$this->redirect(array('view','id'=>$model->Id));
+					}
+					
+				} catch (Exception $e) {
+					$transaction->rollback();
+				}		
 			}
 		}
 		
@@ -134,6 +148,7 @@ class NzbController extends Controller
 		$this->render('create',array(
 			'model'=>$model,
 			'modelUpload'=>$modelUpload,
+			'modelImdb'=>$modelImdb,
 		));
 	}
 

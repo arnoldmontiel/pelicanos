@@ -24,5 +24,23 @@
 	<?php echo CHtml::link($data->subt_file_name, NzbController::createUrl('AjaxDownloadFile',array('fileName'=>$data->subt_file_name, 'root'=>'subtitles'))); ?>
 	<br />
 
+	<b><?php echo CHtml::encode($data->getAttributeLabel('Title')); ?>:</b>
+	<?php echo CHtml::encode($data->imdbData->Title); ?>
+	<br />
 
+	<b><?php echo CHtml::encode($data->getAttributeLabel('Year')); ?>:</b>
+	<?php echo CHtml::encode($data->imdbData->Year); ?>
+	<br />
+	
+	<b><?php echo CHtml::encode($data->getAttributeLabel('Genre')); ?>:</b>
+	<?php echo CHtml::encode($data->imdbData->Genre); ?>
+	<br />
+	
+	<b><?php echo CHtml::encode($data->getAttributeLabel('Runtime')); ?>:</b>
+	<?php echo CHtml::encode($data->imdbData->Runtime); ?>
+	<br />
+	
+	<b><?php echo CHtml::encode($data->getAttributeLabel('Rating')); ?>:</b>
+	<?php echo CHtml::encode($data->imdbData->Rating); ?>
+	<br />
 </div>
