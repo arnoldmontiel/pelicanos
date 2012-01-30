@@ -10,6 +10,10 @@
  * @property string $file_name
  * @property string $subt_url
  * @property string $subt_file_name
+ * @property string $Id_imdbdata
+ *
+ * The followings are the available model relations:
+ * @property Imdbdata $idImdbdata
  */
 class Nzb extends CActiveRecord
 {
@@ -39,10 +43,11 @@ class Nzb extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
+			array('Id_imdbdata', 'required'),
 			array('url, subt_url, description, file_name, subt_file_name', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id, url, description, file_name, subt_url, subt_file_name', 'safe', 'on'=>'search'),
+			array('Id, url, description, file_name, subt_url, subt_file_name, Id_imdbdata', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -54,6 +59,7 @@ class Nzb extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'imdbData' => array(self::BELONGS_TO, 'Imdbdata', 'Id_imdbdata'),
 		);
 	}
 
@@ -69,7 +75,7 @@ class Nzb extends CActiveRecord
 			'file_name' => 'File Name',
 			'subt_url' => 'Subt Url',
 			'subt_file_name' => 'Subt File Name',
-		
+			'Id_imdbData' => 'Id Imdb Data',
 		);
 	}
 
@@ -90,6 +96,7 @@ class Nzb extends CActiveRecord
 		$criteria->compare('file_name',$this->file_name,true);
 		$criteria->compare('subt_url',$this->subt_url,true);
 		$criteria->compare('subt_file_name',$this->subt_file_name,true);
+		$criteria->compare('Id_imdbdata',$this->Id_imdbdata,true);
 		
 
 		return new CActiveDataProvider($this, array(
