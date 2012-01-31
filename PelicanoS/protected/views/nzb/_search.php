@@ -15,10 +15,6 @@
 		<?php echo $form->textField($model,'url',array('size'=>60,'maxlength'=>255)); ?>
 	</div>
 
-	<div class="row">
-		<?php echo $form->label($model,'description'); ?>
-		<?php echo $form->textField($model,'description',array('size'=>45,'maxlength'=>45)); ?>
-	</div>
 
 	<div class="row">
 		<?php echo $form->label($model,'file_name'); ?>

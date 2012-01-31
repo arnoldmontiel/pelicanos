@@ -1,7 +1,7 @@
 <?php
 $this->breadcrumbs=array(
 	'Nzbs'=>array('index'),
-	$model->Id,
+	$model->imdbData->ID,
 );
 
 $this->menu=array(
@@ -13,19 +13,17 @@ $this->menu=array(
 );
 ?>
 
-<h1>View Nzb #<?php echo $model->Id; ?></h1>
+<h1>View Nzb</h1>
 
-<div class="left">
+	<div class="left" style="display: inline-block;">
 <?php $this->widget('zii.widgets.CDetailView', array(
 	'data'=>$model,
+	'cssFile'=>Yii::app()->baseUrl . '/css/detail-view-blue.css',
 	'attributes'=>array(
-		'url',
-		'description',
 		array('label'=>$model->getAttributeLabel('file_name'),
 			'type'=>'raw',
 			'value'=>CHtml::link($model->file_name, NzbController::createUrl('AjaxDownloadFile',array('fileName'=>$model->file_name, 'root'=>'nzb')))
 		),
-		'subt_url',
 		array('label'=>$model->getAttributeLabel('subt_file_name'),
 			'type'=>'raw',
 			'value'=>CHtml::link($model->subt_file_name, NzbController::createUrl('AjaxDownloadFile',array('fileName'=>$model->subt_file_name, 'root'=>'subtitles')))
@@ -89,7 +87,7 @@ $this->menu=array(
 	),
 )); ?>
 </div>
-<div class="right" style="margin-left:1px; width: 48%; ">
+	<div class="right" style="display: inline-block; vertical-align: top;">
 <?php echo CHtml::image( $model->imdbData->Poster, $model->imdbData->Title,array('id'=>'Imdbdata_Poster_img', 'style'=>'height: 320px;width: 220px;')); ?>
 
 </div>
