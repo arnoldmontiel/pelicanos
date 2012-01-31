@@ -6,7 +6,6 @@
  * The followings are the available columns in table 'nzb':
  * @property integer $Id
  * @property string $url
- * @property string $description
  * @property string $file_name
  * @property string $subt_url
  * @property string $subt_file_name
@@ -17,6 +16,10 @@
  */
 class Nzb extends CActiveRecord
 {
+	public $title;
+	public $year;
+	public $idImdb;
+	public $genre;
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -44,13 +47,13 @@ class Nzb extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('Id_imdbdata', 'required'),
-			array('url, subt_url, description, file_name, subt_file_name', 'length', 'max'=>255),
+			array('url, subt_url, file_name, subt_file_name', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id, url, description, file_name, subt_url, subt_file_name, Id_imdbdata', 'safe', 'on'=>'search'),
+			array('Id, url, file_name, subt_url, subt_file_name, Id_imdbdata, title, year, idImdb, genre', 'safe', 'on'=>'search'),
 		);
 	}
-
+	
 	/**
 	 * @return array relational rules.
 	 */
@@ -71,7 +74,6 @@ class Nzb extends CActiveRecord
 		return array(
 			'Id' => 'ID',
 			'url' => 'Url',
-			'description' => 'Description',
 			'file_name' => 'File Name',
 			'subt_url' => 'Subt Url',
 			'subt_file_name' => 'Subt File Name',
@@ -92,7 +94,6 @@ class Nzb extends CActiveRecord
 
 		$criteria->compare('Id',$this->Id);
 		$criteria->compare('url',$this->url,true);
-		$criteria->compare('description',$this->description,true);
 		$criteria->compare('file_name',$this->file_name,true);
 		$criteria->compare('subt_url',$this->subt_url,true);
 		$criteria->compare('subt_file_name',$this->subt_file_name,true);
@@ -101,6 +102,61 @@ class Nzb extends CActiveRecord
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
+		));
+	}
+	
+	public function searchNzb()
+	{
+		// Warning: Please modify the following code to remove attributes that
+		// should not be searched.
+	
+		$criteria=new CDbCriteria;
+	
+		$criteria->compare('Id',$this->Id);
+		$criteria->compare('url',$this->url,true);
+		$criteria->compare('file_name',$this->file_name,true);
+		$criteria->compare('subt_url',$this->subt_url,true);
+		$criteria->compare('subt_file_name',$this->subt_file_name,true);
+		$criteria->compare('Id_imdbdata',$this->Id_imdbdata,true);
+		
+		$criteria->with[]='imdbData';
+		$criteria->addSearchCondition("imdbData.Title",$this->title);
+		$criteria->addSearchCondition("imdbData.Year",$this->year);
+		$criteria->addSearchCondition("imdbData.ID",$this->idImdb);
+		$criteria->addSearchCondition("imdbData.Genre",$this->genre);
+	
+		// Create a custom sort
+		$sort=new CSort;
+		$sort->attributes=array(
+		// For each relational attribute, create a 'virtual attribute' using the public variable name
+			'Id',
+			'url',
+			'file_name',
+			'subt_url',
+			'subt_url_name',
+			'Id_imdbdata',
+			'title' => array(
+				        'asc' => 'imdbData.Title',
+				        'desc' => 'imdbData.Title DESC',
+			),
+			'year' => array(
+				        'asc' => 'imdbData.Year',
+				        'desc' => 'imdbData.Year DESC',
+			),
+			'idImdb' => array(
+				        'asc' => 'imdbData.ID',
+				        'desc' => 'imdbData.ID DESC',
+			),
+			'genre' => array(
+				        'asc' => 'imdbData.Genre',
+				        'desc' => 'imdbData.Genre DESC',
+			),
+			'*',
+		);
+	
+		return new CActiveDataProvider($this, array(
+							'criteria'=>$criteria,
+							'sort'=>$sort,
 		));
 	}
 }

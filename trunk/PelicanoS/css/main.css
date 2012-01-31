@@ -135,26 +135,6 @@ div.view
 	border: 1px solid #C9E0ED;
 }
 
-div.left
-{
-	width:51%;
-	float:left;
-	bottom:10px;
-  	left:0;
-  	clear: both;
-  	padding: 0; 
-	margin: 0 0 10px 0;  
-}
-
-div.right
-{
-	width:49%;
-	float:left;
-	bottom:10px;
-  	padding: 0; 
-	margin: 0 0 10px 0;  
-}
-
 div.breadcrumbs
 {
 	font-size: 0.9em;
@@ -246,4 +226,24 @@ div.search-form
 .operations li a:hover
 {
 	background: #80CFFF;
+}
+
+div.left
+{
+	width:51%;
+	float:left;
+	bottom:10px;
+  	left:0;
+  	clear: both;
+  	padding: 0; 
+	margin: 0 0 10px 0;  
+}
+
+div.right
+{
+	width:49%;
+	float:left;
+	bottom:10px;
+  	padding: 0; 
+	margin: 0 0 10px 0;  
 }

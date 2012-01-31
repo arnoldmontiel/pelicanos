@@ -1,7 +1,7 @@
 <?php
 $this->breadcrumbs=array(
 	'Nzbs'=>array('index'),
-	$model->Id=>array('view','id'=>$model->Id),
+	$model->imdbData->ID=>array('view','id'=>$model->Id),
 	'Update',
 );
 
@@ -13,6 +13,6 @@ $this->menu=array(
 );
 ?>
 
-<h1>Update Nzb <?php echo $model->Id; ?></h1>
+<h1>Update Nzb</h1>
 
-<?php echo $this->renderPartial('_form', array('model'=>$model, 'modelUpload'=>$modelUpload)); ?>
+<?php echo $this->renderPartial('_form', array('model'=>$model, 'modelUpload'=>$modelUpload, 'modelImdb'=>$modelImdb)); ?>

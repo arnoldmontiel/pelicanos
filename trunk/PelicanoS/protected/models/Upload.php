@@ -8,7 +8,7 @@ class Upload extends CFormModel
 	{
 		return array(
 			array('file', 'file', 'types'=>'nzb', 'allowEmpty' => true),
-			array('subt_file', 'file', 'types'=>'txt', 'allowEmpty' => true),
+			array('subt_file', 'file', 'types'=>'srt', 'allowEmpty' => true),
 		);
 	}
 }
