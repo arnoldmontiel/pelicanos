@@ -19,6 +19,10 @@ $this->menu=array(
 	'dataProvider'=>$model->searchNzb(),
 	'filter'=>$model,
 	'columns'=>array(
+		array(
+ 			'name'=>'idImdb',
+			'value'=>'$data->imdbData->ID',
+		),
 		'file_name',
 		'subt_file_name',
 		array(
@@ -28,10 +32,6 @@ $this->menu=array(
 		array(
  			'name'=>'year',
 			'value'=>'$data->imdbData->Year',
-		),
-		array(
- 			'name'=>'idImdb',
-			'value'=>'$data->imdbData->ID',
 		),
 		array(
  			'name'=>'genre',

@@ -14,7 +14,7 @@ class NzbController extends Controller
 		            'wsdl'=>array(
 		                'class'=>'CWebServiceAction',
 					'classMap'=>array(
-			                    'SNzb'=>'SNzb',  // or simply 'Post'
+			                    'MovieResponse'=>'MovieResponse',  // or simply 'Post'
 		),
 		),
 		);
@@ -22,25 +22,24 @@ class NzbController extends Controller
 	
 	/**
 	 * @param integer
-	 * @return SNzb[]
+	 * @return MovieResponse[]
 	 * @soap
 	 */
-	public function getNextNZBs($id)
+	public function getNewMovies($idCustomer)
 	{
-		// 		$linkArray = Link::model()->findAll();
-	
-		// 		foreach ($linkArray as $linkItem){
-		// 			$sLink = new SLink;
-		// 			$sLink->attributes(array(
-		// 								'Id'=>$linkItem->Id,
-		// 								'description'=>$linkItem->description,
-		// 								'url'=>$linkItem->url
-		// 									));
-		// 		}
-
 		$criteria=new CDbCriteria;
-		$criteria->addCondition(' Id > ' . $id);
-		return Nzb::model()->findAll($criteria);
+		$criteria->addCondition('t.Id NOT IN(select Id_nzb from nzb_customer where Id_customer = '. $id.')');
+		
+		$arrayNbz = Nzb::model()->findAll($criteria);
+		$arrayResponse = array();
+		foreach ($arrayNbz as $modelNbz)
+		{
+			$movieResponse = new MovieResponse;
+			$movieResponse->setAttributes($modelNbz);
+			$arrayResponse[]=$movieResponse;
+		}
+
+		return $arrayResponse;
 	}
 	
 	/**
