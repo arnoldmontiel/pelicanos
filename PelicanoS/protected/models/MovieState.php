@@ -1,23 +1,18 @@
 <?php
 
 /**
- * This is the model class for table "customer".
+ * This is the model class for table "movie_state".
  *
- * The followings are the available columns in table 'customer':
+ * The followings are the available columns in table 'movie_state':
  * @property integer $Id
- * @property string $name
- * @property string $last_name
- * @property string $address
- *
- * The followings are the available model relations:
- * @property Nzb[] $nzbs
+ * @property string $description
  */
-class Customer extends CActiveRecord
+class MovieState extends CActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return Customer the static model class
+	 * @return MovieState the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -29,7 +24,7 @@ class Customer extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'customer';
+		return 'movie_state';
 	}
 
 	/**
@@ -40,10 +35,10 @@ class Customer extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name, last_name, address', 'length', 'max'=>45),
+			array('description', 'length', 'max'=>45),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id, name, last_name, address', 'safe', 'on'=>'search'),
+			array('Id, description', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -55,15 +50,9 @@ class Customer extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'nzbs' => array(self::MANY_MANY, 'Nzb', 'nzb_customer(Id_customer, Id_nzb)'),
 		);
 	}
 
-	public function getCustomerDesc()
-	{
-		return $this->last_name .' - '. $this->name;
-	}
-	
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */
@@ -71,9 +60,7 @@ class Customer extends CActiveRecord
 	{
 		return array(
 			'Id' => 'ID',
-			'name' => 'Name',
-			'last_name' => 'Last Name',
-			'address' => 'Address',
+			'description' => 'Description',
 		);
 	}
 
@@ -89,9 +76,7 @@ class Customer extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('Id',$this->Id);
-		$criteria->compare('name',$this->name,true);
-		$criteria->compare('last_name',$this->last_name,true);
-		$criteria->compare('address',$this->address,true);
+		$criteria->compare('description',$this->description,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
