@@ -21,25 +21,55 @@ class NzbController extends Controller
 	}
 	
 	/**
-	 * @param integer
+	 * Returns new and updated movies
+	 * @param integer idCustomer
 	 * @return MovieResponse[]
 	 * @soap
 	 */
 	public function getNewMovies($idCustomer)
 	{
 		$criteria=new CDbCriteria;
-		$criteria->addCondition('t.Id NOT IN(select Id_nzb from nzb_customer where Id_customer = '. $id.')');
+		$criteria->addCondition('t.Id NOT IN(select Id_nzb from nzb_customer where Id_customer = '. $idCustomer.')');
 		
 		$arrayNbz = Nzb::model()->findAll($criteria);
 		$arrayResponse = array();
+		
 		foreach ($arrayNbz as $modelNbz)
 		{
 			$movieResponse = new MovieResponse;
 			$movieResponse->setAttributes($modelNbz);
 			$arrayResponse[]=$movieResponse;
+			
+// 			$modelNzbCustomer = new NzbCustomer;
+// 			$modelNzbCustomer->attributes = array(
+// 											'Id_nzb'=>$modelNbz->Id,
+// 											'Id_customer'=>$idCustomer,
+// 											'need_update'=>false
+// 											);
+// 			$modelNzbCustomer->save();
 		}
 
 		return $arrayResponse;
+	}
+
+	/**
+	 * 
+	 * Change movie status in relation customer/nzb
+	 * @param integer $idCustomer
+	 * @param integer $idMovie
+	 * @param integer $idState
+	 * @return boolean
+	 */
+	public function setMovieState($idCustomer, $idMovie, $idState)
+	{
+		$model = NzbCustomer::model()->findByPk(array('Id_customer'=>$idCustomer, 'Id_nzb'=>$idMovie));
+		
+		$model->Id_movie_state = $idState;
+	
+		if($model->save())
+			return true;
+	
+		return true;
 	}
 	
 	/**
@@ -248,13 +278,13 @@ class NzbController extends Controller
 			$transaction = $model->dbConnection->beginTransaction();
 			try {
 
-				$file = Yii::app()->file->set('./nzb/'.$model->file_name, true);
-				if($file != null)
-					$file->delete();
+// 				$file = Yii::app()->file->set('./nzb/'.$model->file_name, true);
+// 				if($file != null)
+// 					$file->delete();
 					
-				$subt_file = Yii::app()->file->set('./subtitles/'.$model->subt_file_name, true);
-				if($subt_file != null)
-					$subt_file->delete();
+// 				$subt_file = Yii::app()->file->set('./subtitles/'.$model->subt_file_name, true);
+// 				if($subt_file != null)
+// 					$subt_file->delete();
 
 				$modelRelation = NzbCustomer::model()->findAllByAttributes(array('Id_nzb'=>$id));
 				if(!empty($modelRelation) )
@@ -264,8 +294,11 @@ class NzbController extends Controller
 					}
 				}
 				
+				$modelImdbdata = Imdbdata::model()->findByPk($model->Id_imdbdata);
+				
 				$model->delete();
 				
+				$modelImdbdata->delete();
 				$transaction->commit();
 				// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 				if(!isset($_GET['ajax']))

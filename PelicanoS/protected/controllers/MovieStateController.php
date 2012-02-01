@@ -1,6 +1,6 @@
 <?php
 
-class CustomerController extends Controller
+class MovieStateController extends Controller
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -49,14 +49,14 @@ class CustomerController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model=new Customer;
+		$model=new MovieState;
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['Customer']))
+		if(isset($_POST['MovieState']))
 		{
-			$model->attributes=$_POST['Customer'];
+			$model->attributes=$_POST['MovieState'];
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->Id));
 		}
@@ -78,9 +78,9 @@ class CustomerController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['Customer']))
+		if(isset($_POST['MovieState']))
 		{
-			$model->attributes=$_POST['Customer'];
+			$model->attributes=$_POST['MovieState'];
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->Id));
 		}
@@ -115,7 +115,7 @@ class CustomerController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Customer');
+		$dataProvider=new CActiveDataProvider('MovieState');
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
@@ -126,39 +126,16 @@ class CustomerController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new Customer('search');
+		$model=new MovieState('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['Customer']))
-			$model->attributes=$_GET['Customer'];
+		if(isset($_GET['MovieState']))
+			$model->attributes=$_GET['MovieState'];
 
 		$this->render('admin',array(
 			'model'=>$model,
 		));
 	}
 
-	public function actionCustomerMovies()
-	{
-		$ddlSource = Customer::model()->findAll();
-		$model = Customer::model();
-		
-		$modelRelation=new NzbCustomer('search');
-		$modelRelation->unsetAttributes();
-		
-		if(isset($_GET['NzbCustomer']))
-			$modelRelation->attributes=$_GET['NzbCustomer'];
-	
-		if(isset($_GET['Customer']))
-			$modelRelation->Id_customer = $_GET['Customer']['Id'];
-	
-	
-		$this->render('customerMovies',array(
-							'model'=>$model,
-							'ddlSource'=>$ddlSource,
-							'modelRelation'=>$modelRelation,
-		));
-	
-	}
-	
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
@@ -166,7 +143,7 @@ class CustomerController extends Controller
 	 */
 	public function loadModel($id)
 	{
-		$model=Customer::model()->findByPk($id);
+		$model=MovieState::model()->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
@@ -178,7 +155,7 @@ class CustomerController extends Controller
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='customer-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='movie-state-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
