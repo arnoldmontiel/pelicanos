@@ -29,7 +29,7 @@ class NzbController extends Controller
 	public function getNewMovies($idCustomer)
 	{
 		$criteria=new CDbCriteria;
-		$criteria->addCondition('t.Id NOT IN(select Id_nzb from nzb_customer where Id_customer = '. $idCustomer.')');
+		$criteria->addCondition('t.Id NOT IN(select Id_nzb from nzb_customer where Id_customer = '. $idCustomer.' and need_update = 0)');
 		
 		$arrayNbz = Nzb::model()->findAll($criteria);
 		$arrayResponse = array();
@@ -40,13 +40,22 @@ class NzbController extends Controller
 			$movieResponse->setAttributes($modelNbz);
 			$arrayResponse[]=$movieResponse;
 			
-// 			$modelNzbCustomer = new NzbCustomer;
-// 			$modelNzbCustomer->attributes = array(
-// 											'Id_nzb'=>$modelNbz->Id,
-// 											'Id_customer'=>$idCustomer,
-// 											'need_update'=>false
-// 											);
-// 			$modelNzbCustomer->save();
+			$nzbCustomerDB = NzbCustomer::model()->findByPk(array('Id_nzb'=>$modelNbz->Id, 'Id_customer'=>$idCustomer));
+			if($nzbCustomerDB != null)
+			{
+				$nzbCustomerDB->need_update = 0;
+				$nzbCustomerDB->save();
+			}
+			else
+			{
+				$modelNzbCustomer = new NzbCustomer;
+				
+				$modelNzbCustomer->attributes = array(
+												'Id_nzb'=>$modelNbz->Id,
+												'Id_customer'=>$idCustomer
+												);
+				$modelNzbCustomer->save();
+			}
 		}
 
 		return $arrayResponse;
@@ -237,7 +246,7 @@ class NzbController extends Controller
 						if(!empty($modelRelation) )
 						{
 							foreach ($modelRelation as $modelRel){
-								$modelRel->need_update = true;
+								$modelRel->need_update = 1;
 								$modelRel->save();
 							}
 						}
