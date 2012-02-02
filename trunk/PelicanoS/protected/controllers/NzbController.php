@@ -68,17 +68,18 @@ class NzbController extends Controller
 	 * @param integer $idMovie
 	 * @param integer $idState
 	 * @return boolean
+	 * @soap
 	 */
 	public function setMovieState($idCustomer, $idMovie, $idState)
 	{
-		$model = NzbCustomer::model()->findByPk(array('Id_customer'=>$idCustomer, 'Id_nzb'=>$idMovie));
+		$model = NzbCustomer::model()->findByAttributes(array('Id_customer'=>$idCustomer, 'Id_nzb'=>$idMovie));
 		
 		$model->Id_movie_state = $idState;
 	
 		if($model->save())
 			return true;
 	
-		return true;
+		return false;
 	}
 	
 	/**

@@ -136,6 +136,7 @@ class CustomerController extends Controller
 		));
 	}
 
+	
 	public function actionCustomerMovies()
 	{
 		$ddlSource = Customer::model()->findAll();

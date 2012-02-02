@@ -1,3 +1,5 @@
+<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/detail-view-blue.css" />
+
 <?php
 $this->breadcrumbs=array(
 	'Customers'=>array('index'),
@@ -22,6 +24,7 @@ $('#Customer_Id').change(function(){
 	}
 	return false;
 });
+
 ");
 ?>
 
@@ -44,11 +47,16 @@ $('#Customer_Id').change(function(){
 				'prompt'=>'Select a Customer'
 			)		
 		);
+		
+		
+		
 		?>
+		
 	</div>
 	<div id="display"
 	style="display: none">
 	<?php		
+	
 	$this->widget('zii.widgets.grid.CGridView', array(
 		'id'=>'relation-grid',
 		'dataProvider'=>$modelRelation->searchRelation(),
