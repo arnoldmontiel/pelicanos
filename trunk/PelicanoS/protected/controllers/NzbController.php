@@ -82,6 +82,8 @@ class NzbController extends Controller
 		return false;
 	}
 	
+	
+	
 	/**
 	 * @return array action filters
 	 */
@@ -322,6 +324,54 @@ class NzbController extends Controller
 			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
 	}
 
+	/**
+	* Find subtitle.
+	*/
+	public function actionFindSubtitle()
+	{
+		$model = new Subtitle('search');
+		
+		if($_POST['Subtitle'])
+		{
+			$model->attributes = $_POST['Subtitle']; 
+ 			$model->searchSubtitle();
+		}
+		$modelOpenSubtitle = new OpenSubtitle('search');
+		if($_GET['OpenSubtitle'])
+			$modelOpenSubtitle->attributes = $_GET['OpenSubtitle'];
+		
+		$this->render('findSubtitle',array(
+				'model'=>$model,
+				'modelOpenSubtitle'=>$modelOpenSubtitle,
+		));
+	}
+	
+	public function actionAjaxSearchSubtitles($searchString)
+	{
+		$xml_request_url = 'http://api.allsubs.org/index.php?search=heroes+season+4&language=en&limit=3';
+		$xml = new SimpleXMLElement($xml_request_url, null, true);
+		echo "<BR>".$xml->title;
+		echo "<BR>".$xml->link;
+		echo "<BR>".$xml->description;
+		echo "<BR>".$xml->language;
+		echo "<BR>".$xml->results;
+		echo "<BR>".$xml->found_results;
+			
+		foreach ( $xml->items->item as $item )
+		{
+		echo "<BR>Title :".$item->title;
+		echo "<BR>Link :".$item->link;
+		echo "<BR>Filename :".$item->filename;
+		echo "<BR>Files in archive :".$item->files_in_archive;
+		echo "<BR>Languages :".$item->languages;
+		echo "<BR>Added on :".$item->added_on;
+		echo "<BR>";
+			
+		}
+		
+	}
+	
+	
 	/**
 	 * Lists all models.
 	 */

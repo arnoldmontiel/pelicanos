@@ -1,6 +1,6 @@
 <?php
 
-class CustomerController extends Controller
+class OpenSubtitleController extends Controller
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -27,6 +27,18 @@ class CustomerController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
+				'actions'=>array('index','view'),
+				'users'=>array('*'),
+			),
+			array('allow', // allow authenticated user to perform 'create' and 'update' actions
+				'actions'=>array('create','update'),
+				'users'=>array('@'),
+			),
+			array('allow', // allow admin user to perform 'admin' and 'delete' actions
+				'actions'=>array('admin','delete'),
+				'users'=>array('admin'),
+			),
+			array('deny',  // deny all users
 				'users'=>array('*'),
 			),
 		);
@@ -49,14 +61,14 @@ class CustomerController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model=new Customer;
+		$model=new OpenSubtitle;
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['Customer']))
+		if(isset($_POST['OpenSubtitle']))
 		{
-			$model->attributes=$_POST['Customer'];
+			$model->attributes=$_POST['OpenSubtitle'];
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->Id));
 		}
@@ -78,9 +90,9 @@ class CustomerController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['Customer']))
+		if(isset($_POST['OpenSubtitle']))
 		{
-			$model->attributes=$_POST['Customer'];
+			$model->attributes=$_POST['OpenSubtitle'];
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->Id));
 		}
@@ -115,7 +127,7 @@ class CustomerController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Customer');
+		$dataProvider=new CActiveDataProvider('OpenSubtitle');
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
@@ -126,56 +138,16 @@ class CustomerController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new Customer('search');
+		$model=new OpenSubtitle('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['Customer']))
-			$model->attributes=$_GET['Customer'];
+		if(isset($_GET['OpenSubtitle']))
+			$model->attributes=$_GET['OpenSubtitle'];
 
 		$this->render('admin',array(
 			'model'=>$model,
 		));
 	}
 
-	
-	public function actionCustomerMovies()
-	{
-		$ddlSource = Customer::model()->findAll();
-		$model = Customer::model();
-			
-// 		if(isset($_GET['Customer']))
-// 		{
-// 			$idCustomer = $_GET['Customer']['Id'];
-// 			$pelicanoClient = new PelicanoC;
-// 			$movieStateResponseArray = $pelicanoClient->getMovieState($idCustomer);
-			
-// 			foreach ($movieStateResponseArray as $movieStateResp)
-// 			{
-// 				$modelNzbCustomer = NzbCustomer::model()->findByAttributes(array('Id_nzb'=>$movieStateResp->Id_nzb, 'Id_customer'=>$movieStateResp->Id_customer));
-				
-// 				if($modelNzbCustomer != null)
-// 				{
-// 					$modelNzbCustomer->Id_movie_state = $movieStateResp->Id_state;
-// 					$modelNzbCustomer->save();
-// 				}
-// 			}
-			
-// 			$modelRelation->Id_customer = $idCustomer;
-// 		}
-	
-		$modelRelation=new NzbCustomer('search');
-		$modelRelation->unsetAttributes();
-		
-		if(isset($_GET['Customer']))
-			$modelRelation->Id_customer = $_GET['Customer']['Id'];
-		
-		$this->render('customerMovies',array(
-							'model'=>$model,
-							'ddlSource'=>$ddlSource,
-							'modelRelation'=>$modelRelation,
-		));
-	
-	}
-	
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
@@ -183,7 +155,7 @@ class CustomerController extends Controller
 	 */
 	public function loadModel($id)
 	{
-		$model=Customer::model()->findByPk($id);
+		$model=OpenSubtitle::model()->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
@@ -195,7 +167,7 @@ class CustomerController extends Controller
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='customer-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='open-subtitle-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
