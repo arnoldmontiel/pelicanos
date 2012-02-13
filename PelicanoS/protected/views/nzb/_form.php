@@ -77,85 +77,94 @@ $.ajax({
 
 		<div class="row">			
 			<?php echo CHtml::activeLabelEx($modelImdb,'ID'); ?>
-			<?php echo CHtml::activeTextField($modelImdb,'ID',array('size'=>45,'maxlength'=>45)); ?>
+			<?php if($model->isNewRecord)
+					echo CHtml::activeTextField($modelImdb,'ID',array('size'=>45,'maxlength'=>45));
+				  else
+					echo CHtml::activeTextField($modelImdb,'ID',array('size'=>45,'maxlength'=>45, 'readonly'=>true));
+			?>
 			<?php echo CHtml::error($modelImdb,'ID'); ?>
 		</div>
 	
 		<div class="row">
 			<?php echo CHtml::activeLabelEx($modelImdb,'Title'); ?>
-			<?php echo CHtml::activeTextField($modelImdb,'Title',array('size'=>45,'maxlength'=>255)); ?>
+
+		<?php if($model->isNewRecord)
+				echo CHtml::activeTextField($modelImdb,'Title',array('size'=>45,'maxlength'=>255)); 
+			  else
+			  	echo CHtml::activeTextField($modelImdb,'Title',array('size'=>45,'maxlength'=>255, 'readonly'=>true));
+		?>
 			<?php echo CHtml::error($modelImdb,'Title'); ?>
 		</div>
 	
 		<div class="row">
 			<?php echo CHtml::activeLabelEx($modelImdb,'Year'); ?>
-			<?php echo CHtml::activeTextField($modelImdb,'Year'); ?>
+			<?php echo CHtml::activeTextField($modelImdb,'Year',array('readonly'=>true)); ?>
 			<?php echo CHtml::error($modelImdb,'Year'); ?>
 		</div>
 	
 		<div class="row">
 			<?php echo CHtml::activeLabelEx($modelImdb,'Rated'); ?>
-			<?php echo CHtml::activeTextField($modelImdb,'Rated',array('size'=>45,'maxlength'=>45)); ?>
+			<?php echo CHtml::activeTextField($modelImdb,'Rated',array('size'=>45,'maxlength'=>45,'readonly'=>true)); ?>
 			<?php echo CHtml::error($modelImdb,'Rated'); ?>
 		</div>
 	
 		<div class="row">
 			<?php echo CHtml::activeLabelEx($modelImdb,'Released'); ?>
-			<?php echo CHtml::activeTextField($modelImdb,'Released',array('size'=>45,'maxlength'=>45)); ?>
+			<?php echo CHtml::activeTextField($modelImdb,'Released',array('size'=>45,'maxlength'=>45,'readonly'=>true)); ?>
 			<?php echo CHtml::error($modelImdb,'Released'); ?>
 		</div>
 	
 		<div class="row">
 			<?php echo CHtml::activeLabelEx($modelImdb,'Genre'); ?>
-			<?php echo CHtml::activeTextField($modelImdb,'Genre',array('size'=>45,'maxlength'=>45)); ?>
+			<?php echo CHtml::activeTextField($modelImdb,'Genre',array('size'=>45,'maxlength'=>45,'readonly'=>true)); ?>
 			<?php echo CHtml::error($modelImdb,'Genre'); ?>
 		</div>
 	
 		<div class="row">
 			<?php echo CHtml::activeLabelEx($modelImdb,'Director'); ?>
-			<?php echo CHtml::activeTextField($modelImdb,'Director',array('size'=>45,'maxlength'=>255)); ?>
+			<?php echo CHtml::activeTextField($modelImdb,'Director',array('size'=>45,'maxlength'=>255,'readonly'=>true)); ?>
 			<?php echo CHtml::error($modelImdb,'Director'); ?>
 		</div>
 	
 		<div class="row">
 			<?php echo CHtml::activeLabelEx($modelImdb,'Writer'); ?>
-			<?php echo CHtml::activeTextField($modelImdb,'Writer',array('size'=>45,'maxlength'=>255)); ?>
+			<?php echo CHtml::activeTextField($modelImdb,'Writer',array('size'=>45,'maxlength'=>255,'readonly'=>true)); ?>
 			<?php echo CHtml::error($modelImdb,'Writer'); ?>
 		</div>
 	
 		<div class="row">
 			<?php echo CHtml::activeLabelEx($modelImdb,'Actors'); ?>
-			<?php echo CHtml::activeTextArea($modelImdb,'Actors',array('rows'=>6, 'cols'=>40)); ?>
+			<?php echo CHtml::activeTextArea($modelImdb,'Actors',array('rows'=>6, 'cols'=>40,'readonly'=>true)); ?>
 			<?php echo CHtml::error($modelImdb,'Actors'); ?>
 		</div>
 	
 		<div class="row">
 			<?php echo CHtml::activeLabelEx($modelImdb,'Plot'); ?>
-			<?php echo CHtml::activeTextArea($modelImdb,'Plot',array('rows'=>6, 'cols'=>40)); ?>
+			<?php echo CHtml::activeTextArea($modelImdb,'Plot',array('rows'=>6, 'cols'=>40,'readonly'=>true)); ?>
 			<?php echo CHtml::error($modelImdb,'Plot'); ?>
 		</div>
 		
 		<div class="row">
 			<?php echo CHtml::activeLabelEx($modelImdb,'Runtime'); ?>
-			<?php echo CHtml::activeTextField($modelImdb,'Runtime',array('size'=>45,'maxlength'=>45)); ?>
+			<?php echo CHtml::activeTextField($modelImdb,'Runtime',array('size'=>45,'maxlength'=>45,'readonly'=>true)); ?>
 			<?php echo CHtml::error($modelImdb,'Runtime'); ?>
 		</div>
 	
 		<div class="row">
 			<?php echo CHtml::activeLabelEx($modelImdb,'Rating'); ?>
-			<?php echo CHtml::activeTextField($modelImdb,'Rating'); ?>
+			<?php echo CHtml::activeTextField($modelImdb,'Rating',array('readonly'=>true)); ?>
 			<?php echo CHtml::error($modelImdb,'Rating'); ?>
 		</div>
 	
 		<div class="row">
 			<?php echo CHtml::activeLabelEx($modelImdb,'Votes'); ?>
-			<?php echo CHtml::activeTextField($modelImdb,'Votes',array('size'=>45,'maxlength'=>45)); ?>
+			<?php echo CHtml::activeTextField($modelImdb,'Votes',array('size'=>45,'maxlength'=>45,'readonly'=>true)); ?>
 			<?php echo CHtml::error($modelImdb,'Votes'); ?>
 		</div>
 	
 		<div class="row">
 			<?php echo CHtml::activeLabelEx($modelImdb,'Response'); ?>
-			<?php echo CHtml::activeTextField($modelImdb,'Response',array('size'=>45,'maxlength'=>45)); ?>
+			<?php echo CHtml::activeTextField($modelImdb,'Response',array('size'=>45,'maxlength'=>45,'readonly'=>true)); ?>
 			<?php echo CHtml::error($modelImdb,'Response'); ?>
 		</div>
 
@@ -163,7 +172,7 @@ $.ajax({
 	<div id="right" style="display: inline-block; vertical-align: top;">
 		<div class="row">
 			<?php echo CHtml::activeLabelEx($modelImdb,'Poster'); ?>
-			<?php echo CHtml::activeTextField($modelImdb,'Poster',array('size'=>45,'maxlength'=>255)); ?>
+			<?php echo CHtml::activeTextField($modelImdb,'Poster',array('size'=>45,'maxlength'=>255,'readonly'=>true)); ?>
 			<?php echo CHtml::error($modelImdb,'Poster'); ?>			
 		</div>
 		
