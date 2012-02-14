@@ -33,7 +33,6 @@
 				array('label'=>'Logout'.' ('.Yii::app()->user->name.')', 'url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest),
 				array('label'=>'Nzb', 'url'=>array('/nzb/index'), 'visible'=>!Yii::app()->user->isGuest),
 				array('label'=>'Customer', 'url'=>array('/customer/index'), 'visible'=>!Yii::app()->user->isGuest),
-				array('label'=>'Subtitle', 'url'=>array('/nzb/findSubtitle'), 'visible'=>!Yii::app()->user->isGuest),
 			),
 		)); ?>
 	</div><!-- mainmenu -->

@@ -84,6 +84,23 @@ class Subtitle extends CFormModel
 			return parent::__isset($name);
 	}
 	
+	static public function downloadSubtitle($idSubtitleFile)
+	{
+		require_once 'ripcord.php';
+		$client = ripcord::client('http://api.opensubtitles.org/xml-rpc');
+	
+		//open OpenSource API connection
+		$token_from_login = $client->LogIn('','','','OS Test User Agent');
+	
+		$arrResponse = $client->DownloadSubtitles($token_from_login['token'], array($idSubtitleFile));
+		
+	
+		//close OpenSource API connection
+		$client->LogOut($token_from_login['token']);
+	
+		return $arrResponse['data'][0]['data'];
+	}
+	
 	public function searchSubtitle()
 	{
 		$get = array();
@@ -92,7 +109,7 @@ class Subtitle extends CFormModel
 		$client = ripcord::client('http://api.opensubtitles.org/xml-rpc');
 		
 		//open OpenSource API connection
-		$token_from_login = $client->LogIn('','','','OS Test User Agent'); //works fine		
+		$token_from_login = $client->LogIn('','','','OS Test User Agent');		
 
 		
 		if(!(empty($this->movieHash) && empty($this->movieSize))) {
@@ -147,11 +164,13 @@ class Subtitle extends CFormModel
 				
 				foreach ($searchSubtitles['data'] as $item)
 				{
-					$sql = 'INSERT INTO open_subtitle (Id_user, SubFileName, ZipDownloadLink, MovieNameEng, MovieByteSize, SeriesSeason, SeriesEpisode, LanguageName)
+					$sql = 'INSERT INTO open_subtitle (Id_user, IDSubtitleFile, SubFileName, ZipDownloadLink, SubtitlesLink, MovieNameEng, MovieByteSize, SeriesSeason, SeriesEpisode, LanguageName)
 												 VALUES ("' . Yii::app()->user->id.
+															'", "' . $item['IDSubtitleFile'] .
 												 			'", "' . $item['SubFileName'] . 
 															'", "' . $item['ZipDownloadLink'].
-															'", "' . $item['MovieNameEng'].
+															'", "' . addslashes($item['SubtitlesLink']).
+															'", "' . addslashes($item['MovieNameEng']).
 															'", "' . $item['MovieByteSize'].
 															'", "' . $item['SeriesSeason'].
 															'", "' . $item['SeriesEpisode'].
@@ -159,10 +178,6 @@ class Subtitle extends CFormModel
 					$command = Yii::app()->db->createCommand($sql);
 					$command->execute();
 				}
-// 				$command = Yii::app()->db->createCommand($sql);
-// 				$command->execute();
-// 				$command->getPdoStatement()->closeCursor();
-// 				$command->connection->setActive(false);
 			}
 		}
 	}

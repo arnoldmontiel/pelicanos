@@ -173,4 +173,21 @@ class OpenSubtitleController extends Controller
 			Yii::app()->end();
 		}
 	}
+	
+	public function downloadSubtitle()
+	{
+		require_once 'ripcord.php';
+		$client = ripcord::client('http://api.opensubtitles.org/xml-rpc');
+	
+		//open OpenSource API connection
+		$token_from_login = $client->LogIn('','','','OS Test User Agent');
+	
+		$arrResponse = $client->DownloadSubtitles($token_from_login['token'], $this->IDSubtitleFile);
+	
+	
+		//close OpenSource API connection
+		$client->LogOut($token_from_login['token']);
+	
+		return $arrResponse['data'];
+	}
 }

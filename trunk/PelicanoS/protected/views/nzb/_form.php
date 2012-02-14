@@ -59,12 +59,6 @@ $.ajax({
 	<?php echo CHtml::error($modelUpload, 'file')?>
 </div>	
 
-<div class="row">
-	<?php echo CHtml::activeLabelEx($modelUpload,'Subtitle *.srt'); ?>
-	<?php echo CHtml::activeFileField($modelUpload, 'subt_file')?> <?php echo CHtml::link($model->subt_file_name, NzbController::createUrl('AjaxDownloadFile',array('fileName'=>$model->subt_file_name, 'root'=>'subtitles'))); ?>
-	<?php echo CHtml::error($modelUpload, 'subt_file')?>
-</div>	
-
 <div class="gridTitle-decoration1">
 	<div class="gridTitle1">
 		Imdb Data
@@ -183,7 +177,7 @@ $.ajax({
 	
 	<div class="left">
 		<div class="row buttons">
-			<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
+			<?php echo CHtml::submitButton($model->isNewRecord ? 'Create and find Subtitle' : 'Save'); ?>
 		</div>
 	</div>
 <?php echo CHtml::endForm()?>
