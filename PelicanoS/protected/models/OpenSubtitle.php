@@ -213,4 +213,5 @@ class OpenSubtitle extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+	
 }

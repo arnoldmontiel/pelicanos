@@ -55,6 +55,23 @@ $('input[name=searchFilter]').click(function(){
 	'enableAjaxValidation'=>false,
 )); ?>
 
+<?php $this->widget('zii.widgets.CDetailView', array(
+		'data'=>$modelNzb,
+		'cssFile'=>Yii::app()->baseUrl . '/css/detail-view-blue.css',
+		'attributes'=>array(
+			'Id_imdbdata',
+			array('label'=>$modelNzb->getAttributeLabel('Title'),
+				'type'=>'raw',
+				'value'=>$modelNzb->imdbData->Title
+			),
+			array('label'=>$modelNzb->getAttributeLabel('Year'),
+				'type'=>'raw',
+				'value'=>$modelNzb->imdbData->Year
+			),
+			'file_name'
+		),
+	)); ?>
+	
 <div id="byQuery" style="float:left;position:relative;display:block;width:30%;left:0px;margin:4px">
 	<input name="searchFilter" value="Q" checked type="radio" type="text" value=""/>
 	<div >	
@@ -98,7 +115,7 @@ $('input[name=searchFilter]').click(function(){
 		<?php 
 		echo $form->checkBoxList($model, 'language',array('spa'=>'Spanish','ita'=>'Italian','fre'=>'French','eng'=>'English','pob'=>'Portuguese-BR','ger'=>'German')
 		,array(
-		'template'=>'<th>{label}</th><td>{input}</td>',
+		'template'=>'<td>{input}</td><td>{label}</td>',
 		'separator' => '',// es necesario eliminar el separador
 		//Estos parametros son opcionales
 		
@@ -114,10 +131,15 @@ $('input[name=searchFilter]').click(function(){
 			<?php echo CHtml::submitButton('Search'); ?>
 		</div>
 	</div>
+	<br>
+	<br>
+<div class="rows">
+<p class="note">Select row to save subtitle.</p>
 <?php $this->widget('zii.widgets.grid.CGridView', array(
-	'id'=>'guild-grid',
+	'id'=>'subtitle-grid',
 	'dataProvider'=>$modelOpenSubtitle->search(),
 	'filter'=>$modelOpenSubtitle,
+	'summaryText'=>'',
 	'columns'=>array(
 			'SubFileName',
 			array(
@@ -125,13 +147,45 @@ $('input[name=searchFilter]').click(function(){
 				'value' => 'CHtml::link($data->ZipDownloadLink, $data->ZipDownloadLink, array(target=>_blank))',
             	'type'  => 'html',
 			),
-			
 			'MovieNameEng',
 			'SeriesSeason',
 			'SeriesEpisode',
 			'LanguageName',
 	),
+	'selectionChanged'=>'js:function(){
+						$("#downloadSubtitle").show();
+					}',
 )); ?>
-	
+</div>
+
+
+<?php
+		 $this->widget('zii.widgets.jui.CJuiButton',
+			 array(
+			 	'id'=>'downloadSubtitle',
+			 	'name'=>'download',
+			 	'caption'=>'Save Subtitle',
+			 	'value'=>'Click to download subtitle',
+			 	'onclick'=>'js:function(){
+			 		if(confirm("Save button clicked" + $.fn.yiiGridView.getSelection("subtitle-grid")))
+			 		{
+						$.post("'.NzbController::createUrl('AjaxDownloadSubtitle').'",
+								{idOpenSubtitle: $.fn.yiiGridView.getSelection("subtitle-grid"),
+								 idNzb:"'.$modelNzb->Id.'"
+								}
+						).success(
+							function(data) 
+							{
+	 							window.location = "'.NzbController::createUrl('view',array('id'=>$modelNzb->Id)).'";
+							}
+						);
+		 
+			 		}
+			 		return false;
+				}',
+				'htmlOptions'=>array('style'=>'display: none;')
+		 	)
+		 );
+	 ?>	
 <?php $this->endWidget(); ?>
 </div> <!-- form -->

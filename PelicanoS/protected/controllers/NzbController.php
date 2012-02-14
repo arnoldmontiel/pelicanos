@@ -146,7 +146,6 @@ class NzbController extends Controller
 			$modelUpload->attributes=$_POST['Upload'];
 			$modelImdb->attributes=$_POST['Imdbdata'];
 			$file=CUploadedFile::getInstance($modelUpload,'file');
-			$file_subt=CUploadedFile::getInstance($modelUpload,'subt_file');
 			
 			if($modelUpload->validate())
 			{		
@@ -160,21 +159,14 @@ class NzbController extends Controller
 						$this->saveFile($file, 'nzb');
 					}
 					
-					if($file_subt != null)
-					{
-						$model->subt_url = Yii::app()->request->getBaseUrl(). '/subtitles/'.rawurlencode($file_subt->getName());
-						$model->subt_file_name = $file_subt->getName();
-					
-						$this->saveFile($file_subt, 'subtitles');
-					}
-					
 					$modelImdb->save();
 					
 					$model->Id_imdbdata = $modelImdb->ID;
 					
 					if($model->save()){
 						$transaction->commit();
-						$this->redirect(array('view','id'=>$model->Id));
+						//$this->redirect(array('view','id'=>$model->Id));
+						$this->redirect(array('findSubtitle','id'=>$model->Id));
 					}
 					
 				} catch (Exception $e) {
@@ -219,7 +211,6 @@ class NzbController extends Controller
 			$modelUpload->attributes=$_POST['Upload'];
 			$modelImdb->attributes=$_POST['Imdbdata'];
 			$file=CUploadedFile::getInstance($modelUpload,'file');
-			$file_subt=CUploadedFile::getInstance($modelUpload,'subt_file');
 			
 			if($modelUpload->validate())
 			{
@@ -233,14 +224,6 @@ class NzbController extends Controller
 						$model->file_name = $file->getName();
 						
 						$this->saveFile($file, 'nzb');
-					}
-					
-					if($file_subt != null)
-					{
-						$model->subt_url = Yii::app()->request->getBaseUrl(). '/subtitles/'.rawurlencode($file_subt->getName());
-						$model->subt_file_name = $file_subt->getName();
-	
-						$this->saveFile($file_subt, 'subtitles');
 					}
 				
 					$modelImdb->save();
@@ -261,11 +244,6 @@ class NzbController extends Controller
 					$transaction->rollback();
 				}
 			}
-// 			elseif ($file == null && $file_subt == null)
-// 			{		
-// 				if($model->save())
-// 					$this->redirect(array('view','id'=>$model->Id));				
-// 			}
 		}
 
 		$this->render('update',array(
@@ -327,7 +305,7 @@ class NzbController extends Controller
 	/**
 	* Find subtitle.
 	*/
-	public function actionFindSubtitle()
+	public function actionFindSubtitle($id)
 	{
 		$model = new Subtitle('search');
 		
@@ -340,10 +318,35 @@ class NzbController extends Controller
 		if($_GET['OpenSubtitle'])
 			$modelOpenSubtitle->attributes = $_GET['OpenSubtitle'];
 		
+		$modelNzb = Nzb::model()->findByPk($id);
+		
+		$model->attributes = array('query'=>$modelNzb->file_name);
+		 
 		$this->render('findSubtitle',array(
 				'model'=>$model,
 				'modelOpenSubtitle'=>$modelOpenSubtitle,
+				'modelNzb'=>$modelNzb
 		));
+	}
+	
+	public function actionAjaxDownloadSubtitle()
+	{
+		$idOpenSubtitle = $_POST['idOpenSubtitle'];
+		$idNzb = $_POST['idNzb'];
+		$openSubtitle = OpenSubtitle::model()->findByPk($idOpenSubtitle);
+		
+		$zip = Subtitle::downloadSubtitle($openSubtitle->IDSubtitleFile);
+
+		$file = fopen('./subtitles/'.$openSubtitle->SubFileName,'x+');
+		fwrite($file,gzinflate(substr(base64_decode($zip),10)));
+		fclose($file);
+		
+		$nzb = Nzb::model()->findByPk($idNzb);
+		$nzb->subt_url = Yii::app()->request->getBaseUrl(). '/subtitles/'.rawurlencode($openSubtitle->SubFileName);
+		$nzb->subt_file_name = $openSubtitle->SubFileName;
+		$nzb->save();
+		
+		
 	}
 	
 	public function actionAjaxSearchSubtitles($searchString)
