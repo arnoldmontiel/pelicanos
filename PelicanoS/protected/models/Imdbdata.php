@@ -51,7 +51,7 @@ class Imdbdata extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('ID', 'required'),
+			array('ID, Title', 'required'),
 			array('Year', 'numerical', 'integerOnly'=>true),
 			array('Rating', 'numerical'),
 			array('ID, Rated, Released, Genre, Runtime, Votes, Response', 'length', 'max'=>45),
