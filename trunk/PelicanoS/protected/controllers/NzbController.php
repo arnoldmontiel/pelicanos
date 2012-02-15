@@ -205,44 +205,43 @@ class NzbController extends Controller
 		$model=$this->loadModel($id);
 		$modelUpload=new Upload;
 		$modelImdb = Imdbdata::model()->findByPk($model->Id_imdbdata);
-
-		if(isset($_POST['Upload']) && isset($_POST['Imdbdata']))
+		if(isset($_POST['Upload']))
 		{
 			$modelUpload->attributes=$_POST['Upload'];
-			$modelImdb->attributes=$_POST['Imdbdata'];
 			$file=CUploadedFile::getInstance($modelUpload,'file');
-			
-			if($modelUpload->validate())
-			{
-				$modelRelation = NzbCustomer::model()->findAllByAttributes(array('Id_nzb'=>$id));
-				
-				$transaction = $model->dbConnection->beginTransaction();
-				try {
-					if($file != null)
-					{
+			if($file!=null)
+			{	
+				if($modelUpload->validate())
+				{
+					$modelRelation = NzbCustomer::model()->findAllByAttributes(array('Id_nzb'=>$id));
+					
+					$transaction = $model->dbConnection->beginTransaction();
+					try {
+						
 						$model->url = Yii::app()->request->getBaseUrl(). '/nzb/'.rawurlencode($file->getName());
 						$model->file_name = $file->getName();
 						
 						$this->saveFile($file, 'nzb');
-					}
-				
-					$modelImdb->save();
-				
-					if($model->save()){
-						if(!empty($modelRelation) )
-						{
-							foreach ($modelRelation as $modelRel){
-								$modelRel->need_update = 1;
-								$modelRel->save();
-							}
-						}
-						$transaction->commit();
-						$this->redirect(array('view','id'=>$model->Id));
-					}
 					
-				} catch (Exception $e) {
-					$transaction->rollback();
+						if($model->save()){
+							if(!empty($modelRelation) )
+							{
+								foreach ($modelRelation as $modelRel){
+									$modelRel->need_update = 1;
+									$modelRel->save();
+								}
+							}
+							$transaction->commit();
+							$this->redirect(array('view','id'=>$model->Id));
+						}
+						
+					} catch (Exception $e) {
+						$transaction->rollback();
+					}
 				}
+			}
+			else{
+				$this->redirect(array('view','id'=>$model->Id));
 			}
 		}
 
@@ -312,7 +311,13 @@ class NzbController extends Controller
 		if($_POST['Subtitle'])
 		{
 			$model->attributes = $_POST['Subtitle']; 
- 			$model->searchSubtitle();
+			try {
+				$model->searchSubtitle();
+			} catch (Exception $e) {
+ 				throw new CHttpException('','Invalid request. The OpenSubtitle API is not working. Please '. CHtml::link('try again',Yii::app()->request->getUrl()) .'.');
+
+			}
+ 			
 		}
 		$modelOpenSubtitle = new OpenSubtitle('search');
 		if($_GET['OpenSubtitle'])
@@ -320,7 +325,7 @@ class NzbController extends Controller
 		
 		$modelNzb = Nzb::model()->findByPk($id);
 		
-		$model->attributes = array('query'=>$modelNzb->file_name);
+		//$model->attributes = array('query'=>$modelNzb->file_name);
 		 
 		$this->render('findSubtitle',array(
 				'model'=>$model,
