@@ -9,6 +9,7 @@ $this->menu=array(
 	array('label'=>'Create Nzb', 'url'=>array('create')),
 	array('label'=>'Update Nzb', 'url'=>array('update', 'id'=>$model->Id)),
 	array('label'=>'Update Subtitle', 'url'=>array('findSubtitle', 'id'=>$model->Id)),
+	array('label'=>'Upload Subtitle', 'url'=>array('uploadSubtitle', 'id'=>$model->Id)),
 	array('label'=>'Delete Nzb', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->Id),'confirm'=>'Are you sure you want to delete this item?')),
 	array('label'=>'Manage Nzb', 'url'=>array('admin')),
 );

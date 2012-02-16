@@ -307,6 +307,15 @@ class NzbController extends Controller
 	public function actionFindSubtitle($id)
 	{
 		$model = new Subtitle('search');
+		$modelNzb = Nzb::model()->findByPk($id);
+		
+		$model->attributes = array('query'=>str_replace('.nzb','',$modelNzb->file_name));
+		
+		if($_POST['selectedRow'] != "")
+		{
+			$this->downloadSubtitle($_POST['selectedRow'], $id);
+			$this->redirect(array('view','id'=>$id));
+		}
 		
 		if($_POST['Subtitle'])
 		{
@@ -314,18 +323,17 @@ class NzbController extends Controller
 			try {
 				$model->searchSubtitle();
 			} catch (Exception $e) {
- 				throw new CHttpException('','Invalid request. The OpenSubtitle API is not working. Please '. CHtml::link('try again',Yii::app()->request->getUrl()) .'.');
+ 				throw new CHttpException('Searching Subtitle','Invalid request. The OpenSubtitle API is not working. Please '. CHtml::link('try again',Yii::app()->request->getUrl()) .'.');
 
 			}
- 			
 		}
+		
 		$modelOpenSubtitle = new OpenSubtitle('search');
+		
 		if($_GET['OpenSubtitle'])
 			$modelOpenSubtitle->attributes = $_GET['OpenSubtitle'];
 		
-		$modelNzb = Nzb::model()->findByPk($id);
 		
-		//$model->attributes = array('query'=>$modelNzb->file_name);
 		 
 		$this->render('findSubtitle',array(
 				'model'=>$model,
@@ -334,25 +342,98 @@ class NzbController extends Controller
 		));
 	}
 	
-	public function actionAjaxDownloadSubtitle()
+	public function actionUploadSubtitle($id)
 	{
-		$idOpenSubtitle = $_POST['idOpenSubtitle'];
-		$idNzb = $_POST['idNzb'];
-		$openSubtitle = OpenSubtitle::model()->findByPk($idOpenSubtitle);
-		
-		$zip = Subtitle::downloadSubtitle($openSubtitle->IDSubtitleFile);
 
-		$file = fopen('./subtitles/'.$openSubtitle->SubFileName,'x+');
-		fwrite($file,gzinflate(substr(base64_decode($zip),10)));
-		fclose($file);
+		$model=new Upload;
+		$modelNzb = Nzb::model()->findByPk($id);
+			
+		if(isset($_POST['Upload']))
+		{
+			$model->attributes=$_POST['Upload'];
+			$file=CUploadedFile::getInstance($model,'file');
+				
+			if($model->validate())
+			{
+				$modelRelation = NzbCustomer::model()->findAllByAttributes(array('Id_nzb'=>$id));
+				
+				$transaction = $modelNzb->dbConnection->beginTransaction();
+				try {
+					
+					$modelNzb->subt_url = Yii::app()->request->getBaseUrl(). '/nzb/'.rawurlencode($file->getName());
+					$modelNzb->subt_file_name = $file->getName();
+					
+					$this->saveFile($file, 'nzb');
+				
+					if($modelNzb->save()){
+						if(!empty($modelRelation) )
+						{
+							foreach ($modelRelation as $modelRel){
+								$modelRel->need_update = 1;
+								$modelRel->save();
+							}
+						}
+						$transaction->commit();
+						$this->redirect(array('view','id'=>$id));
+					}
+					
+				} catch (Exception $e) {
+					$transaction->rollback();
+				}
+			}
+		}
 		
+		$this->render('uploadSubtitle',array(
+					'model'=>$model,
+					'modelNzb'=>$modelNzb
+		));
+	}
+	
+	public function downloadSubtitle($idOpenSubtitle, $idNzb)
+	{
+		$openSubtitle = OpenSubtitle::model()->findByPk($idOpenSubtitle);
+	
+		try {
+			$zip = Subtitle::downloadSubtitle($openSubtitle->IDSubtitleFile);
+		} catch (Exception $e) {
+			throw new CHttpException('Downloading subtitle','Invalid request. The OpenSubtitle API is not working. Please '. CHtml::link('try again',Yii::app()->request->getUrl()) .'.');
+		}
+	
+		try {
+			$file = fopen('./subtitles/'.$openSubtitle->SubFileName,'w+');
+			fwrite($file,gzinflate(substr(base64_decode($zip),10)));
+			fclose($file);
+		} catch (Exception $e) {
+			throw new CHttpException('','There was an error saving the file '. $openSubtitle->SubFileName);
+		}
+	
 		$nzb = Nzb::model()->findByPk($idNzb);
 		$nzb->subt_url = Yii::app()->request->getBaseUrl(). '/subtitles/'.rawurlencode($openSubtitle->SubFileName);
 		$nzb->subt_file_name = $openSubtitle->SubFileName;
-		$nzb->save();
 		
+		$transaction = $nzb->dbConnection->beginTransaction();
+		try {
+			$nzb->save();
+			
+			$modelRelation = NzbCustomer::model()->findAllByAttributes(array('Id_nzb'=>$idNzb));
+			if(!empty($modelRelation) )
+			{
+				foreach ($modelRelation as $modelRel){
+					$modelRel->need_update = 1;
+					$modelRel->save();
+				}
+			}
+			
+			OpenSubtitle::model()->deleteAllByAttributes(array('Id_user'=>Yii::app()->user->id));
+			
+			$transaction->commit();
+		} catch (Exception $e) {
+			$transaction->rollback();
+			throw new CHttpException('DB','There was an error saving the file '. $openSubtitle->SubFileName);
+		}
 		
 	}
+	
 	
 	public function actionAjaxSearchSubtitles($searchString)
 	{
