@@ -30,6 +30,7 @@ $this->menu=array(
 			'type'=>'raw',
 			'value'=>CHtml::link($model->subt_file_name, NzbController::createUrl('AjaxDownloadFile',array('fileName'=>$model->subt_file_name, 'root'=>'subtitles')))
 		),
+		subt_original_name,
 		array('label'=>$model->getAttributeLabel('ID'),
 			'type'=>'raw',
 			'value'=>$model->imdbData->ID
