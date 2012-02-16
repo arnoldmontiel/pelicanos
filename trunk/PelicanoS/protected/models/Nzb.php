@@ -10,7 +10,7 @@
  * @property string $subt_url
  * @property string $subt_file_name
  * @property string $Id_imdbdata
- *
+ * @property string $subt_original_name
  * The followings are the available model relations:
  * @property Imdbdata $idImdbdata
  */
@@ -47,10 +47,10 @@ class Nzb extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('Id_imdbdata', 'required'),
-			array('url, subt_url, file_name, subt_file_name', 'length', 'max'=>255),
+			array('url, subt_url, file_name, subt_file_name, subt_original_name', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id, url, file_name, subt_url, subt_file_name, Id_imdbdata, title, year, idImdb, genre', 'safe', 'on'=>'search'),
+			array('Id, url, file_name, subt_url, subt_file_name, Id_imdbdata, title, year, idImdb, genre, subt_original_name', 'safe', 'on'=>'search'),
 		);
 	}
 	
@@ -78,6 +78,7 @@ class Nzb extends CActiveRecord
 			'subt_url' => 'Subt Url',
 			'subt_file_name' => 'Subt File Name',
 			'Id_imdbData' => 'Id Imdb Data',
+			'subt_original_name' => 'Subt Original Name',
 		);
 	}
 
@@ -98,7 +99,7 @@ class Nzb extends CActiveRecord
 		$criteria->compare('subt_url',$this->subt_url,true);
 		$criteria->compare('subt_file_name',$this->subt_file_name,true);
 		$criteria->compare('Id_imdbdata',$this->Id_imdbdata,true);
-		
+		$criteria->compare('subt_original_name',$this->subt_original_name,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -118,6 +119,7 @@ class Nzb extends CActiveRecord
 		$criteria->compare('subt_url',$this->subt_url,true);
 		$criteria->compare('subt_file_name',$this->subt_file_name,true);
 		$criteria->compare('Id_imdbdata',$this->Id_imdbdata,true);
+		$criteria->compare('subt_original_name',$this->subt_original_name,true);
 		
 		$criteria->with[]='imdbData';
 		$criteria->addSearchCondition("imdbData.Title",$this->title);

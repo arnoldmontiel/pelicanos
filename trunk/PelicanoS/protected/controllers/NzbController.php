@@ -156,7 +156,7 @@ class NzbController extends Controller
 						$model->url = Yii::app()->request->getBaseUrl(). '/nzb/'.rawurlencode($file->getName());
 						$model->file_name = $file->getName();
 					
-						$this->saveFile($file, 'nzb');
+						$this->saveFile($file, 'nzb', $file->getName());
 					}
 					
 					$modelImdb->save();
@@ -184,11 +184,11 @@ class NzbController extends Controller
 	}
 
 	
-	private function saveFile($file, $root)
+	private function saveFile($file, $root, $name)
 	{
 		if($file != null)
 		{		
-			if(! $file->saveAs('./'.$root.'/'.$file->getName()))
+			if(! $file->saveAs('./'.$root.'/'.$name))
 			{
 				$this->redirect(array('uploadError'));
 			}
@@ -221,7 +221,7 @@ class NzbController extends Controller
 						$model->url = Yii::app()->request->getBaseUrl(). '/nzb/'.rawurlencode($file->getName());
 						$model->file_name = $file->getName();
 						
-						$this->saveFile($file, 'nzb');
+						$this->saveFile($file, 'nzb', $file->getName());
 					
 						if($model->save()){
 							if(!empty($modelRelation) )
@@ -360,10 +360,13 @@ class NzbController extends Controller
 				$transaction = $modelNzb->dbConnection->beginTransaction();
 				try {
 					
-					$modelNzb->subt_url = Yii::app()->request->getBaseUrl(). '/nzb/'.rawurlencode($file->getName());
-					$modelNzb->subt_file_name = $file->getName();
+					$subtFileName = str_replace('.nzb','',$modelNzb->file_name) . '.srt';
 					
-					$this->saveFile($file, 'nzb');
+					$modelNzb->subt_url = Yii::app()->request->getBaseUrl(). '/subtitles/'.rawurlencode($subtFileName);
+					$modelNzb->subt_file_name = $subtFileName;
+					$modelNzb->subt_original_name = $file->getName();
+					
+					$this->saveFile($file, 'subtitles', $subtFileName);
 				
 					if($modelNzb->save()){
 						if(!empty($modelRelation) )
@@ -398,18 +401,21 @@ class NzbController extends Controller
 		} catch (Exception $e) {
 			throw new CHttpException('Downloading subtitle','Invalid request. The OpenSubtitle API is not working. Please '. CHtml::link('try again',Yii::app()->request->getUrl()) .'.');
 		}
-	
+		
+		$nzb = Nzb::model()->findByPk($idNzb);
+		$subtFileName = str_replace('.nzb','',$nzb->file_name) . '.srt';
 		try {
-			$file = fopen('./subtitles/'.$openSubtitle->SubFileName,'w+');
+			$file = fopen('./subtitles/'.$subtFileName,'w+');
 			fwrite($file,gzinflate(substr(base64_decode($zip),10)));
 			fclose($file);
 		} catch (Exception $e) {
 			throw new CHttpException('','There was an error saving the file '. $openSubtitle->SubFileName);
 		}
 	
-		$nzb = Nzb::model()->findByPk($idNzb);
-		$nzb->subt_url = Yii::app()->request->getBaseUrl(). '/subtitles/'.rawurlencode($openSubtitle->SubFileName);
-		$nzb->subt_file_name = $openSubtitle->SubFileName;
+		
+		$nzb->subt_url = Yii::app()->request->getBaseUrl(). '/subtitles/'.rawurlencode($subtFileName);
+		$nzb->subt_file_name = $subtFileName;
+		$nzb->subt_original_name = $openSubtitle->SubFileName;
 		
 		$transaction = $nzb->dbConnection->beginTransaction();
 		try {
