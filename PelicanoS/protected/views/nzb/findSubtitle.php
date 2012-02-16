@@ -94,7 +94,8 @@ $(function() {
 				'value'=>$modelNzb->imdbData->Year
 			),
 			'file_name',
-			'subt_file_name'
+			'subt_file_name',
+			'subt_original_name'
 		),
 	)); ?>
 <br>	
