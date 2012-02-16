@@ -2,7 +2,7 @@
 $this->breadcrumbs=array(
 	'Nzbs'=>array('index'),
 	$modelNzb->imdbData->ID=>array('view','id'=>$modelNzb->Id),
-	'Create',
+	'Add subtitle',
 );
 
 $this->menu=array(
@@ -11,7 +11,7 @@ $this->menu=array(
 );
 ?>
 
-<h1>Add subtitles</h1>
+<h1>Add subtitle</h1>
 
 <div class="form">
 <?php
