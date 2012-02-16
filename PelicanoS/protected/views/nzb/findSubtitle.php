@@ -20,9 +20,19 @@ Yii::app()->clientScript->registerScript('findSubtitle', "
 
 $('#searchButton').click(function(){
 			$(this).attr('disabled', 'disabled');
+			$('downloadSubtitle').attr('disabled', 'disabled');
+			$('#cancel').attr('disabled', 'disabled');
 			$('#loading').addClass('input-loading');
-				});
-
+			$('#selectedRow').val('');
+			$(this).parents('form').submit();
+			});
+$('#downloadSubtitle').click(function(){
+			$(this).attr('disabled', 'disabled');
+			$('#searchButton').attr('disabled', 'disabled');
+			$('#cancel').attr('disabled', 'disabled');
+			$('#loadingSave').addClass('input-loading');
+			$(this).parents('form').submit();
+				});				
 $(function() {
 		$( '#tabs' ).tabs(
 		{
@@ -120,13 +130,13 @@ $(function() {
 		</div>
 	</div>
 	<div style="width:30%;float:left">
-		<?php echo CHtml::submitButton('Search',array('id'=>'searchButton')); ?>
+		<?php echo CHtml::submitButton('Search',array('id'=>'searchButton','name'=>'searchButton')); ?>
 	</div>
 	<div style="width:70%;float:left">
 		<p id="loading">&nbsp;</p>
 	</div>
 	<p class="note" >To save a subtitle, first you must select a gird row.</p>
-</div>
+</div><!-- div left (with tabs) -->
 <div style="width:50%;float:left">
 	<div style="width:45%;float:left;margin:10px">
 		<?php echo $form->labelEx($model,'season'); ?>
@@ -150,22 +160,11 @@ $(function() {
 		); ?>
 		</table>
 	</div>
-</div>
+</div><!-- dib right (with season and language) -->
 
-	<br>
-	<div class="rows" style="float:right;width:20%;left:0px">
-		
-	</div>	
+	
 
-	<br>
-	<br>
-	<br>
-<div>
-
-	</div>
 <div class="rows">
-
-
 
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'subtitle-grid',
@@ -185,41 +184,29 @@ $(function() {
 			'LanguageName',
 	),
 	'selectionChanged'=>'js:function(){
-						if($.fn.yiiGridView.getSelection("subtitle-grid") != "")
+						
+						if($.fn.yiiGridView.getSelection("subtitle-grid") != ""){
+							$("#selectedRow").val($.fn.yiiGridView.getSelection("subtitle-grid"));
 							$("#downloadSubtitle").show();
-						else
+							}
+						else{
 							$("#downloadSubtitle").hide();
+							$("#selectedRow").val("");
+							}
 					}',
 )); ?>
-</div>
+</div><!-- girdView -->
 
+<?php echo CHtml::hiddenField('selectedRow','',array('id'=>'selectedRow')); ?>
 
-<?php
-		 $this->widget('zii.widgets.jui.CJuiButton',
-			 array(
-			 	'id'=>'downloadSubtitle',
-			 	'name'=>'download',
-			 	'caption'=>'Save Subtitle',
-			 	'value'=>'Click to download subtitle',
-			 	'onclick'=>'js:function(){
-			 		
-						$.post("'.NzbController::createUrl('AjaxDownloadSubtitle').'",
-								{idOpenSubtitle: $.fn.yiiGridView.getSelection("subtitle-grid"),
-								 idNzb:"'.$modelNzb->Id.'"
-								}
-						).success(
-							function(data) 
-							{
-	 							window.location = "'.NzbController::createUrl('view',array('id'=>$modelNzb->Id)).'";
-							}
-						);
-		 
-			 		
-				}',
-				'htmlOptions'=>array('style'=>'display: none;')
-		 	)
-		 );
-	 ?>	
+<div style="width:50%;float:left">
+	<div style="width:40%;float:left">		<?php echo CHtml::submitButton('Save Subtitle',array('id'=>'downloadSubtitle','name'=>'downloadSubtitle', 'style'=>'display:none')); ?>
+	</div>		
+	<div style="width:58%;float:right"> 	
+		 <p id="loadingSave" style="float:left;width:20px">&nbsp;</p>
+	</div>
+</div><!-- div button save -->
+<div style="width:50%;float:right;position:relative">
 <?php
 		 $this->widget('zii.widgets.jui.CJuiButton',
 			 array(
@@ -234,5 +221,6 @@ $(function() {
 		 	)
 		 );
 	 ?>		 
+</div><!-- div button cancel -->
 <?php $this->endWidget(); ?>
 </div> <!-- form -->
