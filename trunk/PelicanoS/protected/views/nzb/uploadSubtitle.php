@@ -43,7 +43,7 @@ $this->menu=array(
 	<?php echo $form->errorSummary($model); ?>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'file  *.srt , *.txt'); ?>
+		<?php echo $form->labelEx($model,'file  *.srt'); ?>
 		<?php echo $form->fileField($model,'file'); ?>
 		<?php echo $form->error($model,'file'); ?>
 	</div>
