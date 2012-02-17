@@ -102,9 +102,9 @@ class NzbCustomer extends CActiveRecord
 		$criteria->compare('Id_customer',$this->Id_customer);
 		$criteria->compare('need_update',$this->need_update);
 		$criteria->compare('Id_movie_state',$this->Id_movie_state);
-		$criteria->compare('date_sent',$this->date_sent,true);
-		$criteria->compare('date_downloaded',$this->date_downloaded,true);
-		$criteria->compare('date_downloading',$this->date_downloading,true);
+		$criteria->compare('date_sent',$this->date_sent);
+		$criteria->compare('date_downloaded',$this->date_downloaded);
+		$criteria->compare('date_downloading',$this->date_downloading);
 		
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -122,9 +122,9 @@ class NzbCustomer extends CActiveRecord
 		$criteria->compare('Id_customer',$this->Id_customer);
 		$criteria->compare('need_update',$this->need_update);
 		$criteria->compare('Id_movie_state',$this->Id_movie_state);
-		$criteria->compare('date_sent',$this->date_sent,true);
-		$criteria->compare('date_downloaded',$this->date_downloaded,true);
-		$criteria->compare('date_downloading',$this->date_downloading,true);
+		$criteria->compare('date_sent',$this->date_sent);
+		$criteria->compare('date_downloaded',$this->date_downloaded);
+		$criteria->compare('date_downloading',$this->date_downloading);
 		
 		$criteria->with[]='movieState';
 		$criteria->addSearchCondition("movieState.description",$this->movie_status);
