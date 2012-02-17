@@ -450,11 +450,13 @@ class NzbController extends Controller
 	}
 	
 	
-	public function actionMovieImages($idNzb)
+	public function actionMovieImages($id)
 	{
-	
+		$model = Nzb::model()->findByPk($id);
+		
 		$this->render('movieImages',array(
-				'idNzb'=>$idNzb,
+				'idImdb'=>$model->Id_imdbdata,
+				'id'=>$id
 		));
 	}
 	
