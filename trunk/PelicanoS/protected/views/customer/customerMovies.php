@@ -88,6 +88,9 @@ $('#Customer_Id').change(function(){
 					    'value'=>'$data->movieState->description',
 	
 				),
+				date_sent,
+				date_downloading,
+				date_downloaded
 			),
 		));		
 		?>
