@@ -90,7 +90,7 @@ class Subtitle extends CFormModel
 		$client = ripcord::client('http://api.opensubtitles.org/xml-rpc');
 	
 		//open OpenSource API connection
-		$token_from_login = $client->LogIn('','','','OS Test User Agent');
+		$token_from_login = $client->LogIn('pelicanosys','Pelicano','','Pelicano User Agent');
 	
 		$arrResponse = $client->DownloadSubtitles($token_from_login['token'], array($idSubtitleFile));
 		
@@ -109,7 +109,7 @@ class Subtitle extends CFormModel
 		$client = ripcord::client('http://api.opensubtitles.org/xml-rpc');
 		
 		//open OpenSource API connection
-		$token_from_login = $client->LogIn('','','','OS Test User Agent');		
+		$token_from_login = $client->LogIn('pelicanosys','Pelicano','','Pelicano User Agent');		
 
 		
 		if(!(empty($this->movieHash) && empty($this->movieSize))) {

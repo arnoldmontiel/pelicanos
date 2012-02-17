@@ -8,6 +8,9 @@
  * @property integer $Id_customer
  * @property integer $need_update
  * @property integer $Id_movie_state
+ * @property string $date_sent
+ * @property string $date_downloaded
+ * @property string $date_downloading
  */
 class NzbCustomer extends CActiveRecord
 {
@@ -45,9 +48,10 @@ class NzbCustomer extends CActiveRecord
 		return array(
 			array('Id_nzb, Id_customer', 'required'),
 			array('Id_nzb, Id_customer, need_update, Id_movie_state', 'numerical', 'integerOnly'=>true),
+			array('date_sent, date_downloaded, date_downloading', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id_nzb, Id_customer, need_update, Id_movie_state, title, year, genre, movie_status, id_imdb', 'safe', 'on'=>'search'),
+			array('Id_nzb, Id_customer, need_update, Id_movie_state, title, year, genre, movie_status, id_imdb, date_sent, date_downloaded, date_downloading', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -77,6 +81,9 @@ class NzbCustomer extends CActiveRecord
 			'Id_customer' => 'Id Customer',
 			'need_update' => 'Need Update',
 			'Id_movie_state' => 'Id Movie State',
+			'date_sent' => 'Date Sent',
+			'date_downloaded' => 'Date Downloaded',
+			'date_downloading' => 'Date Downloading',
 		);
 	}
 
@@ -95,7 +102,10 @@ class NzbCustomer extends CActiveRecord
 		$criteria->compare('Id_customer',$this->Id_customer);
 		$criteria->compare('need_update',$this->need_update);
 		$criteria->compare('Id_movie_state',$this->Id_movie_state);
-
+		$criteria->compare('date_sent',$this->date_sent,true);
+		$criteria->compare('date_downloaded',$this->date_downloaded,true);
+		$criteria->compare('date_downloading',$this->date_downloading,true);
+		
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
@@ -112,7 +122,10 @@ class NzbCustomer extends CActiveRecord
 		$criteria->compare('Id_customer',$this->Id_customer);
 		$criteria->compare('need_update',$this->need_update);
 		$criteria->compare('Id_movie_state',$this->Id_movie_state);
-			
+		$criteria->compare('date_sent',$this->date_sent,true);
+		$criteria->compare('date_downloaded',$this->date_downloaded,true);
+		$criteria->compare('date_downloading',$this->date_downloading,true);
+		
 		$criteria->with[]='movieState';
 		$criteria->addSearchCondition("movieState.description",$this->movie_status);
 		
