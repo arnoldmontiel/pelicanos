@@ -142,28 +142,12 @@ class CustomerController extends Controller
 		$ddlSource = Customer::model()->findAll();
 		$model = Customer::model();
 			
-// 		if(isset($_GET['Customer']))
-// 		{
-// 			$idCustomer = $_GET['Customer']['Id'];
-// 			$pelicanoClient = new PelicanoC;
-// 			$movieStateResponseArray = $pelicanoClient->getMovieState($idCustomer);
-			
-// 			foreach ($movieStateResponseArray as $movieStateResp)
-// 			{
-// 				$modelNzbCustomer = NzbCustomer::model()->findByAttributes(array('Id_nzb'=>$movieStateResp->Id_nzb, 'Id_customer'=>$movieStateResp->Id_customer));
-				
-// 				if($modelNzbCustomer != null)
-// 				{
-// 					$modelNzbCustomer->Id_movie_state = $movieStateResp->Id_state;
-// 					$modelNzbCustomer->save();
-// 				}
-// 			}
-			
-// 			$modelRelation->Id_customer = $idCustomer;
-// 		}
 	
 		$modelRelation=new NzbCustomer('search');
 		$modelRelation->unsetAttributes();
+		
+		if(isset($_GET['NzbCustomer']))
+			$modelRelation->attributes = $_GET['NzbCustomer']; 
 		
 		if(isset($_GET['Customer']))
 			$modelRelation->Id_customer = $_GET['Customer']['Id'];

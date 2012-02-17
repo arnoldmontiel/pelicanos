@@ -153,4 +153,11 @@ class MovieResponse
 	* @soap
 	*/
 	public $Response;
+	
+	/**
+	* @var string backdrop
+	* @soap
+	*/
+	public $Backdrop;
+
 }

@@ -67,14 +67,31 @@ class NzbController extends Controller
 	 * @param integer $idCustomer
 	 * @param integer $idMovie
 	 * @param integer $idState
+	 * @param integer $date
 	 * @return boolean
 	 * @soap
 	 */
-	public function setMovieState($idCustomer, $idMovie, $idState)
+	public function setMovieState($idCustomer, $idMovie, $idState, $date )
 	{
+// 		Yii::trace('date param: '. $date, 'webService');
+// 		Yii::trace('idCustomer param: '. $idCustomer, 'webService');
+// 		Yii::trace('idMovie param: '. $idMovie, 'webService');
+// 		Yii::trace('idState param: '. $idState, 'webService');
 		$model = NzbCustomer::model()->findByAttributes(array('Id_customer'=>$idCustomer, 'Id_nzb'=>$idMovie));
 		
+		
 		$model->Id_movie_state = $idState;
+		switch ($idState) {
+			case 1:
+				$model->date_sent = date("Y-m-d h:i:s",$date);
+			break;
+			case 2:
+				$model->date_sent = date("Y-m-d h:i:s",$date);
+			break;
+			default:
+				$model->date_sent = date("Y-m-d h:i:s",$date);
+			break;
+		}
 	
 		if($model->save())
 			return true;
@@ -267,14 +284,6 @@ class NzbController extends Controller
 			$transaction = $model->dbConnection->beginTransaction();
 			try {
 
-// 				$file = Yii::app()->file->set('./nzb/'.$model->file_name, true);
-// 				if($file != null)
-// 					$file->delete();
-					
-// 				$subt_file = Yii::app()->file->set('./subtitles/'.$model->subt_file_name, true);
-// 				if($subt_file != null)
-// 					$subt_file->delete();
-
 				$modelRelation = NzbCustomer::model()->findAllByAttributes(array('Id_nzb'=>$id));
 				if(!empty($modelRelation) )
 				{
@@ -441,31 +450,13 @@ class NzbController extends Controller
 	}
 	
 	
-	public function actionAjaxSearchSubtitles($searchString)
+	public function actionMovieImages($idNzb)
 	{
-		$xml_request_url = 'http://api.allsubs.org/index.php?search=heroes+season+4&language=en&limit=3';
-		$xml = new SimpleXMLElement($xml_request_url, null, true);
-		echo "<BR>".$xml->title;
-		echo "<BR>".$xml->link;
-		echo "<BR>".$xml->description;
-		echo "<BR>".$xml->language;
-		echo "<BR>".$xml->results;
-		echo "<BR>".$xml->found_results;
-			
-		foreach ( $xml->items->item as $item )
-		{
-		echo "<BR>Title :".$item->title;
-		echo "<BR>Link :".$item->link;
-		echo "<BR>Filename :".$item->filename;
-		echo "<BR>Files in archive :".$item->files_in_archive;
-		echo "<BR>Languages :".$item->languages;
-		echo "<BR>Added on :".$item->added_on;
-		echo "<BR>";
-			
-		}
-		
-	}
 	
+		$this->render('movieImages',array(
+				'idNzb'=>$idNzb,
+		));
+	}
 	
 	/**
 	 * Lists all models.

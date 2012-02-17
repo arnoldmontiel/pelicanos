@@ -19,7 +19,7 @@
  * @property double $Rating
  * @property string $Votes
  * @property string $Response
- *
+ * @property string $Backdrop
  * The followings are the available model relations:
  * @property Nzb[] $nzbs
  */
@@ -55,11 +55,11 @@ class Imdbdata extends CActiveRecord
 			array('Year', 'numerical', 'integerOnly'=>true),
 			array('Rating', 'numerical'),
 			array('ID, Rated, Released, Runtime, Votes, Response', 'length', 'max'=>45),
-			array('Title, Director, Writer, Poster, Genre', 'length', 'max'=>255),
+			array('Title, Director, Writer, Poster, Genre, Backdrop', 'length', 'max'=>255),
 			array('Actors, Plot', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('ID, Title, Year, Rated, Released, Genre, Director, Writer, Actors, Plot, Poster, Runtime, Rating, Votes, Response', 'safe', 'on'=>'search'),
+			array('ID, Title, Year, Rated, Released, Genre, Director, Writer, Actors, Plot, Poster, Runtime, Rating, Votes, Response, Backdrop', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -96,6 +96,7 @@ class Imdbdata extends CActiveRecord
 			'Rating' => 'Rating',
 			'Votes' => 'Votes',
 			'Response' => 'Response',
+			'Backdrop' => 'Backdrop',
 		);
 	}
 
@@ -125,7 +126,8 @@ class Imdbdata extends CActiveRecord
 		$criteria->compare('Rating',$this->Rating);
 		$criteria->compare('Votes',$this->Votes,true);
 		$criteria->compare('Response',$this->Response,true);
-
+		$criteria->compare('Backdrop',$this->Backdrop,true);
+		
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
