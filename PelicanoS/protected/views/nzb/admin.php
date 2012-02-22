@@ -38,6 +38,10 @@ $this->menu=array(
 			'value'=>'$data->imdbData->Genre',
 		),
 		array(
+ 			'name'=>'resourceTypeDesc',
+			'value'=>'$data->resourceType->description',
+		),
+		array(
 			'class'=>'CButtonColumn',
 		),
 	),
