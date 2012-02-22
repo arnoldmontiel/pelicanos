@@ -10,12 +10,20 @@ $this->menu=array(
 	array('label'=>'Update Nzb', 'url'=>array('update', 'id'=>$model->Id)),
 	array('label'=>'Update Subtitle', 'url'=>array('findSubtitle', 'id'=>$model->Id)),
 	array('label'=>'Upload Subtitle', 'url'=>array('uploadSubtitle', 'id'=>$model->Id)),
-	array('label'=>'Backdrop', 'url'=>array('movieImages', 'id'=>$model->Id)),
+	array('label'=>'Backdrop', 'url'=>array('backdrop', 'id'=>$model->Id)),
 	array('label'=>'Delete Nzb', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->Id),'confirm'=>'Are you sure you want to delete this item?')),
 	array('label'=>'Manage Nzb', 'url'=>array('admin')),
 );
+
+
+
 ?>
 
+<?php
+Yii::app()->clientScript->registerScript('viewNZB', "
+	$('#page').css('background-image','url(".$model->imdbData->Backdrop.")');
+");
+?>
 <h1>View Nzb</h1>
 
 	<div class="left" style="display: inline-block;">
@@ -83,6 +91,10 @@ $this->menu=array(
 		array('label'=>$model->getAttributeLabel('Votes'),
 			'type'=>'raw',
 			'value'=>$model->imdbData->Votes
+		),
+		array('label'=>$model->getAttributeLabel('Id_resource_type'),
+			'type'=>'raw',
+			'value'=>$model->resourceType->description
 		),
 		array('label'=>$model->getAttributeLabel('Response'),
 			'type'=>'raw',

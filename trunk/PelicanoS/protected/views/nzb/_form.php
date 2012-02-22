@@ -59,6 +59,13 @@ $.ajax({
 	<?php echo CHtml::error($modelUpload, 'file')?>
 </div>	
 
+	<div id="resourceType" style="margin-bottom: 5px">
+		<?php	$rsrcType = CHtml::listData($ddlRsrcType, 'Id', 'description');?>
+		<?php echo CHtml::activeLabelEx($model,'Id_resource_type'); ?>
+		<?php echo CHtml::activeDropDownList($model, 'Id_resource_type', $rsrcType);?>
+		<?php echo CHtml::error($model,'Id_resource_type'); ?>
+	</div>
+
 <div class="gridTitle-decoration1">
 	<div class="gridTitle1">
 		Imdb Data

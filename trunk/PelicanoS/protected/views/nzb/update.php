@@ -15,7 +15,7 @@ $this->menu=array(
 
 <h1>Update Nzb</h1>
 
-<?php echo $this->renderPartial('_form', array('model'=>$model, 'modelUpload'=>$modelUpload, 'modelImdb'=>$modelImdb)); ?>
+<?php echo $this->renderPartial('_form', array('model'=>$model, 'modelUpload'=>$modelUpload, 'modelImdb'=>$modelImdb, 'ddlRsrcType'=>$ddlRsrcType)); ?>
 
 <?php
 		 $this->widget('zii.widgets.jui.CJuiButton',

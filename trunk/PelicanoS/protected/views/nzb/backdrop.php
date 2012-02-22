@@ -24,13 +24,19 @@ $.ajax({
       url: 'http://api.themoviedb.org/2.1/Movie.getImages/en/json/cb1fddfd86177c7df456045bddbbc762/".$idImdb."',
       dataType: 'jsonp',
       success: function(data) {      		
+      		var id = '';
+      		var thumbUrl = ''; 
 			$.each(data[0].backdrops, function(j,item){
-				if(data[0].backdrops[j].image.size == 'thumb')
-					$('<img/>').attr('src', data[0].backdrops[j].image.url).appendTo('#images');
-				
-				if(data[0].backdrops[j].image.size == 'original')
+
+				if(data[0].backdrops[j].image.size == 'thumb'){
+					id = data[0].backdrops[j].image.id;
+					thumbUrl = data[0].backdrops[j].image.url;
+				}
+
+				if(data[0].backdrops[j].image.size == 'original' && data[0].backdrops[j].image.id == id)
 				{
-					var radio = $('<input>').attr({type: 'radio', name: 'img', value: data[0].posters[j].image.url, id: 'img'});
+					$('<img/>').attr('src', thumbUrl).appendTo('#images');
+					var radio = $('<input>').attr({type: 'radio', name: 'img', value: data[0].backdrops[j].image.url, id: 'img'});
 					radio.appendTo('#images');
 				}	
 			});		      		
@@ -44,7 +50,7 @@ $.ajax({
 ?>
 
 <?php $form=$this->beginWidget('CActiveForm', array(
-	'id'=>'open-subtitle-form',
+	'id'=>'backdrop-form',
 	'enableAjaxValidation'=>false,
 )); ?>
 
