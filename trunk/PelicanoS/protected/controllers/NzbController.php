@@ -515,7 +515,7 @@ class NzbController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Nzb');
+		$dataProvider=new CActiveDataProvider('Nzb',array('criteria'=>array('order'=>'Id DESC')));
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));

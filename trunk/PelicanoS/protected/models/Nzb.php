@@ -48,7 +48,7 @@ class Nzb extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('Id_imdbdata, Id_resource_type', 'required'),
+			array(' Id_resource_type', 'required'),
 			array('url, subt_url, file_name, subt_file_name, subt_original_name', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
@@ -168,7 +168,7 @@ class Nzb extends CActiveRecord
 			),
 			'*',
 		);
-	
+		$sort->defaultOrder = 't.Id DESC';
 		return new CActiveDataProvider($this, array(
 							'criteria'=>$criteria,
 							'sort'=>$sort,

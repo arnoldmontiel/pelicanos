@@ -125,7 +125,7 @@ class Subtitle extends CFormModel
 													array('sublanguageid'=>$this->getLanguageFilter(),
 														  'season'=>$this->season,
 														  'episode'=>$this->episode,
-														  'imdbid'=>$this->idImdb)
+														  'imdbid'=>str_replace('tt','',$this->idImdb))
 													)); 
 		} elseif (!empty($this->query)) {
 			$get = $client->SearchSubtitles($token_from_login['token'],array(
