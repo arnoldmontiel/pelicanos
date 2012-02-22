@@ -156,15 +156,18 @@ class NzbController extends Controller
 		$model=new Nzb;
 		$modelUpload=new Upload;
 		$modelImdb = new Imdbdata;
+		$ddlRsrcType = ResourceType::model()->findAll();
 		
-		
+		if(isset($_POST['Nzb']))
+			$model->attributes = $_POST['Nzb'];
+
 		if(isset($_POST['Upload']) && isset($_POST['Imdbdata']))
 		{
 			$modelUpload->attributes=$_POST['Upload'];
 			$modelImdb->attributes=$_POST['Imdbdata'];
 			$file=CUploadedFile::getInstance($modelUpload,'file');
 			
-			if($modelUpload->validate())
+			if($modelUpload->validate() && $model->validate())
 			{		
 				$transaction = $model->dbConnection->beginTransaction();
 				try {
@@ -197,6 +200,7 @@ class NzbController extends Controller
 			'model'=>$model,
 			'modelUpload'=>$modelUpload,
 			'modelImdb'=>$modelImdb,
+			'ddlRsrcType'=>$ddlRsrcType,
 		));
 	}
 
@@ -222,6 +226,17 @@ class NzbController extends Controller
 		$model=$this->loadModel($id);
 		$modelUpload=new Upload;
 		$modelImdb = Imdbdata::model()->findByPk($model->Id_imdbdata);
+		$ddlRsrcType = ResourceType::model()->findAll();
+		$hasChanged = false;
+		
+		if(isset($_POST['Nzb']))
+		{
+			if($_POST['Nzb']['Id_resource_type'] != $model->Id_resource_type )
+				$hasChanged = true;
+			
+			$model->attributes = $_POST['Nzb'];
+		}
+		
 		if(isset($_POST['Upload']))
 		{
 			$modelUpload->attributes=$_POST['Upload'];
@@ -258,7 +273,31 @@ class NzbController extends Controller
 				}
 			}
 			else{
-				$this->redirect(array('view','id'=>$model->Id));
+				if($hasChanged)
+				{
+					$modelRelation = NzbCustomer::model()->findAllByAttributes(array('Id_nzb'=>$id));
+						
+					$transaction = $model->dbConnection->beginTransaction();
+					try {
+							
+						if($model->save()){
+							if(!empty($modelRelation) )
+							{
+								foreach ($modelRelation as $modelRel){
+									$modelRel->need_update = 1;
+									$modelRel->save();
+								}
+							}
+							$transaction->commit();
+							$this->redirect(array('view','id'=>$model->Id));
+						}
+					
+					} catch (Exception $e) {
+						$transaction->rollback();
+					}
+				}
+				else
+					$this->redirect(array('view','id'=>$model->Id));
 			}
 		}
 
@@ -266,6 +305,7 @@ class NzbController extends Controller
 			'model'=>$model,
 			'modelUpload'=>$modelUpload,
 			'modelImdb'=>$modelImdb,
+			'ddlRsrcType'=>$ddlRsrcType,
 		));
 	}
 
@@ -450,11 +490,21 @@ class NzbController extends Controller
 	}
 	
 	
-	public function actionMovieImages($id)
+	public function actionBackdrop($id)
 	{
 		$model = Nzb::model()->findByPk($id);
+		if(isset($_POST['img']))
+		{
+			$imdb = Imdbdata::model()->findByPk($model->Id_imdbdata);
+			if($imdb != null)
+			{
+				$imdb->Backdrop = $_POST['img'];
+				if($imdb->save())
+					$this->redirect(array('view','id'=>$id));
+			}
+		}
 		
-		$this->render('movieImages',array(
+		$this->render('backdrop',array(
 				'idImdb'=>$model->Id_imdbdata,
 				'id'=>$id
 		));
