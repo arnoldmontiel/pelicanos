@@ -65,6 +65,12 @@ class MovieResponse
 	public $subt_file_name;
 	
 	/**
+	* @var integer id resource type
+	* @soap
+	*/
+	public $Id_resource_type;
+	
+	/**
 	* @var string id imdb
 	* @soap
 	*/
