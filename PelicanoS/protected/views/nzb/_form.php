@@ -23,7 +23,9 @@ function fillIMDBDataField(data)
 	$('#Imdbdata_Poster_img').attr('src',data.Poster);
 
 }
+
 $('#Imdbdata_ID').change(function(){
+$(this).removeClass('error');
 $(this).addClass('input-loading');
 $.ajax({
       url: 'http://www.imdbapi.com/?i='+$(this).val(),
@@ -31,10 +33,13 @@ $.ajax({
       success: function(data) {
 	      	fillIMDBDataField(data);
 	      	$('#Imdbdata_ID').removeClass('input-loading');
+	      	$('#saveButton').removeAttr('disabled');
 		}
     });
 });
 $('#Imdbdata_Title').change(function(){
+
+$(this).removeClass('error');
 $(this).addClass('input-loading');
 $.ajax({
       url: 'http://www.imdbapi.com/?t='+$(this).val(),
@@ -43,10 +48,29 @@ $.ajax({
       	function(data) {
       		fillIMDBDataField(data);
 	      	$('#Imdbdata_Title').removeClass('input-loading');
+	      	$('#saveButton').removeAttr('disabled');
 		}
     });
 });
 
+$('#Imdbdata_Title').keypress(function() {
+  $('#saveButton').attr('disabled','disabled');
+});
+
+$('#Imdbdata_ID').keypress(function() {
+  $('#saveButton').attr('disabled','disabled');
+});
+
+
+
+$(document).keypress(function(e) {
+    if(e.keyCode == 13) 
+    {
+		return false; 
+    }
+  });
+ 
+  
 ");
 ?>
 
@@ -168,7 +192,12 @@ $.ajax({
 	
 	<div class="left">
 		<div class="row buttons">
-			<?php echo CHtml::submitButton($model->isNewRecord ? 'Create and find Subtitle' : 'Save'); ?>
+
+			<?php if($model->isNewRecord)
+					echo CHtml::submitButton($model->isNewRecord ? 'Create and find Subtitle' : 'Save', array('id'=>'saveButton','disabled'=>'disabled'));
+				  else
+					echo CHtml::submitButton($model->isNewRecord ? 'Create and find Subtitle' : 'Save');
+			?>		
 		</div>
 	</div>
 <?php echo CHtml::endForm()?>
