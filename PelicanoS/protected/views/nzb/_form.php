@@ -66,6 +66,17 @@ $('#Imdbdata_ID').keypress(function() {
 $(document).keypress(function(e) {
     if(e.keyCode == 13) 
     {
+    	if($('*:focus').attr('id') == 'Imdbdata_Title' && $('*:focus').val() != '')
+    	{
+    		$('#Imdbdata_Title').change();
+    		return false;
+    	}
+    	
+    	if($('*:focus').attr('id') == 'Imdbdata_ID' && $('*:focus').val() != '')
+    	{
+    		$('#Imdbdata_ID').change();
+    		return false;
+    	}
 		return false; 
     }
   });
