@@ -24,6 +24,8 @@ function fillIMDBDataField(data)
 
 }
 
+$('#cancel').removeClass('ui-button');
+
 $('#Imdbdata_ID').change(function(){
 $(this).removeClass('error');
 $(this).addClass('input-loading');
@@ -60,8 +62,6 @@ $('#Imdbdata_Title').keypress(function() {
 $('#Imdbdata_ID').keypress(function() {
   $('#saveButton').attr('disabled','disabled');
 });
-
-
 
 $(document).keypress(function(e) {
     if(e.keyCode == 13) 

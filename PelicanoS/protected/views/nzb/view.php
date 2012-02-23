@@ -1,8 +1,4 @@
 <?php
-$this->breadcrumbs=array(
-	'Nzbs'=>array('index'),
-	$model->imdbData->ID,
-);
 
 $this->menu=array(
 	array('label'=>'List Nzb', 'url'=>array('index')),
@@ -26,84 +22,78 @@ Yii::app()->clientScript->registerScript('viewNZB', "
 ?>
 <h1>View Nzb</h1>
 
-	<div class="left" style="display: inline-block;">
-<?php $this->widget('zii.widgets.CDetailView', array(
-	'data'=>$model,
-	'cssFile'=>Yii::app()->baseUrl . '/css/detail-view-blue.css',
-	'attributes'=>array(
-		array('label'=>$model->getAttributeLabel('file_name'),
-			'type'=>'raw',
-			'value'=>CHtml::link($model->file_name, NzbController::createUrl('AjaxDownloadFile',array('fileName'=>$model->file_name, 'root'=>'nzb')))
-		),
-		array('label'=>$model->getAttributeLabel('subt_file_name'),
-			'type'=>'raw',
-			'value'=>CHtml::link($model->subt_file_name, NzbController::createUrl('AjaxDownloadFile',array('fileName'=>$model->subt_file_name, 'root'=>'subtitles')))
-		),
-		subt_original_name,
-		array('label'=>$model->getAttributeLabel('ID'),
-			'type'=>'raw',
-			'value'=>$model->imdbData->ID
-		),
-		array('label'=>$model->getAttributeLabel('Title'),
-			'type'=>'raw',
-			'value'=>$model->imdbData->Title
-		),
-		array('label'=>$model->getAttributeLabel('Year'),
-			'type'=>'raw',
-			'value'=>$model->imdbData->Year
-		),
-		array('label'=>$model->getAttributeLabel('Rated'),
-			'type'=>'raw',
-			'value'=>$model->imdbData->Rated
-		),
-		array('label'=>$model->getAttributeLabel('Released'),
-			'type'=>'raw',
-			'value'=>$model->imdbData->Released
-		),
-		array('label'=>$model->getAttributeLabel('Genre'),
-			'type'=>'raw',
-			'value'=>$model->imdbData->Genre
-		),
-		array('label'=>$model->getAttributeLabel('Director'),
-			'type'=>'raw',
-			'value'=>$model->imdbData->Director
-		),
-		array('label'=>$model->getAttributeLabel('Writer'),
-			'type'=>'raw',
-			'value'=>$model->imdbData->Writer
-		),
-		array('label'=>$model->getAttributeLabel('Actors'),
-			'type'=>'raw',
-			'value'=>$model->imdbData->Actors
-		),
-		array('label'=>$model->getAttributeLabel('Plot'),
-			'type'=>'raw',
-			'value'=>$model->imdbData->Plot
-		),
-		array('label'=>$model->getAttributeLabel('Runtime'),
-			'type'=>'raw',
-			'value'=>$model->imdbData->Runtime
-		),
-		array('label'=>$model->getAttributeLabel('Rating'),
-			'type'=>'raw',
-			'value'=>$model->imdbData->Rating
-		),
-		array('label'=>$model->getAttributeLabel('Votes'),
-			'type'=>'raw',
-			'value'=>$model->imdbData->Votes
-		),
-		array('label'=>$model->getAttributeLabel('Id_resource_type'),
-			'type'=>'raw',
-			'value'=>$model->resourceType->description
-		),
-		array('label'=>$model->getAttributeLabel('Response'),
-			'type'=>'raw',
-			'value'=>$model->imdbData->Response
-		),
-	),
-)); ?>
+<div class="movie-detail-view" >
+	<div class="left-movie-detail-view" >
+		<b><?php echo CHtml::encode($model->getAttributeLabel('file_name')); ?>:</b>
+		<?php echo CHtml::link($model->file_name, NzbController::createUrl('AjaxDownloadFile',array('fileName'=>$model->file_name, 'root'=>'nzb'))); ?>
+		<br />
+	
+		<b><?php echo CHtml::encode($model->getAttributeLabel('subt_file_name')); ?>:</b>
+		<?php echo CHtml::link($model->subt_file_name, NzbController::createUrl('AjaxDownloadFile',array('fileName'=>$model->subt_file_name, 'root'=>'subtitles'))); ?>
+		<br />
+	
+		<b><?php echo CHtml::encode($model->getAttributeLabel('subt_original_name')); ?>:</b>
+		<?php echo CHtml::encode($model->subt_original_name); ?>
+		<br />
+	
+		<b><?php echo CHtml::encode($model->getAttributeLabel('ID')); ?>:</b>
+		<?php echo CHtml::encode($model->imdbData->ID); ?>
+		<br />
+		
+		<b><?php echo CHtml::encode($model->getAttributeLabel('Title')); ?>:</b>
+		<?php echo CHtml::encode($model->imdbData->Title); ?>
+		<br />
+	
+		<b><?php echo CHtml::encode($model->getAttributeLabel('Year')); ?>:</b>
+		<?php echo CHtml::encode($model->imdbData->Year); ?>
+		<br />
+		
+		<b><?php echo CHtml::encode($model->getAttributeLabel('Rated')); ?>:</b>
+		<?php echo CHtml::encode($model->imdbData->Rated); ?>
+		<br />
+		
+		<b><?php echo CHtml::encode($model->getAttributeLabel('Released')); ?>:</b>
+		<?php echo CHtml::encode($model->imdbData->Released); ?>
+		<br />
+		
+		<b><?php echo CHtml::encode($model->getAttributeLabel('Genre')); ?>:</b>
+		<?php echo CHtml::encode($model->imdbData->Genre); ?>
+		<br />
+		
+		<b><?php echo CHtml::encode($model->getAttributeLabel('Director')); ?>:</b>
+		<?php echo CHtml::encode($model->imdbData->Director); ?>
+		<br />
+				
+		<b><?php echo CHtml::encode($model->getAttributeLabel('Writer')); ?>:</b>
+		<?php echo CHtml::encode($model->imdbData->Writer); ?>
+		<br />
+		
+		<b><?php echo CHtml::encode($model->getAttributeLabel('Actors')); ?>:</b>
+		<?php echo CHtml::encode($model->imdbData->Actors); ?>
+		<br />
+		
+		<b><?php echo CHtml::encode($model->getAttributeLabel('Plot')); ?>:</b>
+		<?php echo CHtml::encode($model->imdbData->Plot); ?>
+		<br />
+		
+		<b><?php echo CHtml::encode($model->getAttributeLabel('Runtime')); ?>:</b>
+		<?php echo CHtml::encode($model->imdbData->Runtime); ?>
+		<br />
+		
+		<b><?php echo CHtml::encode($model->getAttributeLabel('Id_resource_type')); ?>:</b>
+		<?php echo CHtml::encode($model->resourceType->description); ?>
+		<br />
+		
+		<b><?php echo CHtml::encode($model->getAttributeLabel('Rating')); ?>:</b>
+		<?php echo CHtml::encode($model->imdbData->Rating); ?>
+		<br />
+		
+		<b><?php echo CHtml::encode($model->getAttributeLabel('Votes')); ?>:</b>
+		<?php echo CHtml::encode($model->imdbData->Votes); ?>
+		<br />
+	</div>
+	<div class="right-movie-detail-view">
+		<?php echo CHtml::image( $model->imdbData->Poster, $model->imdbData->Title,array('id'=>'Imdbdata_Poster_img', 'style'=>'height: 320px;width: 220px;')); ?>
+	</div>
 </div>
-	<div class="right" style="display: inline-block; vertical-align: top;">
-<?php echo CHtml::image( $model->imdbData->Poster, $model->imdbData->Title,array('id'=>'Imdbdata_Poster_img', 'style'=>'height: 320px;width: 220px;')); ?>
 
-</div>

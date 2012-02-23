@@ -1,9 +1,4 @@
 <?php
-$this->breadcrumbs=array(
-	'Nzbs'=>array('index'),
-	$modelNzb->imdbData->ID=>array('view','id'=>$modelNzb->Id),
-	'Add subtitle',
-);
 
 $this->menu=array(
 	array('label'=>'List Nzb', 'url'=>array('index')),
@@ -34,6 +29,8 @@ $('#downloadSubtitle').click(function(){
 			$(this).parents('form').submit();
 				});				
 $(function() {
+
+		$('#cancel').removeClass('ui-button ui-widget ui-state-default ui-corner-all');
 		$( '#tabs' ).tabs(
 		{
 		
@@ -155,7 +152,7 @@ $(function() {
 		'separator' => '',// es necesario eliminar el separador
 		//Estos parametros son opcionales
 		
-		'style' => 'width: 5px;',
+		//'style' => 'width: 5px;',
 		)
 		
 		); ?>
@@ -215,6 +212,7 @@ $(function() {
 			 	'name'=>'Cancel',
 			 	'caption'=>'Cancel',
 			 	'value'=>'Cancel',
+		        //'cssFile'=>'',
 			 	'onclick'=>'js:function(){
 			 		window.location = "'.NzbController::createUrl('view',array('id'=>$modelNzb->Id)).'";
 			 		return false;

@@ -1,9 +1,4 @@
 <?php
-$this->breadcrumbs=array(
-	'Nzbs'=>array('index'),
-	'Manage',
-);
-
 $this->menu=array(
 	array('label'=>'List Nzb', 'url'=>array('index')),
 	array('label'=>'Create Nzb', 'url'=>array('create')),

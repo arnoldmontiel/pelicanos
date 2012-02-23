@@ -1,10 +1,6 @@
 <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/detail-view-blue.css" />
 
 <?php
-$this->breadcrumbs=array(
-	'Customers'=>array('index'),
-	'Customer Movies',
-);
 
 $this->menu=array(
 	array('label'=>'List Customer', 'url'=>array('index')),

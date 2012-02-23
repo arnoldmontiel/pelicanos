@@ -1,8 +1,4 @@
 <?php
-$this->breadcrumbs=array(
-	'Resource Types',
-);
-
 $this->menu=array(
 	array('label'=>'Create ResourceType', 'url'=>array('create')),
 	array('label'=>'Manage ResourceType', 'url'=>array('admin')),
