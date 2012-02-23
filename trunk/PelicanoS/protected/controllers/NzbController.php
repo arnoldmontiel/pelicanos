@@ -83,13 +83,13 @@ class NzbController extends Controller
 		$model->Id_movie_state = $idState;
 		switch ($idState) {
 			case 1:
-				$model->date_sent = date("Y-m-d h:i:s",$date);
+				$model->date_sent = date("Y-m-d H:i:s",$date);
 			break;
 			case 2:
-				$model->date_sent = date("Y-m-d h:i:s",$date);
+				$model->date_sent = date("Y-m-d H:i:s",$date);
 			break;
 			default:
-				$model->date_sent = date("Y-m-d h:i:s",$date);
+				$model->date_sent = date("Y-m-d H:i:s",$date);
 			break;
 		}
 	
