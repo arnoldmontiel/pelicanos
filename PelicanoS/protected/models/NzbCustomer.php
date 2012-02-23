@@ -163,6 +163,7 @@ class NzbCustomer extends CActiveRecord
 			'*',
 		);
 	
+		$sort->defaultOrder = 't.Id_nzb DESC';
 		return new CActiveDataProvider($this, array(
 										'criteria'=>$criteria,
 										'sort'=>$sort,

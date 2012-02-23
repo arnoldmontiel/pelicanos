@@ -499,8 +499,26 @@ class NzbController extends Controller
 			if($imdb != null)
 			{
 				$imdb->Backdrop = $_POST['img'];
-				if($imdb->save())
-					$this->redirect(array('view','id'=>$id));
+				
+				$transaction = $imdb->dbConnection->beginTransaction();
+				try {
+					if($imdb->save())
+					{
+						$modelRelation = NzbCustomer::model()->findAllByAttributes(array('Id_nzb'=>$id));
+						if(!empty($modelRelation) )
+						{
+							foreach ($modelRelation as $modelRel){
+								$modelRel->need_update = 1;
+								$modelRel->save();
+							}
+						}
+						$transaction->commit();
+						$this->redirect(array('view','id'=>$id));
+					}
+				} catch (Exception $e) {
+					$transaction->rollback();
+				}
+				
 			}
 		}
 		
