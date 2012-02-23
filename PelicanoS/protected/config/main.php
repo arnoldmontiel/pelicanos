@@ -17,6 +17,7 @@ return array(
 		'application.models.*',
 		'application.components.*',
 		'application.stubs.*',
+		'application.controllers.*',
 		'application.modules.srbac.controllers.SBaseController',
 	),
 
@@ -106,6 +107,9 @@ return array(
 				array(
 					'class'=>'CFileLogRoute',
 					'levels'=>'error, warning',
+					//'levels'=>'error, warning,trace',
+					//'categories'=>'webService',
+					//'logFile'=>'pepe.log'
 				),
 				// uncomment the following to show log messages on web pages
 				/*
