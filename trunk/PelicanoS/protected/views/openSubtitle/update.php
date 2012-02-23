@@ -1,9 +1,4 @@
 <?php
-$this->breadcrumbs=array(
-	'Open Subtitles'=>array('index'),
-	$model->Id=>array('view','id'=>$model->Id),
-	'Update',
-);
 
 $this->menu=array(
 	array('label'=>'List OpenSubtitle', 'url'=>array('index')),

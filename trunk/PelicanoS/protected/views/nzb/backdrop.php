@@ -1,9 +1,4 @@
 <?php
-$this->breadcrumbs=array(
-	'Nzbs'=>array('index'),
-	$idImdb=>array('view','id'=>$id),
-	'Backdrop',
-);
 
 $this->menu=array(
 	array('label'=>'List Nzb', 'url'=>array('index')),
@@ -44,7 +39,16 @@ $.ajax({
     });
 });
 
-
+$('#saveButton').click(function(){
+	if(jQuery('input:checked').val() == undefined)
+	{
+		$('.messageError').animate({opacity: 'show'},2000);
+		$('.messageError').animate({opacity: 'hide'},2000);
+		return false;
+	}
+	
+	$(this).parents('form').submit();
+});
 
 ");
 ?>
@@ -59,9 +63,29 @@ $.ajax({
 	
 	<div id="images"></div>
 	
-	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create and find Subtitle' : 'Save'); ?>
+	<p class="messageError"><?php
+		echo 'Please select a backdrop to save.'?>
+	</p>
+	<div style="width:50%;float:left">
+		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create and find Subtitle' : 'Save',array('id'=>'saveButton')); ?>
 	</div>
+	<div style="width:50%;float:right;position:relative">
+	<?php
+	$this->widget('zii.widgets.jui.CJuiButton',
+	array(
+					 	'id'=>'cancel',
+					 	'name'=>'Cancel',
+					 	'caption'=>'Cancel',
+					 	'value'=>'Cancel',
+				 		'cssFile'=>'',
+					 	'onclick'=>'js:function(){
+					 		window.location = "'.NzbController::createUrl('view',array('id'=>$id)).'";
+					 		return false;
+						}',
+	)
+	);
+	?>
+		</div><!-- div button cancel -->
 <?php $this->endWidget(); ?>
 
 </div><!-- form -->

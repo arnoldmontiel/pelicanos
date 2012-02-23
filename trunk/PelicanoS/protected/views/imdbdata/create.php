@@ -1,8 +1,4 @@
 <?php
-$this->breadcrumbs=array(
-	'Imdbdatas'=>array('index'),
-	'Create',
-);
 
 $this->menu=array(
 	array('label'=>'List Imdbdata', 'url'=>array('index')),

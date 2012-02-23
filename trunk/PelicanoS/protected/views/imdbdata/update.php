@@ -1,9 +1,4 @@
 <?php
-$this->breadcrumbs=array(
-	'Imdbdatas'=>array('index'),
-	$model->Title=>array('view','id'=>$model->ID),
-	'Update',
-);
 
 $this->menu=array(
 	array('label'=>'List Imdbdata', 'url'=>array('index')),

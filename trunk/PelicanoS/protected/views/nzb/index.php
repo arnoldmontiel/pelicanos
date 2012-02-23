@@ -1,7 +1,4 @@
 <?php
-$this->breadcrumbs=array(
-	'Nzbs',
-);
 
 $this->menu=array(
 	array('label'=>'Create Nzb', 'url'=>array('create')),

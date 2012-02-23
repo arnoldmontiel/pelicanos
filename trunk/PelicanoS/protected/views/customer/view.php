@@ -1,8 +1,4 @@
 <?php
-$this->breadcrumbs=array(
-	'Customers'=>array('index'),
-	$model->name,
-);
 
 $this->menu=array(
 	array('label'=>'List Customer', 'url'=>array('index')),

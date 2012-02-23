@@ -1,9 +1,4 @@
 <?php
-$this->breadcrumbs=array(
-	'Resource Types'=>array('index'),
-	$model->Id=>array('view','id'=>$model->Id),
-	'Update',
-);
 
 $this->menu=array(
 	array('label'=>'List ResourceType', 'url'=>array('index')),

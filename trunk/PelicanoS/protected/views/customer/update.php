@@ -1,9 +1,5 @@
 <?php
-$this->breadcrumbs=array(
-	'Customers'=>array('index'),
-	$model->name=>array('view','id'=>$model->Id),
-	'Update',
-);
+
 
 $this->menu=array(
 	array('label'=>'List Customer', 'url'=>array('index')),

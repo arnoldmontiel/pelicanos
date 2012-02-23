@@ -1,9 +1,4 @@
 <?php
-$this->breadcrumbs=array(
-	'Nzbs'=>array('index'),
-	$modelNzb->imdbData->ID=>array('view','id'=>$modelNzb->Id),
-	'Upload subtitle',
-);
 
 $this->menu=array(
 	array('label'=>'List Nzb', 'url'=>array('index')),
@@ -60,6 +55,7 @@ $this->menu=array(
 				 	'name'=>'Cancel',
 				 	'caption'=>'Cancel',
 				 	'value'=>'Cancel',
+			 		'cssFile'=>'',
 				 	'onclick'=>'js:function(){
 				 		window.location = "'.NzbController::createUrl('view',array('id'=>$modelNzb->Id)).'";
 				 		return false;

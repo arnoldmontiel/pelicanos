@@ -1,8 +1,4 @@
 <?php
-$this->breadcrumbs=array(
-	'Open Subtitles'=>array('index'),
-	'Manage',
-);
 
 $this->menu=array(
 	array('label'=>'List OpenSubtitle', 'url'=>array('index')),
