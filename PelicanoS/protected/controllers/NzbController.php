@@ -43,7 +43,7 @@ class NzbController extends Controller
 			$nzbCustomerDB = NzbCustomer::model()->findByPk(array('Id_nzb'=>$modelNbz->Id, 'Id_customer'=>$idCustomer));
 			if($nzbCustomerDB != null)
 			{
-				$nzbCustomerDB->need_update = 0;
+				$nzbCustomerDB->need_update = 1;
 				$nzbCustomerDB->save();
 			}
 			else
@@ -52,7 +52,8 @@ class NzbController extends Controller
 				
 				$modelNzbCustomer->attributes = array(
 												'Id_nzb'=>$modelNbz->Id,
-												'Id_customer'=>$idCustomer
+												'Id_customer'=>$idCustomer,
+												'need_update'=> 1,
 												);
 				$modelNzbCustomer->save();
 			}
@@ -84,6 +85,7 @@ class NzbController extends Controller
 		switch ($idState) {
 			case 1:
 				$model->date_sent = date("Y-m-d H:i:s",$date);
+				$model->need_update = 0;
 			break;
 			case 2:
 				$model->date_sent = date("Y-m-d H:i:s",$date);
