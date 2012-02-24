@@ -88,10 +88,10 @@ class NzbController extends Controller
 				$model->need_update = 0;
 			break;
 			case 2:
-				$model->date_sent = date("Y-m-d H:i:s",$date);
+				$model->date_downloading = date("Y-m-d H:i:s",$date);
 			break;
 			default:
-				$model->date_sent = date("Y-m-d H:i:s",$date);
+				$model->date_downloaded = date("Y-m-d H:i:s",$date);
 			break;
 		}
 	
