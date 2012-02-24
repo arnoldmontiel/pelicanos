@@ -27,7 +27,10 @@ $('#downloadSubtitle').click(function(){
 			$('#cancel').attr('disabled', 'disabled');
 			$('#loadingSave').addClass('input-loading');
 			$(this).parents('form').submit();
-				});				
+				});
+
+
+
 $(function() {
 
 		$('#cancel').removeClass('ui-button ui-widget ui-state-default ui-corner-all');
@@ -69,6 +72,12 @@ $(function() {
 				$( '#tabs' ).tabs().tabs('select',2);
 		}
 });
+$(document).keypress(function(e) {
+    if(e.keyCode == 13) 
+    {
+    	return false;
+    }
+  });
 ");
 ?>
 
