@@ -105,6 +105,7 @@ class NzbCustomer extends CActiveRecord
 		$criteria->compare('date_sent',$this->date_sent);
 		$criteria->compare('date_downloaded',$this->date_downloaded);
 		$criteria->compare('date_downloading',$this->date_downloading);
+		$criteria->order = "Id_movie_state DESC";
 		
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -129,12 +130,13 @@ class NzbCustomer extends CActiveRecord
 		$criteria->with[]='movieState';
 		$criteria->addSearchCondition("movieState.description",$this->movie_status);
 		
-		$criteria->join =	"LEFT OUTER JOIN Nzb n ON n.Id=t.Id_nzb
+		$criteria->join =	"LEFT OUTER JOIN nzb n ON n.Id=t.Id_nzb
 									 LEFT OUTER JOIN imdbdata i ON n.Id_imdbdata=i.ID";
 		$criteria->addSearchCondition("i.Title",$this->title);
 		$criteria->addSearchCondition("i.Year",$this->year);
 		$criteria->addSearchCondition("i.Genre",$this->genre);
 		$criteria->addSearchCondition("i.ID",$this->id_imdb);
+		
 		
 		// Create a custom sort
 		$sort=new CSort;
@@ -163,7 +165,9 @@ class NzbCustomer extends CActiveRecord
 			'*',
 		);
 	
-		$sort->defaultOrder = 't.Id_nzb DESC';
+		$sort->defaultOrder =
+			'Id_movie_state DESC, date_downloaded DESC, date_downloading DESC, date_sent DESC';
+		
 		return new CActiveDataProvider($this, array(
 										'criteria'=>$criteria,
 										'sort'=>$sort,
