@@ -1,1 +1,1 @@
-<?php $this->redirect(NzbController::createUrl('site/login') );?>
+<?php $this->redirect(NzbController::createUrl('nzb/index') );?>

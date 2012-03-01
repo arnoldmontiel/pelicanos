@@ -44,8 +44,9 @@ return array(
 					'notAuthorizedView'=> 'srbac.views.authitem.unauthorized', // default:
 		//srbac.views.authitem.unauthorized, must be an existing alias
 					'alwaysAllowed'=>array( //default: array()
-					'SiteLogin','SiteLogout','SiteIndex','SiteAdmin',
-					'SiteError', 'SiteContact'),
+					'SiteLogin','SiteLogout','SiteError'),
+					'prefixAlwaysAllowed'=>array( //default: array()
+								'Ajax'),
 					'userActions'=>array('Show','View','List'), //default: array()
 					'listBoxNumberOfLines' => 15, //default : 10 'imagesPath' => 'srbac.images', // default: srbac.images 'imagesPack'=>'noia', //default: noia 'iconText'=>true, // default : false 'header'=>'srbac.views.authitem.header', //default : srbac.views.authitem.header,
 		//must be an existing alias 'footer'=>'srbac.views.authitem.footer', //default: srbac.views.authitem.footer,
