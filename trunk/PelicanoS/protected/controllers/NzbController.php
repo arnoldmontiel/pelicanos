@@ -181,10 +181,23 @@ class NzbController extends Controller
 						$this->saveFile($file, 'nzb', $file->getName());
 					}
 					
+
+					$validator = new CUrlValidator();						
+					if($modelImdb->Poster!='' && $validator->validateValue($modelImdb->Poster))
+					{
+						$content = file_get_contents($modelImdb->Poster);
+						if ($content !== false) {
+							$file = fopen("./images/".$modelImdb->ID.".jpg", 'w');
+							fwrite($file,$content);
+							fclose($file);
+							$modelImdb->Poster_local = $modelImdb->ID.".jpg";
+						} else {
+							// an error happened
+						}
+					}				
 					$modelImdb->save();
-					
 					$model->Id_imdbdata = $modelImdb->ID;
-					
+						
 					if($model->save()){
 						$transaction->commit();
 						//$this->redirect(array('view','id'=>$model->Id));
