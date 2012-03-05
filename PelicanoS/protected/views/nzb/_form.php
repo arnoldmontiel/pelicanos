@@ -21,6 +21,7 @@ function fillIMDBDataField(data)
 	$('#Imdbdata_Poster').val(data.Poster);
 	$('#Imdbdata_Poster_img').attr('alt',data.Title);
 	$('#Imdbdata_Poster_img').attr('src',data.Poster);
+	$('.nzb-poster').attr('style','background-image:url('+data.Poster+')');
 
 }
 
@@ -193,8 +194,8 @@ $(document).keypress(function(e) {
 			<?php echo CHtml::error($modelImdb,'Poster'); ?>			
 		</div>
 		
-		
-		<?php echo CHtml::image( "./images/".$modelImdb->Poster_local, $modelImdb->Title,array('id'=>'Imdbdata_Poster_img', 'style'=>'height: 320px;width: 220px;')); ?>	
+		<div class="nzb-poster" style="background-image: url(<?php echo "./images/".$modelImdb->Poster_local; ?>)">
+		</div>
 	</div>
 </div>
 <div class="left" style="display: inline-block;">
