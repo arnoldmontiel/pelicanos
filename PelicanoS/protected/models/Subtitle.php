@@ -1,4 +1,5 @@
 <?php
+require_once 'XML/RPC.php';
 class Subtitle extends CFormModel
 {
 	private $_attributes = array();
@@ -100,48 +101,124 @@ class Subtitle extends CFormModel
 	
 		return $arrResponse['data'][0]['data'];
 	}
+	/**
+	* The function that actually sends an XML-RPC request to the server, handles
+	* errors accordingly and returns the appropriately decoded data sent as response
+	* from the server.
+	*
+	* @param XML_RPC_Message $request An appropriately encoded XML-RPC message
+	*                                  that needs to be sent as a request to the
+	*                                  server.
+	* @param XML_RPC_Client  $client  The XML-RPC client as which the request
+	*                                  is to be sent.
+	*
+	* @return Array The appropriately decoded response sent by the server.
+	*/
+	public static function sendRequest($request, $client)
+	{
+		$response = $client->send($request);
+		if (!$response) {
+			throw new CHttpException(
+		                'XML-RPC communication error: ' . $client->errstr
+			);
+		} else if ($response->faultCode() != 0) {
+			throw new CHttpException(
+			$response->faultString()." ".$response->faultCode()
+			);
+		}
 	
+		$value = XML_RPC_Decode($response->value());
+		if (!is_array($value) || !isset($value['faultCode'])) {
+			return $value;
+		} else {
+			throw new CHttpException(
+			$value['faultString']." ".$value['faultCode']
+			);
+		}
+	}
 	public function searchSubtitle()
 	{
+		$rpc_client = new XML_RPC_Client(
+		'/xml-rpc',
+		'http://api.opensubtitles.org'
+		);
+		$username = new XML_RPC_Value('pelicanosys', 'string');
+		$password = new XML_RPC_Value('Pelicano', 'string');
+		$language = new XML_RPC_Value('', 'string');
+		$useragent = new XML_RPC_Value('Pelicano User Agent', 'string');
+		
+		$request = new XML_RPC_Message(
+		            'LogIn',
+		array($username,$password,$language,$useragent
+		)
+		);
+		$response = Subtitle::sendRequest($request, $rpc_client);
+		
+
+		$token = new XML_RPC_Value($response['token'], 'string');
 		$get = array();
 		
-		require_once 'ripcord.php';
-		$client = ripcord::client('http://api.opensubtitles.org/xml-rpc');
-		
-		//open OpenSource API connection
-		$token_from_login = $client->LogIn('pelicanosys','Pelicano','','Pelicano User Agent');		
-
-		
 		if(!(empty($this->movieHash) && empty($this->movieSize))) {
-			$get = $client->SearchSubtitles($token_from_login['token'],array(
-													array('sublanguageid'=>$this->getLanguageFilter(),
-														  'season'=>$this->season, 
-														  'episode'=>$this->episode,
-														  'moviehash'=>$this->movieHash,
-														  'moviebytesize'=>$this->movieSize)
-													)); 
+			$sublanguageid = new XML_RPC_Value($this->getLanguageFilter(), 'string');
+			$season = new XML_RPC_Value($this->season, 'string');
+			$episode = new XML_RPC_Value($this->episode, 'string');
+			$moviehash = new XML_RPC_Value($this->movieHash, 'string');
+			$moviesize = new XML_RPC_Value($this->movieSize, 'string');
+
+			$paramStruct = new XML_RPC_Value(
+				array('sublanguageid'=>$sublanguageid,
+					'season'=>$season,
+					'episode'=>$episode,
+					'moviehash'=>$moviehash,
+					'moviebytesize'=>$moviesize),
+							'struct');
+			$paramArray =new XML_RPC_Value(array($paramStruct),'array');
+
+			$request = new XML_RPC_Message('SearchSubtitles',array($token,$paramArray));
+
+			$get = Subtitle::sendRequest($request, $rpc_client);
 		} elseif (!empty($this->idImdb) ) {
-			$get = $client->SearchSubtitles($token_from_login['token'],array(
-													array('sublanguageid'=>$this->getLanguageFilter(),
-														  'season'=>$this->season,
-														  'episode'=>$this->episode,
-														  'imdbid'=>str_replace('tt','',$this->idImdb))
-													)); 
+			$sublanguageid = new XML_RPC_Value($this->getLanguageFilter(), 'string');
+			$season = new XML_RPC_Value($this->season, 'string');
+			$episode = new XML_RPC_Value($this->episode, 'string');
+			$imdbid = new XML_RPC_Value($this->idImdb, 'string');
+			$paramStruct = new XML_RPC_Value(
+				array('sublanguageid'=>$sublanguageid,
+					'season'=>$season,
+					'episode'=>$episode,
+					'imdbid'=>$imdbid),
+				'struct');
+			$paramArray =new XML_RPC_Value(array($paramStruct),'array');
+
+			$request = new XML_RPC_Message('SearchSubtitles',array($token,$paramArray));
+
+			$get = Subtitle::sendRequest($request, $rpc_client);
 		} elseif (!empty($this->query)) {
-			$get = $client->SearchSubtitles($token_from_login['token'],array(
-													array('sublanguageid'=>$this->getLanguageFilter(),
-														  'season'=>$this->season,
-														  'episode'=>$this->episode,
-														  'query'=>$this->query)
-													)); 
+			$sublanguageid = new XML_RPC_Value($this->getLanguageFilter(), 'string');
+			$season = new XML_RPC_Value($this->season, 'string');
+			$episode = new XML_RPC_Value($this->episode, 'string');
+			$query = new XML_RPC_Value($this->query, 'string');
+			$paramStruct = new XML_RPC_Value(
+				array('sublanguageid'=>$sublanguageid,
+					'season'=>$season,
+					'episode'=>$episode,
+					'query'=>$query),
+				'struct');
+			$paramArray =new XML_RPC_Value(array($paramStruct),'array');
+
+			$request = new XML_RPC_Message('SearchSubtitles',array($token,$paramArray));
+
+			$get = Subtitle::sendRequest($request, $rpc_client);
+			
 		} else {
 			$get = null;
 		}
 		
 		$this->saveSubtitles($get);
 		
-		//close OpenSource API connection
-		$client->LogOut($token_from_login['token']);
+		$request = new XML_RPC_Message('LogOut',array($token));
+			
+		Subtitle::sendRequest($request, $rpc_client);
 	}
 	
 	private function getLanguageFilter()
