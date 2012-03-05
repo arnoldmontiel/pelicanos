@@ -2,7 +2,7 @@
 
 	<div class="left-movie-view" >
 	<?php
-		echo CHtml::link( CHtml::image($data->imdbData->Poster,$data->imdbData->Title,array('id'=>'Imdbdata_Poster_img', 'style'=>'height: 200px;width: 125px;')
+		echo CHtml::link( CHtml::image("./images/".$data->imdbData->Poster_local,$data->imdbData->Title,array('id'=>'Imdbdata_Poster_img', 'style'=>'height: 200px;width: 125px;')
                             ),array('view', 'id'=>$data->Id));
 		?>
 	</div>

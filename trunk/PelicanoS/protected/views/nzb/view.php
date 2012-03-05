@@ -93,7 +93,7 @@ Yii::app()->clientScript->registerScript('viewNZB', "
 		<br />
 	</div>
 	<div class="right-movie-detail-view">
-		<?php echo CHtml::image( $model->imdbData->Poster, $model->imdbData->Title,array('id'=>'Imdbdata_Poster_img', 'style'=>'height: 320px;width: 220px;')); ?>
+		<?php echo CHtml::image( "./images/".$model->imdbData->Poster_local, $model->imdbData->Title,array('id'=>'Imdbdata_Poster_img', 'style'=>'height: 320px;width: 220px;')); ?>
 	</div>
 </div>
 

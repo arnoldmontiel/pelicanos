@@ -194,7 +194,7 @@ $(document).keypress(function(e) {
 		</div>
 		
 		
-		<?php echo CHtml::image( $modelImdb->Poster, $modelImdb->Title,array('id'=>'Imdbdata_Poster_img', 'style'=>'height: 320px;width: 220px;')); ?>	
+		<?php echo CHtml::image( "./images/".$modelImdb->Poster_local, $modelImdb->Title,array('id'=>'Imdbdata_Poster_img', 'style'=>'height: 320px;width: 220px;')); ?>	
 	</div>
 </div>
 <div class="left" style="display: inline-block;">
