@@ -181,8 +181,12 @@ class ImdbdataTv extends CActiveRecord
 
 		$criteria->addCondition('Id_parent is null');
 		
+		$sort=new CSort;
+		//$sort->defaultOrder = 't.Id DESC';
+		
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
+			'sort'=>$sort,
 		));
 	}
 }

@@ -39,61 +39,6 @@
 		<b><?php echo CHtml::encode($data->getAttributeLabel('Seasons')); ?>:</b>
 				<?php echo CHtml::encode(count($data->seasons)); ?>
 		<br />
-		
-		<?php /*
-		<b><?php echo CHtml::encode($data->getAttributeLabel('Writer')); ?>:</b>
-		<?php echo CHtml::encode($data->Writer); ?>
-		<br />
-	
-		<b><?php echo CHtml::encode($data->getAttributeLabel('Actors')); ?>:</b>
-		<?php echo CHtml::encode($data->Actors); ?>
-		<br />
-	
-		<b><?php echo CHtml::encode($data->getAttributeLabel('Plot')); ?>:</b>
-		<?php echo CHtml::encode($data->Plot); ?>
-		<br />
-	
-		<b><?php echo CHtml::encode($data->getAttributeLabel('Poster')); ?>:</b>
-		<?php echo CHtml::encode($data->Poster); ?>
-		<br />
-	
-		<b><?php echo CHtml::encode($data->getAttributeLabel('Poster_local')); ?>:</b>
-		<?php echo CHtml::encode($data->Poster_local); ?>
-		<br />
-	
-		<b><?php echo CHtml::encode($data->getAttributeLabel('Runtime')); ?>:</b>
-		<?php echo CHtml::encode($data->Runtime); ?>
-		<br />
-	
-		<b><?php echo CHtml::encode($data->getAttributeLabel('Rating')); ?>:</b>
-		<?php echo CHtml::encode($data->Rating); ?>
-		<br />
-	
-		<b><?php echo CHtml::encode($data->getAttributeLabel('Votes')); ?>:</b>
-		<?php echo CHtml::encode($data->Votes); ?>
-		<br />
-	
-		<b><?php echo CHtml::encode($data->getAttributeLabel('Response')); ?>:</b>
-		<?php echo CHtml::encode($data->Response); ?>
-		<br />
-	
-		<b><?php echo CHtml::encode($data->getAttributeLabel('Backdrop')); ?>:</b>
-		<?php echo CHtml::encode($data->Backdrop); ?>
-		<br />
-	
-		<b><?php echo CHtml::encode($data->getAttributeLabel('Season')); ?>:</b>
-		<?php echo CHtml::encode($data->Season); ?>
-		<br />
-	
-		<b><?php echo CHtml::encode($data->getAttributeLabel('Episode')); ?>:</b>
-		<?php echo CHtml::encode($data->Episode); ?>
-		<br />
-	
-		<b><?php echo CHtml::encode($data->getAttributeLabel('Id_parent')); ?>:</b>
-		<?php echo CHtml::encode($data->Id_parent); ?>
-		<br />
-	
-		*/ ?>
 	
 	</div>
 </div>	

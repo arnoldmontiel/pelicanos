@@ -31,7 +31,7 @@ $(document).keypress(function(e) {
 ?>
 
 <?php $form=$this->beginWidget('CActiveForm', array(
-	'id'=>'serieSeason-form',
+	'id'=>'setSeason-form',
 	'enableAjaxValidation'=>false,
 )); ?>
 

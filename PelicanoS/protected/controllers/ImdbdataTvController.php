@@ -57,8 +57,23 @@ class ImdbdataTvController extends Controller
 		if(isset($_POST['ImdbdataTv']))
 		{
 			$model->attributes=$_POST['ImdbdataTv'];
+			
+			$validator = new CUrlValidator();
+			if($model->Poster!='' && $validator->validateValue($model->Poster))
+			{
+				$content = file_get_contents($model->Poster);
+				if ($content !== false) {
+					$file = fopen("./images/".$model->ID.".jpg", 'w');
+					fwrite($file,$content);
+					fclose($file);
+					$model->Poster_local = $model->ID.".jpg";
+				} else {
+					// an error happened
+				}
+			}
+			
 			if($model->save())
-				$this->redirect(array('serieSeason','id'=>$model->ID));
+				$this->redirect(array('setSeason','id'=>$model->ID));
 		}
 
 		$this->render('create',array(
@@ -66,7 +81,7 @@ class ImdbdataTvController extends Controller
 		));
 	}
 
-	public function actionSerieSeason($id)
+	public function actionSetSeason($id)
 	{
 		$model=$this->loadModel($id);
 		$modelSeason = new Season;
@@ -77,7 +92,7 @@ class ImdbdataTvController extends Controller
 		if(isset($_GET['Season']))
 			$modelSeason->attributes=$_GET['Season'];
 		
-		$this->render('serieSeason',array(
+		$this->render('setSeason',array(
 				'model'=>$model,
 				'modelSeason'=>$modelSeason
 		));
@@ -170,12 +185,24 @@ class ImdbdataTvController extends Controller
 	{
 		if(Yii::app()->request->isPostRequest)
 		{
-			// we only allow deletion via POST request
-			$this->loadModel($id)->delete();
+			$model = $this->loadModel($id);
+			
+			$transaction = $model->dbConnection->beginTransaction();
+			try {
 
-			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-			if(!isset($_GET['ajax']))
-				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+				Season::model()->deleteAllByAttributes(array('Id_imdbdata_tv'=>$id));
+				
+				// we only allow deletion via POST request
+				$model->delete();
+				
+				$transaction->commit();
+				// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+				if(!isset($_GET['ajax']))
+					$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+				
+			} catch (Exception $e) {
+				$transaction->rollback();
+			}
 		}
 		else
 			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
