@@ -6,7 +6,7 @@ $this->menu=array(
 	array('label'=>'Update Serie Tv', 'url'=>array('update', 'id'=>$model->ID)),
 	array('label'=>'Delete Serie Tv', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->ID),'confirm'=>'Are you sure you want to delete this item?')),
 	array('label'=>'Manage Series Tv', 'url'=>array('admin')),
-	array('label'=>'Set Seasons', 'url'=>array('serieSeason', 'id'=>$model->ID)),
+	array('label'=>'Set Seasons', 'url'=>array('setSeason', 'id'=>$model->ID)),
 );
 ?>
 
@@ -65,6 +65,16 @@ $this->menu=array(
 		<b><?php echo CHtml::encode($model->getAttributeLabel('Votes')); ?>:</b>
 		<?php echo CHtml::encode($model->Votes); ?>
 		<br />
+		
+		<b><?php echo CHtml::encode($model->getAttributeLabel('Seasons')); ?>:</b>
+		<?php 
+		$index = 1;
+		while ($index <= count($model->seasons)) {
+			echo CHtml::link($index,array('view','id'=>$model->ID, 'season'=>$index)). ' <span>|</span> ';
+			$index = $index + 1;
+		}?>
+		<br />
+		
 	</div>
 	<div class="right-movie-detail-view">
 		<?php echo CHtml::image( "./images/".$model->Poster_local, $model->Title,array('id'=>'Imdbdata_Poster_img', 'style'=>'height: 320px;width: 220px;')); ?>
