@@ -36,6 +36,10 @@
 		<?php echo CHtml::encode($data->Director); ?>
 		<br />
 	
+		<b><?php echo CHtml::encode($data->getAttributeLabel('Seasons')); ?>:</b>
+				<?php echo CHtml::encode(count($data->seasons)); ?>
+		<br />
+		
 		<?php /*
 		<b><?php echo CHtml::encode($data->getAttributeLabel('Writer')); ?>:</b>
 		<?php echo CHtml::encode($data->Writer); ?>

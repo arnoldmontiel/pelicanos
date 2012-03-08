@@ -1,8 +1,9 @@
 <?php
 
 $this->menu=array(
-	array('label'=>'List Nzb', 'url'=>array('index')),
-	array('label'=>'Manage Nzb', 'url'=>array('admin')),
+	array('label'=>'List Series Tv', 'url'=>array('index')),
+	array('label'=>'View Serie Tv', 'url'=>array('view', 'id'=>$model->ID)),
+	array('label'=>'Manage Series Tv', 'url'=>array('admin')),
 );
 ?>
 
