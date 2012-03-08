@@ -3,36 +3,36 @@ $this->menu=array(
 	array('label'=>'List Nzb Movies', 'url'=>array('index')),
 	array('label'=>'List Nzb Episodes', 'url'=>array('indexEpisode')),
 	array('label'=>'Create Nzb', 'url'=>array('create')),
-	array('label'=>'Manage Nzb Episodes', 'url'=>array('adminEpisode')),
+	array('label'=>'Manage Nzb Movies', 'url'=>array('admin')),
 );
 
 ?>
 
-<h1>Manage Nzbs Movies</h1>
+<h1>Manage Nzbs Episodes</h1>
 
 
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'nzb-grid',
-	'dataProvider'=>$model->searchNzbMovies(),
+	'dataProvider'=>$model->searchNzbEpisodes(),
 	'filter'=>$model,
 	'columns'=>array(
 		array(
  			'name'=>'idImdb',
-			'value'=>'$data->imdbData->ID',
+			'value'=>'$data->imdbDataTv->ID',
 		),
 		'file_name',
 		'subt_file_name',
 		array(
  			'name'=>'title',
-			'value'=>'$data->imdbData->Title',
+			'value'=>'$data->imdbDataTv->Title',
 		),
 		array(
  			'name'=>'year',
-			'value'=>'$data->imdbData->Year',
+			'value'=>'$data->imdbDataTv->Year',
 		),
 		array(
  			'name'=>'genre',
-			'value'=>'$data->imdbData->Genre',
+			'value'=>'$data->imdbDataTv->Genre',
 		),
 		array(
  			'name'=>'resourceTypeDesc',
@@ -40,6 +40,18 @@ $this->menu=array(
 		),
 		array(
 			'class'=>'CButtonColumn',
+			'template'=>'{view}{update}{delete}',
+			'buttons'=>array
+			(
+			    'view' => array
+				(
+			    	'url'=>'Yii::app()->createUrl("nzb/viewEpisode", array("id"=>$data->Id))',
+				),
+				'update' => array
+				(
+			    	'url'=>'Yii::app()->createUrl("nzb/updateEpisode", array("id"=>$data->Id))',
+				),
+			),
 		),
 	),
 )); ?>

@@ -13,7 +13,8 @@
 
 	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/main.css" />
 	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/form.css" />
-
+	<?php Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseUrl."/js/tools.js");?>
+	
 	<title>PelicanoS</title>
 </head>
 
@@ -30,6 +31,7 @@
 			'items'=>array(
 				array('label'=>'Login', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
 				array('label'=>'Nzb', 'url'=>array('/nzb/index'), 'visible'=>!Yii::app()->user->isGuest),
+				array('label'=>'Serie', 'url'=>array('/imdbdataTv/index'), 'visible'=>!Yii::app()->user->isGuest),
 				array('label'=>'Customer', 'url'=>array('/customer/index'), 'visible'=>!Yii::app()->user->isGuest),
 				array('label'=>'Logout'.' ('.Yii::app()->user->name.')', 'url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest),
 		),

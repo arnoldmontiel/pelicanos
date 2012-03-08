@@ -1,27 +1,26 @@
 <?php
 
 $this->menu=array(
-	array('label'=>'List Nzb', 'url'=>array('index')),
-	array('label'=>'Manage Nzb', 'url'=>array('admin')),
+	array('label'=>'List Nzb Movies', 'url'=>array('index')),
+	array('label'=>'List Nzb Episodes', 'url'=>array('indexEpisode')),
+	array('label'=>'Manage Nzb Movies', 'url'=>array('admin')),
+	array('label'=>'Manage Nzb Episodes', 'url'=>array('adminEpisode')),
 );
 ?>
 
-<h1>Create Nzb</h1>
-
-<?php echo $this->renderPartial('_form', array('model'=>$model,'modelUpload'=>$modelUpload, 'modelImdb'=>$modelImdb, 'ddlRsrcType'=>$ddlRsrcType)); ?>
+<h1>Select creation</h1>
 <br>
-<?php
-		 $this->widget('zii.widgets.jui.CJuiButton',
-			 array(
-			 	'id'=>'cancel',
-			 	'name'=>'Cancel',
-			 	'caption'=>'Cancel',
-			 	'cssFile'=>'',
-			 	'value'=>'Cancel',
-			 	'onclick'=>'js:function(){
-			 		window.location = "'.NzbController::createUrl('index').'";
-			 		return false;
-				}',
-		 	)
-		 );
-	 ?>		
+<div >
+	<div style="width:40%;float:left; display: inline-block;">
+		<?php
+			echo CHtml::link( CHtml::image("./images/movie.png","Movies",array('id'=>'movie_img', 'style'=>'width: 128px;')),
+				array('createMovie'), array('title'=>"Movies"));
+		?>
+	</div>
+	<div style="width:40%;float:right; display: inline-block;">
+		<?php
+			echo CHtml::link( CHtml::image("./images/tv.png","",array('id'=>'tv_img', 'style'=>'width: 128px;')),
+				array('createEpisode'), array('title'=>"Episode"));
+		?>
+	</div>
+</div>
