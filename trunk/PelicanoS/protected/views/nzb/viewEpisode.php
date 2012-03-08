@@ -1,14 +1,13 @@
 <?php
 
 $this->menu=array(
-	array('label'=>'List Nzb Movies', 'url'=>array('index')),
+	array('label'=>'List Nzb Episodes', 'url'=>array('indexEpisode')),
 	array('label'=>'Create Nzb', 'url'=>array('create')),
-	array('label'=>'Update Nzb', 'url'=>array('update', 'id'=>$model->Id)),
+	array('label'=>'Update Nzb', 'url'=>array('updateEpisode', 'id'=>$model->Id)),
 	array('label'=>'Update Subtitle', 'url'=>array('findSubtitle', 'id'=>$model->Id)),
 	array('label'=>'Upload Subtitle', 'url'=>array('uploadSubtitle', 'id'=>$model->Id)),
-	array('label'=>'Backdrop', 'url'=>array('backdrop', 'id'=>$model->Id)),
 	array('label'=>'Delete Nzb', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->Id),'confirm'=>'Are you sure you want to delete this item?')),
-	array('label'=>'Manage Nzb Movies', 'url'=>array('admin')),
+	array('label'=>'Manage Nzb Episodes', 'url'=>array('adminEpisode')),
 );
 
 
@@ -17,7 +16,7 @@ $this->menu=array(
 
 <?php
 Yii::app()->clientScript->registerScript('viewNZB', "
-	$('#page').css('background-image','url(".$model->imdbData->Backdrop.")');
+	$('#page').css('background-image','url(".$model->imdbDataTv->Backdrop.")');
 ");
 ?>
 <h1>View Nzb</h1>
@@ -37,47 +36,47 @@ Yii::app()->clientScript->registerScript('viewNZB', "
 		<br />
 	
 		<b><?php echo CHtml::encode($model->getAttributeLabel('ID')); ?>:</b>
-		<?php echo CHtml::encode($model->imdbData->ID); ?>
+		<?php echo CHtml::encode($model->imdbDataTv->ID); ?>
 		<br />
 		
 		<b><?php echo CHtml::encode($model->getAttributeLabel('Title')); ?>:</b>
-		<?php echo CHtml::encode($model->imdbData->Title); ?>
+		<?php echo CHtml::encode($model->imdbDataTv->Title); ?>
 		<br />
 	
 		<b><?php echo CHtml::encode($model->getAttributeLabel('Year')); ?>:</b>
-		<?php echo CHtml::encode($model->imdbData->Year); ?>
+		<?php echo CHtml::encode($model->imdbDataTv->Year); ?>
 		<br />
 		
 		<b><?php echo CHtml::encode($model->getAttributeLabel('Rated')); ?>:</b>
-		<?php echo CHtml::encode($model->imdbData->Rated); ?>
+		<?php echo CHtml::encode($model->imdbDataTv->Rated); ?>
 		<br />
 		
 		<b><?php echo CHtml::encode($model->getAttributeLabel('Released')); ?>:</b>
-		<?php echo CHtml::encode($model->imdbData->Released); ?>
+		<?php echo CHtml::encode($model->imdbDataTv->Released); ?>
 		<br />
 		
 		<b><?php echo CHtml::encode($model->getAttributeLabel('Genre')); ?>:</b>
-		<?php echo CHtml::encode($model->imdbData->Genre); ?>
+		<?php echo CHtml::encode($model->imdbDataTv->Genre); ?>
 		<br />
 		
 		<b><?php echo CHtml::encode($model->getAttributeLabel('Director')); ?>:</b>
-		<?php echo CHtml::encode($model->imdbData->Director); ?>
+		<?php echo CHtml::encode($model->imdbDataTv->Director); ?>
 		<br />
 				
 		<b><?php echo CHtml::encode($model->getAttributeLabel('Writer')); ?>:</b>
-		<?php echo CHtml::encode($model->imdbData->Writer); ?>
+		<?php echo CHtml::encode($model->imdbDataTv->Writer); ?>
 		<br />
 		
 		<b><?php echo CHtml::encode($model->getAttributeLabel('Actors')); ?>:</b>
-		<?php echo CHtml::encode($model->imdbData->Actors); ?>
+		<?php echo CHtml::encode($model->imdbDataTv->Actors); ?>
 		<br />
 		
 		<b><?php echo CHtml::encode($model->getAttributeLabel('Plot')); ?>:</b>
-		<?php echo CHtml::encode($model->imdbData->Plot); ?>
+		<?php echo CHtml::encode($model->imdbDataTv->Plot); ?>
 		<br />
 		
 		<b><?php echo CHtml::encode($model->getAttributeLabel('Runtime')); ?>:</b>
-		<?php echo CHtml::encode($model->imdbData->Runtime); ?>
+		<?php echo CHtml::encode($model->imdbDataTv->Runtime); ?>
 		<br />
 		
 		<b><?php echo CHtml::encode($model->getAttributeLabel('Id_resource_type')); ?>:</b>
@@ -85,15 +84,23 @@ Yii::app()->clientScript->registerScript('viewNZB', "
 		<br />
 		
 		<b><?php echo CHtml::encode($model->getAttributeLabel('Rating')); ?>:</b>
-		<?php echo CHtml::encode($model->imdbData->Rating); ?>
+		<?php echo CHtml::encode($model->imdbDataTv->Rating); ?>
 		<br />
 		
 		<b><?php echo CHtml::encode($model->getAttributeLabel('Votes')); ?>:</b>
-		<?php echo CHtml::encode($model->imdbData->Votes); ?>
+		<?php echo CHtml::encode($model->imdbDataTv->Votes); ?>
+		<br />
+		
+		<b><?php echo CHtml::encode($model->getAttributeLabel('Season')); ?>:</b>
+		<?php echo CHtml::encode($model->imdbDataTv->Season); ?>
+		<br />
+		
+		<b><?php echo CHtml::encode($model->getAttributeLabel('Episode')); ?>:</b>
+		<?php echo CHtml::encode($model->imdbDataTv->Episode); ?>
 		<br />
 	</div>
 	<div class="right-movie-detail-view">
-		<?php echo CHtml::image( "./images/".$model->imdbData->Poster_local, $model->imdbData->Title,array('id'=>'Imdbdata_Poster_img', 'style'=>'height: 320px;width: 220px;')); ?>
+		<?php echo CHtml::image( "./images/".$model->imdbDataTv->Poster_local, $model->imdbDataTv->Title,array('id'=>'imdbDataTv_Poster_img', 'style'=>'height: 320px;width: 220px;')); ?>
 	</div>
 </div>
 

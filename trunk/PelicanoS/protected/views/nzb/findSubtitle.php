@@ -1,7 +1,8 @@
 <?php
 
 $this->menu=array(
-	array('label'=>'List Nzb', 'url'=>array('index')),
+	array('label'=>'List Nzb Movies', 'url'=>array('index')),
+	array('label'=>'List Nzb Episodes', 'url'=>array('indexEpisode')),
 	array('label'=>'Manage Nzb', 'url'=>array('admin')),
 );
 ?>
@@ -90,14 +91,14 @@ $(document).keypress(function(e) {
 		'data'=>$modelNzb,
 		'cssFile'=>Yii::app()->baseUrl . '/css/detail-view-blue.css',
 		'attributes'=>array(
-			'Id_imdbdata',
+			($modelNzb->Id_imdbdata != null) ? 'Id_imdbdata' : 'Id_imdbdata_tv',
 			array('label'=>$modelNzb->getAttributeLabel('Title'),
 				'type'=>'raw',
-				'value'=>$modelNzb->imdbData->Title
+				'value'=>($modelNzb->Id_imdbdata != null) ? $modelNzb->imdbData->Title : $modelNzb->imdbDataTv->Title 
 			),
 			array('label'=>$modelNzb->getAttributeLabel('Year'),
 				'type'=>'raw',
-				'value'=>$modelNzb->imdbData->Year
+				'value'=>($modelNzb->Id_imdbdata != null) ? $modelNzb->imdbData->Year : $modelNzb->imdbDataTv->Year
 			),
 			'file_name',
 			'subt_file_name',
@@ -223,7 +224,7 @@ $(document).keypress(function(e) {
 			 	'value'=>'Cancel',
 		        //'cssFile'=>'',
 			 	'onclick'=>'js:function(){
-			 		window.location = "'.NzbController::createUrl('view',array('id'=>$modelNzb->Id)).'";
+			 		window.location = "'.NzbController::createUrl(($modelNzb->Id_imdbdata != null) ? 'view' : 'viewEpisode',array('id'=>$modelNzb->Id)).'";
 			 		return false;
 				}',
 		 	)
