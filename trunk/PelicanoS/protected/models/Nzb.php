@@ -12,8 +12,12 @@
  * @property string $Id_imdbdata
  * @property string $subt_original_name
  * @property integer $Id_resource_type
+ * @property string $Id_imdbdata_tv
  * The followings are the available model relations:
  * @property Imdbdata $idImdbdata
+ * @property ImdbdataTv $idImdbdataTv
+ * @property ResourceType $idResourceType
+ * @property Customer[] $customers
  */
 class Nzb extends CActiveRecord
 {
@@ -49,10 +53,12 @@ class Nzb extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array(' Id_resource_type', 'required'),
+			array('Id_resource_type', 'numerical', 'integerOnly'=>true),
+			array('Id_imdbdata, Id_imdbdata_tv', 'length', 'max'=>45),
 			array('url, subt_url, file_name, subt_file_name, subt_original_name', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id, url, file_name, subt_url, subt_file_name, Id_imdbdata, title, year, idImdb, genre, subt_original_name, resourceTypeDesc', 'safe', 'on'=>'search'),
+			array('Id, url, file_name, subt_url, subt_file_name, Id_imdbdata, title, year, idImdb, genre, subt_original_name, resourceTypeDesc, Id_resource_type, Id_imdbdata_tv', 'safe', 'on'=>'search'),
 		);
 	}
 	
@@ -66,6 +72,7 @@ class Nzb extends CActiveRecord
 		return array(
 			'resourceType' => array(self::BELONGS_TO, 'ResourceType', 'Id_resource_type'),
 			'imdbData' => array(self::BELONGS_TO, 'Imdbdata', 'Id_imdbdata'),
+			'imdbDataTv' => array(self::BELONGS_TO, 'ImdbdataTv', 'Id_imdbdata_tv'),
 		);
 	}
 
@@ -83,6 +90,7 @@ class Nzb extends CActiveRecord
 			'Id_imdbData' => 'Id Imdb Data',
 			'subt_original_name' => 'Subt Original Name',
 			'Id_resource_type' => 'Resource Type',
+			'Id_imdbdata_tv' => 'Id Imdb Data Tv',
 		);
 	}
 
@@ -105,13 +113,14 @@ class Nzb extends CActiveRecord
 		$criteria->compare('Id_imdbdata',$this->Id_imdbdata,true);
 		$criteria->compare('subt_original_name',$this->subt_original_name,true);
 		$criteria->compare('Id_resource_type',$this->Id_resource_type);
+		$criteria->compare('Id_imdbdata_tv',$this->Id_imdbdata_tv,true);
 		
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
 	}
 	
-	public function searchNzb()
+	public function searchNzbMovies()
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
@@ -126,6 +135,8 @@ class Nzb extends CActiveRecord
 		$criteria->compare('Id_imdbdata',$this->Id_imdbdata,true);
 		$criteria->compare('subt_original_name',$this->subt_original_name,true);
 		$criteria->compare('Id_resource_type',$this->Id_resource_type);
+		
+		$criteria->addCondition('Id_imdbdata_tv is null');
 		
 		$criteria->with[]='imdbData';
 		$criteria->addSearchCondition("imdbData.Title",$this->title);
@@ -172,6 +183,72 @@ class Nzb extends CActiveRecord
 		return new CActiveDataProvider($this, array(
 							'criteria'=>$criteria,
 							'sort'=>$sort,
+		));
+	}
+	
+	public function searchNzbEpisodes()
+	{
+		// Warning: Please modify the following code to remove attributes that
+		// should not be searched.
+	
+		$criteria=new CDbCriteria;
+	
+		$criteria->compare('Id',$this->Id);
+		$criteria->compare('url',$this->url,true);
+		$criteria->compare('file_name',$this->file_name,true);
+		$criteria->compare('subt_url',$this->subt_url,true);
+		$criteria->compare('subt_file_name',$this->subt_file_name,true);
+		$criteria->compare('subt_original_name',$this->subt_original_name,true);
+		$criteria->compare('Id_resource_type',$this->Id_resource_type);
+		$criteria->compare('Id_imdbdata_tv',$this->Id_imdbdata_tv,true);
+	
+		$criteria->addCondition('Id_imdbdata is null');
+		
+		$criteria->with[]='imdbData';
+		$criteria->addSearchCondition("imdbData.Title",$this->title);
+		$criteria->addSearchCondition("imdbData.Year",$this->year);
+		$criteria->addSearchCondition("imdbData.ID",$this->idImdb);
+		$criteria->addSearchCondition("imdbData.Genre",$this->genre);
+	
+		$criteria->with[]='resourceType';
+		$criteria->addSearchCondition("resourceType.description",$this->resourceTypeDesc);
+	
+		// Create a custom sort
+		$sort=new CSort;
+		$sort->attributes=array(
+		// For each relational attribute, create a 'virtual attribute' using the public variable name
+				'Id',
+				'url',
+				'file_name',
+				'subt_url',
+				'subt_url_name',
+				'Id_imdbdata',
+				'title' => array(
+					        'asc' => 'imdbData.Title',
+					        'desc' => 'imdbData.Title DESC',
+		),
+				'year' => array(
+					        'asc' => 'imdbData.Year',
+					        'desc' => 'imdbData.Year DESC',
+		),
+				'idImdb' => array(
+					        'asc' => 'imdbData.ID',
+					        'desc' => 'imdbData.ID DESC',
+		),
+				'genre' => array(
+					        'asc' => 'imdbData.Genre',
+					        'desc' => 'imdbData.Genre DESC',
+		),
+				'resourceTypeDesc' => array(
+					        'asc' => 'resourceType.description',
+					        'desc' => 'resourceType.description DESC',
+		),
+				'*',
+		);
+		$sort->defaultOrder = 't.Id DESC';
+		return new CActiveDataProvider($this, array(
+								'criteria'=>$criteria,
+								'sort'=>$sort,
 		));
 	}
 }
