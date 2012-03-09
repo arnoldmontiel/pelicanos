@@ -70,7 +70,7 @@ $this->menu=array(
 		<?php 
 		$index = 1;
 		while ($index <= count($model->seasons)) {
-			echo CHtml::link($index,array('view','id'=>$model->ID, 'season'=>$index)). ' <span>|</span> ';
+			echo CHtml::link($index,array('viewSeason','id'=>$model->ID, 'season'=>$index)). ' <span>|</span> ';
 			$index = $index + 1;
 		}?>
 		<br />
