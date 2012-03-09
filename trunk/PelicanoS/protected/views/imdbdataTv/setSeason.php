@@ -191,7 +191,7 @@ $(document).keypress(function(e) {
 																		
 														});
 											});
-											if(childCount == 0)
+											if(childCount == 1)
 												$("#generate").animate({opacity: "show"},500);
 											else
 												$("#generate").animate({opacity: "hide"},500);

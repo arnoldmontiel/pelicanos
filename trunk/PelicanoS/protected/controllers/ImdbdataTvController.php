@@ -58,22 +58,38 @@ class ImdbdataTvController extends Controller
 		{
 			$model->attributes=$_POST['ImdbdataTv'];
 			
-			$validator = new CUrlValidator();
-			if($model->Poster!='' && $validator->validateValue($model->Poster))
-			{
-				$content = file_get_contents($model->Poster);
-				if ($content !== false) {
-					$file = fopen("./images/".$model->ID.".jpg", 'w');
-					fwrite($file,$content);
-					fclose($file);
-					$model->Poster_local = $model->ID.".jpg";
-				} else {
-					// an error happened
+			$transaction = $model->dbConnection->beginTransaction();
+			try {
+
+				$validator = new CUrlValidator();
+				if($model->Poster!='' && $validator->validateValue($model->Poster))
+				{
+					$content = file_get_contents($model->Poster);
+					if ($content !== false) {
+						$file = fopen("./images/".$model->ID.".jpg", 'w');
+						fwrite($file,$content);
+						fclose($file);
+						$model->Poster_local = $model->ID.".jpg";
+					} else {
+						// an error happened
+					}
 				}
+
+				$modelS = new Season;
+				$modelS->attributes = array('Id_imdbdata_tv'=>$model->ID,
+												'season'=>1,
+												'episodes'=>1);
+				
+				if($model->save()){
+					$modelS->save();
+					$transaction->commit();
+					$this->redirect(array('setSeason','id'=>$model->ID));
+				}
+				
+				
+			} catch (Exception $e) {
+				$transaction->rollback();
 			}
-			
-			if($model->save())
-				$this->redirect(array('setSeason','id'=>$model->ID));
 		}
 
 		$this->render('create',array(

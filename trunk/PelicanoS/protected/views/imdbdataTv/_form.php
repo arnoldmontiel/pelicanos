@@ -193,9 +193,9 @@ $(document).keypress(function(e) {
 		<div class="row buttons">
 
 			<?php if($model->isNewRecord)
-					echo CHtml::submitButton($model->isNewRecord ? 'Create and find Subtitle' : 'Save', array('id'=>'saveButton','disabled'=>'disabled'));
+					echo CHtml::submitButton($model->isNewRecord ? 'Create and define Seasons' : 'Save', array('id'=>'saveButton','disabled'=>'disabled'));
 				  else
-					echo CHtml::submitButton($model->isNewRecord ? 'Create and find Subtitle' : 'Save');
+					echo CHtml::submitButton($model->isNewRecord ? 'Create and define Seasons' : 'Save');
 			?>		
 		</div>
 	</div>
