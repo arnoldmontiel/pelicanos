@@ -178,7 +178,7 @@ class NzbController extends Controller
 		}
 
 		if(isset($_POST['Nzb']))
-		$model->attributes = $_POST['Nzb'];
+			$model->attributes = $_POST['Nzb'];
 
 		if(isset($_POST['Upload']) && isset($_POST['ImdbdataTv']))
 		{

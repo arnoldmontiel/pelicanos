@@ -219,6 +219,80 @@ class ImdbdataTvController extends Controller
 		));
 	}
 
+	public function actionViewSeason($id=null, $season=null)
+	{
+		$modelImdb = new ImdbdataTv;
+		$ddlTvShow = ImdbdataTv::model()->findAllByAttributes(array('Id_parent'=>null));
+		$emptyArray = array();
+		$ddlSeason = Season::model()->findAllByAttributes(array('Id_imdbdata_tv'=> ($id != null) ? $id : $emptyArray));
+		
+		$condition = 'Id_parent = 1';
+		
+		if($id!=null)
+		{
+			$modelImdb->Id_parent = $id;
+			$condition = 'Id_parent = "'. $id . '"';
+			if($season != null)
+			{
+				$modelImdb->Season = $season;
+				$condition .= ' AND Season = '. $season;
+			}
+		}
+		
+		$dataProvider=new CActiveDataProvider('ImdbdataTv',array('criteria'=>array('condition'=>$condition)));
+		
+		
+		$this->render('viewSeason',array(
+					'model'=>$modelImdb,
+					'ddlTvShow'=>$ddlTvShow,
+					'ddlSeason'=>$ddlSeason,
+					'dataProvider'=>$dataProvider
+		));
+	}
+	
+	public function actionAjaxSearch()
+	{
+		$modelImdb = new ImdbdataTv;
+		$condition = '';
+		if(isset($_POST['season']) && isset($_POST['idParent']))
+		{
+			
+			$condition .= 'Id_parent = "'. trim($_POST['idParent']) . '"';
+			if($_POST['season'] != "")
+				$condition .= ' AND Season = '. trim($_POST['season']);
+			
+		}
+		
+		$dataProvider=new CActiveDataProvider('ImdbdataTv',array('criteria'=>array('condition'=>$condition)));
+		
+		$this->widget('zii.widgets.CListView', array(
+				'dataProvider'=>$dataProvider,
+				'itemView'=>'_view',
+				'summaryText' =>"",
+		));
+	}
+	
+	public function actionAjaxFillSeason()
+	{
+		$id = $_POST['ImdbdataTv']['Id_parent'];
+	
+		//please enter current controller name because yii send multi dim array
+		$data = Season::model()->findAllByAttributes(array('Id_imdbdata_tv'=>$id));
+	
+		$data = CHtml::listData($data,'season','season');
+		$ddlSeason = CHtml::tag('option',
+			array('value'=>''),'Select..',true);
+		foreach($data as $value=>$name)
+		{
+			$ddlSeason .= CHtml::tag('option',
+			array('value'=>$value),CHtml::encode($name),true);
+		}
+	
+		echo CJSON::encode(array(
+			  'season'=>$ddlSeason,
+		));
+	}
+	
 	/**
 	 * Manages all models.
 	 */
