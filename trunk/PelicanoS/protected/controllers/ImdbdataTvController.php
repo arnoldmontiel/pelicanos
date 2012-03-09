@@ -131,9 +131,23 @@ class ImdbdataTvController extends Controller
 				$modelS->save();
 				$season = $season + 1;
 			}
+			$this->updateRelation($id);
 			$transaction->commit();
 		} catch (Exception $e) {
 			$transaction->rollback();
+		}
+	}
+	
+	private function updateRelation($id)
+	{
+		$modelRelation = ImdbdataTvCustomer::model()->findAllByAttributes(array('Id_imdbdata_tv'=>$id));
+	
+		if(!empty($modelRelation) )
+		{
+			foreach ($modelRelation as $modelRel){
+				$modelRel->need_update = 1;
+				$modelRel->save();
+			}
 		}
 	}
 	
@@ -147,6 +161,7 @@ class ImdbdataTvController extends Controller
 												 'season'=>count($modelDB) +1,
 												'episodes'=>1 );
 		$modelSeason->save();
+		$this->updateRelation($id);
 	}
 	
 	public function actionAjaxDeleteSeason()
@@ -154,6 +169,7 @@ class ImdbdataTvController extends Controller
 		$id = $_GET['id'];
 		$modelDB = Season::model()->findAllByAttributes(array('Id_imdbdata_tv'=>$id));
 		Season::model()->deleteByPk(array('Id_imdbdata_tv'=>$id, 'season'=>count($modelDB)));	
+		$this->updateRelation($id);
 	}
 	
 	public function actionAjaxUpdateEpisode()
@@ -163,8 +179,10 @@ class ImdbdataTvController extends Controller
 		$episodes= $_POST['episodes'];
 		$model = Season::model()->findByPk(array('Id_imdbdata_tv'=>$id,'season'=>$season));
 		$model->episodes = $episodes;
-		if($model->save())
+		if($model->save()){
+			$this->updateRelation($id);
 			return true;
+		}
 		return false;
 	}
 	

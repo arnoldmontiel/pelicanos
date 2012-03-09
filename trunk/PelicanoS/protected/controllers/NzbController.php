@@ -15,6 +15,7 @@ class NzbController extends Controller
 		                'class'=>'CWebServiceAction',
 					'classMap'=>array(
 			                    'MovieResponse'=>'MovieResponse',  // or simply 'Post'
+								'SerieResponse'=>'SerieResponse',  // or simply 'Post'
 		),
 		),
 		);
@@ -29,7 +30,7 @@ class NzbController extends Controller
 	public function getNewMovies($idCustomer)
 	{
 		$criteria=new CDbCriteria;
-		$criteria->addCondition('t.Id NOT IN(select Id_nzb from nzb_customer where Id_customer = '. $idCustomer.' and need_update = 0)');
+		$criteria->addCondition('t.Id NOT IN(select Id_nzb from nzb_customer where Id_customer = '. $idCustomer.' and need_update = 0) AND Id_imdbdata_tv is null');
 
 		$arrayNbz = Nzb::model()->findAll($criteria);
 		$arrayResponse = array();
@@ -62,6 +63,84 @@ class NzbController extends Controller
 		return $arrayResponse;
 	}
 
+	
+	/**
+	* Returns new and updated series
+	* @param integer idCustomer
+	* @return SerieResponse[]
+	* @soap
+	*/
+	public function getNewSeries($idCustomer)
+	{
+		$criteria=new CDbCriteria;
+		$criteria->addCondition('t.Id NOT IN(select Id_nzb from nzb_customer where Id_customer = '. $idCustomer.' and need_update = 0) AND t.Id_imdbdata is null');
+		
+		$arrayNbz = Nzb::model()->findAll($criteria);
+		$arrayResponse = array();
+		
+		foreach ($arrayNbz as $modelNbz) //add Serie Header
+		{
+			$imdbdataTv = ImdbdataTv::model()->findByPk($modelNbz->imdbDataTv->Id_parent);
+			if(!$this->findImdbID($imdbdataTv->ID, $arrayResponse)) // insert just once
+			{
+				$imdbdataTvCustomerDB = ImdbdataTvCustomer::model()->findByPk(array('Id_imdbdata_tv'=>$imdbdataTv->ID,'Id_customer'=>$idCustomer));
+				if($imdbdataTvCustomerDB == null) //insert send Serie Header
+				{
+					$modelImdbCustomer = new ImdbdataTvCustomer;
+					
+					$modelImdbCustomer->attributes = array(
+															'Id_imdbdata_tv'=>$imdbdataTv->ID,
+															'Id_customer'=>$idCustomer,
+															'need_update'=> 1,
+					);
+					$modelImdbCustomer->save();
+					
+					$serieResponse = new SerieResponse;
+					$serieResponse->setHeaderAttributes($imdbdataTv);
+					$arrayResponse[]=$serieResponse;
+				}
+				else 
+				{
+					if($imdbdataTvCustomerDB->need_update == 1)
+					{
+						$serieResponse = new SerieResponse;
+						$serieResponse->setHeaderAttributes($imdbdataTv);
+						$arrayResponse[]=$serieResponse;
+					}
+				}
+			}
+				
+		}
+		
+		foreach ($arrayNbz as $modelNbz) //add episode (nzb)
+		{
+			
+			$serieResponse = new SerieResponse;
+			$serieResponse->setAttributes($modelNbz);
+			$arrayResponse[]=$serieResponse;
+	
+			$nzbCustomerDB = NzbCustomer::model()->findByPk(array('Id_nzb'=>$modelNbz->Id, 'Id_customer'=>$idCustomer));
+			if($nzbCustomerDB != null)
+			{
+				$nzbCustomerDB->need_update = 1;
+				$nzbCustomerDB->save();
+			}
+			else
+			{
+				$modelNzbCustomer = new NzbCustomer;
+	
+				$modelNzbCustomer->attributes = array(
+													'Id_nzb'=>$modelNbz->Id,
+													'Id_customer'=>$idCustomer,
+													'need_update'=> 1,
+				);
+				$modelNzbCustomer->save();
+			}
+		}
+	
+		return $arrayResponse;
+	}
+	
 	/**
 	 *
 	 * Change movie status in relation customer/nzb
@@ -85,7 +164,6 @@ class NzbController extends Controller
 		switch ($idState) {
 			case 1:
 				$model->date_sent = date("Y-m-d H:i:s",$date);
-				$model->need_update = 0;
 				break;
 			case 2:
 				$model->date_downloading = date("Y-m-d H:i:s",$date);
@@ -94,9 +172,9 @@ class NzbController extends Controller
 				$model->date_downloaded = date("Y-m-d H:i:s",$date);
 			break;
 		}
-
+		$model->need_update = 0;
 		if($model->save())
-		return true;
+			return true;
 
 		return false;
 	}
@@ -156,8 +234,20 @@ class NzbController extends Controller
 		echo $myfile->send();
 	}
 
+	private function findImdbID($id, $stack) {
+		foreach ($stack as $k => $v) {
+			if ($v->ID == $id) {
+					return true;
+				}
+		}
+	
+		// Return false since there was nothing found
+		return false;
+	}
+	
 	public function actionCreate()
-	{
+	{	
+		//$hola = $this->getNewSeries(1);
 		$this->render('create');
 	}
 
@@ -411,8 +501,6 @@ class NzbController extends Controller
 			{
 				if($modelUpload->validate())
 				{
-					$modelRelation = NzbCustomer::model()->findAllByAttributes(array('Id_nzb'=>$id));
-
 					$transaction = $model->dbConnection->beginTransaction();
 					try {
 
@@ -422,13 +510,7 @@ class NzbController extends Controller
 						$this->saveFile($file, 'nzb', $file->getName());
 						$modelImdb->save();
 						if($model->save()){
-							if(!empty($modelRelation) )
-							{
-								foreach ($modelRelation as $modelRel){
-									$modelRel->need_update = 1;
-									$modelRel->save();
-								}
-							}
+							$this->updateRelation($id);
 							$transaction->commit();
 							$this->redirect(array('viewEpisode','id'=>$model->Id));
 						}
@@ -441,19 +523,11 @@ class NzbController extends Controller
 			else{
 				if($hasChanged)
 				{
-					$modelRelation = NzbCustomer::model()->findAllByAttributes(array('Id_nzb'=>$id));
-
 					$transaction = $model->dbConnection->beginTransaction();
 					try {
 						$modelImdb->save();
 						if($model->save()){
-							if(!empty($modelRelation) )
-							{
-								foreach ($modelRelation as $modelRel){
-									$modelRel->need_update = 1;
-									$modelRel->save();
-								}
-							}
+							$this->updateRelation($id);
 							$transaction->commit();
 							$this->redirect(array('viewEpisode','id'=>$model->Id));
 						}
@@ -463,6 +537,7 @@ class NzbController extends Controller
 					}
 				}
 				else{
+					$this->updateRelation($id);
 					$modelImdb->save();
 					$this->redirect(array('viewEpisode','id'=>$model->Id));
 				}
@@ -504,7 +579,6 @@ class NzbController extends Controller
 			{
 				if($modelUpload->validate())
 				{
-					$modelRelation = NzbCustomer::model()->findAllByAttributes(array('Id_nzb'=>$id));
 						
 					$transaction = $model->dbConnection->beginTransaction();
 					try {
@@ -515,13 +589,7 @@ class NzbController extends Controller
 						$this->saveFile($file, 'nzb', $file->getName());
 							
 						if($model->save()){
-							if(!empty($modelRelation) )
-							{
-								foreach ($modelRelation as $modelRel){
-									$modelRel->need_update = 1;
-									$modelRel->save();
-								}
-							}
+							$this->updateRelation($id);
 							$transaction->commit();
 							$this->redirect(array('view','id'=>$model->Id));
 						}
@@ -534,19 +602,10 @@ class NzbController extends Controller
 			else{
 				if($hasChanged)
 				{
-					$modelRelation = NzbCustomer::model()->findAllByAttributes(array('Id_nzb'=>$id));
-
 					$transaction = $model->dbConnection->beginTransaction();
 					try {
-							
 						if($model->save()){
-							if(!empty($modelRelation) )
-							{
-								foreach ($modelRelation as $modelRel){
-									$modelRel->need_update = 1;
-									$modelRel->save();
-								}
-							}
+							$this->updateRelation($id);
 							$transaction->commit();
 							$this->redirect(array('view','id'=>$model->Id));
 						}
@@ -556,7 +615,7 @@ class NzbController extends Controller
 					}
 				}
 				else
-				$this->redirect(array('view','id'=>$model->Id));
+					$this->redirect(array('view','id'=>$model->Id));
 			}
 		}
 
@@ -568,6 +627,19 @@ class NzbController extends Controller
 		));
 	}
 
+	private function updateRelation($id)
+	{
+		$modelRelation = NzbCustomer::model()->findAllByAttributes(array('Id_nzb'=>$id));
+		
+		if(!empty($modelRelation) )
+		{
+			foreach ($modelRelation as $modelRel){
+				$modelRel->need_update = 1;
+				$modelRel->save();
+			}
+		}
+	}
+	
 	/**
 	 * Deletes a particular model.
 	 * If deletion is successful, the browser will be redirected to the 'admin' page.
