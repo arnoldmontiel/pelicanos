@@ -3,6 +3,7 @@
 $this->menu=array(
 	array('label'=>'Create Serie Tv', 'url'=>array('create')),
 	array('label'=>'Manage Series Tv', 'url'=>array('admin')),
+	array('label'=>'View Season', 'url'=>array('viewSeason')),
 );
 ?>
 
