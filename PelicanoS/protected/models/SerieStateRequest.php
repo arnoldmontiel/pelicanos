@@ -12,7 +12,7 @@ class SerieStateRequest
 	{
 		//set season attributes
 		$attributesArray = $modelSeason->attributes;
-		while ($value = current($attributesArray)) {
+		while (($value = current($attributesArray)) !== false) {
 			$this->setAttribute(key($attributesArray), $value);
 			next($attributesArray);
 		}
@@ -33,19 +33,19 @@ class SerieStateRequest
 	* @var integer customer
 	* @soap
 	*/
-	public $id_Customer;
+	public $id_customer;
 	
 	/**
 	* @var integer serieNzb
 	* @soap
 	*/
-	public $id_SerieNzb;
+	public $id_serieNzb;
 	
 	/**
 	* @var integer state
 	* @soap
 	*/
-	public $id_State;
+	public $id_state;
 	
 	/**
 	* @var integer date
@@ -57,5 +57,5 @@ class SerieStateRequest
 	* @var integer idImdb
 	* @soap
 	*/
-	public $id_Imdb;
+	public $id_imdb;
 }
