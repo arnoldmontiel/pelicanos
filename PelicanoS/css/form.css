@@ -82,6 +82,12 @@ div.form span.required
 	color: red;
 }
 
+span.deleted
+{
+	color: red;
+	font-style: italic;
+}
+
 div.form div.error label,
 div.form label.error,
 div.form span.error

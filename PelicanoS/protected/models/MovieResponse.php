@@ -12,14 +12,14 @@ class MovieResponse
 	{
 		//set nzb attributes
 		$attributesArray = $modelNzb->attributes;
-		while ($value = current($attributesArray)) {
+		while (($value = current($attributesArray)) !== false) {
 			$this->setAttribute(key($attributesArray), $value);
 			next($attributesArray);
 		}
 		
 		//set imdbdata attributes
 		$attributesArray = $modelNzb->imdbData->attributes;
-		while ($value = current($attributesArray)) {
+		while (($value = current($attributesArray)) !== false) {
 			$this->setAttribute(key($attributesArray), $value);
 			next($attributesArray);
 		}
@@ -69,6 +69,12 @@ class MovieResponse
 	* @soap
 	*/
 	public $Id_resource_type;
+	
+	/**
+	* @var integer deleted
+	* @soap
+	*/
+	public $deleted;
 	
 	/**
 	* @var string id imdb
