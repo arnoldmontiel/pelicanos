@@ -16,6 +16,9 @@ class NzbController extends Controller
 					'classMap'=>array(
 			                    'MovieResponse'=>'MovieResponse',  // or simply 'Post'
 								'SerieResponse'=>'SerieResponse',  // or simply 'Post'
+								'SeasonResponse'=>'SeasonResponse',
+								'SerieStateRequest'=>'SerieStateRequest',
+								'MovieStateRequest'=>'MovieStateRequest',
 		),
 		),
 		);
@@ -29,9 +32,13 @@ class NzbController extends Controller
 	 */
 	public function getNewMovies($idCustomer)
 	{
+		
 		$criteria=new CDbCriteria;
-		$criteria->addCondition('t.Id NOT IN(select Id_nzb from nzb_customer where Id_customer = '. $idCustomer.' and need_update = 0) AND Id_imdbdata_tv is null');
-
+		
+		$criteria->addCondition('t.Id NOT IN(select Id_nzb from nzb_customer where Id_customer = '. $idCustomer.' and need_update = 0)');
+		$criteria->addCondition('t.Id_imdbdata_tv is null');
+		//$criteria->addCondition('t.deleted  <> 1');
+		
 		$arrayNbz = Nzb::model()->findAll($criteria);
 		$arrayResponse = array();
 
@@ -73,7 +80,10 @@ class NzbController extends Controller
 	public function getNewSeries($idCustomer)
 	{
 		$criteria=new CDbCriteria;
-		$criteria->addCondition('t.Id NOT IN(select Id_nzb from nzb_customer where Id_customer = '. $idCustomer.' and need_update = 0) AND t.Id_imdbdata is null');
+		
+		$criteria->addCondition('t.Id NOT IN(select Id_nzb from nzb_customer where Id_customer = '. $idCustomer.' and need_update = 0)');
+		$criteria->addCondition('t.Id_imdbdata_tv is null');
+		//$criteria->addCondition('t.deleted  <> 1');
 		
 		$arrayNbz = Nzb::model()->findAll($criteria);
 		$arrayResponse = array();
@@ -97,6 +107,7 @@ class NzbController extends Controller
 					
 					$serieResponse = new SerieResponse;
 					$serieResponse->setHeaderAttributes($imdbdataTv);
+					$serieResponse->setSeasons( Season::model()->findAllByAttributes(array('Id_imdbdata_tv'=>$imdbdataTv->ID)));
 					$arrayResponse[]=$serieResponse;
 				}
 				else 
@@ -105,6 +116,7 @@ class NzbController extends Controller
 					{
 						$serieResponse = new SerieResponse;
 						$serieResponse->setHeaderAttributes($imdbdataTv);
+						$serieResponse->setSeasons( Season::model()->findAllByAttributes(array('Id_imdbdata_tv'=>$imdbdataTv->ID)));
 						$arrayResponse[]=$serieResponse;
 					}
 				}
@@ -144,42 +156,88 @@ class NzbController extends Controller
 	/**
 	 *
 	 * Change movie status in relation customer/nzb
-	 * @param integer $idCustomer
-	 * @param integer $idMovie
-	 * @param integer $idState
-	 * @param integer $date
+	 * @param MovieStateRequest[]
 	 * @return boolean
 	 * @soap
 	 */
-	public function setMovieState($idCustomer, $idMovie, $idState, $date )
+	public function setMovieState($movieStateRequest )
 	{
 		// 		Yii::trace('date param: '. $date, 'webService');
 		// 		Yii::trace('idCustomer param: '. $idCustomer, 'webService');
 		// 		Yii::trace('idMovie param: '. $idMovie, 'webService');
 		// 		Yii::trace('idState param: '. $idState, 'webService');
-		$model = NzbCustomer::model()->findByAttributes(array('Id_customer'=>$idCustomer, 'Id_nzb'=>$idMovie));
-
-
-		$model->Id_movie_state = $idState;
-		switch ($idState) {
-			case 1:
-				$model->date_sent = date("Y-m-d H:i:s",$date);
+		
+		foreach($movieStateRequest as $item)
+		{
+			$model = NzbCustomer::model()->findByAttributes(array('Id_customer'=>$item->id_customer, 'Id_nzb'=>$item->id_movie));
+	
+	
+			$model->Id_movie_state = $item->id_state;
+			switch ($item->id_state) {
+				case 1:
+					$model->date_sent = date("Y-m-d H:i:s",$item->date);
+					break;
+				case 2:
+					$model->date_downloading = date("Y-m-d H:i:s",$item->date);
+					break;
+				case 3:
+					$model->date_downloaded = date("Y-m-d H:i:s",$item->date);
 				break;
-			case 2:
-				$model->date_downloading = date("Y-m-d H:i:s",$date);
-				break;
-			default:
-				$model->date_downloaded = date("Y-m-d H:i:s",$date);
-			break;
+			}
+			$model->need_update = 0;
+			$model->save();
 		}
-		$model->need_update = 0;
-		if($model->save())
-			return true;
+		
+		return true;
 
-		return false;
 	}
 
 
+	/**
+	*
+	* Change serie status in relation customer/serie
+	* @param SerieStateRequest[]
+	* @return boolean
+	* @soap
+	*/
+	public function setSerieState($serieStateRequest )
+	{
+		// 		Yii::trace('date param: '. $date, 'webService');
+		// 		Yii::trace('idCustomer param: '. $idCustomer, 'webService');
+		// 		Yii::trace('idMovie param: '. $idMovie, 'webService');
+		// 		Yii::trace('idState param: '. $idState, 'webService');
+		foreach($serieStateRequest as $item)
+		{
+			if($item->$id_SerieNzb != null) //is serie episode
+			{
+				$model = NzbCustomer::model()->findByAttributes(array('Id_customer'=>$item->id_Customer, 'Id_nzb'=>$item->id_SerieNzb));
+				$model->Id_movie_state = $item->id_State;
+				switch ( $item->id_State) {
+					case 1:
+						$model->date_sent = date("Y-m-d H:i:s",$item->date);
+						break;
+					case 2:
+						$model->date_downloading = date("Y-m-d H:i:s",$item->date);
+						break;
+					case 3:
+						$model->date_downloaded = date("Y-m-d H:i:s",$item->date);
+					break;
+				}
+				
+			}
+			else //is serie header
+			{
+				$model = ImdbdataTvCustomer::model()->findByAttributes(array('Id_customer'=>$item->id_Customer, 'Id_imdbdata_tv'=>$item->id_Imdb));
+				$model->date_sent = date("Y-m-d H:i:s",$item->date);
+				
+			}
+			
+			$model->need_update = 0;
+			$model->save();
+		}
+		
+		return true;
+	}
 
 	/**
 	 * @return array action filters
@@ -247,7 +305,7 @@ class NzbController extends Controller
 	
 	public function actionCreate()
 	{	
-		//$hola = $this->getNewSeries(1);
+		$hola = $this->getNewMovies(1);
 		$this->render('create');
 	}
 
@@ -655,23 +713,19 @@ class NzbController extends Controller
 			$transaction = $model->dbConnection->beginTransaction();
 			try {
 
-				$modelRelation = NzbCustomer::model()->findAllByAttributes(array('Id_nzb'=>$id));
-				if(!empty($modelRelation) )
-				{
-					foreach ($modelRelation as $modelRel){
-						$modelRel->delete();
-					}
-				}
-
-				$modelImdbdata = Imdbdata::model()->findByPk($model->Id_imdbdata);
-
-				$model->delete();
-
-				$modelImdbdata->delete();
+				$this->updateRelation($id);
+				
+				if($model->deleted == 1)
+					$model->deleted = 0;
+				else
+					$model->deleted = 1;
+				
+				$model->save();
+				
 				$transaction->commit();
 				// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 				if(!isset($_GET['ajax']))
-				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+					$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
 
 			} catch (Exception $e) {
 				$transaction->rollback();
@@ -681,6 +735,42 @@ class NzbController extends Controller
 		throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
 	}
 
+	/**
+	* Deletes a particular model.
+	* If deletion is successful, the browser will be redirected to the 'admin' page.
+	* @param integer $id the ID of the model to be deleted
+	*/
+	public function actionDeleteEpisode($id)
+	{
+		if(Yii::app()->request->isPostRequest)
+		{
+			// we only allow deletion via POST request
+			$model = $this->loadModel($id);
+	
+			$transaction = $model->dbConnection->beginTransaction();
+			try {
+	
+				$this->updateRelation($id);
+	
+				if($model->deleted == 1)
+					$model->deleted = 0;
+				else
+					$model->deleted = 1;
+	
+				$model->save();
+	
+				$transaction->commit();
+				// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+				if(!isset($_GET['ajax']))
+					$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('adminEpisode'));
+	
+			} catch (Exception $e) {
+				$transaction->rollback();
+			}
+		}
+		else
+		throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
+	}
 	/**
 	 * Find subtitle.
 	 */

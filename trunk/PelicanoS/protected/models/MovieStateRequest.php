@@ -23,4 +23,10 @@ class MovieStateRequest
 	*/
 	public $id_state;
 	
+	/**
+	* @var integer date
+	* @soap
+	*/
+	public $date;
+	
 }

@@ -12,26 +12,38 @@ class SerieResponse
 	{
 		//set nzb attributes
 		$attributesArray = $modelNzb->attributes;
-		while ($value = current($attributesArray)) {
+		while (($value = current($attributesArray)) !== false) {	
 			$this->setAttribute(key($attributesArray), $value);
 			next($attributesArray);
 		}
 		
 		//set imdbdata attributes
 		$attributesArray = $modelNzb->imdbDataTv->attributes;
-		while ($value = current($attributesArray)) {
+		while (($value = current($attributesArray)) !== false) {
 			$this->setAttribute(key($attributesArray), $value);
-			(next($attributesArray) == null)? next($attributesArray) : true;
+			next($attributesArray);
 		}
 	}
 	
+	//set serie header information
 	public function setHeaderAttributes($modelImdbdataTv)
 	{
 		//set imdbdata attributes
 		$attributesArray = $modelImdbdataTv->attributes;
-		while ($value = current($attributesArray)) {
+		while (($value = current($attributesArray)) !== false) {
 			$this->setAttribute(key($attributesArray), $value);
 			next($attributesArray);
+		}
+	}
+	
+	public function setSeasons($seasons)
+	{
+		//set imdbdata attributes
+		foreach ($seasons as $item)
+		{
+			$seasonResp = new SeasonResponse;
+			$seasonResp->setAttributes($item);
+			$this->arrSeason[] = $seasonResp;
 		}
 	}
 	
@@ -193,4 +205,10 @@ class SerieResponse
 	* @soap
 	*/
 	public $Id_parent;
+	
+	/**
+	* @var SeasonResponse[] seasons
+	* @soap
+	*/
+	public $arrSeason = array();
 }
