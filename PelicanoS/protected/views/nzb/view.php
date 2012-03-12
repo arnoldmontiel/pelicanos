@@ -7,7 +7,7 @@ $this->menu=array(
 	array('label'=>'Update Subtitle', 'url'=>array('findSubtitle', 'id'=>$model->Id)),
 	array('label'=>'Upload Subtitle', 'url'=>array('uploadSubtitle', 'id'=>$model->Id)),
 	array('label'=>'Backdrop', 'url'=>array('backdrop', 'id'=>$model->Id)),
-	array('label'=>'Delete Nzb', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->Id),'confirm'=>'Are you sure you want to delete this item?')),
+	array('label'=>($model->deleted == 1)?'Re-create Nzb':'Delete Nzb', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->Id),'confirm'=>($model->deleted == 1)?'Are you sure you want to re-create this item?':'Are you sure you want to delete this item?')),
 	array('label'=>'Manage Nzb Movies', 'url'=>array('admin')),
 );
 
@@ -91,6 +91,13 @@ Yii::app()->clientScript->registerScript('viewNZB', "
 		<b><?php echo CHtml::encode($model->getAttributeLabel('Votes')); ?>:</b>
 		<?php echo CHtml::encode($model->imdbData->Votes); ?>
 		<br />
+		
+		<?php if($model->deleted == 1){ ?>
+		<b><?php echo CHtml::encode($model->getAttributeLabel('State')); ?>:</b>
+		<span class="deleted">Deleted</span>
+		<br />
+		<?php } ?>
+		
 	</div>
 	<div class="right-movie-detail-view">
 		<?php echo CHtml::image( "./images/".$model->imdbData->Poster_local, $model->imdbData->Title,array('id'=>'Imdbdata_Poster_img', 'style'=>'height: 320px;width: 220px;')); ?>
