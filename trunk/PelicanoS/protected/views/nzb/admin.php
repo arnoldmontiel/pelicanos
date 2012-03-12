@@ -23,6 +23,18 @@ $this->menu=array(
 		'file_name',
 		'subt_file_name',
 		array(
+ 			'name'=>"deleted",
+ 			'type'=>'raw',
+ 			'value'=>'CHtml::checkBox("deleted",$data->deleted,array("disabled"=>"disabled"))',
+ 			'filter'=>CHtml::listData(
+				array(
+						array('id'=>'0','value'=>'No'),
+						array('id'=>'1','value'=>'Yes')
+					)
+					,'id','value'
+				),
+		),
+		array(
  			'name'=>'title',
 			'value'=>'$data->imdbData->Title',
 		),
@@ -40,6 +52,16 @@ $this->menu=array(
 		),
 		array(
 			'class'=>'CButtonColumn',
+			'template'=>'{view}{update}{delete}',
+			'deleteConfirmation'=>'Are you sure you want to Delete/Re-create this item?',
+			'buttons'=>array
+			(
+				'delete' => array
+				(
+					'label'=>'Delete/Re-create',
+			    	'url'=>'Yii::app()->createUrl("nzb/delete", array("id"=>$data->Id))',
+				),
+			),
 		),
 	),
 )); ?>
