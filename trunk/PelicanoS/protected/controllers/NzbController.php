@@ -208,11 +208,11 @@ class NzbController extends Controller
 		// 		Yii::trace('idState param: '. $idState, 'webService');
 		foreach($serieStateRequest as $item)
 		{
-			if($item->$id_SerieNzb != null) //is serie episode
+			if($item->$id_serieNzb != null) //is serie episode
 			{
-				$model = NzbCustomer::model()->findByAttributes(array('Id_customer'=>$item->id_Customer, 'Id_nzb'=>$item->id_SerieNzb));
-				$model->Id_movie_state = $item->id_State;
-				switch ( $item->id_State) {
+				$model = NzbCustomer::model()->findByAttributes(array('Id_customer'=>$item->id_customer, 'Id_nzb'=>$item->id_serieNzb));
+				$model->Id_movie_state = $item->id_state;
+				switch ( $item->id_state) {
 					case 1:
 						$model->date_sent = date("Y-m-d H:i:s",$item->date);
 						break;
@@ -227,7 +227,7 @@ class NzbController extends Controller
 			}
 			else //is serie header
 			{
-				$model = ImdbdataTvCustomer::model()->findByAttributes(array('Id_customer'=>$item->id_Customer, 'Id_imdbdata_tv'=>$item->id_Imdb));
+				$model = ImdbdataTvCustomer::model()->findByAttributes(array('Id_customer'=>$item->id_customer, 'Id_imdbdata_tv'=>$item->id_imdb));
 				$model->date_sent = date("Y-m-d H:i:s",$item->date);
 				
 			}
