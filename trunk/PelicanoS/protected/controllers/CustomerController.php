@@ -160,6 +160,29 @@ class CustomerController extends Controller
 	
 	}
 	
+	public function actionCustomerSeries()
+	{
+		$ddlSource = Customer::model()->findAll();
+		$model = Customer::model();
+			
+	
+		$modelRelation=new NzbCustomer('search');
+		$modelRelation->unsetAttributes();
+	
+		if(isset($_GET['NzbCustomer']))
+			$modelRelation->attributes = $_GET['NzbCustomer'];
+	
+		if(isset($_GET['Customer']))
+			$modelRelation->Id_customer = $_GET['Customer']['Id'];
+	
+		$this->render('customerSeries',array(
+								'model'=>$model,
+								'ddlSource'=>$ddlSource,
+								'modelRelation'=>$modelRelation,
+		));
+	
+	}
+	
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.

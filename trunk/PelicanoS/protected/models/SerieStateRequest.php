@@ -39,7 +39,7 @@ class SerieStateRequest
 	* @var integer serieNzb
 	* @soap
 	*/
-	public $id_serieNzb;
+	public $id_serie_nzb;
 	
 	/**
 	* @var integer state
@@ -54,8 +54,8 @@ class SerieStateRequest
 	public $date;
 	
 	/**
-	* @var integer idImdb
+	* @var string id_imdbdata_tv
 	* @soap
 	*/
-	public $id_imdb;
+	public $id_imdbdata_tv;
 }

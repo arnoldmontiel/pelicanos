@@ -201,7 +201,7 @@ class SerieResponse
 	public $Episode;
 	
 	/**
-	* @var integer Id_parent
+	* @var string Id_parent
 	* @soap
 	*/
 	public $Id_parent;

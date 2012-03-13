@@ -5,7 +5,7 @@
 $this->menu=array(
 	array('label'=>'List Customer', 'url'=>array('index')),
 	array('label'=>'Create Customer', 'url'=>array('create')),
-	array('label'=>'Customer Series', 'url'=>array('customerSeries')),
+	array('label'=>'Customer Movies', 'url'=>array('customerMovies')),
 );
 
 Yii::app()->clientScript->registerScript('customerMovies', "
@@ -24,7 +24,8 @@ $('#Customer_Id').change(function(){
 
 ");
 ?>
-<h1>Customers Movies</h1>
+
+<h1>Customers Series</h1>
 <div class="form">
 <?php $form=$this->beginWidget('CActiveForm', array(
 		'id'=>'customerMovies-form',
@@ -56,28 +57,28 @@ $('#Customer_Id').change(function(){
 	
 	$this->widget('zii.widgets.grid.CGridView', array(
 		'id'=>'relation-grid',
-		'dataProvider'=>$modelRelation->searchRelationMovies(),
+		'dataProvider'=>$modelRelation->searchRelationSeries(),
 		'filter'=>$modelRelation,
 		'summaryText'=>'',	
 		'columns'=>array(	
 				array(
 	 				    'name'=>'id_imdb',
-					    'value'=>'$data->nzb->imdbData->ID',
+					    'value'=>'$data->nzb->imdbDataTv->ID',
 	
 				),
 				array(
 	 				    'name'=>'title',
-					    'value'=>'$data->nzb->imdbData->Title',
+					    'value'=>'$data->nzb->imdbDataTv->Title',
 	
 				),
 				array(
 	 				    'name'=>'year',
-					    'value'=>'$data->nzb->imdbData->Year',
+					    'value'=>'$data->nzb->imdbDataTv->Year',
 	
 				),
 				array(
 	 				    'name'=>'genre',
-					    'value'=>'$data->nzb->imdbData->Genre',
+					    'value'=>'$data->nzb->imdbDataTv->Genre',
 	
 				),
 				array(
