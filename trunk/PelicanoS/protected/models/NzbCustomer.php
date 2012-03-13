@@ -19,6 +19,9 @@ class NzbCustomer extends CActiveRecord
 	public $genre;
 	public $movie_status;
 	public $id_imdb;
+	public $episode;
+	public $season;
+	public $serie_title;
 	
 	/**
 	 * Returns the static model of the specified AR class.
@@ -51,7 +54,7 @@ class NzbCustomer extends CActiveRecord
 			array('date_sent, date_downloaded, date_downloading', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id_nzb, Id_customer, need_update, Id_movie_state, title, year, genre, movie_status, id_imdb, date_sent, date_downloaded, date_downloading', 'safe', 'on'=>'search'),
+			array('Id_nzb, Id_customer, need_update, Id_movie_state, title, year, genre, movie_status, id_imdb, date_sent, date_downloaded, date_downloading, episode, season, serie_title', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -84,6 +87,7 @@ class NzbCustomer extends CActiveRecord
 			'date_sent' => 'Date Sent',
 			'date_downloaded' => 'Date Downloaded',
 			'date_downloading' => 'Date Downloading',
+			'serie_title' => 'Serie Title',
 		);
 	}
 
@@ -131,11 +135,15 @@ class NzbCustomer extends CActiveRecord
 		$criteria->addSearchCondition("movieState.description",$this->movie_status);
 		
 		$criteria->join =	"LEFT OUTER JOIN nzb n ON n.Id=t.Id_nzb
-									 LEFT OUTER JOIN imdbdata_tv i ON n.Id_imdbdata_tv=i.ID";
+									 LEFT OUTER JOIN imdbdata_tv i ON n.Id_imdbdata_tv=i.ID
+									 LEFT OUTER JOIN imdbdata_tv p ON p.ID=i.Id_parent";
 		$criteria->addSearchCondition("i.Title",$this->title);
 		$criteria->addSearchCondition("i.Year",$this->year);
 		$criteria->addSearchCondition("i.Genre",$this->genre);
 		$criteria->addSearchCondition("i.ID",$this->id_imdb);
+		$criteria->addSearchCondition("i.Season",$this->season);
+		$criteria->addSearchCondition("i.Episode",$this->episode);
+		$criteria->addSearchCondition("p.Title",$this->serie_title);
 		$criteria->addCondition('n.Id_imdbdata is null');
 		
 		
@@ -149,6 +157,18 @@ class NzbCustomer extends CActiveRecord
 			'title'=> array(
 						'asc'=>'i.Title',
 						'desc'=>'i.Title DESC'
+			),
+			'serie_title'=> array(
+						'asc'=>'p.Title',
+						'desc'=>'p.Title DESC'
+			),
+			'episode'=> array(
+						'asc'=>'i.Episode',
+						'desc'=>'i.Episode DESC'
+			),
+			'season'=> array(
+						'asc'=>'i.Season',
+						'desc'=>'i.Season DESC'
 			),
 			'year'=> array(
 						'asc'=>'i.Year',
