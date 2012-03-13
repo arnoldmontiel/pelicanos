@@ -82,11 +82,23 @@ class NzbController extends Controller
 		$criteria=new CDbCriteria;
 		
 		$criteria->addCondition('t.Id NOT IN(select Id_nzb from nzb_customer where Id_customer = '. $idCustomer.' and need_update = 0)');
-		$criteria->addCondition('t.Id_imdbdata_tv is null');
+		$criteria->addCondition('t.Id_imdbdata_tv is not null');
 		//$criteria->addCondition('t.deleted  <> 1');
 		
 		$arrayNbz = Nzb::model()->findAll($criteria);
 		$arrayResponse = array();
+		
+		
+		//check if there are headers which need update
+		$imdbdataTvCustomerDB = ImdbdataTvCustomer::model()->findAllByAttributes(array('need_update'=>1));
+		foreach ($imdbdataTvCustomerDB as $item)
+		{
+			$imdbdataTv = ImdbdataTv::model()->findByPk($item->Id_imdbdata_tv);
+			$serieResponse = new SerieResponse;
+			$serieResponse->setHeaderAttributes($imdbdataTv);
+			$serieResponse->setSeasons( Season::model()->findAllByAttributes(array('Id_imdbdata_tv'=>$imdbdataTv->ID)));
+			$arrayResponse[]=$serieResponse;
+		}
 		
 		foreach ($arrayNbz as $modelNbz) //add Serie Header
 		{
@@ -202,15 +214,24 @@ class NzbController extends Controller
 	*/
 	public function setSerieState($serieStateRequest )
 	{
-		// 		Yii::trace('date param: '. $date, 'webService');
-		// 		Yii::trace('idCustomer param: '. $idCustomer, 'webService');
-		// 		Yii::trace('idMovie param: '. $idMovie, 'webService');
-		// 		Yii::trace('idState param: '. $idState, 'webService');
+// 				Yii::trace('date param: '. $date, 'webService');
+// 				Yii::trace('idCustomer param: '. $idCustomer, 'webService');
+// 				Yii::trace('idMovie param: '. $idMovie, 'webService');
+// 				Yii::trace('idState param: '. $idState, 'webService');
+// 				foreach($serieStateRequest as $item)
+// 		 		{
+// 		 			Yii::trace('id_serie_nzb param: '. $item->id_serie_nzb, 'webService');
+// 		 			Yii::trace('date param: '. $item->date, 'webService');
+// 		 			Yii::trace('state param: '. $item->id_state, 'webService');
+// 		 			Yii::trace('CUSTOMER param: '. $item->id_customer, 'webService');
+// 		 			Yii::trace('id_imdbdata_tv param: '. $item->id_imdbdata_tv, 'webService');
+// 		 			Yii::trace('---------------------------------------------------', 'webService');
+// 		 		}
 		foreach($serieStateRequest as $item)
 		{
-			if($item->$id_serieNzb != null) //is serie episode
+			if($item->id_serie_nzb != null) //is serie episode
 			{
-				$model = NzbCustomer::model()->findByAttributes(array('Id_customer'=>$item->id_customer, 'Id_nzb'=>$item->id_serieNzb));
+				$model = NzbCustomer::model()->findByAttributes(array('Id_customer'=>$item->id_customer, 'Id_nzb'=>$item->id_serie_nzb));
 				$model->Id_movie_state = $item->id_state;
 				switch ( $item->id_state) {
 					case 1:
@@ -227,7 +248,7 @@ class NzbController extends Controller
 			}
 			else //is serie header
 			{
-				$model = ImdbdataTvCustomer::model()->findByAttributes(array('Id_customer'=>$item->id_customer, 'Id_imdbdata_tv'=>$item->id_imdb));
+				$model = ImdbdataTvCustomer::model()->findByAttributes(array('Id_customer'=>$item->id_customer, 'Id_imdbdata_tv'=>$item->id_imdbdata_tv));
 				$model->date_sent = date("Y-m-d H:i:s",$item->date);
 				
 			}
@@ -305,7 +326,7 @@ class NzbController extends Controller
 	
 	public function actionCreate()
 	{	
-		$hola = $this->getNewMovies(1);
+		$hola = $this->getNewSeries(1);
 		$this->render('create');
 	}
 
