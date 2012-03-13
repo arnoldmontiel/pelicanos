@@ -52,8 +52,6 @@ class Imdbdata extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('ID, Title', 'required'),
-			array('Year', 'numerical', 'integerOnly'=>true),
-			array('Rating', 'numerical'),
 			array('ID, Rated, Released, Runtime, Votes, Response', 'length', 'max'=>45),
 			array('Title, Director, Writer, Poster, Genre, Backdrop', 'length', 'max'=>255),
 			array('Actors, Plot', 'safe'),
