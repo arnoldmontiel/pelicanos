@@ -131,7 +131,7 @@ class NzbCustomer extends CActiveRecord
 		$criteria->addSearchCondition("movieState.description",$this->movie_status);
 		
 		$criteria->join =	"LEFT OUTER JOIN nzb n ON n.Id=t.Id_nzb
-									 LEFT OUTER JOIN imdbdata i ON n.Id_imdbdata=i.ID";
+									 LEFT OUTER JOIN imdbdata_tv i ON n.Id_imdbdata_tv=i.ID";
 		$criteria->addSearchCondition("i.Title",$this->title);
 		$criteria->addSearchCondition("i.Year",$this->year);
 		$criteria->addSearchCondition("i.Genre",$this->genre);
