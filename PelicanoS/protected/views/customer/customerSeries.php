@@ -82,6 +82,21 @@ $('#Customer_Id').change(function(){
 	
 				),
 				array(
+	 				    'name'=>'serie_title',
+					    'value'=>'$data->nzb->imdbDataTv->idParent->Title',
+	
+				),	
+				array(
+	 				    'name'=>'season',
+					    'value'=>'$data->nzb->imdbDataTv->Season',
+	
+				),
+				array(
+	 				    'name'=>'episode',
+					    'value'=>'$data->nzb->imdbDataTv->Episode',
+	
+				),
+				array(
 	 				    'name'=>'movie_status',
 					    'value'=>'$data->movieState->description',
 	
