@@ -43,6 +43,10 @@
 		<?php echo CHtml::encode($data->imdbDataTv->Rating); ?>
 		<br />
 		
+		<b><?php echo CHtml::encode($data->getAttributeLabel('Serie')); ?>:</b>
+		<?php echo CHtml::encode($data->imdbDataTv->idParent->Title); ?>
+		<br />
+		
 		<b><?php echo CHtml::encode($data->getAttributeLabel('Season')); ?>:</b>
 		<?php echo CHtml::encode($data->imdbDataTv->Season); ?>
 		<br />

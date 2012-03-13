@@ -27,6 +27,10 @@ class Nzb extends CActiveRecord
 	public $idImdb;
 	public $genre;
 	public $resourceTypeDesc;
+	public $serie_title;
+	public $episode;
+	public $season;
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -59,7 +63,7 @@ class Nzb extends CActiveRecord
 			array('url, subt_url, file_name, subt_file_name, subt_original_name', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id, url, file_name, subt_url, subt_file_name, Id_imdbdata, title, year, idImdb, genre, subt_original_name, resourceTypeDesc, Id_resource_type, Id_imdbdata_tv, deleted', 'safe', 'on'=>'search'),
+			array('Id, url, file_name, subt_url, subt_file_name, Id_imdbdata, title, year, idImdb, genre, subt_original_name, resourceTypeDesc, Id_resource_type, Id_imdbdata_tv, deleted, serie_title, season, episode', 'safe', 'on'=>'search'),
 		);
 	}
 	
@@ -147,6 +151,7 @@ class Nzb extends CActiveRecord
 		$criteria->addSearchCondition("imdbData.Year",$this->year);
 		$criteria->addSearchCondition("imdbData.ID",$this->idImdb);
 		$criteria->addSearchCondition("imdbData.Genre",$this->genre);
+		$criteria->addSearchCondition("imdbData.Genre",$this->genre);
 	
 		$criteria->with[]='resourceType';
 		$criteria->addSearchCondition("resourceType.description",$this->resourceTypeDesc);
@@ -209,15 +214,21 @@ class Nzb extends CActiveRecord
 		
 		$criteria->addCondition('Id_imdbdata is null');
 		
-		$criteria->with[]='imdbData';
-		$criteria->addSearchCondition("imdbData.Title",$this->title);
-		$criteria->addSearchCondition("imdbData.Year",$this->year);
-		$criteria->addSearchCondition("imdbData.ID",$this->idImdb);
-		$criteria->addSearchCondition("imdbData.Genre",$this->genre);
+		//$criteria->with[]='imdbDataTv';
+		
 	
 		$criteria->with[]='resourceType';
 		$criteria->addSearchCondition("resourceType.description",$this->resourceTypeDesc);
 	
+		$criteria->join =	"LEFT OUTER JOIN imdbdata_tv i ON t.Id_imdbdata_tv=i.ID
+							 LEFT OUTER JOIN imdbdata_tv p ON p.ID=i.Id_parent";
+		$criteria->addSearchCondition("i.Title",$this->title);
+		$criteria->addSearchCondition("i.Year",$this->year);
+		$criteria->addSearchCondition("i.ID",$this->idImdb);
+		$criteria->addSearchCondition("i.Genre",$this->genre);
+		$criteria->addSearchCondition("i.Season",$this->season);
+		$criteria->addSearchCondition("i.Episode",$this->episode);
+		$criteria->addSearchCondition("p.Title",$this->serie_title);
 		// Create a custom sort
 		$sort=new CSort;
 		$sort->attributes=array(
@@ -229,20 +240,32 @@ class Nzb extends CActiveRecord
 				'subt_url_name',
 				'Id_imdbdata',
 				'title' => array(
-					        'asc' => 'imdbData.Title',
-					        'desc' => 'imdbData.Title DESC',
+					        'asc' => 'i.Title',
+					        'desc' => 'i.Title DESC',
 		),
 				'year' => array(
-					        'asc' => 'imdbData.Year',
-					        'desc' => 'imdbData.Year DESC',
+					        'asc' => 'i.Year',
+					        'desc' => 'i.Year DESC',
+		),
+				'serie_title' => array(
+					        'asc' => 'p.Year',
+					        'desc' => 'o.Year DESC',
+		),
+				'season' => array(
+					        'asc' => 'i.Year',
+					        'desc' => 'i.Year DESC',
+		),
+				'episode' => array(
+					        'asc' => 'i.Episode',
+					        'desc' => 'i.Episode DESC',
 		),
 				'idImdb' => array(
-					        'asc' => 'imdbData.ID',
-					        'desc' => 'imdbData.ID DESC',
+					        'asc' => 'i.ID',
+					        'desc' => 'i.ID DESC',
 		),
 				'genre' => array(
-					        'asc' => 'imdbData.Genre',
-					        'desc' => 'imdbData.Genre DESC',
+					        'asc' => 'i.Genre',
+					        'desc' => 'i.Genre DESC',
 		),
 				'resourceTypeDesc' => array(
 					        'asc' => 'resourceType.description',

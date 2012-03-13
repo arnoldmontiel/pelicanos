@@ -91,6 +91,10 @@ Yii::app()->clientScript->registerScript('viewNZB', "
 		<?php echo CHtml::encode($model->imdbDataTv->Votes); ?>
 		<br />
 		
+		<b><?php echo CHtml::encode($model->getAttributeLabel('Serie')); ?>:</b>
+		<?php echo CHtml::encode($model->imdbDataTv->idParent->Title); ?>
+		<br />
+		
 		<b><?php echo CHtml::encode($model->getAttributeLabel('Season')); ?>:</b>
 		<?php echo CHtml::encode($model->imdbDataTv->Season); ?>
 		<br />
