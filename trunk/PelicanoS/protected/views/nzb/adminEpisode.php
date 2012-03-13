@@ -43,6 +43,18 @@ $this->menu=array(
 			'value'=>'$data->imdbDataTv->Year',
 		),
 		array(
+ 			'name'=>'serie_title',
+			'value'=>'$data->imdbDataTv->idParent->Title',
+		),
+		array(
+ 			'name'=>'season',
+			'value'=>'$data->imdbDataTv->Season',
+		),
+		array(
+ 			'name'=>'episode',
+			'value'=>'$data->imdbDataTv->Episode',
+		),
+		array(
  			'name'=>'genre',
 			'value'=>'$data->imdbDataTv->Genre',
 		),
