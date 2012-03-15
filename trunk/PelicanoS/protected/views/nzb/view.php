@@ -92,6 +92,10 @@ Yii::app()->clientScript->registerScript('viewNZB', "
 		<?php echo CHtml::encode($model->imdbData->Votes); ?>
 		<br />
 		
+		<b><?php echo CHtml::encode($model->getAttributeLabel('points')); ?>:</b>
+		<?php echo CHtml::encode($model->points); ?>
+		<br />
+		
 		<?php if($model->deleted == 1){ ?>
 		<b><?php echo CHtml::encode($model->getAttributeLabel('State')); ?>:</b>
 		<span class="deleted">Deleted</span>

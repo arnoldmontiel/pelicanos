@@ -145,7 +145,12 @@ $(document).keypress(function(e) {
 		<?php echo CHtml::error($modelImdb,'Episode'); ?>
 	</div>
 </div>
-	
+
+	<div id="points" style="margin-bottom: 5px">
+		<?php echo CHtml::activeLabelEx($model,'points'); ?>
+		<?php echo CHtml::activeTextField($model, 'points');?>
+		<?php echo CHtml::error($model,'points'); ?>
+	</div>	
 <div class="gridTitle-decoration1">
 	<div class="gridTitle1">
 		Imdb Data

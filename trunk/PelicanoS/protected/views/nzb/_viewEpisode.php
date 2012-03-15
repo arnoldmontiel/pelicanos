@@ -54,5 +54,9 @@
 		<b><?php echo CHtml::encode($data->getAttributeLabel('Episode')); ?>:</b>
 		<?php echo CHtml::encode($data->imdbDataTv->Episode); ?>
 		<br />
+		
+		<b><?php echo CHtml::encode($data->getAttributeLabel('points')); ?>:</b>
+		<?php echo CHtml::encode($data->points); ?>
+		<br />
 	</div>
 </div>
