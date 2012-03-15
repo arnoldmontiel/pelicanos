@@ -6,7 +6,7 @@
  * The followings are the available columns in table 'imdbdata_tv':
  * @property string $ID
  * @property string $Title
- * @property integer $Year
+ * @property string $Year
  * @property string $Rated
  * @property string $Released
  * @property string $Genre
@@ -17,7 +17,7 @@
  * @property string $Poster
  * @property string $Poster_local
  * @property string $Runtime
- * @property double $Rating
+ * @property string $Rating
  * @property string $Votes
  * @property string $Response
  * @property string $Backdrop
@@ -61,7 +61,7 @@ class ImdbdataTv extends CActiveRecord
 		return array(
 			array('ID', 'required'),
 			array('Season, Episode', 'numerical', 'integerOnly'=>true),
-			array('ID, Rated, Released, Runtime, Votes, Response, Id_parent', 'length', 'max'=>45),
+			array('ID, Rated, Released, Runtime, Votes, Response, Id_parent, Year, Rating', 'length', 'max'=>45),
 			array('Title, Genre, Director, Writer, Poster, Poster_local, Backdrop', 'length', 'max'=>255),
 			array('Actors, Plot', 'safe'),
 			// The following rule is used by search().
