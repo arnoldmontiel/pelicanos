@@ -14,6 +14,7 @@
  * @property integer $Id_resource_type
  * @property string $Id_imdbdata_tv
  * @property integer $deleted
+ * @property integer $points
  * The followings are the available model relations:
  * @property Imdbdata $idImdbdata
  * @property ImdbdataTv $idImdbdataTv
@@ -30,6 +31,13 @@ class Nzb extends CActiveRecord
 	public $serie_title;
 	public $episode;
 	public $season;
+	
+	public function beforeSave()
+	{
+		if($this->points == null)
+			$this->points = 0;
+		return parent::beforeSave();
+	}
 	
 	/**
 	 * Returns the static model of the specified AR class.
@@ -58,12 +66,12 @@ class Nzb extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array(' Id_resource_type', 'required'),
-			array('Id_resource_type, deleted', 'numerical', 'integerOnly'=>true),
+			array('Id_resource_type, deleted, points', 'numerical', 'integerOnly'=>true),
 			array('Id_imdbdata, Id_imdbdata_tv', 'length', 'max'=>45),
 			array('url, subt_url, file_name, subt_file_name, subt_original_name', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id, url, file_name, subt_url, subt_file_name, Id_imdbdata, title, year, idImdb, genre, subt_original_name, resourceTypeDesc, Id_resource_type, Id_imdbdata_tv, deleted, serie_title, season, episode', 'safe', 'on'=>'search'),
+			array('Id, url, file_name, subt_url, subt_file_name, Id_imdbdata, title, year, idImdb, genre, subt_original_name, resourceTypeDesc, Id_resource_type, Id_imdbdata_tv, deleted, serie_title, season, episode, points', 'safe', 'on'=>'search'),
 		);
 	}
 	
@@ -97,6 +105,7 @@ class Nzb extends CActiveRecord
 			'Id_resource_type' => 'Resource Type',
 			'Id_imdbdata_tv' => 'Id Imdb Data Tv',
 			'deleted' => 'Deleted',
+			'points' => 'Points',
 		);
 	}
 
@@ -121,6 +130,7 @@ class Nzb extends CActiveRecord
 		$criteria->compare('Id_resource_type',$this->Id_resource_type);
 		$criteria->compare('Id_imdbdata_tv',$this->Id_imdbdata_tv,true);
 		$criteria->compare('deleted',$this->deleted,true);
+		$criteria->compare('points',$this->points);
 		
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -143,6 +153,7 @@ class Nzb extends CActiveRecord
 		$criteria->compare('subt_original_name',$this->subt_original_name,true);
 		$criteria->compare('Id_resource_type',$this->Id_resource_type);
 		$criteria->compare('deleted',$this->deleted,true);
+		$criteria->compare('points',$this->points);
 		
 		$criteria->addCondition('Id_imdbdata_tv is null');
 		
@@ -211,6 +222,7 @@ class Nzb extends CActiveRecord
 		$criteria->compare('Id_resource_type',$this->Id_resource_type);
 		$criteria->compare('Id_imdbdata_tv',$this->Id_imdbdata_tv,true);
 		$criteria->compare('deleted',$this->deleted,true);
+		$criteria->compare('points',$this->points);
 		
 		$criteria->addCondition('Id_imdbdata is null');
 		
