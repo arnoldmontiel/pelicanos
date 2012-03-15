@@ -174,13 +174,11 @@ $(document).keypress(function(e) {
 																		
 																		var target = $(this);
 																		
-																		var keys = $.fn.yiiGridView.getSelection("seasons-grid")[0].split(",");
-																		
 																		$.post(
 																			"'. ImdbdataTvController::createUrl('AjaxUpdateEpisode').'",
 																		{
-																			id: keys[0],
-																			season: keys[1],
+																			id: "'.$model->ID.'",
+																			season: $(this).attr("id"),
 																			episodes: $(this).val()
 																		}).success(
 																		function()
