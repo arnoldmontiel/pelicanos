@@ -77,6 +77,12 @@ class MovieResponse
 	public $deleted;
 	
 	/**
+	* @var integer points
+	* @soap
+	*/
+	public $points;
+	
+	/**
 	* @var string id imdb
 	* @soap
 	*/

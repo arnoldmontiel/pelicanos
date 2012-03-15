@@ -93,6 +93,18 @@ class SerieResponse
 	public $Id_resource_type;
 	
 	/**
+	* @var integer deleted
+	* @soap
+	*/
+	public $deleted;
+	
+	/**
+	 * @var integer points
+	 * @soap
+	 */
+	public $points;
+	
+	/**
 	* @var string id imdb
 	* @soap
 	*/

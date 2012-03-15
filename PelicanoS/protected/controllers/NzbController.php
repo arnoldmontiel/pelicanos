@@ -467,7 +467,7 @@ class NzbController extends Controller
 		$ddlRsrcType = ResourceType::model()->findAll();
 
 		if(isset($_POST['Nzb']))
-		$model->attributes = $_POST['Nzb'];
+			$model->attributes = $_POST['Nzb'];
 
 		if(isset($_POST['Upload']) && isset($_POST['Imdbdata']))
 		{
@@ -506,7 +506,6 @@ class NzbController extends Controller
 
 					if($model->save()){
 						$transaction->commit();
-						//$this->redirect(array('view','id'=>$model->Id));
 						$this->redirect(array('findSubtitle','id'=>$model->Id));
 					}
 						
@@ -566,11 +565,25 @@ class NzbController extends Controller
 			if($_POST['Nzb']['Id_resource_type'] != $model->Id_resource_type )
 				$hasChanged = true;
 
+			if($_POST['Nzb']['points'] != $model->points )
+				$hasChanged = true;
+			
 			$model->attributes = $_POST['Nzb'];
 		}
 
 		if(isset($_POST['ImdbdataTv']))
+		{
+			if($_POST['ImdbdataTv']['Id_parent'] != $modelImdb->Id_parent )
+				$hasChanged = true;
+			
+			if($_POST['ImdbdataTv']['Season'] != $modelImdb->Season )
+				$hasChanged = true;
+			
+			if($_POST['ImdbdataTv']['Episode'] != $modelImdb->Episode )
+				$hasChanged = true;
+			
 			$modelImdb->attributes=$_POST['ImdbdataTv'];
+		}
 		
 		if(isset($_POST['Upload']))
 		{
@@ -580,47 +593,26 @@ class NzbController extends Controller
 			{
 				if($modelUpload->validate())
 				{
-					$transaction = $model->dbConnection->beginTransaction();
-					try {
-
-						$model->url = Yii::app()->request->getBaseUrl(). '/nzb/'.rawurlencode($file->getName());
-						$model->file_name = $file->getName();
-
-						$this->saveFile($file, 'nzb', $file->getName());
-						$modelImdb->save();
-						if($model->save()){
-							$this->updateRelation($id);
-							$transaction->commit();
-							$this->redirect(array('viewEpisode','id'=>$model->Id));
-						}
-
-					} catch (Exception $e) {
-						$transaction->rollback();
-					}
+					$model->url = Yii::app()->request->getBaseUrl(). '/nzb/'.rawurlencode($file->getName());
+					$model->file_name = $file->getName();
+					
+					$this->saveFile($file, 'nzb', $file->getName());
+					
+					$this->saveUpdatedEpisodeModel($model, $modelImdb, $id);
 				}
 			}
-			else{
+			else
+			{
 				if($hasChanged)
-				{
-					$transaction = $model->dbConnection->beginTransaction();
-					try {
-						$modelImdb->save();
-						if($model->save()){
-							$this->updateRelation($id);
-							$transaction->commit();
-							$this->redirect(array('viewEpisode','id'=>$model->Id));
-						}
-							
-					} catch (Exception $e) {
-						$transaction->rollback();
-					}
-				}
-				else{
-					$this->updateRelation($id);
-					$modelImdb->save();
+					$this->saveUpdatedEpisodeModel($model, $modelImdb, $id);
+				else
 					$this->redirect(array('viewEpisode','id'=>$model->Id));
-				}
 			}
+		}
+		else
+		{
+			if($hasChanged)
+				$this->saveUpdatedEpisodeModel($model, $modelImdb, $id);
 		}
 
 		$this->render('updateEpisode',array(
@@ -634,6 +626,22 @@ class NzbController extends Controller
 		));
 	}
 
+	private function saveUpdatedEpisodeModel($model, $modelImdb, $id)
+	{
+		$transaction = $model->dbConnection->beginTransaction();
+		try {
+			$modelImdb->save();
+			if($model->save()){
+				$this->updateRelation($id);
+				$transaction->commit();
+				$this->redirect(array('viewEpisode','id'=>$model->Id));
+			}
+				
+		} catch (Exception $e) {
+			$transaction->rollback();
+		}
+	}
+	
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
@@ -645,8 +653,11 @@ class NzbController extends Controller
 		if(isset($_POST['Nzb']))
 		{
 			if($_POST['Nzb']['Id_resource_type'] != $model->Id_resource_type )
-			$hasChanged = true;
-				
+				$hasChanged = true;
+
+			if($_POST['Nzb']['points'] != $model->points )
+				$hasChanged = true;
+			
 			$model->attributes = $_POST['Nzb'];
 		}
 
@@ -658,44 +669,26 @@ class NzbController extends Controller
 			{
 				if($modelUpload->validate())
 				{
-						
-					$transaction = $model->dbConnection->beginTransaction();
-					try {
-
-						$model->url = Yii::app()->request->getBaseUrl(). '/nzb/'.rawurlencode($file->getName());
-						$model->file_name = $file->getName();
-
-						$this->saveFile($file, 'nzb', $file->getName());
-							
-						if($model->save()){
-							$this->updateRelation($id);
-							$transaction->commit();
-							$this->redirect(array('view','id'=>$model->Id));
-						}
-
-					} catch (Exception $e) {
-						$transaction->rollback();
-					}
+					$model->url = Yii::app()->request->getBaseUrl(). '/nzb/'.rawurlencode($file->getName());
+					$model->file_name = $file->getName();
+					
+					$this->saveFile($file, 'nzb', $file->getName());
+					
+					$this->saveUpdatedModel($model, $id);
 				}
 			}
-			else{
+			else
+			{
 				if($hasChanged)
-				{
-					$transaction = $model->dbConnection->beginTransaction();
-					try {
-						if($model->save()){
-							$this->updateRelation($id);
-							$transaction->commit();
-							$this->redirect(array('view','id'=>$model->Id));
-						}
-							
-					} catch (Exception $e) {
-						$transaction->rollback();
-					}
-				}
+					$this->saveUpdatedModel($model, $id);
 				else
 					$this->redirect(array('view','id'=>$model->Id));
 			}
+		}
+		else
+		{
+			if($hasChanged)
+				$this->saveUpdatedModel($model, $id);
 		}
 
 		$this->render('update',array(
@@ -706,6 +699,21 @@ class NzbController extends Controller
 		));
 	}
 
+	private function saveUpdatedModel($model, $id)
+	{
+		$transaction = $model->dbConnection->beginTransaction();
+		try {
+			if($model->save()){
+				$this->updateRelation($id);
+				$transaction->commit();
+				$this->redirect(array('view','id'=>$model->Id));
+			}
+		
+		} catch (Exception $e) {
+			$transaction->rollback();
+		}
+	}
+	
 	private function updateRelation($id)
 	{
 		$modelRelation = NzbCustomer::model()->findAllByAttributes(array('Id_nzb'=>$id));
