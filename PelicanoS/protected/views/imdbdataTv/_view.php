@@ -49,6 +49,9 @@
 			<b><?php echo CHtml::encode($data->getAttributeLabel('Episode')); ?>:</b>
 				<?php echo CHtml::encode($data->Episode); ?>
 			<br />
+			<b><?php echo CHtml::encode($data->getAttributeLabel('Points')); ?>:</b>
+				<?php echo CHtml::encode($data->nzbs[0]->points); ?>
+			<br />
 		<?php }?>
 		
 	</div>

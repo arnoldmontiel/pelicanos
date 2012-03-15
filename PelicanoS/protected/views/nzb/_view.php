@@ -42,5 +42,9 @@
 		<b><?php echo CHtml::encode($data->getAttributeLabel('Rating')); ?>:</b>
 		<?php echo CHtml::encode($data->imdbData->Rating); ?>
 		<br />
+		
+		<b><?php echo CHtml::encode($data->getAttributeLabel('Points')); ?>:</b>
+		<?php echo CHtml::encode($data->points); ?>
+		<br />
 	</div>
 </div>
