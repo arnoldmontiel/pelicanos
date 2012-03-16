@@ -41,27 +41,24 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 		'ID',
 		'Title',
 		'Year',
+		array(
+		 			'name'=>"Deleted_serie",
+		 			'type'=>'raw',
+		 			'value'=>'CHtml::checkBox("deleted_serie",$data->Deleted_serie,array("disabled"=>"disabled"))',
+		 			'filter'=>CHtml::listData(
+					array(
+							array('id'=>'0','value'=>'No'),
+							array('id'=>'1','value'=>'Yes')
+						)
+						,'id','value'
+					),
+		),
 		'Rated',
 		'Released',
 		'Genre',
-		/*
-		'Director',
-		'Writer',
-		'Actors',
-		'Plot',
-		'Poster',
-		'Poster_local',
-		'Runtime',
-		'Rating',
-		'Votes',
-		'Response',
-		'Backdrop',
-		'Season',
-		'Episode',
-		'Id_parent',
-		*/
 		array(
 			'class'=>'CButtonColumn',
+			'template'=>'{view}',
 		),
 	),
 )); ?>

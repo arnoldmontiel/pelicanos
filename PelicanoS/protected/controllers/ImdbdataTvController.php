@@ -223,11 +223,17 @@ class ImdbdataTvController extends Controller
 			
 			$transaction = $model->dbConnection->beginTransaction();
 			try {
-
-				Season::model()->deleteAllByAttributes(array('Id_imdbdata_tv'=>$id));
+				
+				$this->updateRelation($id);
+				
+				if($model->Deleted_serie == 1)
+					$model->Deleted_serie = 0;
+				else
+					$model->Deleted_serie = 1;
+				
 				
 				// we only allow deletion via POST request
-				$model->delete();
+				$model->save();
 				
 				$transaction->commit();
 				// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
@@ -242,6 +248,7 @@ class ImdbdataTvController extends Controller
 			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
 	}
 
+	
 	/**
 	 * Lists all models.
 	 */

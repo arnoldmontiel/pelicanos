@@ -31,10 +31,6 @@
 		<?php echo CHtml::encode($data->imdbDataTv->Genre); ?>
 		<br />
 		
-		<b><?php echo CHtml::encode($data->getAttributeLabel('Runtime')); ?>:</b>
-		<?php echo CHtml::encode($data->imdbDataTv->Runtime); ?>
-		<br />
-		
 		<b><?php echo CHtml::encode($data->getAttributeLabel('Id_resource_type')); ?>:</b>
 		<?php echo CHtml::encode($data->resourceType->description); ?>
 		<br />
@@ -58,5 +54,11 @@
 		<b><?php echo CHtml::encode($data->getAttributeLabel('points')); ?>:</b>
 		<?php echo CHtml::encode($data->points); ?>
 		<br />
+		
+		<?php if($data->imdbDataTv->idParent->Deleted_serie == 1){ ?>
+			<b><?php echo CHtml::encode($data->getAttributeLabel('State')); ?>:</b>
+			<span class="deleted">Deleted</span>
+			<br />
+		<?php } ?>
 	</div>
 </div>
