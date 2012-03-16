@@ -219,6 +219,12 @@ class SerieResponse
 	public $Id_parent;
 	
 	/**
+	* @var integer Deleted_serie
+	* @soap
+	*/
+	public $Deleted_serie;
+	
+	/**
 	* @var SeasonResponse[] seasons
 	* @soap
 	*/

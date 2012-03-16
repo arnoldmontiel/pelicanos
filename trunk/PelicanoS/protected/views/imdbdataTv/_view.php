@@ -42,6 +42,11 @@
 			<b><?php echo CHtml::encode($data->getAttributeLabel('Seasons')); ?>:</b>
 				<?php echo CHtml::encode(count($data->seasons)); ?>
 			<br />
+			<?php if($data->Deleted_serie == 1){ ?>
+				<b><?php echo CHtml::encode($data->getAttributeLabel('State')); ?>:</b>
+				<span class="deleted">Deleted</span>
+				<br />
+			<?php } ?>
 		<?php }else{?>
 			<b><?php echo CHtml::encode($data->getAttributeLabel('Season')); ?>:</b>
 				<?php echo CHtml::encode($data->Season); ?>
@@ -52,6 +57,11 @@
 			<b><?php echo CHtml::encode($data->getAttributeLabel('Points')); ?>:</b>
 				<?php echo CHtml::encode($data->nzbs[0]->points); ?>
 			<br />
+				<?php if($data->idParent->Deleted_serie == 1){ ?>
+						<b><?php echo CHtml::encode($data->getAttributeLabel('State')); ?>:</b>
+						<span class="deleted">Deleted</span>
+						<br />
+				<?php } ?>
 		<?php }?>
 		
 	</div>

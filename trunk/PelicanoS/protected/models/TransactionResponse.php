@@ -35,12 +35,6 @@ class TransactionResponse
 	public $Id;
 	
 	/**
-	* @var integer Id_nzb
-	* @soap
-	*/
-	public $Id_nzb;
-	
-	/**
 	* @var integer Id_customer
 	* @soap
 	*/
@@ -51,12 +45,6 @@ class TransactionResponse
 	* @soap
 	*/
 	public $points;
-	
-	/**
-	 * @var integer date
-	 * @soap
-	 */
-	public $date;
 	
 	/**
 	* @var integer Id_transaction_type

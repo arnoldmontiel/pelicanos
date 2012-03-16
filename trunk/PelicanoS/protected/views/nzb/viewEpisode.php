@@ -1,15 +1,23 @@
 <?php
 
-$this->menu=array(
-	array('label'=>'List Nzb Episodes', 'url'=>array('indexEpisode')),
-	array('label'=>'Create Nzb', 'url'=>array('create')),
-	array('label'=>'Update Nzb', 'url'=>array('updateEpisode', 'id'=>$model->Id)),
-	array('label'=>'Update Subtitle', 'url'=>array('findSubtitle', 'id'=>$model->Id)),
-	array('label'=>'Upload Subtitle', 'url'=>array('uploadSubtitle', 'id'=>$model->Id)),
-	array('label'=>($model->deleted == 1)?'Re-create Nzb':'Delete Nzb', 'url'=>'#', 'linkOptions'=>array('submit'=>array('deleteEpisode','id'=>$model->Id),'confirm'=>($model->deleted == 1)?'Are you sure you want to re-create this item?':'Are you sure you want to delete this item?')),
-	array('label'=>'Manage Nzb Episodes', 'url'=>array('adminEpisode')),
-);
-
+if($model->imdbDataTv->idParent->Deleted_serie == 1)
+{
+	$this->menu=array(
+		array('label'=>'List Nzb Episodes', 'url'=>array('indexEpisode')),
+		array('label'=>'Re-create Nzb', 'url'=>'#', 'linkOptions'=>array('submit'=>array('deleteEpisode','id'=>$model->Id),'confirm'=>'Are you sure you want to re-create this item?')),
+		array('label'=>'Manage Nzb Episodes', 'url'=>array('adminEpisode')),
+	);
+}
+else {
+	$this->menu=array(
+		array('label'=>'List Nzb Episodes', 'url'=>array('indexEpisode')),
+		array('label'=>'Update Nzb', 'url'=>array('updateEpisode', 'id'=>$model->Id)),
+		array('label'=>'Update Subtitle', 'url'=>array('findSubtitle', 'id'=>$model->Id)),
+		array('label'=>'Upload Subtitle', 'url'=>array('uploadSubtitle', 'id'=>$model->Id)),
+		array('label'=>'Delete Nzb', 'url'=>'#', 'linkOptions'=>array('submit'=>array('deleteEpisode','id'=>$model->Id),'confirm'=>'Are you sure you want to delete this item?')),
+		array('label'=>'Manage Nzb Episodes', 'url'=>array('adminEpisode')),
+	);
+}
 
 
 ?>
@@ -107,7 +115,7 @@ Yii::app()->clientScript->registerScript('viewNZB', "
 		<?php echo CHtml::encode($model->points); ?>
 		<br />
 		
-		<?php if($model->deleted == 1){ ?>
+		<?php if($model->imdbDataTv->idParent->Deleted_serie == 1){ ?>
 		<b><?php echo CHtml::encode($model->getAttributeLabel('State')); ?>:</b>
 		<span class="deleted">Deleted</span>
 		<br />

@@ -24,6 +24,7 @@
  * @property integer $Season
  * @property integer $Episode
  * @property string $Id_parent
+ * @property integer $Deleted_serie
  *
  * The followings are the available model relations:
  * @property ImdbdataTv $idParent
@@ -60,13 +61,13 @@ class ImdbdataTv extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('ID', 'required'),
-			array('Season, Episode', 'numerical', 'integerOnly'=>true),
+			array('Season, Episode, Deleted_serie', 'numerical', 'integerOnly'=>true),
 			array('ID, Rated, Released, Runtime, Votes, Response, Id_parent, Year, Rating', 'length', 'max'=>45),
 			array('Title, Genre, Director, Writer, Poster, Poster_local, Backdrop', 'length', 'max'=>255),
 			array('Actors, Plot', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('ID, Title, Year, Rated, Released, Genre, Director, Writer, Actors, Plot, Poster, Poster_local, Runtime, Rating, Votes, Response, Backdrop, Season, Episode, Id_parent', 'safe', 'on'=>'search'),
+			array('ID, Title, Year, Rated, Released, Genre, Director, Writer, Actors, Plot, Poster, Poster_local, Runtime, Rating, Votes, Response, Backdrop, Season, Episode, Id_parent, Deleted_serie', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -111,6 +112,7 @@ class ImdbdataTv extends CActiveRecord
 			'Season' => 'Season',
 			'Episode' => 'Episode',
 			'Id_parent' => 'Serie',
+			'Deleted_serie' => 'Deleted Serie',
 		);
 	}
 
@@ -145,6 +147,7 @@ class ImdbdataTv extends CActiveRecord
 		$criteria->compare('Season',$this->Season);
 		$criteria->compare('Episode',$this->Episode);
 		$criteria->compare('Id_parent',$this->Id_parent,true);
+		$criteria->compare('Deleted_serie',$this->Deleted_serie);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -177,6 +180,7 @@ class ImdbdataTv extends CActiveRecord
 		$criteria->compare('Backdrop',$this->Backdrop,true);
 		$criteria->compare('Season',$this->Season);
 		$criteria->compare('Episode',$this->Episode);
+		$criteria->compare('Deleted_serie',$this->Deleted_serie);
 
 		$criteria->addCondition('Id_parent is null');
 		

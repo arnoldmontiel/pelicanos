@@ -31,10 +31,6 @@
 		<?php echo CHtml::encode($data->imdbData->Genre); ?>
 		<br />
 		
-		<b><?php echo CHtml::encode($data->getAttributeLabel('Runtime')); ?>:</b>
-		<?php echo CHtml::encode($data->imdbData->Runtime); ?>
-		<br />
-		
 		<b><?php echo CHtml::encode($data->getAttributeLabel('Id_resource_type')); ?>:</b>
 		<?php echo CHtml::encode($data->resourceType->description); ?>
 		<br />
@@ -46,5 +42,11 @@
 		<b><?php echo CHtml::encode($data->getAttributeLabel('Points')); ?>:</b>
 		<?php echo CHtml::encode($data->points); ?>
 		<br />
+		
+		<?php if($data->deleted == 1){ ?>
+			<b><?php echo CHtml::encode($data->getAttributeLabel('State')); ?>:</b>
+			<span class="deleted">Deleted</span>
+			<br />
+		<?php } ?>
 	</div>
 </div>
