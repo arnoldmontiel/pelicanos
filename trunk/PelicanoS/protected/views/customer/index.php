@@ -5,6 +5,8 @@ $this->menu=array(
 	array('label'=>'Manage Customer', 'url'=>array('admin')),
 	array('label'=>'Customer Movies', 'url'=>array('customerMovies')),
 	array('label'=>'Customer Series', 'url'=>array('customerSeries')),
+	array('label'=>'Customer Points', 'url'=>array('customerPoints')),
+	array('label'=>'Customer Transactions', 'url'=>array('customerTransaction')),
 );
 ?>
 
