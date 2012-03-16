@@ -19,6 +19,7 @@ class NzbController extends Controller
 								'SeasonResponse'=>'SeasonResponse',
 								'SerieStateRequest'=>'SerieStateRequest',
 								'MovieStateRequest'=>'MovieStateRequest',
+								'TransactionResponse'=>'TransactionResponse',
 		),
 		),
 		);
@@ -179,28 +180,37 @@ class NzbController extends Controller
 		// 		Yii::trace('idMovie param: '. $idMovie, 'webService');
 		// 		Yii::trace('idState param: '. $idState, 'webService');
 		
-		foreach($movieStateRequest as $item)
-		{
-			$model = NzbCustomer::model()->findByAttributes(array('Id_customer'=>$item->id_customer, 'Id_nzb'=>$item->id_movie));
-	
-	
-			$model->Id_movie_state = $item->id_state;
-			switch ($item->id_state) {
-				case 1:
-					$model->date_sent = date("Y-m-d H:i:s",$item->date);
-					break;
-				case 2:
-					$model->date_downloading = date("Y-m-d H:i:s",$item->date);
-					break;
-				case 3:
-					$model->date_downloaded = date("Y-m-d H:i:s",$item->date);
-				break;
+		try {
+
+			foreach($movieStateRequest as $item)
+			{
+				$model = NzbCustomer::model()->findByAttributes(array('Id_customer'=>$item->id_customer, 'Id_nzb'=>$item->id_movie));
+			
+				if(isset($model))
+				{
+					$model->Id_movie_state = $item->id_state;
+					switch ($item->id_state) {
+						case 1:
+							$model->date_sent = date("Y-m-d H:i:s",$item->date);
+							break;
+						case 2:
+							$model->date_downloading = date("Y-m-d H:i:s",$item->date);
+							$this->doTransaction($item->id_movie, $item->id_customer);
+							break;
+						case 3:
+							$model->date_downloaded = date("Y-m-d H:i:s",$item->date);
+							break;
+					}
+					$model->need_update = 0;
+					$model->save();
+				}
 			}
-			$model->need_update = 0;
-			$model->save();
+			
+			return true;
+		} catch (Exception $e) {
+			return false;
 		}
 		
-		return true;
 
 	}
 
@@ -227,39 +237,106 @@ class NzbController extends Controller
 // 		 			Yii::trace('id_imdbdata_tv param: '. $item->id_imdbdata_tv, 'webService');
 // 		 			Yii::trace('---------------------------------------------------', 'webService');
 // 		 		}
-		foreach($serieStateRequest as $item)
-		{
-			if($item->id_serie_nzb != null) //is serie episode
+		try {
+			foreach($serieStateRequest as $item)
 			{
-				$model = NzbCustomer::model()->findByAttributes(array('Id_customer'=>$item->id_customer, 'Id_nzb'=>$item->id_serie_nzb));
-				$model->Id_movie_state = $item->id_state;
-				switch ( $item->id_state) {
-					case 1:
-						$model->date_sent = date("Y-m-d H:i:s",$item->date);
-						break;
-					case 2:
-						$model->date_downloading = date("Y-m-d H:i:s",$item->date);
-						break;
-					case 3:
-						$model->date_downloaded = date("Y-m-d H:i:s",$item->date);
-					break;
+				if($item->id_serie_nzb != null) //is serie episode
+				{
+					$model = NzbCustomer::model()->findByAttributes(array('Id_customer'=>$item->id_customer, 'Id_nzb'=>$item->id_serie_nzb));
+					if(isset($model))
+					{
+						$model->Id_movie_state = $item->id_state;
+						switch ( $item->id_state) {
+							case 1:
+								$model->date_sent = date("Y-m-d H:i:s",$item->date);
+								break;
+							case 2:
+								$model->date_downloading = date("Y-m-d H:i:s",$item->date);
+								$this->doTransaction($item->id_serie_nzb, $item->id_customer);
+								break;
+							case 3:
+								$model->date_downloaded = date("Y-m-d H:i:s",$item->date);
+							break;
+						}
+						
+						$model->need_update = 0;
+						$model->save();
+					}
+					
 				}
-				
-			}
-			else //is serie header
-			{
-				$model = ImdbdataTvCustomer::model()->findByAttributes(array('Id_customer'=>$item->id_customer, 'Id_imdbdata_tv'=>$item->id_imdbdata_tv));
-				$model->date_sent = date("Y-m-d H:i:s",$item->date);
-				
+				else //is serie header
+				{
+					$model = ImdbdataTvCustomer::model()->findByAttributes(array('Id_customer'=>$item->id_customer, 'Id_imdbdata_tv'=>$item->id_imdbdata_tv));
+					if(isset($model))
+					{
+						$model->date_sent = date("Y-m-d H:i:s",$item->date);
+						$model->need_update = 0;
+						$model->save();
+					}
+				}
 			}
 			
-			$model->need_update = 0;
-			$model->save();
+			return true;
+		} catch (Exception $e) {
+			return false;
 		}
-		
-		return true;
 	}
 
+	/**
+	*
+	* get customer points
+	* @param integer idCustomer
+	* @param integer idTransaction
+	* @return TransactionResponse[]
+	* @soap
+	*/
+	public function getPoints($idCustomer, $idTransaction)
+	{
+		$criteria=new CDbCriteria;
+		
+		$criteria->addCondition('t.Id > '. $idTransaction);
+		$criteria->addCondition('t.Id_customer = '. $idCustomer);
+		$criteria->addCondition('t.Id_nzb is null ');
+		
+		$arrayResponse = array();
+		
+		$arrayTransaction = CustomerTransaction::model()->findAll($criteria);
+		
+		foreach($arrayTransaction as $modelTrans)
+		{
+			$transResponse = new TransactionResponse;
+			$transResponse->setAttributes($modelTrans);
+			$arrayResponse[]=$transResponse;
+		}		
+		
+		
+		return $arrayResponse;
+	}
+	
+	/***
+	 * Make a debit transaction with the nzb and customer
+	 */
+	private function doTransaction($idNzb, $idCustomer)
+	{
+		$modelNzb =  Nzb::model()->findByPk($idNzb);
+		if(isset($modelNzb))
+		{
+			$model = new CustomerTransaction;
+			$model->attributes = array('Id_nzb'=>$idNzb,
+										'Id_customer'=>$idCustomer,
+										'points'=>$modelNzb->points,
+										'Id_transaction_type'=>1, //Debit
+										'description'=>'Extraccion automatica por consumo');
+			$model->save();
+			
+			
+			//customer points decrement
+			$modelCustomer = Customer::model()->findByPk($idCustomer);
+			$modelCustomer->current_points = $modelCustomer->current_points - $model->points;
+			$modelCustomer->save();
+		}
+	}
+	
 	/**
 	 * @return array action filters
 	 */
