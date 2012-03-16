@@ -5,15 +5,15 @@
 $this->menu=array(
 	array('label'=>'List Customer', 'url'=>array('index')),
 	array('label'=>'Create Customer', 'url'=>array('create')),
+	array('label'=>'Customer Series', 'url'=>array('customerSeries')),
 	array('label'=>'Customer Movies', 'url'=>array('customerMovies')),
 	array('label'=>'Customer Points', 'url'=>array('customerPoints')),
-	array('label'=>'Customer Transaction', 'url'=>array('customerTransaction')),
 );
 
 Yii::app()->clientScript->registerScript('customerMovies', "
 $('#Customer_Id').change(function(){
 	if($(this).val()!= ''){
-		$.fn.yiiGridView.update('relation-grid', {
+		$.fn.yiiGridView.update('transaction-grid', {
 			data: $(this).serialize()
 		});
 		$('#display').animate({opacity: 'show'},240);
@@ -26,8 +26,7 @@ $('#Customer_Id').change(function(){
 
 ");
 ?>
-
-<h1>Customers Series</h1>
+<h1>Customers Transaction</h1>
 <div class="form">
 <?php $form=$this->beginWidget('CActiveForm', array(
 		'id'=>'customerMovies-form',
@@ -55,57 +54,38 @@ $('#Customer_Id').change(function(){
 	</div>
 	<div id="display"
 	style="display: none">
-	<?php		
+		
+<?php		
 	
 	$this->widget('zii.widgets.grid.CGridView', array(
-		'id'=>'relation-grid',
-		'dataProvider'=>$modelRelation->searchRelationSeries(),
+		'id'=>'transaction-grid',
+		'dataProvider'=>$modelRelation->searchTransaction(),
 		'filter'=>$modelRelation,
 		'summaryText'=>'',	
 		'columns'=>array(	
 				array(
-	 				    'name'=>'id_imdb',
-					    'value'=>'$data->nzb->imdbDataTv->ID',
-	
+	 				    'name'=>'date',
+					    'value'=>'$data->date',	
+						'htmlOptions' => array('style' => 'width: 150px;'),
 				),
 				array(
-	 				    'name'=>'title',
-					    'value'=>'$data->nzb->imdbDataTv->Title',
-	
+			 			'name'=>"Id_transaction_type",
+			 			'type'=>'raw',
+			 			'value'=>'$data->transactionType->description',
+			 			'filter'=>CHtml::listData(array(
+														array('id'=>'1','value'=>'Debit'),
+														array('id'=>'2','value'=>'Credit')
+														)
+														,'id','value'
+												),
+						'htmlOptions' => array('style' => 'width: 50px;'),
 				),
 				array(
-	 				    'name'=>'year',
-					    'value'=>'$data->nzb->imdbDataTv->Year',
-	
+	 				    'name'=>'points',
+					    'value'=>'$data->points',
+					    'htmlOptions' => array('style' => 'width: 50px;'),
 				),
-				array(
-	 				    'name'=>'genre',
-					    'value'=>'$data->nzb->imdbDataTv->Genre',
-	
-				),
-				array(
-	 				    'name'=>'serie_title',
-					    'value'=>'$data->nzb->imdbDataTv->idParent->Title',
-	
-				),	
-				array(
-	 				    'name'=>'season',
-					    'value'=>'$data->nzb->imdbDataTv->Season',
-	
-				),
-				array(
-	 				    'name'=>'episode',
-					    'value'=>'$data->nzb->imdbDataTv->Episode',
-	
-				),
-				array(
-	 				    'name'=>'movie_status',
-					    'value'=>'$data->movieState->description',
-	
-				),
-				date_sent,
-				date_downloading,
-				date_downloaded
+				description,
 			),
 		));		
 		?>

@@ -6,6 +6,8 @@ $this->menu=array(
 	array('label'=>'List Customer', 'url'=>array('index')),
 	array('label'=>'Create Customer', 'url'=>array('create')),
 	array('label'=>'Customer Series', 'url'=>array('customerSeries')),
+	array('label'=>'Customer Points', 'url'=>array('customerPoints')),
+	array('label'=>'Customer Transaction', 'url'=>array('customerTransaction')),
 );
 
 Yii::app()->clientScript->registerScript('customerMovies', "
