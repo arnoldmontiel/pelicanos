@@ -136,6 +136,130 @@ class CustomerController extends Controller
 		));
 	}
 
+	public function actionAjaxDoTransaction()
+	{
+		$pointsQty = $_POST['pointsQty'];
+		$pointsDesc = $_POST['pointsDesc'];
+		$transType = (int)$_POST['rbnTransType'];
+		$idCustomer = $_POST['Customer']['Id'];
+		
+		$currentPoints = 0;
+		$modelTransaction = new CustomerTransaction;
+		$modelTransaction->attributes = array('Id_customer'=>$idCustomer,
+												'points'=>$pointsQty,
+												'description'=>$pointsDesc,
+												'Id_transaction_type'=>$transType);
+		
+		if($transType == 1) //Debit
+		{
+			$currentPoints = $this->removeCredit($modelTransaction);
+		}
+		else //Credit 
+		{
+			$currentPoints = $this->addCredit($modelTransaction);
+		}
+		
+		echo $currentPoints;
+	}
+	
+	private function addCredit($modelTransaction)
+	{
+		
+		$transaction = $modelTransaction->dbConnection->beginTransaction();
+		try {
+			
+			//save customer credit transaction		
+			$modelTransaction->save();
+			
+			//customer points increment
+			$model = Customer::model()->findByPk($modelTransaction->Id_customer);
+			$model->current_points = $model->current_points + $modelTransaction->points;
+			$model->save();
+			
+			$transaction->commit();
+			return $model->current_points;
+		} catch (Exception $e) {
+			$transaction->rollback();
+		}
+		
+		
+	}
+	
+	private function removeCredit($modelTransaction)
+	{
+	
+		$transaction = $modelTransaction->dbConnection->beginTransaction();
+		try {
+				
+			//save customer credit transaction
+			$modelTransaction->save();
+				
+			//customer points decrement
+			$model = Customer::model()->findByPk($modelTransaction->Id_customer);
+			$model->current_points = $model->current_points - $modelTransaction->points;
+			$model->save();
+				
+			$transaction->commit();
+			return $model->current_points;
+		} catch (Exception $e) {
+			$transaction->rollback();
+		}
+	
+	
+	}
+	
+	public function actionCustomerPoints()
+	{
+		$ddlSource = Customer::model()->findAll();
+		$model = Customer::model();
+			
+	
+		$modelRelation = new CustomerTransaction('search');
+		$modelRelation->unsetAttributes();
+	
+		if(isset($_GET['CustomerTransaction']))
+			$modelRelation->attributes = $_GET['CustomerTransaction'];
+	
+		if(isset($_GET['Customer']))
+			$modelRelation->Id_customer = $_GET['Customer']['Id'];
+	
+		$this->render('customerPoints',array(
+								'model'=>$model,
+								'ddlSource'=>$ddlSource,
+								'modelRelation'=>$modelRelation,
+		));
+	
+	}
+	
+	public function actionAjaxGetCurrentPoints()
+	{
+		$idCustomer = $_POST['idCustomer'];
+		$model = Customer::model()->findByPk($idCustomer);
+		echo $model->current_points; 
+	}
+	
+	public function actionCustomerTransaction()
+	{
+		$ddlSource = Customer::model()->findAll();
+		$model = Customer::model();
+			
+	
+		$modelRelation = new CustomerTransaction('search');
+		$modelRelation->unsetAttributes();
+	
+		if(isset($_GET['CustomerTransaction']))
+			$modelRelation->attributes = $_GET['CustomerTransaction'];
+	
+		if(isset($_GET['Customer']))
+			$modelRelation->Id_customer = $_GET['Customer']['Id'];
+	
+		$this->render('customerTransaction',array(
+									'model'=>$model,
+									'ddlSource'=>$ddlSource,
+									'modelRelation'=>$modelRelation,
+		));
+	
+	}
 	
 	public function actionCustomerMovies()
 	{
