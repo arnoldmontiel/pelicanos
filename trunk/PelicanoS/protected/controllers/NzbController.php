@@ -879,6 +879,63 @@ class NzbController extends Controller
 		else
 		throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
 	}
+	
+	
+	public function actionReCreateHeader($id)
+	{
+		if(Yii::app()->request->isPostRequest)
+		{
+			
+			$model = $this->loadModel($id);
+			
+			$modelHeader = ImdbdataTv::model()->findByPk($model->imdbDataTv->Id_parent);
+			
+			$transaction = $model->dbConnection->beginTransaction();
+			try {
+	
+				$this->updateHeaderRelation($model->imdbDataTv->Id_parent);
+	
+				if($modelHeader->Deleted_serie == 1)
+					$modelHeader->Deleted_serie = 0;
+				else
+					$modelHeader->Deleted_serie = 1;
+	
+				//check if item is deleted
+				if($model->deleted == 1)
+				{
+					$this->updateRelation($id);
+					$model->deleted = 0;
+					$model->save();
+				}
+	
+				$modelHeader->save();
+	
+				$transaction->commit();
+				// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+				if(!isset($_GET['ajax']))
+					$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('adminEpisode'));
+	
+			} catch (Exception $e) {
+				$transaction->rollback();
+			}
+		}
+		else
+			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
+	}
+	
+	private function updateHeaderRelation($id)
+	{
+		$modelRelation = ImdbdataTvCustomer::model()->findAllByAttributes(array('Id_imdbdata_tv'=>$id));
+	
+		if(isset($modelRelation) )
+		{
+			foreach ($modelRelation as $modelRel){
+				$modelRel->need_update = 1;
+				$modelRel->save();
+			}
+		}
+	}
+	
 	/**
 	 * Find subtitle.
 	 */

@@ -1,22 +1,37 @@
 <?php
 
+$confirm = '';
 if($model->imdbDataTv->idParent->Deleted_serie == 1)
 {
+	$confirm = 'Header Serie will be re-create. Are you sure you want to re-create this item?';
 	$this->menu=array(
 		array('label'=>'List Nzb Episodes', 'url'=>array('indexEpisode')),
-		array('label'=>'Re-create Nzb', 'url'=>'#', 'linkOptions'=>array('submit'=>array('deleteEpisode','id'=>$model->Id),'confirm'=>'Are you sure you want to re-create this item?')),
+		array('label'=>'Re-create Nzb', 'url'=>'#', 'linkOptions'=>array('submit'=>array('reCreateHeader','id'=>$model->Id),'confirm'=>$confirm)),
 		array('label'=>'Manage Nzb Episodes', 'url'=>array('adminEpisode')),
 	);
 }
 else {
-	$this->menu=array(
+	if($model->deleted == 1)
+	{
+		$confirm = 'Are you sure you want to re-create this item?';
+		$this->menu=array(
 		array('label'=>'List Nzb Episodes', 'url'=>array('indexEpisode')),
-		array('label'=>'Update Nzb', 'url'=>array('updateEpisode', 'id'=>$model->Id)),
-		array('label'=>'Update Subtitle', 'url'=>array('findSubtitle', 'id'=>$model->Id)),
-		array('label'=>'Upload Subtitle', 'url'=>array('uploadSubtitle', 'id'=>$model->Id)),
-		array('label'=>'Delete Nzb', 'url'=>'#', 'linkOptions'=>array('submit'=>array('deleteEpisode','id'=>$model->Id),'confirm'=>'Are you sure you want to delete this item?')),
+		array('label'=>'Re-create Nzb', 'url'=>'#', 'linkOptions'=>array('submit'=>array('deleteEpisode','id'=>$model->Id),'confirm'=>$confirm)),
 		array('label'=>'Manage Nzb Episodes', 'url'=>array('adminEpisode')),
-	);
+		);
+	}
+	else 
+	{
+		$confirm = 'Are you sure you want to delete this item?';
+		$this->menu=array(
+			array('label'=>'List Nzb Episodes', 'url'=>array('indexEpisode')),
+			array('label'=>'Update Nzb', 'url'=>array('updateEpisode', 'id'=>$model->Id)),
+			array('label'=>'Update Subtitle', 'url'=>array('findSubtitle', 'id'=>$model->Id)),
+			array('label'=>'Upload Subtitle', 'url'=>array('uploadSubtitle', 'id'=>$model->Id)),
+			array('label'=>'Delete Nzb', 'url'=>'#', 'linkOptions'=>array('submit'=>array('deleteEpisode','id'=>$model->Id),'confirm'=>$confirm)),
+			array('label'=>'Manage Nzb Episodes', 'url'=>array('adminEpisode')),
+		);
+	}
 }
 
 
@@ -115,7 +130,7 @@ Yii::app()->clientScript->registerScript('viewNZB', "
 		<?php echo CHtml::encode($model->points); ?>
 		<br />
 		
-		<?php if($model->imdbDataTv->idParent->Deleted_serie == 1){ ?>
+		<?php if($model->imdbDataTv->idParent->Deleted_serie == 1 || $model->deleted == 1){ ?>
 		<b><?php echo CHtml::encode($model->getAttributeLabel('State')); ?>:</b>
 		<span class="deleted">Deleted</span>
 		<br />

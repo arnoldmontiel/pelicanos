@@ -1,16 +1,29 @@
 <?php
 
-$this->menu=array(
-	array('label'=>'List Nzb Movies', 'url'=>array('index')),
-	array('label'=>'Create Nzb', 'url'=>array('create')),
-	array('label'=>'Update Nzb', 'url'=>array('update', 'id'=>$model->Id)),
-	array('label'=>'Update Subtitle', 'url'=>array('findSubtitle', 'id'=>$model->Id)),
-	array('label'=>'Upload Subtitle', 'url'=>array('uploadSubtitle', 'id'=>$model->Id)),
-	array('label'=>'Backdrop', 'url'=>array('backdrop', 'id'=>$model->Id)),
-	array('label'=>($model->deleted == 1)?'Re-create Nzb':'Delete Nzb', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->Id),'confirm'=>($model->deleted == 1)?'Are you sure you want to re-create this item?':'Are you sure you want to delete this item?')),
-	array('label'=>'Manage Nzb Movies', 'url'=>array('admin')),
-);
-
+$confirm = '';
+if($model->deleted == 1)
+{
+	$confirm = 'Are you sure you want to re-create this item?';
+	$this->menu=array(
+		array('label'=>'List Nzb Movies', 'url'=>array('index')),
+		array('label'=>'Re-create Nzb', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->Id),'confirm'=>$confirm)),
+		array('label'=>'Manage Nzb Movies', 'url'=>array('admin')),
+	);
+}
+else
+{
+	$confirm = 'Are you sure you want to delete this item?';
+	$this->menu=array(
+		array('label'=>'List Nzb Movies', 'url'=>array('index')),
+		array('label'=>'Create Nzb', 'url'=>array('create')),
+		array('label'=>'Update Nzb', 'url'=>array('update', 'id'=>$model->Id)),
+		array('label'=>'Update Subtitle', 'url'=>array('findSubtitle', 'id'=>$model->Id)),
+		array('label'=>'Upload Subtitle', 'url'=>array('uploadSubtitle', 'id'=>$model->Id)),
+		array('label'=>'Backdrop', 'url'=>array('backdrop', 'id'=>$model->Id)),
+		array('label'=>'Delete Nzb', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->Id),'confirm'=>$confirm)),
+		array('label'=>'Manage Nzb Movies', 'url'=>array('admin')),
+	);	
+}
 
 
 ?>

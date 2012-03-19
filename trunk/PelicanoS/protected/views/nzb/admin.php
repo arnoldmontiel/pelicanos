@@ -52,16 +52,7 @@ $this->menu=array(
 		),
 		array(
 			'class'=>'CButtonColumn',
-			'template'=>'{view}{update}{delete}',
-			'deleteConfirmation'=>'Are you sure you want to Delete/Re-create this item?',
-			'buttons'=>array
-			(
-				'delete' => array
-				(
-					'label'=>'Delete/Re-create',
-			    	'url'=>'Yii::app()->createUrl("nzb/delete", array("id"=>$data->Id))',
-				),
-			),
+			'template'=>'{view}',
 		),
 	),
 )); ?>
