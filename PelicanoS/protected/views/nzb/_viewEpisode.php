@@ -55,7 +55,7 @@
 		<?php echo CHtml::encode($data->points); ?>
 		<br />
 		
-		<?php if($data->imdbDataTv->idParent->Deleted_serie == 1){ ?>
+		<?php if($data->imdbDataTv->idParent->Deleted_serie == 1 || $data->deleted == 1){ ?>
 			<b><?php echo CHtml::encode($data->getAttributeLabel('State')); ?>:</b>
 			<span class="deleted">Deleted</span>
 			<br />

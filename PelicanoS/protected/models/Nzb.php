@@ -31,6 +31,7 @@ class Nzb extends CActiveRecord
 	public $serie_title;
 	public $episode;
 	public $season;
+	public $deleted_serie;
 	
 	public function beforeSave()
 	{
@@ -71,7 +72,7 @@ class Nzb extends CActiveRecord
 			array('url, subt_url, file_name, subt_file_name, subt_original_name', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id, url, file_name, subt_url, subt_file_name, Id_imdbdata, title, year, idImdb, genre, subt_original_name, resourceTypeDesc, Id_resource_type, Id_imdbdata_tv, deleted, serie_title, season, episode, points', 'safe', 'on'=>'search'),
+			array('Id, url, file_name, subt_url, subt_file_name, Id_imdbdata, title, year, idImdb, genre, subt_original_name, resourceTypeDesc, Id_resource_type, Id_imdbdata_tv, deleted, serie_title, season, episode, points, deleted_serie', 'safe', 'on'=>'search'),
 		);
 	}
 	
@@ -106,6 +107,7 @@ class Nzb extends CActiveRecord
 			'Id_imdbdata_tv' => 'Id Imdb Data Tv',
 			'deleted' => 'Deleted',
 			'points' => 'Points',
+			'deleted_serie' => 'Deleted from Header',
 		);
 	}
 
@@ -163,7 +165,8 @@ class Nzb extends CActiveRecord
 		$criteria->addSearchCondition("imdbData.ID",$this->idImdb);
 		$criteria->addSearchCondition("imdbData.Genre",$this->genre);
 		$criteria->addSearchCondition("imdbData.Genre",$this->genre);
-	
+		
+		
 		$criteria->with[]='resourceType';
 		$criteria->addSearchCondition("resourceType.description",$this->resourceTypeDesc);
 		
@@ -241,6 +244,8 @@ class Nzb extends CActiveRecord
 		$criteria->addSearchCondition("i.Season",$this->season);
 		$criteria->addSearchCondition("i.Episode",$this->episode);
 		$criteria->addSearchCondition("p.Title",$this->serie_title);
+		$criteria->addSearchCondition("p.Deleted_serie",$this->deleted_serie);
+		
 		// Create a custom sort
 		$sort=new CSort;
 		$sort->attributes=array(
@@ -261,7 +266,11 @@ class Nzb extends CActiveRecord
 		),
 				'serie_title' => array(
 					        'asc' => 'p.Year',
-					        'desc' => 'o.Year DESC',
+					        'desc' => 'p.Year DESC',
+		),
+				'deleted_serie' => array(
+					        'asc' => 'p.Deleted_serie',
+					        'desc' => 'p.Deleted_serie DESC',
 		),
 				'season' => array(
 					        'asc' => 'i.Year',
