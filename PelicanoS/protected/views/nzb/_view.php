@@ -12,7 +12,7 @@
 		<br />
 	
 		<b><?php echo CHtml::encode($data->getAttributeLabel('file_name')); ?>:</b>
-		<?php echo CHtml::link($data->file_name, NzbController::createUrl('AjaxDownloadFile',array('fileName'=>$data->file_name, 'root'=>'nzb'))); ?>
+		<?php echo CHtml::link($data->file_original_name, NzbController::createUrl('AjaxDownloadFile',array('fileName'=>$data->file_name, 'root'=>'nzb'))); ?>
 		<br />
 	
 		<b><?php echo CHtml::encode($data->getAttributeLabel('subt_file_name')); ?>:</b>

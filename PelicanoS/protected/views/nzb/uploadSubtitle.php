@@ -29,7 +29,7 @@ $this->menu=array(
 				'type'=>'raw',
 				'value'=>($modelNzb->Id_imdbdata != null) ? $modelNzb->imdbData->Year : $modelNzb->imdbDataTv->Year
 			),
-			'file_name',
+			'file_original_name',
 			'subt_file_name',
 			'subt_original_name'
 		),
