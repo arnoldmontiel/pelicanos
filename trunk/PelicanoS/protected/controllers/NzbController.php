@@ -206,11 +206,11 @@ class NzbController extends Controller
 				}
 			}
 			
-			return true;
+			
 		} catch (Exception $e) {
 			return false;
 		}
-		
+		return true;
 
 	}
 
@@ -276,10 +276,10 @@ class NzbController extends Controller
 				}
 			}
 			
-			return true;
 		} catch (Exception $e) {
 			return false;
 		}
+		return true;
 	}
 
 	/**
@@ -297,8 +297,8 @@ class NzbController extends Controller
 		if($idTransaction != 0)
 			$criteria->addCondition('t.Id > '. $idTransaction);
 		
+		//$criteria->addCondition('t.Id_nzb is null');
 		$criteria->addCondition('t.Id_customer = '. $idCustomer);
-		$criteria->addCondition('t.Id_nzb is null ');
 		
 		$arrayResponse = array();
 		
@@ -439,11 +439,16 @@ class NzbController extends Controller
 				$transaction = $model->dbConnection->beginTransaction();
 				try {
 					if($file != null)
-					{
-						$model->url = Yii::app()->request->getBaseUrl(). '/nzb/'.rawurlencode($file->getName());
-						$model->file_name = $file->getName();
-							
-						$this->saveFile($file, 'nzb', $file->getName());
+					{	
+						$uniqueId = uniqid();
+						$fileName = $uniqueId . '.nzb';
+						
+						$model->url = '/nzb/'.$fileName;
+						$model->file_name = $fileName;
+						
+						$model->file_original_name = $file->getName();
+						
+						$this->saveFile($file, 'nzb', $fileName);
 					}
 
 
@@ -560,10 +565,15 @@ class NzbController extends Controller
 				try {
 					if($file != null)
 					{
-						$model->url = Yii::app()->request->getBaseUrl(). '/nzb/'.rawurlencode($file->getName());
-						$model->file_name = $file->getName();
-							
-						$this->saveFile($file, 'nzb', $file->getName());
+						$uniqueId = uniqid();
+						$fileName = $uniqueId . '.nzb'; 
+						
+						$model->url = '/nzb/'.$fileName;
+						$model->file_name = $fileName;
+						
+						$model->file_original_name = $file->getName();
+						
+						$this->saveFile($file, 'nzb', $fileName);
 					}
 						
 
@@ -672,10 +682,17 @@ class NzbController extends Controller
 			{
 				if($modelUpload->validate())
 				{
-					$model->url = Yii::app()->request->getBaseUrl(). '/nzb/'.rawurlencode($file->getName());
-					$model->file_name = $file->getName();
 					
-					$this->saveFile($file, 'nzb', $file->getName());
+					$uniqueId = uniqid();
+					$fileName = $uniqueId . '.nzb';
+					
+					$model->url = '/nzb/'.$fileName;
+					$model->file_name = $fileName;
+					
+					$model->file_original_name = $file->getName();
+					
+					$this->saveFile($file, 'nzb', $fileName);
+					
 					
 					$this->saveUpdatedEpisodeModel($model, $modelImdb, $id);
 				}
@@ -748,10 +765,15 @@ class NzbController extends Controller
 			{
 				if($modelUpload->validate())
 				{
-					$model->url = Yii::app()->request->getBaseUrl(). '/nzb/'.rawurlencode($file->getName());
-					$model->file_name = $file->getName();
+					$uniqueId = uniqid();
+					$fileName = $uniqueId . '.nzb'; 
 					
-					$this->saveFile($file, 'nzb', $file->getName());
+					$model->url = '/nzb/'.$fileName;
+					$model->file_name = $fileName;
+					
+					$model->file_original_name = $file->getName();
+					
+					$this->saveFile($file, 'nzb', $fileName);
 					
 					$this->saveUpdatedModel($model, $id);
 				}
@@ -944,7 +966,7 @@ class NzbController extends Controller
 		$model = new Subtitle('search');
 		$modelNzb = Nzb::model()->findByPk($id);
 
-		$model->attributes = array('query'=>str_replace('.nzb','',$modelNzb->file_name));
+		$model->attributes = array('query'=>str_replace('.nzb','',$modelNzb->file_original_name));
 
 		if($_POST['selectedRow'] != "")
 		{
@@ -997,7 +1019,7 @@ class NzbController extends Controller
 						
 					$subtFileName = str_replace('.nzb','',$modelNzb->file_name) . '.srt';
 						
-					$modelNzb->subt_url = Yii::app()->request->getBaseUrl(). '/subtitles/'.rawurlencode($subtFileName);
+					$modelNzb->subt_url = '/subtitles/'.rawurlencode($subtFileName);
 					$modelNzb->subt_file_name = $subtFileName;
 					$modelNzb->subt_original_name = $file->getName();
 						
@@ -1048,7 +1070,7 @@ class NzbController extends Controller
 		}
 
 
-		$nzb->subt_url = Yii::app()->request->getBaseUrl(). '/subtitles/'.rawurlencode($subtFileName);
+		$nzb->subt_url = '/subtitles/'.rawurlencode($subtFileName);
 		$nzb->subt_file_name = $subtFileName;
 		$nzb->subt_original_name = $openSubtitle->SubFileName;
 
