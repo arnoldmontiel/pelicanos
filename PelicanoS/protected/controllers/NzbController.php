@@ -20,11 +20,39 @@ class NzbController extends Controller
 								'SerieStateRequest'=>'SerieStateRequest',
 								'MovieStateRequest'=>'MovieStateRequest',
 								'TransactionResponse'=>'TransactionResponse',
+								'UserResponse'=>'UserResponse',
+								'UserStateRequest'=>'UserStateRequest',
 		),
 		),
 		);
 	}
 
+	
+	/**
+	* Get new users by customer
+	* @param integer idCustomer
+	* @return UserResponse[]
+	* @soap
+	*/
+	public function getNewUser($idCustomer)
+	{
+		$criteria=new CDbCriteria;
+		
+		$criteria->addCondition('t.Id_customer = '. $idCustomer.' and need_update = 1)');
+				
+		$arrayCustomerUsers = CustomerUsers::model()->findAll($criteria);
+		$arrayResponse = array();
+		
+		foreach ($arrayCustomerUsers as $model)
+		{
+			$userResponse = new UserResponse();
+			$userResponse->setAttributes($model);
+			$arrayResponse[]=$userResponse;
+		}
+		
+		return $arrayResponse;
+	}
+	
 	/**
 	 * Returns new and updated movies
 	 * @param integer idCustomer
@@ -164,6 +192,36 @@ class NzbController extends Controller
 		}
 	
 		return $arrayResponse;
+	}
+	
+	/**
+	*
+	* Change customerUser status in relation customer/user
+	* @param UserStateRequest[]
+	* @return boolean
+	* @soap
+	*/
+	public function setUserState($userStateRequest )
+	{
+	
+		try {
+	
+			foreach($userStateRequest as $item)
+			{
+				$model = CustomerUsers::model()->findByPk($item->username);
+				if(isset($model))
+				{
+					$model->need_update = 0;
+					$model->save();
+				}
+				
+			}
+				
+		} catch (Exception $e) {
+			return false;
+		}
+		return true;
+	
 	}
 	
 	/**
