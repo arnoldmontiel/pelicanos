@@ -38,8 +38,17 @@ class CustomerController extends Controller
 	 */
 	public function actionView($id)
 	{
+		
+		$modelCustUsers = new CustomerUsers('search');
+		$modelCustUsers->unsetAttributes();
+		$modelCustUsers->Id_customer = $id;
+		
+		if(isset($_GET['CustomerUsers']))
+			$modelCustUsers->attributes=$_GET['CustomerUsers'];
+		
 		$this->render('view',array(
 			'model'=>$this->loadModel($id),
+			'modelCustUsr'=>$modelCustUsers,
 		));
 	}
 
@@ -66,6 +75,7 @@ class CustomerController extends Controller
 		));
 	}
 
+	
 	/**
 	 * Updates a particular model.
 	 * If update is successful, the browser will be redirected to the 'view' page.
