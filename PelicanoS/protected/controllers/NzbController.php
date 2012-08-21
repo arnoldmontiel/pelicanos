@@ -38,7 +38,7 @@ class NzbController extends Controller
 	{
 		$criteria=new CDbCriteria;
 		
-		$criteria->addCondition('t.Id_customer = '. $idCustomer.' and need_update = 1)');
+		$criteria->addCondition('t.Id_customer = '. $idCustomer.' and need_update = 1');
 				
 		$arrayCustomerUsers = CustomerUsers::model()->findAll($criteria);
 		$arrayResponse = array();
