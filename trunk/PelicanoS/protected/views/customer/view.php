@@ -110,7 +110,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 		'email',
 		array(
 				'class'=>'CButtonColumn',
-				'template'=>'{update}{delete}',
+				'template'=>'{update}',
 				'buttons'=>array(
 						'delete' => array(
 								'url'=>'Yii::app()->createUrl("customerUsers/AjaxRemoveUserCustomer", array("id"=>$data->username))',
