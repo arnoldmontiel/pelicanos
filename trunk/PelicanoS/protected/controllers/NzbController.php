@@ -22,11 +22,38 @@ class NzbController extends Controller
 								'TransactionResponse'=>'TransactionResponse',
 								'UserResponse'=>'UserResponse',
 								'UserStateRequest'=>'UserStateRequest',
+								'RippedRequest'=>'RippedRequest',
+								'RippedResponse'=>'RippedResponse',
 		),
 		),
 		);
 	}
-
+	
+	/**
+	* Get ripped by customer
+	* @param integer idCustomer
+	* @return RippedResponse[]
+	* @soap
+	*/
+	public function getRipped($idCustomer)
+	{
+		$criteria=new CDbCriteria;
+	
+		$criteria->addCondition('t.Id_customer = '. $idCustomer);
+	
+		$arrayRipped = RippedCustomer::model()->findAll($criteria);
+		$arrayResponse = array();
+	
+		foreach ($arrayRipped as $model)
+		{
+			$rippedResponse = new RippedResponse();
+			$rippedResponse->Id = $model->Id_my_movie;
+			$rippedResponse->id_customer = $model->Id_customer;
+			$arrayResponse[]=$rippedResponse;
+		}
+	
+		return $arrayResponse;
+	}
 	
 	/**
 	* Get new users by customer
@@ -192,6 +219,81 @@ class NzbController extends Controller
 		}
 	
 		return $arrayResponse;
+	}
+	
+	/**
+	*
+	* Sincronize ripped videos from customer
+	* @param RippedRequest[]
+	* @return boolean
+	* @soap
+	*/
+	public function setRipped($rippedRequest )
+	{
+	
+		try {
+	
+			foreach($rippedRequest as $item)
+			{
+				$rippedCustomerDB = RippedCustomer::model()->findByAttributes(array('Id_my_movie'=>$item->Id)); 				
+				if(isset($rippedCustomerDB))
+				{
+					$transaction = $rippedCustomerDB->dbConnection->beginTransaction();
+					try {
+						
+						$rippedCustomerDB->delete();
+						MyMovie::model()->deleteByPk($rippedCustomerDB->Id_my_movie);
+						
+						$transaction->commit();
+					} catch (Exception $e) {
+						$transaction->rollback();
+					}
+				}
+				
+				$modelMyMovie = new MyMovie();
+				
+				$transaction = $modelMyMovie->dbConnection->beginTransaction();
+				try {
+				
+					$modelMyMovie->Id = $item->Id;
+					$modelMyMovie->type = $item->type;
+					$modelMyMovie->bar_code = $item->bar_code;
+					$modelMyMovie->country = $item->country;
+					$modelMyMovie->local_title = $item->local_title;
+					$modelMyMovie->original_title = $item->original_title;
+					$modelMyMovie->sort_title = $item->sort_title;
+					$modelMyMovie->aspect_ratio = $item->aspect_ratio;
+					$modelMyMovie->video_standard = $item->video_standard;
+					$modelMyMovie->production_year = $item->production_year;
+					$modelMyMovie->release_date = $item->release_date;
+					$modelMyMovie->running_time = $item->running_time;
+					$modelMyMovie->description = $item->description;
+					$modelMyMovie->extra_features = $item->extra_features;
+					$modelMyMovie->parental_rating_desc = $item->parental_rating_desc;
+					$modelMyMovie->imdb = $item->imdb;
+					$modelMyMovie->rating = $item->rating;
+					$modelMyMovie->data_changed = $item->data_changed;
+					$modelMyMovie->covers_changed = $item->covers_changed;
+					$modelMyMovie->genre = $item->genre;
+					$modelMyMovie->studio =  $item->studio;				
+					$modelMyMovie->save();
+					
+					$modelRippedCustomer = new RippedCustomer();
+					$modelRippedCustomer->Id_customer = $item->Id_customer;
+					$modelRippedCustomer->Id_my_movie = $item->Id;
+					$modelRippedCustomer->save();
+					
+					$transaction->commit();
+				} catch (Exception $e) {
+					$transaction->rollback();
+				}
+			}
+	
+		} catch (Exception $e) {
+			return false;
+		}
+		return true;
+	
 	}
 	
 	/**
