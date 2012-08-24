@@ -30,7 +30,7 @@ class NzbController extends Controller
 	}
 	
 	/**
-	* Get ripped by customer
+	* Get ripped by customer (feedback to client)
 	* @param integer idCustomer
 	* @return RippedResponse[]
 	* @soap
@@ -47,7 +47,7 @@ class NzbController extends Controller
 		foreach ($arrayRipped as $model)
 		{
 			$rippedResponse = new RippedResponse();
-			$rippedResponse->Id = $model->Id_my_movie;
+			$rippedResponse->Id_my_movie = $model->Id_my_movie;
 			$rippedResponse->id_customer = $model->Id_customer;
 			$arrayResponse[]=$rippedResponse;
 		}
@@ -223,7 +223,7 @@ class NzbController extends Controller
 	
 	/**
 	*
-	* Sincronize ripped videos from customer
+	* Sincronize ripped videos from customer (from client to server)
 	* @param RippedRequest[]
 	* @return boolean
 	* @soap
@@ -235,7 +235,7 @@ class NzbController extends Controller
 	
 			foreach($rippedRequest as $item)
 			{
-				$rippedCustomerDB = RippedCustomer::model()->findByAttributes(array('Id_my_movie'=>$item->Id)); 				
+				$rippedCustomerDB = RippedCustomer::model()->findByAttributes(array('Id_my_movie'=>$item->Id_my_movie)); 				
 				if(isset($rippedCustomerDB))
 				{
 					$transaction = $rippedCustomerDB->dbConnection->beginTransaction();
@@ -255,7 +255,7 @@ class NzbController extends Controller
 				$transaction = $modelMyMovie->dbConnection->beginTransaction();
 				try {
 				
-					$modelMyMovie->Id = $item->Id;
+					$modelMyMovie->Id = $item->Id_my_movie;
 					$modelMyMovie->type = $item->type;
 					$modelMyMovie->bar_code = $item->bar_code;
 					$modelMyMovie->country = $item->country;
@@ -280,7 +280,7 @@ class NzbController extends Controller
 					
 					$modelRippedCustomer = new RippedCustomer();
 					$modelRippedCustomer->Id_customer = $item->Id_customer;
-					$modelRippedCustomer->Id_my_movie = $item->Id;
+					$modelRippedCustomer->Id_my_movie = $item->Id_my_movie;
 					$modelRippedCustomer->save();
 					
 					$transaction->commit();

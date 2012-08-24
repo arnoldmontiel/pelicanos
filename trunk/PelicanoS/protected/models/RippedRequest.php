@@ -7,14 +7,14 @@ class RippedRequest
 	* @var integer customer id
 	* @soap
 	*/
-	public $id_customer;
+	public $Id_customer;
 
 	
 	/**
-	* @var string Id
+	* @var string Id_my_movie
 	* @soap
 	*/
-	public $Id;
+	public $Id_my_movie;
 	
 	/**
 	* @var string type
