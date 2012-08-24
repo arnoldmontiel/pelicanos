@@ -7,7 +7,7 @@ class RippedResponse
 	* @var integer customer id
 	* @soap
 	*/
-	public $id_customer;
+	public $Id_customer;
 
 	
 	/**

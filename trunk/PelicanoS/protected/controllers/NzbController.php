@@ -48,7 +48,7 @@ class NzbController extends Controller
 		{
 			$rippedResponse = new RippedResponse();
 			$rippedResponse->Id_my_movie = $model->Id_my_movie;
-			$rippedResponse->id_customer = $model->Id_customer;
+			$rippedResponse->Id_customer = $model->Id_customer;
 			$arrayResponse[]=$rippedResponse;
 		}
 	
@@ -231,8 +231,7 @@ class NzbController extends Controller
 	public function setRipped($rippedRequest )
 	{
 	
-		try {
-	
+		try {			
 			foreach($rippedRequest as $item)
 			{
 				$rippedCustomerDB = RippedCustomer::model()->findByAttributes(array('Id_my_movie'=>$item->Id_my_movie)); 				
@@ -251,6 +250,7 @@ class NzbController extends Controller
 				}
 				
 				$modelMyMovie = new MyMovie();
+				
 				
 				$transaction = $modelMyMovie->dbConnection->beginTransaction();
 				try {
@@ -276,6 +276,7 @@ class NzbController extends Controller
 					$modelMyMovie->covers_changed = $item->covers_changed;
 					$modelMyMovie->genre = $item->genre;
 					$modelMyMovie->studio =  $item->studio;				
+					
 					$modelMyMovie->save();
 					
 					$modelRippedCustomer = new RippedCustomer();
@@ -285,6 +286,7 @@ class NzbController extends Controller
 					
 					$transaction->commit();
 				} catch (Exception $e) {
+					//Yii::trace('---------------------------------------------------------'. $e , 'webService');
 					$transaction->rollback();
 				}
 			}
