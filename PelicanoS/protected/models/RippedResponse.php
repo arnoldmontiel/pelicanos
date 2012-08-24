@@ -11,10 +11,10 @@ class RippedResponse
 
 	
 	/**
-	* @var string Id
+	* @var string Id_my_movie
 	* @soap
 	*/
-	public $Id;
+	public $Id_my_movie;
 
 	
 }
