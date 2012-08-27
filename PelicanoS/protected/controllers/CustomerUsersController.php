@@ -66,6 +66,21 @@ class CustomerUsersController extends Controller
 		));
 	}
 
+	public function actionAjaxCreate()
+	{
+		$model=new CustomerUsers;
+	
+		// Uncomment the following line if AJAX validation is needed
+		$this->performAjaxValidation($model);
+	
+		if(isset($_POST['CustomerUsers']))
+		{
+			$model->attributes=$_POST['CustomerUsers'];
+			if($model->save())
+				echo json_encode($model->attributes);
+		}
+	}
+	
 	/**
 	 * Updates a particular model.
 	 * If update is successful, the browser will be redirected to the 'view' page.

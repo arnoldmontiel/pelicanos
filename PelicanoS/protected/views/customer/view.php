@@ -53,14 +53,16 @@ $this->menu=array(
 							'Grabar'=>'js:function()
 							{
 							jQuery("#wating").dialog("open");
-							jQuery.post("'.Yii::app()->createUrl("customerUsers/create").'", $("#customer-users-form").serialize(),
+							jQuery.post("'.Yii::app()->createUrl("customerUsers/AjaxCreate").'", $("#customer-users-form").serialize(),
 							function(data) {
-							$.fn.yiiGridView.update("customer-users-grid", {
-								data: $(this).serialize()
-							});
-
-							jQuery("#wating").dialog("close");
-							jQuery("#CreateUser").dialog( "close" );
+								if(data!=null && data!="")
+								{
+									$.fn.yiiGridView.update("customer-users-grid", {
+										data: $(this).serialize()
+									});
+									jQuery("#CreateUser").dialog( "close" );
+								}
+								jQuery("#wating").dialog("close");
 							}
 					);
 
@@ -70,7 +72,7 @@ $this->menu=array(
 	$modelCustomerUsers = new CustomerUsers();
 	$modelCustomerUsers->Id_customer = $model->Id;
 	
-	echo $this->renderPartial('_formUser', array('model'=>$modelCustomerUsers));
+	echo $this->renderPartial('../customerUsers/_formPopUp', array('model'=>$modelCustomerUsers));
 
 	$this->endWidget('zii.widgets.jui.CJuiDialog');
 ?>
