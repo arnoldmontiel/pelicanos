@@ -2,7 +2,8 @@
 
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'customer-users-form',
-	'enableAjaxValidation'=>false,
+	'enableAjaxValidation'=>true,
+	'action'=>Yii::app()->createUrl("customerUsers/ajaxCreate")
 )); ?>
 
 	<p class="note">Fields with <span class="required">*</span> are required.</p>

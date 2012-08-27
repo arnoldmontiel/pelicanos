@@ -43,9 +43,10 @@ class CustomerUsers extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('username, Id_customer', 'required'),
+			array('username, Id_customer, password', 'required'),
 			array('parental_control, Id_customer, deleted, need_update', 'numerical', 'integerOnly'=>true),
 			array('username, password, email', 'length', 'max'=>128),
+			array('username','unique'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('username, password, parental_control, email, Id_customer, deleted, need_update', 'safe', 'on'=>'search'),
