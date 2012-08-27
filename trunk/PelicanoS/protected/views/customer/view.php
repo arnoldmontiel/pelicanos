@@ -6,10 +6,11 @@ $this->menu=array(
 	array('label'=>'Update Customer', 'url'=>array('update', 'id'=>$model->Id)),
 	array('label'=>'Delete Customer', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->Id),'confirm'=>'Are you sure you want to delete this item?')),
 	array('label'=>'Manage Customer', 'url'=>array('admin')),
+	array('label'=>'Ripped', 'url'=>array('indexRipped', 'id'=>$model->Id)),
 );
 ?>
 
-<h1>View Customer #<?php echo $model->Id; ?></h1>
+<h1>View Customer</h1>
 
 <?php $this->widget('zii.widgets.CDetailView', array(
 	'data'=>$model,

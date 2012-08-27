@@ -59,8 +59,8 @@ class RippedCustomer extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'idMyMovie' => array(self::BELONGS_TO, 'MyMovie', 'Id_my_movie'),
-			'idCustomer' => array(self::BELONGS_TO, 'Customer', 'Id_customer'),
+			'myMovie' => array(self::BELONGS_TO, 'MyMovie', 'Id_my_movie'),
+			'customer' => array(self::BELONGS_TO, 'Customer', 'Id_customer'),
 		);
 	}
 
