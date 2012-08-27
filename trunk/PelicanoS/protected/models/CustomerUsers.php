@@ -35,6 +35,24 @@ class CustomerUsers extends CActiveRecord
 		return 'customer_users';
 	}
 
+	public function behaviors() {
+		return array(
+	            'ECompositeUniqueKeyValidatable' => array(
+	                'class' => 'ext.ECompositeUniqueKeyValidatable.ECompositeUniqueKeyValidatable',
+	                'uniqueKeys' => array(
+	                    'attributes' => 'username, Id_customer',
+	                    'errorMessage' => 'Your login is already taken',
+	                    'errorAttributes' => array('username'),
+		)
+		),
+		);
+	}
+	
+	
+	public function compositeUniqueKeysValidator() {
+		$this->validateCompositeUniqueKeys();
+	}
+	
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -46,7 +64,7 @@ class CustomerUsers extends CActiveRecord
 			array('username, Id_customer, password', 'required'),
 			array('parental_control, Id_customer, deleted, need_update', 'numerical', 'integerOnly'=>true),
 			array('username, password, email', 'length', 'max'=>128),
-			array('username','unique'),
+			 array('*', 'compositeUniqueKeysValidator'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('username, password, parental_control, email, Id_customer, deleted, need_update', 'safe', 'on'=>'search'),
