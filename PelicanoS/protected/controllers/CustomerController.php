@@ -51,6 +51,35 @@ class CustomerController extends Controller
 			'modelCustUsr'=>$modelCustUsers,
 		));
 	}
+	
+	public function actionViewRipped($id)
+	{
+	
+		$model = MyMovie::model()->findByPk($id);
+		
+		$modelRippedCustomer = RippedCustomer::model()->findByAttributes(array('Id_my_movie'=>$id));
+	
+		$this->render('viewRipped',array(
+				'model'=>$model,
+				'idCustomer'=>$modelRippedCustomer->Id_customer,
+		));
+	}
+	
+	public function actionIndexRipped($id)
+	{
+	
+		$criteria=new CDbCriteria;
+		$criteria->addCondition('t.Id_customer = '. $id);
+		
+		$dataProvider=new CActiveDataProvider('RippedCustomer', array(
+								'criteria'=>$criteria,
+		));
+		
+		$this->render('indexRipped',array(
+					'model'=>$this->loadModel($id),
+					'dataProvider'=>$dataProvider,
+		));
+	}
 
 	/**
 	 * Creates a new model.
