@@ -32,16 +32,6 @@ class CustomerUsersController extends Controller
 		);
 	}
 
-	/**
-	 * Displays a particular model.
-	 * @param integer $id the ID of the model to be displayed
-	 */
-	public function actionView($id)
-	{
-		$this->render('view',array(
-			'model'=>$this->loadModel($id),
-		));
-	}
 
 	/**
 	 * Creates a new model.
@@ -86,10 +76,9 @@ class CustomerUsersController extends Controller
 	 * If update is successful, the browser will be redirected to the 'view' page.
 	 * @param integer $id the ID of the model to be updated
 	 */
-	public function actionUpdate($id)
+	public function actionUpdate($username, $idCustomer)
 	{
-		$model=$this->loadModel($id);
-
+		$model=CustomerUsers::model()->findByAttributes(array('username'=>$username,'Id_customer'=>$idCustomer));
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
@@ -106,64 +95,20 @@ class CustomerUsersController extends Controller
 		));
 	}
 
-	/**
-	 * Deletes a particular model.
-	 * If deletion is successful, the browser will be redirected to the 'admin' page.
-	 * @param integer $id the ID of the model to be deleted
-	 */
-	public function actionDelete($id)
-	{
-		if(Yii::app()->request->isPostRequest)
-		{
-			// we only allow deletion via POST request
-			$this->loadModel($id)->delete();
-
-			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-			if(!isset($_GET['ajax']))
-				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
-		}
-		else
-			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
-	}
-
-	/**
-	 * Lists all models.
-	 */
-	public function actionIndex()
-	{
-		$dataProvider=new CActiveDataProvider('CustomerUsers');
-		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
-		));
-	}
-
-	public function actionAjaxRemoveUserCustomer()
-	{
-	
-		$id = isset($_GET['id'])?$_GET['id']:'';
-	
-		if(!empty($id))
-		{
-			$userCustomerDb = $this->loadModel($id);
-			if(isset($userCustomerDb))
-			{
-				$userCustomerDb->deleted = 1;
-				$userCustomerDb->save();
-			}
-		}
-	}
 	
 	public function actionAjaxUpdateUserCustomer()
 	{
 	
-		$id = isset($_GET['id'])?$_GET['id']:'';
-	
-		if(!empty($id))
+		$username = isset($_GET['username'])?$_GET['username']:'';
+		$idCustomer = isset($_GET['idCustomer'])?$_GET['idCustomer']:'';
+		
+		if(!empty($username) && !empty($idCustomer))
 		{
-			$userCustomerDb = $this->loadModel($id);
+			$userCustomerDb = CustomerUsers::model()->findByAttributes(array('username'=>$username,'Id_customer'=>$idCustomer));
+			
 			if(isset($userCustomerDb))
 			{
-				$this->redirect(array('update','id'=>$userCustomerDb->username));
+				$this->redirect(array('update','username'=>$username,'idCustomer'=>$idCustomer));
 			}
 		}
 		
@@ -184,18 +129,6 @@ class CustomerUsersController extends Controller
 		));
 	}
 
-	/**
-	 * Returns the data model based on the primary key given in the GET variable.
-	 * If the data model is not found, an HTTP exception will be raised.
-	 * @param integer the ID of the model to be loaded
-	 */
-	public function loadModel($id)
-	{
-		$model=CustomerUsers::model()->findByPk($id);
-		if($model===null)
-			throw new CHttpException(404,'The requested page does not exist.');
-		return $model;
-	}
 
 	/**
 	 * Performs the AJAX validation.

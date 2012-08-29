@@ -91,7 +91,7 @@ class CustomerUsers extends CActiveRecord
 		return array(
 			'username' => 'Username',
 			'password' => 'Password',
-			'parental_control' => 'Parental Control',
+			'parental_control' => 'Under Parental Control',
 			'email' => 'Email',
 			'Id_customer' => 'Id Customer',
 			'deleted' => 'Deleted',

@@ -136,4 +136,15 @@ class RippedRequest
 	*/
 	public $studio;
 	
+	/**
+	* @var string poster
+	* @soap
+	*/
+	public $poster;
+	
+	/**
+	* @var string backdrop
+	* @soap
+	*/
+	public $backdrop;
 }
