@@ -276,6 +276,47 @@ class NzbController extends Controller
 					$modelMyMovie->covers_changed = $item->covers_changed;
 					$modelMyMovie->genre = $item->genre;
 					$modelMyMovie->studio =  $item->studio;				
+					$modelMyMovie->poster_original =  $item->poster;
+					
+					$validator = new CUrlValidator();
+					
+					if($item->poster!='' && $validator->validateValue($item->poster))
+					{
+						try {
+							$content = @file_get_contents($item->poster);
+							if ($content !== false) {
+								$file = fopen("./images/".$modelMyMovie->Id.".jpg", 'w');
+								fwrite($file,$content);
+								fclose($file);
+								$modelMyMovie->poster = $modelMyMovie->Id.".jpg";
+							} else {
+								// an error happened
+							}
+						} catch (Exception $e) {
+							throw $e;
+							// an error happened
+						}
+					}
+					
+					$modelMyMovie->backdrop_original =  $item->backdrop;
+						
+					if($item->backdrop!='' && $validator->validateValue($item->backdrop))
+					{
+						try {
+							$content = @file_get_contents($item->backdrop);
+							if ($content !== false) {
+								$file = fopen("./images/".$modelMyMovie->Id."_bd.jpg", 'w');
+								fwrite($file,$content);
+								fclose($file);
+								$modelMyMovie->backdrop = $modelMyMovie->Id."_bd.jpg";
+							} else {
+								// an error happened
+							}
+						} catch (Exception $e) {
+							throw $e;
+							// an error happened
+						}
+					}
 					
 					$modelMyMovie->save();
 					

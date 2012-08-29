@@ -119,7 +119,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 								'url'=>'Yii::app()->createUrl("customerUsers/AjaxRemoveUserCustomer", array("id"=>$data->username))',
 						),
 						'update' => array(
-								'url'=>'Yii::app()->createUrl("customerUsers/AjaxUpdateUserCustomer", array("id"=>$data->username))',
+								'url'=>'Yii::app()->createUrl("customerUsers/AjaxUpdateUserCustomer", array("username"=>$data->username, "idCustomer"=>$data->Id_customer))',
 						),
 				),
 		),
