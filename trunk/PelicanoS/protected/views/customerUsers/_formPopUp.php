@@ -27,9 +27,9 @@
 	</div>
 	
 	<div class="row">
-		<?php echo $form->labelEx($model,'parental_control'); ?>
-		<?php echo $form->checkBox($model,'parental_control'); ?>
-		<?php echo $form->error($model,'parental_control'); ?>
+		<?php echo $form->labelEx($model,'adult_section'); ?>
+		<?php echo $form->checkBox($model,'adult_section'); ?>
+		<?php echo $form->error($model,'adult_section'); ?>
 	</div>
 
 	<div class="row">
@@ -37,6 +37,23 @@
 		<?php echo $form->textField($model,'email',array('size'=>45,'maxlength'=>128)); ?>
 		<?php echo $form->error($model,'email'); ?>
 	</div>
+	<div class="row">
+	<?php echo $form->labelEx($model,'birth_date'); ?>
+	 		<?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+		     // additional javascript options for the date picker plugin
+	 		'language'=>'es',
+	 		'model'=>$model,
+	 		'attribute'=>'birth_date',
+	 		'options'=>array(
+		         'showAnim'=>'fold',
+		     ),
+		     'htmlOptions'=>array(
+		         'style'=>'height:20px;'
+		    ),
+			));?>
+			<?php echo $form->error($model,'birth_date'); ?>
+		</div>
+		
 	
 
 <?php $this->endWidget(); ?>
