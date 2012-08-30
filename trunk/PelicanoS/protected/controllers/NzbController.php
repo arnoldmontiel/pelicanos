@@ -277,6 +277,8 @@ class NzbController extends Controller
 					$modelMyMovie->genre = $item->genre;
 					$modelMyMovie->studio =  $item->studio;				
 					$modelMyMovie->poster_original =  $item->poster;
+					$modelMyMovie->adult =  $item->adult;
+					$modelMyMovie->Id_parental_control =  $item->Id_parental_control;
 					
 					$validator = new CUrlValidator();
 					
