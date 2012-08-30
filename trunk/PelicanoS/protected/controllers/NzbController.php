@@ -24,6 +24,8 @@ class NzbController extends Controller
 								'UserStateRequest'=>'UserStateRequest',
 								'RippedRequest'=>'RippedRequest',
 								'RippedResponse'=>'RippedResponse',
+								'LogRequest'=>'LogRequest',
+								'LogResponse'=>'LogResponse',
 		),
 		),
 		);
@@ -218,6 +220,39 @@ class NzbController extends Controller
 			}
 		}
 	
+		return $arrayResponse;
+	}
+	
+	/**
+	*
+	* Sincronize log from customer (from client to server)
+	* @param LogRequest[]
+	* @return LogResponse[]
+	* @soap
+	*/
+	public function setLog($logRequest )
+	{
+		$arrayResponse = array();
+		try {
+			foreach($logRequest as $item)
+			{
+				$model = new Log();
+				$model->description = $item->description;
+				$model->username = $item->username;
+				$model->log_date = $item->log_date;
+				$model->Id_log_type = $item->Id_log_type;
+				$model->Id_customer = $item->Id_customer;
+				$model->Id_log_customer = $item->Id_log_customer;
+				if($model->save())
+				{
+					$logResponse = new LogResponse();
+					$logResponse->Id_log_customer = $item->Id_log_customer;
+					$arrayResponse[]=$logResponse;
+				}
+				
+			}
+		} catch (Exception $e) {
+		}
 		return $arrayResponse;
 	}
 	
