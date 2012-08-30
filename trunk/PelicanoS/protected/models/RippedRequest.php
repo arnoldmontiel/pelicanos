@@ -152,4 +152,16 @@ class RippedRequest
 	* @soap
 	*/
 	public $backdrop;
+	
+	/**
+	* @var integer adult
+	* @soap
+	*/
+	public $adult;
+	
+	/**
+	* @var integer Id_parental_control
+	* @soap
+	*/
+	public $Id_parental_control;
 }
