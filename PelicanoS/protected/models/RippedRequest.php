@@ -9,6 +9,11 @@ class RippedRequest
 	*/
 	public $Id_customer;
 
+	/**
+	* @var date ripped_date
+	* @soap
+	*/
+	public $ripped_date;
 	
 	/**
 	* @var string Id_my_movie

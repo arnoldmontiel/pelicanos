@@ -323,6 +323,7 @@ class NzbController extends Controller
 					$modelRippedCustomer = new RippedCustomer();
 					$modelRippedCustomer->Id_customer = $item->Id_customer;
 					$modelRippedCustomer->Id_my_movie = $item->Id_my_movie;
+					$modelRippedCustomer->ripped_date = $item->ripped_date;
 					$modelRippedCustomer->save();
 					
 					$transaction->commit();
