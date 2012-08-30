@@ -6,11 +6,12 @@
  * The followings are the available columns in table 'customer_users':
  * @property string $username
  * @property string $password
- * @property integer $parental_control
+ * @property integer $adult_section
  * @property string $email
  * @property integer $Id_customer
  * @property integer $deleted
  * @property integer $need_update
+ * @property string $birth_date
  *
  * The followings are the available model relations:
  * @property Customer $idCustomer
@@ -62,12 +63,13 @@ class CustomerUsers extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('username, Id_customer, password', 'required'),
-			array('parental_control, Id_customer, deleted, need_update', 'numerical', 'integerOnly'=>true),
+			array('adult_section, Id_customer, deleted, need_update', 'numerical', 'integerOnly'=>true),
 			array('username, password, email', 'length', 'max'=>128),
+			array('birth_date', 'length', 'max'=>20),		
 			 array('*', 'compositeUniqueKeysValidator'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('username, password, parental_control, email, Id_customer, deleted, need_update', 'safe', 'on'=>'search'),
+			array('username, password, adult_section, email, Id_customer, deleted, need_update, birth_date', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -91,11 +93,12 @@ class CustomerUsers extends CActiveRecord
 		return array(
 			'username' => 'Username',
 			'password' => 'Password',
-			'parental_control' => 'Under Parental Control',
+			'adult_section' => 'Adult Section',
 			'email' => 'Email',
 			'Id_customer' => 'Id Customer',
 			'deleted' => 'Deleted',
 			'need_update' => 'Need Update',
+			'birth_date' => 'Birth Date',
 		);
 	}
 
@@ -112,11 +115,12 @@ class CustomerUsers extends CActiveRecord
 
 		$criteria->compare('username',$this->username,true);
 		$criteria->compare('password',$this->password,true);
-		$criteria->compare('parental_control',$this->parental_control);
+		$criteria->compare('adult_section',$this->parental_control);
 		$criteria->compare('email',$this->email,true);
 		$criteria->compare('Id_customer',$this->Id_customer);
 		$criteria->compare('deleted',$this->deleted);
 		$criteria->compare('need_update',$this->need_update);
+		$criteria->compare('birth_date',$this->birth_date);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
