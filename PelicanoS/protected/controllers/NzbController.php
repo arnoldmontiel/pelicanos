@@ -227,7 +227,7 @@ class NzbController extends Controller
 	/**
 	*
 	* Create customer
-	* @param CustomerRequest[]
+	* @param CustomerRequest
 	* @return integer idCusomer
 	* @soap
 	*/
