@@ -41,12 +41,15 @@
 	<?php echo $form->labelEx($model,'birth_date'); ?>
 	 		<?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
 		     // additional javascript options for the date picker plugin
-	 		'language'=>'es',
+	 		'language'=>'en',
 	 		'model'=>$model,
 	 		'attribute'=>'birth_date',
 	 		'options'=>array(
-		         'showAnim'=>'fold',
-		     ),
+				'showAnim'=>'fold',
+	 			'yearRange'=>'1930',
+				'changeYear'=>'true',
+	 			'changeMonth'=>'true',
+	 		),
 		     'htmlOptions'=>array(
 		         'style'=>'height:20px;'
 		    ),
