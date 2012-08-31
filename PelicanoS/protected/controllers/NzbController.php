@@ -26,6 +26,7 @@ class NzbController extends Controller
 								'RippedResponse'=>'RippedResponse',
 								'LogRequest'=>'LogRequest',
 								'LogResponse'=>'LogResponse',
+								'CustomerRequest'=>'CustomerRequest',
 		),
 		),
 		);
@@ -221,6 +222,36 @@ class NzbController extends Controller
 		}
 	
 		return $arrayResponse;
+	}
+	
+	/**
+	*
+	* Create customer
+	* @param CustomerRequest[]
+	* @return integer idCusomer
+	* @soap
+	*/
+	public function setCustomer($customerRequest )
+	{		
+		$idCustomer = 0;
+		try {
+			foreach($customerRequest as $item)
+			{
+				$model = new Customer();
+				$model->name = $item->name;
+				$model->last_name = $item->last_name;
+				$model->address = $item->address;
+			
+				if($model->save())
+				{
+					$idCustomer = $model->Id;
+				}
+	
+			}
+		} catch (Exception $e) {
+			return $idCustomer;
+		}
+		return $idCustomer;
 	}
 	
 	/**
