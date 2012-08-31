@@ -87,9 +87,9 @@ $this->widget('zii.widgets.grid.CGridView', array(
 		'username',
 		'password',
 		array(
- 			'name'=>"parental_control",
+ 			'name'=>"adult_section",
  			'type'=>'raw',
- 			'value'=>'CHtml::checkBox("parental_control",$data->parental_control,array("disabled"=>"disabled"))',
+ 			'value'=>'CHtml::checkBox("adult_section",$data->adult_section,array("disabled"=>"disabled"))',
  			'filter'=>CHtml::listData(
 				array(
 					array('id'=>'0','value'=>'No'),
@@ -110,6 +110,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 					,'id','value'
 			),
 		),
+		'birth_date',
 		'email',
 		array(
 				'class'=>'CButtonColumn',

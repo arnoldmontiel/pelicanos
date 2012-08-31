@@ -27,7 +27,13 @@ class CustomerUsers extends CActiveRecord
 	{
 		return parent::model($className);
 	}
-
+	public function beforeSave()
+	{
+		//$this->date_birth = Yii::app()->lc->toDatabase($this->date_birth,'date','small','date',null);//;
+		$this->birth_date = date('Y-m-d',strtotime($this->birth_date));
+		return parent::beforeSave();
+	}
+	
 	/**
 	 * @return string the associated database table name
 	 */
@@ -115,7 +121,7 @@ class CustomerUsers extends CActiveRecord
 
 		$criteria->compare('username',$this->username,true);
 		$criteria->compare('password',$this->password,true);
-		$criteria->compare('adult_section',$this->parental_control);
+		$criteria->compare('adult_section',$this->adult_section);
 		$criteria->compare('email',$this->email,true);
 		$criteria->compare('Id_customer',$this->Id_customer);
 		$criteria->compare('deleted',$this->deleted);
