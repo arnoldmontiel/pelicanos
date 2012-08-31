@@ -235,19 +235,18 @@ class NzbController extends Controller
 	{		
 		$idCustomer = 0;
 		try {
-			foreach($customerRequest as $item)
-			{
-				$model = new Customer();
-				$model->name = $item->name;
-				$model->last_name = $item->last_name;
-				$model->address = $item->address;
 			
-				if($model->save())
-				{
-					$idCustomer = $model->Id;
-				}
-	
+			$model = new Customer();
+			$model->name = $customerRequest->name;
+			$model->last_name = $customerRequest->last_name;
+			$model->address = $customerRequest->address;
+		
+			if($model->save())
+			{
+				$idCustomer = $model->Id;
 			}
+	
+			
 		} catch (Exception $e) {
 			return $idCustomer;
 		}
