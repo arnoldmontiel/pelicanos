@@ -421,7 +421,7 @@ class NzbController extends Controller
 	
 			foreach($userStateRequest as $item)
 			{
-				$model = CustomerUsers::model()->findByPk($item->username);
+				$model = CustomerUsers::model()->findByAttributes(array('username'=>$item->username, 'Id_customer'=>$item->Id_customer));
 				if(isset($model))
 				{
 					$model->need_update = 0;

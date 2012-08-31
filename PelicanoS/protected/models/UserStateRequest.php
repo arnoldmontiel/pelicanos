@@ -3,7 +3,11 @@
 class UserStateRequest 
 {
 
-	
+	/**
+	* @var integer id customer
+	* @soap
+	*/
+	public $Id_customer;
 	
 	/**
 	* @var string username
@@ -24,15 +28,21 @@ class UserStateRequest
 	public $email;
 	
 	/**
-	* @var integer parental_control
+	* @var integer adult_section
 	* @soap
 	*/
-	public $parental_control;
+	public $adult_section;
 
 	/**
 	* @var integer deleted
 	* @soap
 	*/
 	public $deleted;
+	
+	/**
+	* @var date birth_date
+	* @soap
+	*/
+	public $birth_date;
 	
 }
