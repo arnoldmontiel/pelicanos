@@ -226,6 +226,36 @@ class NzbController extends Controller
 	
 	/**
 	*
+	* Update customer
+	* @param CustomerRequest
+	* @return integer idCusomer
+	* @soap
+	*/
+	public function updateCustomer($customerRequest )
+	{
+		$idCustomer = 0;
+		try {
+				
+			$model = Customer::model()->findByPk($customerRequest->Id);
+			if($model)
+			{
+				$model->name = $customerRequest->name;
+				$model->last_name = $customerRequest->last_name;
+				$model->address = $customerRequest->address;
+				if($model->save())
+				{
+					$idCustomer = $model->Id;
+				}
+			}
+				
+		} catch (Exception $e) {
+			return $idCustomer;
+		}
+		return $idCustomer;
+	}
+	
+	/**
+	*
 	* Create customer
 	* @param CustomerRequest
 	* @return integer idCusomer

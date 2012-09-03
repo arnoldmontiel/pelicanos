@@ -2,6 +2,11 @@
 
 class CustomerRequest 
 {
+	/**
+	* @var integer id
+	* @soap
+	*/
+	public $Id;
 	
 	/**
 	* @var string name
