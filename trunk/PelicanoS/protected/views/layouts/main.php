@@ -33,6 +33,7 @@
 				array('label'=>'Nzb', 'url'=>array('/nzb/index'), 'visible'=>!Yii::app()->user->isGuest),
 				array('label'=>'Serie', 'url'=>array('/imdbdataTv/index'), 'visible'=>!Yii::app()->user->isGuest),
 				array('label'=>'Customer', 'url'=>array('/customer/index'), 'visible'=>!Yii::app()->user->isGuest),
+				array('label'=>'User', 'url'=>array('/user/index'), 'visible'=>Yii::app()->user->checkAccess('ResellerAdmin')),
 				array('label'=>'Logout'.' ('.Yii::app()->user->name.')', 'url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest),
 		),
 		)); ?>
