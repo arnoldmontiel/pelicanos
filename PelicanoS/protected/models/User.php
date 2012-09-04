@@ -7,6 +7,11 @@
  * @property string $username
  * @property string $password
  * @property string $email
+ * @property integer $Id_reseller
+ *
+ * The followings are the available model relations:
+ * @property OpenSubtitle[] $openSubtitles
+ * @property Reseller $idReseller
  */
 class User extends CActiveRecord
 {
@@ -19,6 +24,12 @@ class User extends CActiveRecord
 		return parent::model($className);
 	}
 
+	public static function getResellerId()
+	{
+		$user = User::model()->findByPk(Yii::app()->user->Id);
+		return $user->Id_reseller;
+	}
+	
 	/**
 	 * @return string the associated database table name
 	 */
@@ -36,12 +47,13 @@ class User extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('username, password, email', 'required', 'message'=>'{attribute} '.'cannot be blank.'),
+			array('Id_reseller', 'numerical', 'integerOnly'=>true),
 			array('username, password, email', 'length', 'max'=>128),
 			array('email', 'email', 'message'=> '{attribute} '. 'is not a valid email address.'),
 			array('username, email', 'unique', 'message'=>'{attribute} "{value}" '.'has already been taken.'),		
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('username, password, email', 'safe', 'on'=>'search'),
+			array('username, password, email, Id_reseller', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -53,6 +65,8 @@ class User extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'openSubtitles' => array(self::HAS_MANY, 'OpenSubtitle', 'Id_user'),
+			'reseller' => array(self::BELONGS_TO, 'Reseller', 'Id_reseller'),
 		);
 	}
 
@@ -65,6 +79,7 @@ class User extends CActiveRecord
 			'username' => 'Username',
 			'password' => 'Password',
 			'email' => 'Email',
+			'Id_reseller' => 'Reseller',
 		);
 	}
 
@@ -82,7 +97,12 @@ class User extends CActiveRecord
 		$criteria->compare('username',$this->username,true);
 		$criteria->compare('password',$this->password,true);
 		$criteria->compare('email',$this->email,true);
+		
 
+		$IdReseller = User::getResellerId();
+		if(isset($IdReseller))
+			$criteria->compare('Id_reseller',$IdReseller);
+		
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));

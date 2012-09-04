@@ -33,6 +33,25 @@ class NzbController extends Controller
 	}
 	
 	/**
+	* Get reseller id
+	* @param string username
+	* @param string password
+	* @return integer Id_reseller
+	* @soap
+	*/
+	public function getReseller($username, $password)
+	{
+		$idReseller = 0;
+		$model = User::model()->findByAttributes(array('username'=>$username, 'password'=>$password));
+		if($model)
+		{
+			$idReseller = $model->Id_reseller;
+		}
+	
+		return $idReseller;
+	}
+	
+	/**
 	* Get ripped by customer (feedback to client)
 	* @param integer idCustomer
 	* @return RippedResponse[]

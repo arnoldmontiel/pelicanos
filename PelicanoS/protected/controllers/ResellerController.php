@@ -1,6 +1,6 @@
 <?php
 
-class UserController extends Controller
+class ResellerController extends Controller
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -49,21 +49,37 @@ class UserController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model=new User;
-
+		$model=new Reseller;
+		$modelUser = new User();
+		
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['User']))
+		if(isset($_POST['Reseller']) && isset($_POST['User']))
 		{
-			$model->attributes=$_POST['User'];
-			$model->Id_reseller = User::getResellerId();
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->username));
+			$model->attributes=$_POST['Reseller'];
+			$modelUser->attributes=$_POST['User'];
+			
+			if($model->validate() && $modelUser->validate())
+			{
+				$transaction = $model->dbConnection->beginTransaction();
+				try {
+					$model->save();
+					$modelUser->Id_reseller = $model->Id;
+					$modelUser->save();
+					$transaction->commit();
+					$this->redirect(array('view','id'=>$model->Id));
+				} catch (Exception $e) {
+					$transaction->rollback();
+				}
+			}
+			
+				
 		}
 
 		$this->render('create',array(
 			'model'=>$model,
+			'modelUser'=>$modelUser,
 		));
 	}
 
@@ -79,11 +95,11 @@ class UserController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['User']))
+		if(isset($_POST['Reseller']))
 		{
-			$model->attributes=$_POST['User'];
+			$model->attributes=$_POST['Reseller'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->username));
+				$this->redirect(array('view','id'=>$model->Id));
 		}
 
 		$this->render('update',array(
@@ -116,14 +132,7 @@ class UserController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$criteria=new CDbCriteria;
-		
-		$IdReseller = User::getResellerId();
-		if(isset($IdReseller))
-			$criteria->condition = 't.Id_reseller = '. $IdReseller;
-		
-		$dataProvider=new CActiveDataProvider('User', array(
-									'criteria'=>$criteria));
+		$dataProvider=new CActiveDataProvider('Reseller');
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
@@ -134,10 +143,10 @@ class UserController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new User('search');
+		$model=new Reseller('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['User']))
-			$model->attributes=$_GET['User'];
+		if(isset($_GET['Reseller']))
+			$model->attributes=$_GET['Reseller'];
 
 		$this->render('admin',array(
 			'model'=>$model,
@@ -151,7 +160,7 @@ class UserController extends Controller
 	 */
 	public function loadModel($id)
 	{
-		$model=User::model()->findByPk($id);
+		$model=Reseller::model()->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
@@ -163,7 +172,7 @@ class UserController extends Controller
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='user-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='reseller-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
