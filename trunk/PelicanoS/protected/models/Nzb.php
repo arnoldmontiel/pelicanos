@@ -16,9 +16,12 @@
  * @property integer $deleted
  * @property integer $points
  * @property string $file_original_name
- * 
+ * @property integer $Id_reseller
+ *
  * The followings are the available model relations:
+ * @property CustomerTransaction[] $customerTransactions
  * @property Imdbdata $idImdbdata
+ * @property Reseller $idReseller
  * @property ImdbdataTv $idImdbdataTv
  * @property ResourceType $idResourceType
  * @property Customer[] $customers
@@ -69,13 +72,13 @@ class Nzb extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array(' Id_resource_type', 'required'),
+			array(' Id_resource_type, Id_reseller', 'required'),
 			array('Id_resource_type, deleted, points', 'numerical', 'integerOnly'=>true),
 			array('Id_imdbdata, Id_imdbdata_tv', 'length', 'max'=>45),
 			array('url, subt_url, file_name, subt_file_name, subt_original_name, file_original_name', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id, url, file_name, subt_url, subt_file_name, Id_imdbdata, title, year, idImdb, genre, subt_original_name, resourceTypeDesc, Id_resource_type, Id_imdbdata_tv, deleted, serie_title, season, episode, points, deleted_serie, file_original_name', 'safe', 'on'=>'search'),
+			array('Id, url, file_name, subt_url, subt_file_name, Id_imdbdata, title, year, idImdb, genre, subt_original_name, resourceTypeDesc, Id_resource_type, Id_imdbdata_tv, deleted, serie_title, season, episode, points, deleted_serie, file_original_name, Id_reseller', 'safe', 'on'=>'search'),
 		);
 	}
 	
@@ -90,6 +93,7 @@ class Nzb extends CActiveRecord
 			'resourceType' => array(self::BELONGS_TO, 'ResourceType', 'Id_resource_type'),
 			'imdbData' => array(self::BELONGS_TO, 'Imdbdata', 'Id_imdbdata'),
 			'imdbDataTv' => array(self::BELONGS_TO, 'ImdbdataTv', 'Id_imdbdata_tv'),
+			'reseller' => array(self::BELONGS_TO, 'Reseller', 'Id_reseller'),
 		);
 	}
 
@@ -112,6 +116,7 @@ class Nzb extends CActiveRecord
 			'points' => 'Points',
 			'deleted_serie' => 'Deleted from Header',
 			'file_original_name' => 'File Original Name',
+			'Id_reseller' => 'Reseller',
 		);
 	}
 
