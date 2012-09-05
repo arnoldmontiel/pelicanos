@@ -65,6 +65,19 @@ class CustomerController extends Controller
 		));
 	}
 	
+	public function actionViewSummaryRipped($id)
+	{
+	
+		$model = MyMovie::model()->findByPk($id);
+	
+		$modelRippedCustomer = RippedCustomer::model()->findByAttributes(array('Id_my_movie'=>$id));
+	
+		$this->render('viewSummaryRipped',array(
+					'model'=>$model,
+					'idCustomer'=>$modelRippedCustomer->Id_customer,
+		));
+	}
+	
 	public function actionIndexRipped($id)
 	{
 	
@@ -81,6 +94,22 @@ class CustomerController extends Controller
 		));
 	}
 
+	public function actionSummaryRipped($id)
+	{
+	
+		$criteria=new CDbCriteria;
+		$criteria->addCondition('t.Id_customer = '. $id);
+	
+		$dataProvider=new CActiveDataProvider('RippedCustomer', array(
+									'criteria'=>$criteria,
+		));
+	
+		$this->render('summaryRipped',array(
+						'model'=>$this->loadModel($id),
+						'dataProvider'=>$dataProvider,
+		));
+	}
+	
 	/**
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
@@ -175,6 +204,18 @@ class CustomerController extends Controller
 		));
 	}
 
+	public function actionSummary()
+	{
+		$model=new Customer('search');
+		$model->unsetAttributes();  // clear any default values
+		if(isset($_GET['Customer']))
+			$model->attributes=$_GET['Customer'];
+	
+		$this->render('summary',array(
+				'model'=>$model,
+		));
+	}
+	
 	public function actionAjaxDoTransaction()
 	{
 		$pointsQty = $_POST['pointsQty'];

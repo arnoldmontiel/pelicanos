@@ -15,6 +15,8 @@
  */
 class User extends CActiveRecord
 {
+	public $reseller_desc;
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @return User the static model class
@@ -53,7 +55,7 @@ class User extends CActiveRecord
 			array('username, email', 'unique', 'message'=>'{attribute} "{value}" '.'has already been taken.'),		
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('username, password, email, Id_reseller', 'safe', 'on'=>'search'),
+			array('username, password, email, Id_reseller, reseller_desc', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -80,6 +82,7 @@ class User extends CActiveRecord
 			'password' => 'Password',
 			'email' => 'Email',
 			'Id_reseller' => 'Reseller',
+			'reseller_desc' => 'Reseller',
 		);
 	}
 
@@ -103,8 +106,25 @@ class User extends CActiveRecord
 		if(isset($IdReseller))
 			$criteria->compare('Id_reseller',$IdReseller);
 		
+		$criteria->with[]='reseller';
+		$criteria->addSearchCondition("reseller.description",$this->reseller_desc);
+		
+		$sort=new CSort;
+		$sort->attributes=array(
+								      'username',
+								      'password',
+								      'email',
+								      'reseller_desc' => array(
+								        	'asc' => 'reseller.description',
+								        	'desc' => 'reseller.description DESC',
+		),
+									  '*',
+		);
+		
 		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
+					'criteria'=>$criteria,
+					'sort'=>$sort,
 		));
+		
 	}
 }
