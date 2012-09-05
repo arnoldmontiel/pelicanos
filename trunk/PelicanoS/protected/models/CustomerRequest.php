@@ -9,6 +9,12 @@ class CustomerRequest
 	public $Id;
 	
 	/**
+	* @var integer id reseller
+	* @soap
+	*/
+	public $Id_reseller;
+	
+	/**
 	* @var string name
 	* @soap
 	*/

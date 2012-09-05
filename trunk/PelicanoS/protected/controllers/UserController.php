@@ -72,7 +72,7 @@ class UserController extends Controller
 	 * If update is successful, the browser will be redirected to the 'view' page.
 	 * @param integer $id the ID of the model to be updated
 	 */
-	public function actionUpdate($id)
+	public function actionSummaryUpdate($id)
 	{
 		$model=$this->loadModel($id);
 
@@ -83,14 +83,32 @@ class UserController extends Controller
 		{
 			$model->attributes=$_POST['User'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->username));
+				$this->redirect(array('summary'));
 		}
 
-		$this->render('update',array(
+		$this->render('summaryUpdate',array(
 			'model'=>$model,
 		));
 	}
 
+	public function actionUpdate($id)
+	{
+		$model=$this->loadModel($id);
+	
+		// Uncomment the following line if AJAX validation is needed
+		// $this->performAjaxValidation($model);
+	
+		if(isset($_POST['User']))
+		{
+			$model->attributes=$_POST['User'];
+			if($model->save())
+			$this->redirect(array('view','id'=>$model->username));
+		}
+	
+		$this->render('update',array(
+				'model'=>$model,
+		));
+	}
 	/**
 	 * Deletes a particular model.
 	 * If deletion is successful, the browser will be redirected to the 'admin' page.
@@ -144,6 +162,18 @@ class UserController extends Controller
 		));
 	}
 
+	public function actionSummary()
+	{
+		$model=new User('search');
+		$model->unsetAttributes();  // clear any default values
+		if(isset($_GET['User']))
+			$model->attributes=$_GET['User'];
+	
+		$this->render('summary',array(
+				'model'=>$model,
+		));
+	}
+	
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.

@@ -289,7 +289,8 @@ class NzbController extends Controller
 			$model->name = $customerRequest->name;
 			$model->last_name = $customerRequest->last_name;
 			$model->address = $customerRequest->address;
-		
+			$model->Id_reseller = $customerRequest->Id_reseller;
+			
 			if($model->save())
 			{
 				$idCustomer = $model->Id;

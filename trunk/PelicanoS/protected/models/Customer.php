@@ -22,6 +22,7 @@
  */
 class Customer extends CActiveRecord
 {
+	public $reseller_desc;
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -53,7 +54,7 @@ class Customer extends CActiveRecord
 			array('name, last_name, address', 'length', 'max'=>45),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id, name, last_name, address, current_points, Id_reseller', 'safe', 'on'=>'search'),
+			array('Id, name, last_name, address, current_points, Id_reseller, reseller_desc', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -87,6 +88,7 @@ class Customer extends CActiveRecord
 			'address' => 'Address',
 			'current_points' => 'Current Points',
 			'Id_reseller' => 'Reseller',
+			'reseller_desc'=>'Reseller',
 		);
 	}
 
@@ -106,10 +108,32 @@ class Customer extends CActiveRecord
 		$criteria->compare('last_name',$this->last_name,true);
 		$criteria->compare('address',$this->address,true);
 		$criteria->compare('current_points',$this->current_points);
-		$criteria->compare('Id_reseller',$this->Id_reseller);
 
+		$IdReseller = User::getResellerId();
+		if(isset($IdReseller))
+			$criteria->compare('Id_reseller',$IdReseller);
+		
+		
+		$criteria->with[]='reseller';
+		$criteria->addSearchCondition("reseller.description",$this->reseller_desc);
+		
+		$sort=new CSort;
+		$sort->attributes=array(
+						      'Id',
+						      'name',
+						      'last_name',
+						      'address',
+						      'current_points',
+						      'reseller_desc' => array(
+						        	'asc' => 'reseller.description',
+						        	'desc' => 'reseller.description DESC',
+									),
+							  '*',
+		);
+		
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
+			'sort'=>$sort,
 		));
 	}
 }
