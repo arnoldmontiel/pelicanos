@@ -84,7 +84,12 @@ class SiteController extends Controller
 			$model->attributes=$_POST['LoginForm'];
 			// validate user input and redirect to the previous page if valid
 			if($model->validate() && $model->login())
-				$this->redirect(NzbController::createUrl('nzb/index') );
+			{
+				if(Yii::app()->user->checkAccess('Administrator'))
+					$this->redirect(NzbController::createUrl('nzb/index') );
+				else
+					$this->redirect(NzbController::createUrl('nzb/indexReseller') );
+			}
 		}
 		// display the login form
 		$this->render('login',array('model'=>$model));
