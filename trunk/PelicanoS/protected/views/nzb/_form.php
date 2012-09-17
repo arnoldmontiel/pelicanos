@@ -4,7 +4,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl . '/css/detail-vie
 Yii::app()->clientScript->registerScript(__CLASS__.'#imdbdata', "
 function fillIMDBDataField(data)
 {
-	$('#Imdbdata_ID').val(data.ID);
+	$('#Imdbdata_ID').val(data.imdbID);
 	$('#Imdbdata_Year').val(data.Year);
 	$('#Imdbdata_Title').val(data.Title);
 	$('#Imdbdata_Rated').val(data.Rated);
@@ -15,8 +15,8 @@ function fillIMDBDataField(data)
 	$('#Imdbdata_Actors').val(data.Actors);
 	$('#Imdbdata_Plot').val(data.Plot);
 	$('#Imdbdata_Runtime').val(data.Runtime);
-	$('#Imdbdata_Rating').val(data.Rating);
-	$('#Imdbdata_Votes').val(data.Votes);
+	$('#Imdbdata_Rating').val(data.imdbRating);
+	$('#Imdbdata_Votes').val(data.imdbVotes);
 	$('#Imdbdata_Response').val(data.Response);
 	$('#Imdbdata_Poster').val(data.Poster);
 	$('#Imdbdata_Poster_img').attr('alt',data.Title);
