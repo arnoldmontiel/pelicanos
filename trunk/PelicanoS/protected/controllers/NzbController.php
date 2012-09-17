@@ -695,12 +695,27 @@ class NzbController extends Controller
 		));
 	}
 
+	public function actionViewReseller($id)
+	{
+		$this->render('viewReseller',array(
+				'model'=>$this->loadModel($id),
+		));
+	}
+	
 	public function actionViewEpisode($id)
 	{
 		$this->render('viewEpisode',array(
 				'model'=>$this->loadModel($id),
 		));
 	}
+	
+	public function actionViewEpisodeReseller($id)
+	{
+		$this->render('viewEpisodeReseller',array(
+					'model'=>$this->loadModel($id),
+		));
+	}
+	
 
 	public function actionUploadError()
 	{
@@ -726,7 +741,7 @@ class NzbController extends Controller
 	
 	public function actionCreate()
 	{	
-		$hola = $this->getNewSeries(1);
+		
 		$this->render('create');
 	}
 
@@ -1467,6 +1482,14 @@ class NzbController extends Controller
 			'dataProvider'=>$dataProvider,
 		));
 	}
+	
+	public function actionIndexReseller()
+	{
+		$dataProvider=new CActiveDataProvider('Nzb',array('criteria'=>array('order'=>'Id DESC','condition'=>'Id_imdbdata_tv is null')));
+		$this->render('indexReseller',array(
+				'dataProvider'=>$dataProvider,
+		));
+	}
 
 	/**
 	 * Lists all models.
@@ -1479,6 +1502,14 @@ class NzbController extends Controller
 		));
 	}
 
+	public function actionIndexEpisodeReseller()
+	{
+		$dataProvider=new CActiveDataProvider('Nzb',array('criteria'=>array('order'=>'Id DESC','condition'=>'Id_imdbdata is null')));
+		$this->render('indexEpisodeReseller',array(
+					'dataProvider'=>$dataProvider,
+		));
+	}
+	
 	/**
 	 * Manages all models.
 	 */

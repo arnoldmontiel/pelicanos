@@ -43,6 +43,13 @@ class ImdbdataTvController extends Controller
 		));
 	}
 
+	public function actionViewReseller($id)
+	{
+		$this->render('viewReseller',array(
+				'model'=>$this->loadModel($id),
+		));
+	}
+	
 	/**
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
@@ -260,6 +267,14 @@ class ImdbdataTvController extends Controller
 		));
 	}
 
+	public function actionIndexReseller()
+	{
+		$dataProvider=new CActiveDataProvider('ImdbdataTv',array('criteria'=>array('condition'=>'Id_parent is null')));
+		$this->render('indexReseller',array(
+				'dataProvider'=>$dataProvider,
+		));
+	}
+	
 	public function actionViewSeason($id=null, $season=null)
 	{
 		$modelImdb = new ImdbdataTv;
@@ -291,6 +306,37 @@ class ImdbdataTvController extends Controller
 		));
 	}
 	
+	public function actionViewSeasonReseller($id=null, $season=null)
+	{
+		$modelImdb = new ImdbdataTv;
+		$ddlTvShow = ImdbdataTv::model()->findAllByAttributes(array('Id_parent'=>null));
+		$emptyArray = array();
+		$ddlSeason = Season::model()->findAllByAttributes(array('Id_imdbdata_tv'=> ($id != null) ? $id : $emptyArray));
+	
+		$condition = 'Id_parent = 1';
+	
+		if($id!=null)
+		{
+			$modelImdb->Id_parent = $id;
+			$condition = 'Id_parent = "'. $id . '"';
+			if($season != null)
+			{
+				$modelImdb->Season = $season;
+				$condition .= ' AND Season = '. $season;
+			}
+		}
+	
+		$dataProvider=new CActiveDataProvider('ImdbdataTv',array('criteria'=>array('condition'=>$condition)));
+	
+	
+		$this->render('viewSeasonReseller',array(
+						'model'=>$modelImdb,
+						'ddlTvShow'=>$ddlTvShow,
+						'ddlSeason'=>$ddlSeason,
+						'dataProvider'=>$dataProvider
+		));
+	}
+	
 	public function actionAjaxSearch()
 	{
 		$modelImdb = new ImdbdataTv;
@@ -310,6 +356,28 @@ class ImdbdataTvController extends Controller
 				'dataProvider'=>$dataProvider,
 				'itemView'=>'_view',
 				'summaryText' =>"",
+		));
+	}
+	
+	public function actionAjaxSearchReseller()
+	{
+		$modelImdb = new ImdbdataTv;
+		$condition = '';
+		if(isset($_POST['season']) && isset($_POST['idParent']))
+		{
+				
+			$condition .= 'Id_parent = "'. trim($_POST['idParent']) . '"';
+			if($_POST['season'] != "")
+			$condition .= ' AND Season = '. trim($_POST['season']);
+				
+		}
+	
+		$dataProvider=new CActiveDataProvider('ImdbdataTv',array('criteria'=>array('condition'=>$condition)));
+	
+		$this->widget('zii.widgets.CListView', array(
+					'dataProvider'=>$dataProvider,
+					'itemView'=>'_viewReseller',
+					'summaryText' =>"",
 		));
 	}
 	
