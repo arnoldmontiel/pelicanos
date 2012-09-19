@@ -940,15 +940,56 @@ class NzbController extends Controller
 			}
 		}
 
-
+		$searchString = "";
+		if(isset($_GET['Imdbdata']['Title']))
+			$searchString = $_GET['Imdbdata']['Title'];
+		
+		$myMovie = new MyMoviesAPI();
+		$rawData = $myMovie->SearchDiscTitleByTitle($searchString);
+		
+		$arrayDataProvider=new CArrayDataProvider($rawData, array(
+				    'id'=>'id',
+				 	'sort'=>array(
+						'attributes'=>array('year', 'type', 'country'),
+					),
+		
+				          'pagination'=>array('pageSize'=>10),
+		
+		));
+		
 		$this->render('createMovie',array(
 			'model'=>$model,
 			'modelUpload'=>$modelUpload,
 			'modelImdb'=>$modelImdb,
 			'ddlRsrcType'=>$ddlRsrcType,
+			'arrayDataProvider'=>$arrayDataProvider,
 		));
 	}
 
+	public function actionAjaxGetTitles()
+	{
+		$searchString = $_POST['searchString'];
+		
+		$myMovie = new MyMoviesAPI();
+		$rawData = $myMovie->SearchDiscTitleByTitle($searchString);
+		
+		$arrayDataProvider=new CArrayDataProvider($rawData, array(
+		           'id'=>'id',
+		 
+		 	'sort'=>array(
+				'attributes'=>array('year', 'type',
+			),
+		), 
+		
+		          'pagination'=>array('pageSize'=>10),
+		
+			));
+		echo $this->renderPartial('_searchResult', array(
+													'arrayDataProvider'=>$arrayDataProvider,));
+		return $arrayDataProvider;
+		
+	}
+	
 
 	private function saveFile($file, $root, $name)
 	{
