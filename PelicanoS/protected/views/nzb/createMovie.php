@@ -11,7 +11,14 @@ $this->menu=array(
 
 <h1>Create Movie</h1>
 
-<?php echo $this->renderPartial('_form', array('model'=>$model,'modelUpload'=>$modelUpload, 'modelImdb'=>$modelImdb, 'ddlRsrcType'=>$ddlRsrcType)); ?>
+<?php 
+echo $this->renderPartial('_caramba', array('model'=>$model,
+											'modelUpload'=>$modelUpload, 
+											'modelImdb'=>$modelImdb, 
+											'ddlRsrcType'=>$ddlRsrcType,
+											'arrayDataProvider'=>$arrayDataProvider
+									));
+?>
 <br>
 <?php
 		 $this->widget('zii.widgets.jui.CJuiButton',
