@@ -883,7 +883,8 @@ class NzbController extends Controller
 	{
 		$model=new Nzb;
 		$modelUpload=new Upload;
-		$modelImdb = new Imdbdata;
+		$modelSearchDiscRequest = new SearchDiscRequest;
+		
 		$ddlRsrcType = ResourceType::model()->findAll();
 
 		if(isset($_POST['Nzb']))
@@ -892,7 +893,7 @@ class NzbController extends Controller
 		if(isset($_POST['Upload']) && isset($_POST['Imdbdata']))
 		{
 			$modelUpload->attributes=$_POST['Upload'];
-			$modelImdb->attributes=$_POST['Imdbdata'];
+			
 			$file=CUploadedFile::getInstance($modelUpload,'file');
 				
 			if($modelUpload->validate() && $model->validate())
@@ -913,22 +914,6 @@ class NzbController extends Controller
 					}
 						
 
-					$validator = new CUrlValidator();
-					if($modelImdb->Poster!='' && $validator->validateValue($modelImdb->Poster))
-					{
-						$content = file_get_contents($modelImdb->Poster);
-						if ($content !== false) {
-							$file = fopen("./images/".$modelImdb->ID.".jpg", 'w');
-							fwrite($file,$content);
-							fclose($file);
-							$modelImdb->Poster_local = $modelImdb->ID.".jpg";
-						} else {
-							// an error happened
-						}
-					}
-					$modelImdb->save();
-					$model->Id_imdbdata = $modelImdb->ID;
-
 					if($model->save()){
 						$transaction->commit();
 						$this->redirect(array('findSubtitle','id'=>$model->Id));
@@ -940,12 +925,12 @@ class NzbController extends Controller
 			}
 		}
 
-		$searchString = "";
-		if(isset($_GET['Imdbdata']['Title']))
-			$searchString = $_GET['Imdbdata']['Title'];
+		if(isset($_GET['SearchDiscRequest']))
+			$modelSearchDiscRequest->setAttributes($_GET['SearchDiscRequest']);
+		
 		
 		$myMovie = new MyMoviesAPI();
-		$rawData = $myMovie->SearchDiscTitleByTitle($searchString);
+		$rawData = $myMovie->SearchDiscTitleByTitle($modelSearchDiscRequest);
 		
 		$arrayDataProvider=new CArrayDataProvider($rawData, array(
 				    'id'=>'id',
@@ -960,34 +945,24 @@ class NzbController extends Controller
 		$this->render('createMovie',array(
 			'model'=>$model,
 			'modelUpload'=>$modelUpload,
-			'modelImdb'=>$modelImdb,
 			'ddlRsrcType'=>$ddlRsrcType,
 			'arrayDataProvider'=>$arrayDataProvider,
+			'modelSearchDiscRequest'=>$modelSearchDiscRequest,
 		));
 	}
 
-	public function actionAjaxGetTitles()
+	public function actionAjaxGetMovieMoreInfo()
 	{
-		$searchString = $_POST['searchString'];
+		$titleId = isset($_POST['titleId'])?$_POST['titleId']:null;
 		
-		$myMovie = new MyMoviesAPI();
-		$rawData = $myMovie->SearchDiscTitleByTitle($searchString);
+		if(isset($titleId))
+		{
+			$myMovie = new MyMoviesAPI();
+			$model = $myMovie->LoadMovieById($titleId);
 		
-		$arrayDataProvider=new CArrayDataProvider($rawData, array(
-		           'id'=>'id',
-		 
-		 	'sort'=>array(
-				'attributes'=>array('year', 'type',
-			),
-		), 
-		
-		          'pagination'=>array('pageSize'=>10),
-		
-			));
-		echo $this->renderPartial('_searchResult', array(
-													'arrayDataProvider'=>$arrayDataProvider,));
-		return $arrayDataProvider;
-		
+			echo $this->renderPartial('_viewInfo', array(
+														'model'=>$model,));
+		}
 	}
 	
 

@@ -171,17 +171,18 @@ class LoadDiscTitleByIdResult
 		return $modelMyMovie;
 	}
 	
-	function SearchDiscTitleByTitle($searchString)
+	function SearchDiscTitleByTitle($modelSearchDiscRequest)
 	{
 		$response = array();
-		if(!empty($searchString))
+		if(isset($modelSearchDiscRequest) && !empty($modelSearchDiscRequest->Title))
 		{
 			$model = new SearchDiscTitleByTitle();
-			$model->Title = $searchString;
+			$model->Title = $modelSearchDiscRequest->Title;
 			$model->Results = 10;
-			$model->Strict = false;
-			$model->IncludeEnglish = false;
-			$model->IncludeAdult = false;
+			$model->Strict = true;
+			$model->IncludeEnglish = true;
+			$model->IncludeAdult = true;
+			$model->Country = isset($modelSearchDiscRequest->Country)?$modelSearchDiscRequest->Country:'';			
 			$model->Locale = 0;
 			
 			$SearchDiscTitleByTitleResponse = $this->soapClient->SearchDiscTitleByTitle($model);

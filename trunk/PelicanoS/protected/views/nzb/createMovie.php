@@ -14,7 +14,7 @@ $this->menu=array(
 <?php 
 echo $this->renderPartial('_caramba', array('model'=>$model,
 											'modelUpload'=>$modelUpload, 
-											'modelImdb'=>$modelImdb, 
+											'modelSearchDiscRequest'=>$modelSearchDiscRequest, 
 											'ddlRsrcType'=>$ddlRsrcType,
 											'arrayDataProvider'=>$arrayDataProvider
 									));
