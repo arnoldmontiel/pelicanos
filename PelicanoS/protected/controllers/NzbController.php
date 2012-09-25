@@ -890,38 +890,39 @@ class NzbController extends Controller
 		if(isset($_POST['Nzb']))
 			$model->attributes = $_POST['Nzb'];
 
-		if(isset($_POST['Upload']) && isset($_POST['Imdbdata']))
+		if(isset($_POST['Upload']) && isset($_POST['hiddenTitleId']))
 		{
 			$modelUpload->attributes=$_POST['Upload'];
 			
 			$file=CUploadedFile::getInstance($modelUpload,'file');
 				
-			if($modelUpload->validate() && $model->validate())
+			if($modelUpload->validate() && $model->validate() && !empty($_POST['hiddenTitleId']))
 			{
-				$transaction = $model->dbConnection->beginTransaction();
-				try {
-					if($file != null)
-					{
-						$uniqueId = uniqid();
-						$fileName = $uniqueId . '.nzb'; 
+				$this->redirect(array('index'));
+// 				$transaction = $model->dbConnection->beginTransaction();
+// 				try {
+// 					if($file != null)
+// 					{
+// 						$uniqueId = uniqid();
+// 						$fileName = $uniqueId . '.nzb'; 
 						
-						$model->url = '/nzb/'.$fileName;
-						$model->file_name = $fileName;
+// 						$model->url = '/nzb/'.$fileName;
+// 						$model->file_name = $fileName;
 						
-						$model->file_original_name = $file->getName();
+// 						$model->file_original_name = $file->getName();
 						
-						$this->saveFile($file, 'nzb', $fileName);
-					}
+// 						$this->saveFile($file, 'nzb', $fileName);
+// 					}
 						
 
-					if($model->save()){
-						$transaction->commit();
-						$this->redirect(array('findSubtitle','id'=>$model->Id));
-					}
+// 					if($model->save()){
+// 						$transaction->commit();
+// 						$this->redirect(array('findSubtitle','id'=>$model->Id));
+// 					}
 						
-				} catch (Exception $e) {
-					$transaction->rollback();
-				}
+// 				} catch (Exception $e) {
+// 					$transaction->rollback();
+// 				}
 			}
 		}
 
