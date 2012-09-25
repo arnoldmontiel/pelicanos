@@ -1,7 +1,7 @@
 <div class="form">
 <?php
 Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl . '/css/detail-view-blue.css');
-Yii::app()->clientScript->registerScript(__CLASS__.'#imdbdata', "
+Yii::app()->clientScript->registerScript(__CLASS__.'#newMovie', "
 $('#btnSearch').click(function()
 {
 	$('#div-searchResult').animate({opacity: 'hide'},240);
@@ -13,15 +13,12 @@ $('#btnSearch').click(function()
 	return false;
 });
 
-$('#cancel').removeClass('ui-button');
 
-$('#Imdbdata_Title').keypress(function() {
-  $('#saveButton').attr('disabled','disabled');
+$('#Upload_file').change(function() {
+	if($('#hiddenTitleId').val() != '' && $(this).val() != '')
+  		$('#saveButton').removeAttr('disabled');
 });
 
-$('#Imdbdata_ID').keypress(function() {
-  $('#saveButton').attr('disabled','disabled');
-});
 
 $(document).keypress(function(e) {
     if(e.keyCode == 13) 
@@ -48,11 +45,14 @@ $('#Nzb_points').keyup(function(){
 ?>
 
 <?php echo CHtml::beginForm('','post',array
-		('enctype'=>'multipart/form-data'))?>
+		('enctype'=>'multipart/form-data'));
+
+	echo CHtml::hiddenField("hiddenTitleId",'',array('id'=>'hiddenTitleId'));
+?>
 
 <div class="row"> 
 	<?php echo CHtml::activeLabelEx($modelUpload,'File *.nzb'); ?>
-	<?php echo CHtml::activeFileField($modelUpload, 'file')?> <?php echo CHtml::link($model->file_name, NzbController::createUrl('AjaxDownloadFile',array('fileName'=>$model->file_name, 'root'=>'nzb'))); ?>
+	<?php echo CHtml::activeFileField($modelUpload, 'file',array('size'=>50))?>
 	<?php echo CHtml::error($modelUpload, 'file')?>
 </div>	
 
@@ -75,13 +75,13 @@ $('#Nzb_points').keyup(function(){
 	</div>
 </div>
 	
-<div id="conteiner" style="display: inline-block;">
-	<div id="left" style="display: inline-block;">	
-		<div class="row">
+<div id="search-movie-data">
+	<div class="search-movie-data-fields">	
+		<div style="width:40%;display: inline-block;">
 			<?php echo CHtml::activeLabelEx($modelSearchDiscRequest,'Title'); ?>
 			<?php echo CHtml::activeTextField($modelSearchDiscRequest,'Title',array('size'=>35,'maxlength'=>255)); ?>
 		</div>
-		<div class="row">
+		<div style="width:20%;display: inline-block;">
 			<?php echo CHtml::activeLabelEx($modelSearchDiscRequest,'Country'); ?>
 			<?php 
 				$country = array('Argentina'=>'Argentina',
@@ -95,10 +95,11 @@ $('#Nzb_points').keyup(function(){
 				
 				echo CHtml::activeDropDownList($modelSearchDiscRequest, 'Country', $country, array('prompt'=>'Select..')); ?>
 		</div>
-		<div class="row">
+		<div style="width:20%;display: inline-block;">
 			<?php echo CHtml::button('Search', array('id'=>'btnSearch'));?>
 		</div>
-		<div id="div-searchResult" style="display: none; width:70%">
+	</div>	
+	<div id="div-searchResult" style="display: none; width:100%">
 		<?php
 		
 		$this->widget('ext.processingDialog.processingDialog', array(
@@ -117,6 +118,7 @@ $('#Nzb_points').keyup(function(){
 						$("#search-result-grid").find(".lnkMoreInfo").each(
 											function(index, item){
 															$(item).click(function(){
+																$("#wating").dialog("open");
 																var idTitle = $(this).attr("id");
 																$.post("'.NzbController::createUrl('AjaxGetMovieMoreInfo').'",
 																{
@@ -125,27 +127,50 @@ $('#Nzb_points').keyup(function(){
 															).success(
 																function(data) 
 																{
-																	$("#movie-info").html(data);
-																	
+																	$("#popup-view-movie-info").html(data);
+																	$("#ViewMoreInfo").dialog("open");
+																	$("#wating").dialog("close");
 																}
-															);
+															).error(
+																function()
+																{
+																	$("#wating").dialog("close");
+																});
 															return false;
 																	
 												});
+								});
+
+						$("#search-result-grid").find(".lnkImage").each(
+											function(index, item){
+														$(item).click(function(){
+															return false;
+														});
+														$(item).hover(
+															function () {
+    															$(this).find("spam").hide();
+    															$(this).find("img").show();
+  															}, 
+  															function () {
+  																$(this).find("img").hide();
+  																$(this).find("spam").show();
+  															}															
+																	
+												);
 								});	
 					}',
 			'selectionChanged'=>'js:function(){
-								$.post("'.NzbController::createUrl('AjaxGetMovieMoreInfo').'",
-										{
-											titleId :$.fn.yiiGridView.getSelection("search-result-grid")											
-										}
-									).success(
-										function(data) 
-										{
-											$("#movie-info").html(data);
-											
-										}
-									);
+						var titleId = $.fn.yiiGridView.getSelection("search-result-grid")
+						if(titleId!=""){
+							$("#hiddenTitleId").val(titleId);
+							if($("#Upload_file").val() != "")
+								$("#saveButton").removeAttr("disabled");
+						}
+						else
+						{
+							$("#hiddenTitleId").val("");
+							$("#saveButton").attr("disabled","disabled");
+						}
 					}',
 		    'columns' => array(
 		        array(
@@ -179,7 +204,7 @@ $('#Nzb_points').keyup(function(){
 		            'value' => '$data->type'
 				),
 				array(
-					'name'=>'moreInfo',
+					'name'=>'',
 					'value'=>'CHtml::link("more info",
 												"#",
 												array(
@@ -193,19 +218,21 @@ $('#Nzb_points').keyup(function(){
 					'htmlOptions'=>array("style"=>"text-align:right;"),
 				),
 				array(
-		            'name' => 'Thumbnail',
-		            'type' => 'raw',
-		            'value' => 'CHtml::image(CHtml::encode($data->thumbnail), "image")',
-				),
+							'name'=>'',
+							'value'=>'CHtml::link("<spam>image</spam>". CHtml::image($data->thumbnail,"",array("style"=>"display:none",)) ,
+														"#",
+														array(
+																"id"=>$data->id. "_img",
+																"class"=>"lnkImage",
+															)
+													)',
 		
+							'type'=>'raw',					
+							'htmlOptions'=>array("style"=>"text-align:right;"),
+				),
 		    ),
 		));
-		CHtml::link($text)
 		?>
-		</div>
-	</div>
-	<div id="right" style="display: inline-block;width:200px; vertical-align: top;">
-		<div id="movie-info"></div>
 	</div>
 </div>
 
@@ -216,8 +243,8 @@ $('#Nzb_points').keyup(function(){
 	
 	<div class="left">
 		<div class="row buttons">
-
-			<?php if($model->isNewRecord)
+			<?php 			
+				if($model->isNewRecord)					
 					echo CHtml::submitButton($model->isNewRecord ? 'Create and find Subtitle' : 'Save', array('id'=>'saveButton','disabled'=>'disabled'));
 				  else
 					echo CHtml::submitButton($model->isNewRecord ? 'Create and find Subtitle' : 'Save');
@@ -227,3 +254,24 @@ $('#Nzb_points').keyup(function(){
 <?php echo CHtml::endForm()?>
 
 </div><!-- form -->
+
+<?php
+//ProductType
+	$this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+			'id'=>'ViewMoreInfo',
+			// additional javascript options for the dialog plugin
+			'options'=>array(
+					'title'=>'Movie Info',
+					'autoOpen'=>false,
+					'modal'=>true,
+					'width'=> '500',
+					'buttons'=>	array(
+							'Aceptar'=>'js:function(){jQuery("#ViewMoreInfo").dialog( "close" );}',
+					),
+			),
+	));
+	echo CHtml::openTag('div',array('id'=>'popup-view-movie-info','style'=>'position:relative;display:inline-block;width:97%'));
+	echo CHtml::closeTag('div');
+	
+	$this->endWidget('zii.widgets.jui.CJuiDialog');
+?>
