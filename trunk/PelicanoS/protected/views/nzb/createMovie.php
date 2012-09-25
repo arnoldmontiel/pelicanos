@@ -12,7 +12,7 @@ $this->menu=array(
 <h1>Create Movie</h1>
 
 <?php 
-echo $this->renderPartial('_caramba', array('model'=>$model,
+echo $this->renderPartial('_formMovie', array('model'=>$model,
 											'modelUpload'=>$modelUpload, 
 											'modelSearchDiscRequest'=>$modelSearchDiscRequest, 
 											'ddlRsrcType'=>$ddlRsrcType,

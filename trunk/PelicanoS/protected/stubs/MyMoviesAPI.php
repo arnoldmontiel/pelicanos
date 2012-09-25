@@ -161,6 +161,9 @@ class LoadDiscTitleByIdResult
 				$modelMyMovie->data_changed = (string)$data->DataChanged;
 				$modelMyMovie->covers_changed = (string)$data->CoversChanged;
 				
+				//Poster
+				$modelMyMovie->poster_original = $this->getPoster($data);
+				
 				//Obtengo la lista de los generos
 				$modelMyMovie->genre = implode(", ",$this->xmlToArray($data->Genres));
 				
