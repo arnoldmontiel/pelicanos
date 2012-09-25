@@ -62,39 +62,16 @@ class SearchDiscTitleByTitleResult
 {
 	public $any; //string;
 }
-
-class LoadDiscTitleById extends MyMovieBase
-{
-	public $Handshake; //string;
-	public $Reference; //string;
-	public $TitleId; //string;
-	public $Client; //string;
-	public $Version; //string;
-	public $Locale; //int;
-}
-	
-class LoadDiscTitleByIdResponse
-{
-	public $LoadDiscTitleByIdResult; //LoadDiscTitleByIdResult;
-}
-	
-class LoadDiscTitleByIdResult
-{
-	public $any; //string;
-}
 	
 	
 	/**
 	* The soap client proxy class
 	*/
-	class MyMoviesAPI 
-	 {
-		public $soapClient;
+class MyMoviesAPI 
+{
+	public $soapClient;
 	
-		private static $classmap = array(
-			'LoadDiscTitleById'=>'LoadDiscTitleById',
-			'LoadDiscTitleByIdResponse'=>'LoadDiscTitleByIdResponse',
-			'LoadDiscTitleByIdResult'=>'LoadDiscTitleByIdResult',
+	private static $classmap = array(
 	
 	);
 	
@@ -104,7 +81,7 @@ class LoadDiscTitleByIdResult
 		$this->soapClient = new SoapClient($url,array("classmap"=>self::$classmap,"trace" => true,"exceptions" => false));
 	}
 	
-	function LoadMovieById($titleId)
+	function LoadMovieById($titleId, $saveImage=false)
 	{
 		$movieResponse = null;
 		if(!empty($titleId))
@@ -119,59 +96,97 @@ class LoadDiscTitleByIdResult
 				
 			if(isset($LoadMovieByIdResponse))
 			{
-				$movieResponse = $this->getMovieResponse(simplexml_load_string($LoadMovieByIdResponse->LoadMovieByIdResult->any));
+				$movieResponse = $this->getMovieResponse(simplexml_load_string($LoadMovieByIdResponse->LoadMovieByIdResult->any), $saveImage);
 			}
 		}
 		return $movieResponse;
 	}
 	
-	private function getMovieResponse($data)
+	private function getMovieResponse($data, $saveImage)
 	{
-		$modelMyMovie = null;
+		$modelMyMovieMovie = null;
 		if(!empty($data) && (string)$data['status'] == 'ok')
 		{
 			if(!empty($data->Title))
 			{
 				$data = $data->Title;
-				$modelMyMovie = new MyMovie();
+				$modelMyMovieMovie = new MyMovieMovie();
 				
-				$modelMyMovie->Id = (string)$data->ID;
-				$modelMyMovie->type = (string)$data->Type;
-				$modelMyMovie->bar_code = (string)$data->Barcode;
-				$modelMyMovie->country = (string)$data->Country;
-				$modelMyMovie->local_title = (string)$data->LocalTitle;
-				$modelMyMovie->original_title = (string)$data->OriginalTitle;
-				$modelMyMovie->sort_title = (string)$data->SortTitle;
-				$modelMyMovie->aspect_ratio = (string)$data->AspectRatio;
-				$modelMyMovie->video_standard = (string)$data->VideoStandard;
-				$modelMyMovie->production_year = (string)$data->ProductionYear;
-				$modelMyMovie->release_date = (string)$data->ReleaseDate;
-				$modelMyMovie->running_time = (string)$data->RunningTime;
-				$modelMyMovie->description = (string)$data->Description;
-				$modelMyMovie->extra_features = (string)$data->ExtraFeatures;
+				$modelMyMovieMovie->Id = (string)$data['MovieId'];
+				$modelMyMovieMovie->local_title = (string)$data->LocalTitle;
+				$modelMyMovieMovie->original_title = (string)$data->OriginalTitle;
+				$modelMyMovieMovie->sort_title = (string)$data->SortTitle;
+				$modelMyMovieMovie->production_year = (string)$data->ProductionYear;
+				$modelMyMovieMovie->running_time = (string)$data->RunningTime;
+				$modelMyMovieMovie->description = (string)$data->Description;
 				
-				$modelMyMovie->parental_rating_desc = (!empty($data->ParentalRating)?(string)$data->ParentalRating->Description:"");
+				$modelMyMovieMovie->parental_rating_desc = (!empty($data->ParentalRating)?(string)$data->ParentalRating->Description:"");
 				
-				$modelMyMovie->Id_parental_control = $this->getParentalControlId($data);
+				$modelMyMovieMovie->Id_parental_control = $this->getParentalControlId($data);
 				
-				$modelMyMovie->adult = $this->getAdult($data);
+				$modelMyMovieMovie->adult = $this->getAdult($data);
 				
-				$modelMyMovie->imdb = (string)$data->IMDB;
-				$modelMyMovie->rating = (string)$data->Rating;
-				$modelMyMovie->data_changed = (string)$data->DataChanged;
-				$modelMyMovie->covers_changed = (string)$data->CoversChanged;
+				$modelMyMovieMovie->imdb = (string)$data->IMDB;
+				$modelMyMovieMovie->rating = (string)$data->Rating;
+				$modelMyMovieMovie->rating_votes = (string)$data->RatingVotes;
 				
 				//Poster
-				$modelMyMovie->poster_original = $this->getPoster($data);
+				$modelMyMovieMovie->poster_original = $this->getPoster($data);
 				
+				if($saveImage)
+				{
+					$validator = new CUrlValidator();				
+					
+					if($modelMyMovieMovie->poster_original!='' && $validator->validateValue($modelMyMovieMovie->poster_original))
+					{
+						try {
+							$content = @file_get_contents($modelMyMovieMovie->poster_original);
+							if ($content !== false) {
+								$file = fopen("images/".$modelMyMovieMovie->Id.".jpg", 'w');
+								fwrite($file,$content);
+								fclose($file);
+								$modelMyMovieMovie->poster = $modelMyMovieMovie->Id.".jpg";
+							} else {
+								// an error happened
+							}
+						} catch (Exception $e) {
+							throw $e;
+							// an error happened
+						}
+					}
+					else
+					{
+						$modelMyMovieMovie->poster = 'no_poster.jpg';
+					}
+					
+					//Backdrop
+					$modelMyMovieMovie->backdrop_original = $this->getBackdrop($data);
+					if($modelMyMovieMovie->backdrop_original!='' && $validator->validateValue($modelMyMovieMovie->backdrop_original))
+					{
+						try {
+							$content = @file_get_contents($modelMyMovieMovie->backdrop_original);
+							if ($content !== false) {
+								$file = fopen("images/".$modelMyMovieMovie->Id."_bd.jpg", 'w');
+								fwrite($file,$content);
+								fclose($file);
+								$modelMyMovieMovie->backdrop = $modelMyMovieMovie->Id."_bd.jpg";
+							} else {
+								// an error happened
+							}
+						} catch (Exception $e) {
+							throw $e;
+							// an error happened
+						}
+					}
+				}
 				//Obtengo la lista de los generos
-				$modelMyMovie->genre = implode(", ",$this->xmlToArray($data->Genres));
+				$modelMyMovieMovie->genre = implode(", ",$this->xmlToArray($data->Genres));
 				
 				//Obtengo la lista de los estudios
-				$modelMyMovie->studio =  implode(", ",$this->xmlToArray($data->Studios));
+				$modelMyMovieMovie->studio =  implode(", ",$this->xmlToArray($data->Studios));
 			}
 		}
-		return $modelMyMovie;
+		return $modelMyMovieMovie;
 	}
 	
 	function SearchDiscTitleByTitle($modelSearchDiscRequest)
@@ -224,131 +239,6 @@ class LoadDiscTitleByIdResult
 			}
 		}
 		return $array;
-	}
-	function LoadDiscTitleById($myMovieId)
-	{
-		$model = new LoadDiscTitleById();
-		$model->TitleId = $myMovieId;
-		$model->Locale = 0;
-		
-		$LoadDiscTitleByIdResponse = $this->soapClient->LoadDiscTitleById($model);
-		
-		$idImdb = "";
-		if(isset($LoadDiscTitleByIdResponse))
-		{
-			$idImdb = $this->saveMyMovie(simplexml_load_string($LoadDiscTitleByIdResponse->LoadDiscTitleByIdResult->any));
-		}	
-		 
-		return $idImdb;
-	}
-
-	private function saveMyMovie($data)
-	{
-		$idImdb = "";
-		if(!empty($data) && (string)$data['status'] == 'ok')
-		{
-			if(!empty($data->Title))
-				$data = $data->Title;
-			else
-				return $idImdb;
-			
-			$modelMyMovieDB = MyMovie::model()->findByPk((string)$data->ID);
-			
-			if(!isset($modelMyMovieDB))
-			{
-				$modelMyMovie = new MyMovie();
-				
-				$modelMyMovie->Id = (string)$data->ID;
-				$modelMyMovie->type = (string)$data->Type;
-				$modelMyMovie->bar_code = (string)$data->Barcode;
-				$modelMyMovie->country = (string)$data->Country;
-				$modelMyMovie->local_title = (string)$data->LocalTitle;
-				$modelMyMovie->original_title = (string)$data->OriginalTitle;
-				$modelMyMovie->sort_title = (string)$data->SortTitle;
-				$modelMyMovie->aspect_ratio = (string)$data->AspectRatio;
-				$modelMyMovie->video_standard = (string)$data->VideoStandard;
-				$modelMyMovie->production_year = (string)$data->ProductionYear;
-				$modelMyMovie->release_date = (string)$data->ReleaseDate;
-				$modelMyMovie->running_time = (string)$data->RunningTime;
-				$modelMyMovie->description = (string)$data->Description;
-				$modelMyMovie->extra_features = (string)$data->ExtraFeatures;
-				
-				$modelMyMovie->parental_rating_desc = (!empty($data->ParentalRating)?(string)$data->ParentalRating->Description:"");
-				
-				$modelMyMovie->Id_parental_control = $this->getParentalControlId($data);
-				
-				$modelMyMovie->adult = $this->getAdult($data);
-				
-				$modelMyMovie->imdb = (string)$data->IMDB;
-				$modelMyMovie->rating = (string)$data->Rating;
-				$modelMyMovie->data_changed = (string)$data->DataChanged;
-				$modelMyMovie->covers_changed = (string)$data->CoversChanged;
-				
-				//Obtengo la lista de los generos
-				$modelMyMovie->genre = implode(", ",$this->xmlToArray($data->Genres));
-				
-				//Obtengo la lista de los estudios
-				$modelMyMovie->studio =  implode(", ",$this->xmlToArray($data->Studios));
-		
-				
-				//Poster
-				$modelMyMovie->poster_original = $this->getPoster($data->MovieData);
-				
-				$validator = new CUrlValidator();
-				$setting = Setting::getInstance();
-				
-				if($modelMyMovie->poster_original!='' && $validator->validateValue($modelMyMovie->poster_original))
-				{
-					try {
-						$content = @file_get_contents($modelMyMovie->poster_original);
-						if ($content !== false) {
-							$file = fopen($setting->path_images."/".$modelMyMovie->Id.".jpg", 'w');
-							fwrite($file,$content);
-							fclose($file);
-							$modelMyMovie->poster = $modelMyMovie->Id.".jpg";
-						} else {
-							// an error happened
-						}
-					} catch (Exception $e) {
-						throw $e;
-						// an error happened
-					}
-				}
-				else
-				{
-					$modelMyMovie->poster = 'no_poster.jpg';
-				}
-				
-				//Backdrop
-				$modelMyMovie->backdrop_original = $this->getBackdrop($data->MovieData);
-				if($modelMyMovie->backdrop_original!='' && $validator->validateValue($modelMyMovie->backdrop_original))
-				{
-					try {
-						$content = @file_get_contents($modelMyMovie->backdrop_original);
-						if ($content !== false) {
-							$file = fopen($setting->path_images."/".$modelMyMovie->Id."_bd.jpg", 'w');
-							fwrite($file,$content);
-							fclose($file);
-							$modelMyMovie->backdrop = $modelMyMovie->Id."_bd.jpg";
-						} else {
-							// an error happened
-						}
-					} catch (Exception $e) {
-						throw $e;
-						// an error happened
-					}
-				}
-				
-				
-				if($modelMyMovie->save())
-				{
-					$this->saveAudioTrack($data);
-					$this->saveSubtitle($data);
-				}
-			}
-			$idImdb = (string)$data->IMDB;
-		}
-		return $idImdb;
 	}
 	
 	private function xmlToArray($xml)
@@ -412,87 +302,6 @@ class LoadDiscTitleByIdResult
 	
 		}
 		return "";
-	}
-	
-	private function saveAudioTrack($xml)
-	{
-		
-		$idMyMovie = (string)$xml->ID;
-		
-		foreach($xml->AudioTracks->children() as $item)
-		{
-			$language = (string)$item['Language'];
-			$type = (string)$item['Type'];
-			$chanels = (string)$item['Channels'];
-			
-			$modelAudioTrackDB = AudioTrack::model()->findByAttributes(array(
-													'language'=>$language,
-													'type'=>$type,
-													'chanel'=>$chanels,));
-			
-			$modelMyMovieAudioTrack = new MyMovieAudioTrack();
-			$modelMyMovieAudioTrack->Id_my_movie = $idMyMovie;
-			
-			if(isset($modelAudioTrackDB))
-			{
-				$modelMyMovieAudioTrack->Id_audio_track = $modelAudioTrackDB->Id;
-			}
-			else
-			{
-				$modelAudioTrack = new AudioTrack();
-				$modelAudioTrack->language = $language;
-				$modelAudioTrack->type = $type;
-				$modelAudioTrack->chanel = $chanels;
-				$modelAudioTrack->save();
-				
-				$modelMyMovieAudioTrack->Id_audio_track = $modelAudioTrack->Id;
-			}
-			
-			$model = MyMovieAudioTrack::model()->findByAttributes(array(
-													'Id_my_movie'=>$idMyMovie, 
-													'Id_audio_track'=>$modelMyMovieAudioTrack->Id_audio_track));
-			if(!isset($model))
-				$modelMyMovieAudioTrack->save();
-
-		}
-	}
-	
-	private function saveSubtitle($xml)
-	{
-	
-		$idMyMovie = (string)$xml->ID;
-	
-		foreach($xml->Subtitles->children() as $item)
-		{
-			$language = (string)$item['Language'];
-				
-			$modelSubtitleDB = Subtitle::model()->findByAttributes(array(
-														'language'=>$language,
-														));
-				
-			$modelMyMovieSubtitle = new MyMovieSubtitle();
-			$modelMyMovieSubtitle->Id_my_movie = $idMyMovie;
-				
-			if(isset($modelSubtitleDB))
-			{
-				$modelMyMovieSubtitle->Id_subtitle = $modelSubtitleDB->Id;
-			}
-			else
-			{
-				$modelSubtitle = new Subtitle();
-				$modelSubtitle->language = $language;
-				$modelSubtitle->save();
-	
-				$modelMyMovieSubtitle->Id_subtitle = $modelSubtitle->Id;
-			}
-				
-			$model = MyMovieSubtitle::model()->findByAttributes(array(
-														'Id_my_movie'=>$idMyMovie, 
-														'Id_subtitle'=>$modelMyMovieSubtitle->Id_subtitle));
-			if(!isset($model))
-				$modelMyMovieSubtitle->save();
-	
-		}
 	}
 }
 
