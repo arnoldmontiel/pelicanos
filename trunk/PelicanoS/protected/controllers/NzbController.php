@@ -893,45 +893,52 @@ class NzbController extends Controller
 		if(isset($_POST['Upload']) && isset($_POST['hiddenTitleId']))
 		{
 			$modelUpload->attributes=$_POST['Upload'];
-			
+			$titleId = $_POST['hiddenTitleId'];
 			$file=CUploadedFile::getInstance($modelUpload,'file');
 				
-			if($modelUpload->validate() && $model->validate() && !empty($_POST['hiddenTitleId']))
+			if($modelUpload->validate() && !empty($titleId))
 			{
-				$this->redirect(array('index'));
-// 				$transaction = $model->dbConnection->beginTransaction();
-// 				try {
-// 					if($file != null)
-// 					{
-// 						$uniqueId = uniqid();
-// 						$fileName = $uniqueId . '.nzb'; 
+				$transaction = $model->dbConnection->beginTransaction();
+				try {
+					if($file != null)
+					{
+						$uniqueId = uniqid();
+						$fileName = $uniqueId . '.nzb'; 
 						
-// 						$model->url = '/nzb/'.$fileName;
-// 						$model->file_name = $fileName;
+						$model->url = '/nzb/'.$fileName;
+						$model->file_name = $fileName;
 						
-// 						$model->file_original_name = $file->getName();
+						$model->file_original_name = $file->getName();
 						
-// 						$this->saveFile($file, 'nzb', $fileName);
-// 					}
+						$this->saveFile($file, 'nzb', $fileName);
+					}
 						
-
-// 					if($model->save()){
-// 						$transaction->commit();
-// 						$this->redirect(array('findSubtitle','id'=>$model->Id));
-// 					}
+					$myMovie = new MyMoviesAPI();
+					$modelMyMovieMovie = $myMovie->LoadMovieById($titleId, true);
+					$modelMyMovieMovie->save();
+					
+					$model->Id_my_movie_movie = $modelMyMovieMovie->Id;
+					 
+					if($model->save()){
+						$transaction->commit();
+						$this->redirect(array('findSubtitle','id'=>$model->Id));
+					}
 						
-// 				} catch (Exception $e) {
-// 					$transaction->rollback();
-// 				}
+				} catch (Exception $e) {
+					$transaction->rollback();
+				}
 			}
 		}
 
+		$rawData = array();
+		
 		if(isset($_GET['SearchDiscRequest']))
+		{
 			$modelSearchDiscRequest->setAttributes($_GET['SearchDiscRequest']);
+			$myMovie = new MyMoviesAPI();
+			$rawData = $myMovie->SearchDiscTitleByTitle($modelSearchDiscRequest);
+		}
 		
-		
-		$myMovie = new MyMoviesAPI();
-		$rawData = $myMovie->SearchDiscTitleByTitle($modelSearchDiscRequest);
 		
 		$arrayDataProvider=new CArrayDataProvider($rawData, array(
 				    'id'=>'id',
