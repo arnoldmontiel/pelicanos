@@ -1,6 +1,5 @@
 <div class="form">
 <?php
-Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl . '/css/detail-view-blue.css');
 Yii::app()->clientScript->registerScript(__CLASS__.'#newMovie', "
 $('#btnSearch').click(function()
 {
@@ -22,6 +21,11 @@ $('#Upload_file').change(function() {
 
 $('#saveButton').click(function(){
 	$('#wating').dialog('open');
+});
+
+$('#cancelButton').click(function(){
+	window.location = '".NzbController::createUrl('index')."';
+	return false;
 });
 
 $(document).keypress(function(e) {
@@ -248,10 +252,9 @@ $('#Nzb_points').keyup(function(){
 	<div class="left">
 		<div class="row buttons">
 			<?php 			
-				if($model->isNewRecord)					
-					echo CHtml::submitButton($model->isNewRecord ? 'Create and find Subtitle' : 'Save', array('id'=>'saveButton','disabled'=>'disabled'));
-				  else
-					echo CHtml::submitButton($model->isNewRecord ? 'Create and find Subtitle' : 'Save');
+									
+				echo CHtml::submitButton($model->isNewRecord ? 'Create and find Subtitle' : 'Save', array('id'=>'saveButton','disabled'=>'disabled'));
+				echo CHtml::submitButton('Cancel', array('id'=>'cancelButton'));
 			?>		
 		</div>
 	</div>
