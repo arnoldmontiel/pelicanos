@@ -19,19 +19,3 @@ echo $this->renderPartial('_formMovie', array('model'=>$model,
 											'arrayDataProvider'=>$arrayDataProvider
 									));
 ?>
-<br>
-<?php
-		 $this->widget('zii.widgets.jui.CJuiButton',
-			 array(
-			 	'id'=>'cancel',
-			 	'name'=>'Cancel',
-			 	'caption'=>'Cancel',
-			 	'cssFile'=>'',
-			 	'value'=>'Cancel',
-			 	'onclick'=>'js:function(){
-			 		window.location = "'.NzbController::createUrl('index').'";
-			 		return false;
-				}',
-		 	)
-		 );
-	 ?>		

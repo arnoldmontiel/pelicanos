@@ -1117,6 +1117,20 @@ class NzbController extends Controller
 			$model->attributes = $_POST['Nzb'];
 		}
 
+		if(isset($_POST['MyMovieMovie']))
+		{
+			if($_POST['MyMovieMovie']['description'] != $modelMyMovieMovie->description )
+				$hasChanged = true;
+		
+			if($_POST['MyMovieMovie']['genre'] != $modelMyMovieMovie->genre )
+				$hasChanged = true;
+				
+			if($_POST['MyMovieMovie']['studio'] != $modelMyMovieMovie->studio )
+				$hasChanged = true;
+			
+			$modelMyMovieMovie->attributes = $_POST['MyMovieMovie'];
+		}
+		
 		if(isset($_POST['Upload']))
 		{
 			$modelUpload->attributes=$_POST['Upload'];
@@ -1135,21 +1149,26 @@ class NzbController extends Controller
 					
 					$this->saveFile($file, 'nzb', $fileName);
 					
+					$modelMyMovieMovie->save();
 					$this->saveUpdatedModel($model, $id);
 				}
 			}
 			else
 			{
-				if($hasChanged)
+				if($hasChanged){
+					$modelMyMovieMovie->save();
 					$this->saveUpdatedModel($model, $id);
+				}
 				else
 					$this->redirect(array('view','id'=>$model->Id));
 			}
 		}
 		else
 		{
-			if($hasChanged)
+			if($hasChanged){
+				$modelMyMovieMovie->save();
 				$this->saveUpdatedModel($model, $id);
+			}
 		}
 
 		$this->render('update',array(

@@ -14,20 +14,6 @@ $this->menu=array(
 <?php echo $this->renderPartial('_updateMovie', array('model'=>$model, 
 													'modelUpload'=>$modelUpload, 
 													'modelMyMovieMovie'=>$modelMyMovieMovie, 
-													'ddlRsrcType'=>$ddlRsrcType)); ?>
-<br>
-<?php
-		 $this->widget('zii.widgets.jui.CJuiButton',
-			 array(
-			 	'id'=>'cancel',
-			 	'name'=>'Cancel',
-			 	'caption'=>'Cancel',
-			 	'value'=>'Cancel',
-		 		'cssFile'=>'',
-			 	'onclick'=>'js:function(){
-			 		window.location = "'.NzbController::createUrl('view',array('id'=>$model->Id)).'";
-			 		return false;
-				}',
-		 	)
-		 );
-	 ?>		 
+													'ddlRsrcType'=>$ddlRsrcType)); 
+?>
+ 

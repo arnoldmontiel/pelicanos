@@ -1,4 +1,15 @@
 <div class="form">
+<?php
+Yii::app()->clientScript->registerScript(__CLASS__.'#updateMovie', "
+
+$('#cancelButton').click(function(){
+	window.location = '".NzbController::createUrl('view',array('id'=>$model->Id))."';
+	return false;
+});
+  
+");
+?>
+
 
 <?php echo CHtml::beginForm('','post',array
 		('enctype'=>'multipart/form-data'))?>
@@ -56,7 +67,7 @@
 
 	<div id="points" style="margin-bottom: 5px">
 		<?php echo CHtml::activeLabelEx($modelMyMovieMovie,'description'); ?>
-		<?php echo CHtml::activeTextArea($modelMyMovieMovie, 'description');?>
+		<?php echo CHtml::activeTextArea($modelMyMovieMovie, 'description',array('cols'=>50));?>
 		<?php echo CHtml::error($modelMyMovieMovie,'description'); ?>
 	</div>
 	
@@ -72,7 +83,11 @@
 		<?php echo CHtml::error($modelMyMovieMovie,'genre'); ?>
 	</div>
 	
-	<?php echo CHtml::submitButton('Save'); ?>
+	<?php 
+		echo CHtml::submitButton('Save'); 
+		echo CHtml::submitButton('Cancel', array('id'=>'cancelButton'));
+	?>
+	
 	<?php echo CHtml::endForm()?>
 
 </div><!-- form -->
