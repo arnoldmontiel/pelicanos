@@ -5,6 +5,7 @@ Yii::app()->clientScript->registerScript(__CLASS__.'#newMovie', "
 $('#btnSearch').click(function()
 {
 	$('#div-searchResult').animate({opacity: 'hide'},240);
+	$('#saveButton').attr('disabled','disabled');
 	$('#wating').dialog('open');
 	$.fn.yiiGridView.update('search-result-grid', {
 				data: $('#SearchDiscRequest_Title').serialize() + '&' + $('#SearchDiscRequest_Country').serialize()
@@ -19,6 +20,9 @@ $('#Upload_file').change(function() {
   		$('#saveButton').removeAttr('disabled');
 });
 
+$('#saveButton').click(function(){
+	$('#wating').dialog('open');
+});
 
 $(document).keypress(function(e) {
     if(e.keyCode == 13) 
@@ -264,7 +268,7 @@ $('#Nzb_points').keyup(function(){
 					'title'=>'Movie Info',
 					'autoOpen'=>false,
 					'modal'=>true,
-					'width'=> '500',
+					'width'=> '600',
 					'buttons'=>	array(
 							'Aceptar'=>'js:function(){jQuery("#ViewMoreInfo").dialog( "close" );}',
 					),

@@ -35,6 +35,14 @@
 		<?php echo CHtml::encode($model->studio); ?>
 		<br />
 		
+		<b><?php echo CHtml::encode($model->getAttributeLabel('country')); ?>:</b>
+		<?php echo CHtml::encode($model->country); ?>
+		<br />
+		
+		<b><?php echo CHtml::encode($model->getAttributeLabel('type')); ?>:</b>
+		<?php echo CHtml::encode($model->type); ?>
+		<br />
+		
 	</div>
 	<div class="footer-movie-info-view" >
 		<b><?php echo CHtml::encode($model->getAttributeLabel('description')); ?>:</b>

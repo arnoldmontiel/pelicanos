@@ -914,7 +914,7 @@ class NzbController extends Controller
 					}
 						
 					$myMovie = new MyMoviesAPI();
-					$modelMyMovieMovie = $myMovie->LoadMovieById($titleId, true);
+					$modelMyMovieMovie = $myMovie->LoadDiscTitleById($titleId, true);
 					$modelMyMovieMovie->save();
 					
 					$model->Id_my_movie_movie = $modelMyMovieMovie->Id;
@@ -966,7 +966,7 @@ class NzbController extends Controller
 		if(isset($titleId))
 		{
 			$myMovie = new MyMoviesAPI();
-			$model = $myMovie->LoadMovieById($titleId);
+			$model = $myMovie->LoadDiscTitleById($titleId);
 		
 			echo $this->renderPartial('_viewInfo', array(
 														'model'=>$model,));
@@ -1102,7 +1102,7 @@ class NzbController extends Controller
 	{
 		$model=$this->loadModel($id);
 		$modelUpload=new Upload;
-		$modelImdb = Imdbdata::model()->findByPk($model->Id_imdbdata);
+		$modelMyMovieMovie = MyMovieMovie::model()->findByPk($model->Id_my_movie_movie);
 		$ddlRsrcType = ResourceType::model()->findAll();
 		$hasChanged = false;
 
@@ -1155,7 +1155,7 @@ class NzbController extends Controller
 		$this->render('update',array(
 			'model'=>$model,
 			'modelUpload'=>$modelUpload,
-			'modelImdb'=>$modelImdb,
+			'modelMyMovieMovie'=>$modelMyMovieMovie,
 			'ddlRsrcType'=>$ddlRsrcType,
 		));
 	}

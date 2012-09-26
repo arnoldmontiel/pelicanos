@@ -17,24 +17,22 @@ class MyMovieBase
 	}	
 }
 
-class LoadMovieById extends MyMovieBase
+class LoadDiscTitleById extends MyMovieBase
 {
 	public $Handshake; //string;
 	public $Reference; //string;
 	public $TitleId; //string;
-	public $PrimaryLanguage; //string;
 	public $Client; //string;
 	public $Version; //string;
-	public $MaxTrailerBitrate; //int;
 	public $Locale; //int;
 }
 
-class LoadMovieByIdResponse
+class LoadDiscTitleByIdResponse
 {
-	public $LoadMovieByIdResult; //LoadMovieByIdResult;
+	public $LoadDiscTitleByIdResult; //LoadDiscTitleByIdResult;
 }
 
-class LoadMovieByIdResult
+class LoadDiscTitleByIdResult
 {
 	public $any; //string;
 }
@@ -81,22 +79,21 @@ class MyMoviesAPI
 		$this->soapClient = new SoapClient($url,array("classmap"=>self::$classmap,"trace" => true,"exceptions" => false));
 	}
 	
-	function LoadMovieById($titleId, $saveImage=false)
+	function LoadDiscTitleById($titleId, $saveImage=false)
 	{
 		$movieResponse = null;
 		if(!empty($titleId))
 		{
-			$model = new LoadMovieById();
+			$model = new LoadDiscTitleById();
 			
 			$model->TitleId = $titleId; //string;
-			$model->MaxTrailerBitrate = 1; //int;
 			$model->Locale = 0;
 				
-			$LoadMovieByIdResponse = $this->soapClient->LoadMovieById($model);
+			$LoadDiscTitleByIdResponse = $this->soapClient->LoadDiscTitleById($model);
 				
-			if(isset($LoadMovieByIdResponse))
+			if(isset($LoadDiscTitleByIdResponse))
 			{
-				$movieResponse = $this->getMovieResponse(simplexml_load_string($LoadMovieByIdResponse->LoadMovieByIdResult->any), $saveImage);
+				$movieResponse = $this->getMovieResponse(simplexml_load_string($LoadDiscTitleByIdResponse->LoadDiscTitleByIdResult->any), $saveImage);
 			}
 		}
 		return $movieResponse;
@@ -112,13 +109,19 @@ class MyMoviesAPI
 				$data = $data->Title;
 				$modelMyMovieMovie = new MyMovieMovie();
 				
-				$modelMyMovieMovie->Id = (string)$data['MovieId'];
+				$modelMyMovieMovie->Id = (string)$data->ID;
+				$modelMyMovieMovie->type = (string)$data->Type;
+				$modelMyMovieMovie->bar_code = (string)$data->Barcode;
+				$modelMyMovieMovie->country = (string)$data->Country;
+				$modelMyMovieMovie->video_standard = (string)$data->VideoStandard;
+				$modelMyMovieMovie->release_date = (string)$data->ReleaseDate;
 				$modelMyMovieMovie->local_title = (string)$data->LocalTitle;
 				$modelMyMovieMovie->original_title = (string)$data->OriginalTitle;
 				$modelMyMovieMovie->sort_title = (string)$data->SortTitle;
 				$modelMyMovieMovie->production_year = (string)$data->ProductionYear;
 				$modelMyMovieMovie->running_time = (string)$data->RunningTime;
 				$modelMyMovieMovie->description = (string)$data->Description;
+				$modelMyMovieMovie->extra_features = (string)$data->ExtraFeatures;
 				
 				$modelMyMovieMovie->parental_rating_desc = (!empty($data->ParentalRating)?(string)$data->ParentalRating->Description:"");
 				
@@ -131,7 +134,7 @@ class MyMoviesAPI
 				$modelMyMovieMovie->rating_votes = (string)$data->RatingVotes;
 				
 				//Poster
-				$modelMyMovieMovie->poster_original = $this->getPoster($data);
+				$modelMyMovieMovie->poster_original = $this->getPoster($data->MovieData);
 				
 				if($saveImage)
 				{
@@ -160,7 +163,7 @@ class MyMoviesAPI
 					}
 					
 					//Backdrop
-					$modelMyMovieMovie->backdrop_original = $this->getBackdrop($data);
+					$modelMyMovieMovie->backdrop_original = $this->getBackdrop($data->MovieData);
 					if($modelMyMovieMovie->backdrop_original!='' && $validator->validateValue($modelMyMovieMovie->backdrop_original))
 					{
 						try {
@@ -235,7 +238,7 @@ class MyMoviesAPI
 	
 		foreach ( array_slice($array, 0) as $key => $value ) {
 			if ( $value instanceof SimpleXMLElement ) {
-				$array[$key] = empty($value) ? NULL : toArray($value);
+				$array[$key] = empty($value) ? NULL : $this->toArray($value);
 			}
 		}
 		return $array;
