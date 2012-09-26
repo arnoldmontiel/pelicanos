@@ -23,9 +23,16 @@
  * @property string $backdrop_original
  * @property string $backdrop
  * @property integer $adult
+ * @property string $extra_features
+ * @property string $country
+ * @property string $video_standard
+ * @property string $release_date
+ * @property string $bar_code
+ * @property string $type
  *
  * The followings are the available model relations:
  * @property ParentalControl $idParentalControl
+ * @property Nzb[] $nzbs
  */
 class MyMovieMovie extends CActiveRecord
 {
@@ -59,13 +66,13 @@ class MyMovieMovie extends CActiveRecord
 			array('Id_parental_control, adult', 'numerical', 'integerOnly'=>true),
 			array('Id', 'length', 'max'=>200),
 			array('local_title, original_title, sort_title, rating_votes', 'length', 'max'=>100),
-			array('production_year, running_time, imdb', 'length', 'max'=>45),
+			array('production_year, running_time, imdb, country, video_standard, release_date, bar_code, type', 'length', 'max'=>45),
 			array('parental_rating_desc, genre, studio, poster_original, poster, backdrop_original, backdrop', 'length', 'max'=>255),
 			array('rating', 'length', 'max'=>10),
-			array('description', 'safe'),
+			array('description, extra_features', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id, Id_parental_control, local_title, original_title, sort_title, production_year, running_time, description, parental_rating_desc, imdb, rating, rating_votes, genre, studio, poster_original, poster, backdrop_original, backdrop, adult', 'safe', 'on'=>'search'),
+			array('Id, Id_parental_control, local_title, original_title, sort_title, production_year, running_time, description, parental_rating_desc, imdb, rating, rating_votes, genre, studio, poster_original, poster, backdrop_original, backdrop, adult, extra_features, country, video_standard, release_date, bar_code, type', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -77,7 +84,8 @@ class MyMovieMovie extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'idParentalControl' => array(self::BELONGS_TO, 'ParentalControl', 'Id_parental_control'),
+			'parentalControl' => array(self::BELONGS_TO, 'ParentalControl', 'Id_parental_control'),
+			'nzbs' => array(self::HAS_MANY, 'Nzb', 'Id_my_movie_movie'),
 		);
 	}
 
@@ -106,6 +114,12 @@ class MyMovieMovie extends CActiveRecord
 			'backdrop_original' => 'Backdrop Original',
 			'backdrop' => 'Backdrop',
 			'adult' => 'Adult',
+			'extra_features' => 'Extra Features',
+			'country' => 'Country',
+			'video_standard' => 'Video Standard',
+			'release_date' => 'Release Date',
+			'bar_code' => 'Bar Code',
+			'type' => 'Type',
 		);
 	}
 
@@ -139,6 +153,12 @@ class MyMovieMovie extends CActiveRecord
 		$criteria->compare('backdrop_original',$this->backdrop_original,true);
 		$criteria->compare('backdrop',$this->backdrop,true);
 		$criteria->compare('adult',$this->adult);
+		$criteria->compare('extra_features',$this->extra_features,true);
+		$criteria->compare('country',$this->country,true);
+		$criteria->compare('video_standard',$this->video_standard,true);
+		$criteria->compare('release_date',$this->release_date,true);
+		$criteria->compare('bar_code',$this->bar_code,true);
+		$criteria->compare('type',$this->type,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
