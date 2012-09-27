@@ -170,12 +170,11 @@ class Nzb extends CActiveRecord
 		
 		$criteria->addCondition('Id_imdbdata_tv is null');
 		
-		$criteria->with[]='imdbData';
-		$criteria->addSearchCondition("imdbData.Title",$this->title);
-		$criteria->addSearchCondition("imdbData.Year",$this->year);
-		$criteria->addSearchCondition("imdbData.ID",$this->idImdb);
-		$criteria->addSearchCondition("imdbData.Genre",$this->genre);
-		$criteria->addSearchCondition("imdbData.Genre",$this->genre);
+		$criteria->with[]='myMovieMovie';
+		$criteria->addSearchCondition("myMovieMovie.original_title",$this->title);
+		$criteria->addSearchCondition("myMovieMovie.production_year",$this->year);
+		$criteria->addSearchCondition("myMovieMovie.imdb",$this->idImdb);
+		$criteria->addSearchCondition("myMovieMovie.genre",$this->genre);
 		
 		
 		$criteria->with[]='resourceType';
@@ -190,22 +189,21 @@ class Nzb extends CActiveRecord
 			'file_name',
 			'subt_url',
 			'subt_url_name',
-			'Id_imdbdata',
 			'title' => array(
-				        'asc' => 'imdbData.Title',
-				        'desc' => 'imdbData.Title DESC',
+				        'asc' => 'myMovieMovie.original_title',
+				        'desc' => 'myMovieMovie.original_title DESC',
 			),
 			'year' => array(
-				        'asc' => 'imdbData.Year',
-				        'desc' => 'imdbData.Year DESC',
+				        'asc' => 'myMovieMovie.production_year',
+				        'desc' => 'myMovieMovie.production_year DESC',
 			),
 			'idImdb' => array(
-				        'asc' => 'imdbData.ID',
-				        'desc' => 'imdbData.ID DESC',
+				        'asc' => 'myMovieMovie.imdb',
+				        'desc' => 'myMovieMovie.imdb DESC',
 			),
 			'genre' => array(
-				        'asc' => 'imdbData.Genre',
-				        'desc' => 'imdbData.Genre DESC',
+				        'asc' => 'myMovieMovie.genre',
+				        'desc' => 'myMovieMovie.genre DESC',
 			),
 			'resourceTypeDesc' => array(
 				        'asc' => 'resourceType.description',
