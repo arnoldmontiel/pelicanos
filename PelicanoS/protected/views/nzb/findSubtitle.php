@@ -14,27 +14,55 @@ $this->menu=array(
 
 Yii::app()->clientScript->registerScript('findSubtitle', "
 
+$('#cancelButton').click(function(){
+	window.location = '".NzbController::createUrl('view',array('id'=>$modelNzb->Id))."';
+	return false;
+});
+
 $('#searchButton').click(function(){
-			$(this).attr('disabled', 'disabled');
-			$('downloadSubtitle').attr('disabled', 'disabled');
-			$('#cancel').attr('disabled', 'disabled');
-			$('#loading').addClass('input-loading');
-			$('#selectedRow').val('');
-			$(this).parents('form').submit();
+	
+	$('#wating').dialog('open');
+	$('#div-searchResult').animate({opacity: 'hide'},240);
+	$('#downloadSubtitle').attr('disabled', 'disabled');
+	$('#selectedRow').val('');
+	$('#div-error').animate({opacity: 'hide'},2000);
+	var dataString = $('#Subtitle_query').serialize() + '&' 
+							+ $('#Subtitle_season').serialize() + '&'
+							+ $('#Subtitle_episode').serialize() + '&'
+							+ $('#Subtitle_idImdb').serialize() + '&'
+							+ $('#Subtitle_movieHash').serialize() + '&'
+							+ $('#Subtitle_movieSize').serialize() + '&'
+							+ $('#div-language').find('input:checked').serialize();
+							
+	$.post(
+			'".NzbController::createUrl('AjaxDoSearchSubtitle')."',
+			 	dataString
+			 ).success(
+					function(data) 
+					{ 
+						$.fn.yiiGridView.update('subtitle-grid', {
+							data: $(this).serialize()
+						});				
+					}
+			).error(
+				function(data)
+				{
+					$('#div-error').html(data.responseText);				
+					$('#div-error').animate({opacity: 'show'},2000);					
+					$('#wating').dialog('close');
 			});
+
+	return false;
+	
+});
+
 $('#downloadSubtitle').click(function(){
-			$(this).attr('disabled', 'disabled');
-			$('#searchButton').attr('disabled', 'disabled');
-			$('#cancel').attr('disabled', 'disabled');
-			$('#loadingSave').addClass('input-loading');
-			$(this).parents('form').submit();
-				});
+	$('#wating').dialog('open');
+});
 
 
 
 $(function() {
-
-		$('#cancel').removeClass('ui-button ui-widget ui-state-default ui-corner-all');
 		$( '#tabs' ).tabs(
 		{
 		
@@ -91,14 +119,17 @@ $(document).keypress(function(e) {
 		'data'=>$modelNzb,
 		'cssFile'=>Yii::app()->baseUrl . '/css/detail-view-blue.css',
 		'attributes'=>array(
-			($modelNzb->Id_imdbdata != null) ? 'Id_imdbdata' : 'Id_imdbdata_tv',
+			array('label'=>$modelNzb->getAttributeLabel('Imdb'),
+				'type'=>'raw',
+				'value'=>$modelNzb->myMovieMovie->imdb, 
+			),
 			array('label'=>$modelNzb->getAttributeLabel('Title'),
 				'type'=>'raw',
-				'value'=>($modelNzb->Id_imdbdata != null) ? $modelNzb->imdbData->Title : $modelNzb->imdbDataTv->Title 
+				'value'=>$modelNzb->myMovieMovie->original_title, 
 			),
 			array('label'=>$modelNzb->getAttributeLabel('Year'),
 				'type'=>'raw',
-				'value'=>($modelNzb->Id_imdbdata != null) ? $modelNzb->imdbData->Year : $modelNzb->imdbDataTv->Year
+				'value'=>$modelNzb->myMovieMovie->production_year,
 			),
 			'file_original_name',
 			'subt_file_name',
@@ -152,7 +183,7 @@ $(document).keypress(function(e) {
 		<?php echo $form->labelEx($model,'episode'); ?>
 		<?php echo $form->textField($model,'episode',array('size'=>5,'maxlength'=>5));?>
 	</div>
-	<div style="width:45%;float:left">
+	<div style="width:45%;float:left" id="div-language">
 	<?php echo $form->labelEx($model,'Select language'); ?>
 		<table>
 		<?php 
@@ -170,15 +201,25 @@ $(document).keypress(function(e) {
 	</div>
 </div><!-- dib right (with season and language) -->
 
-	
+<div id="div-error" class="messageError" style="display:none;width:100%">
+</div>	
+<div id="div-searchResult" style="display:none;width:100%">
+<?php 
 
-<div class="rows">
+$this->widget('ext.processingDialog.processingDialog', array(
+					'buttons'=>array('none'),
+					'idDialog'=>'wating',
+));
 
-<?php $this->widget('zii.widgets.grid.CGridView', array(
+$this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'subtitle-grid',
 	'dataProvider'=>$modelOpenSubtitle->search(),
 	'filter'=>$modelOpenSubtitle,
 	'summaryText'=>'',
+	'afterAjaxUpdate'=>'js:function(){
+								$("#wating").dialog("close");
+								$("#div-searchResult").animate({opacity: "show"},240);								
+					}',
 	'columns'=>array(
 			'SubFileName',
 			array(
@@ -186,7 +227,7 @@ $(document).keypress(function(e) {
 				'value' => 'CHtml::link($data->ZipDownloadLink, $data->ZipDownloadLink, array(target=>_blank))',
             	'type'  => 'html',
 			),
-			'MovieNameEng',
+			'MovieName',
 			'SeriesSeason',
 			'SeriesEpisode',
 			'LanguageName',
@@ -195,12 +236,12 @@ $(document).keypress(function(e) {
 						
 						if($.fn.yiiGridView.getSelection("subtitle-grid") != ""){
 							$("#selectedRow").val($.fn.yiiGridView.getSelection("subtitle-grid"));
-							$("#downloadSubtitle").show();
-							}
+							$("#downloadSubtitle").removeAttr("disabled");
+						}
 						else{
-							$("#downloadSubtitle").hide();
+							$("#downloadSubtitle").attr("disabled","disabled");							
 							$("#selectedRow").val("");
-							}
+						}
 					}',
 )); ?>
 </div><!-- girdView -->
@@ -208,28 +249,14 @@ $(document).keypress(function(e) {
 <?php echo CHtml::hiddenField('selectedRow','',array('id'=>'selectedRow')); ?>
 
 <div style="width:50%;float:left">
-	<div style="width:40%;float:left">		<?php echo CHtml::submitButton('Save Subtitle',array('id'=>'downloadSubtitle','name'=>'downloadSubtitle', 'style'=>'display:none')); ?>
+	<div style="width:40%;float:left">		<?php echo CHtml::submitButton('Save Subtitle',array('id'=>'downloadSubtitle','name'=>'downloadSubtitle', 'disabled'=>'disabled')); ?>
 	</div>		
 	<div style="width:58%;float:right"> 	
 		 <p id="loadingSave" style="float:left;width:20px">&nbsp;</p>
 	</div>
 </div><!-- div button save -->
 <div style="width:50%;float:right;position:relative">
-<?php
-		 $this->widget('zii.widgets.jui.CJuiButton',
-			 array(
-			 	'id'=>'cancel',
-			 	'name'=>'Cancel',
-			 	'caption'=>'Cancel',
-			 	'value'=>'Cancel',
-		        //'cssFile'=>'',
-			 	'onclick'=>'js:function(){
-			 		window.location = "'.NzbController::createUrl(($modelNzb->Id_imdbdata != null) ? 'view' : 'viewEpisode',array('id'=>$modelNzb->Id)).'";
-			 		return false;
-				}',
-		 	)
-		 );
-	 ?>		 
+<?php echo CHtml::submitButton('Cancel',array('id'=>'cancelButton','name'=>'cancelButton')); ?>
 </div><!-- div button cancel -->
 <?php $this->endWidget(); ?>
 </div> <!-- form -->
