@@ -1,4 +1,11 @@
 <?php
+Yii::app()->clientScript->registerScript(__CLASS__.'#UploadSubtitle', "
+
+$('#cancelButton').click(function(){
+	window.location = '".NzbController::createUrl('view',array('id'=>$modelNzb->Id))."';
+	return false;
+});
+");
 
 $this->menu=array(
 	array('label'=>'List Nzb', 'url'=>array('index')),
@@ -20,14 +27,17 @@ $this->menu=array(
 		'data'=>$modelNzb,
 		'cssFile'=>Yii::app()->baseUrl . '/css/detail-view-blue.css',
 		'attributes'=>array(
-			($modelNzb->Id_imdbdata != null) ? 'Id_imdbdata' : 'Id_imdbdata_tv',
+			array('label'=>$modelNzb->getAttributeLabel('Imdb'),
+				'type'=>'raw',
+				'value'=>$modelNzb->myMovieMovie->imdb
+			),
 			array('label'=>$modelNzb->getAttributeLabel('Title'),
 				'type'=>'raw',
-				'value'=>($modelNzb->Id_imdbdata != null) ? $modelNzb->imdbData->Title : $modelNzb->imdbDataTv->Title
+				'value'=>$modelNzb->myMovieMovie->original_title
 			),
 			array('label'=>$modelNzb->getAttributeLabel('Year'),
 				'type'=>'raw',
-				'value'=>($modelNzb->Id_imdbdata != null) ? $modelNzb->imdbData->Year : $modelNzb->imdbDataTv->Year
+				'value'=>$modelNzb->myMovieMovie->production_year
 			),
 			'file_original_name',
 			'subt_file_name',
@@ -49,20 +59,8 @@ $this->menu=array(
 	</div><!-- div button save -->
 	<div style="width:50%;float:right;position:relative">
 	<?php
-			 $this->widget('zii.widgets.jui.CJuiButton',
-				 array(
-				 	'id'=>'cancel',
-				 	'name'=>'Cancel',
-				 	'caption'=>'Cancel',
-				 	'value'=>'Cancel',
-			 		'cssFile'=>'',
-				 	'onclick'=>'js:function(){
-				 		window.location = "'.NzbController::createUrl(($modelNzb->Id_imdbdata != null) ? 'view' : 'viewEpisode',array('id'=>$modelNzb->Id)).'";
-				 		return false;
-					}',
-			 	)
-			 );
-		 ?>		 
+			echo CHtml::submitButton('Cancel', array('id'=>'cancelButton'));
+	?>		 
 	</div><!-- div button cancel -->
 	
 <?php $this->endWidget(); ?>
