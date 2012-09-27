@@ -18,7 +18,7 @@ $this->menu=array(
 	'columns'=>array(
 		array(
  			'name'=>'idImdb',
-			'value'=>'$data->imdbData->ID',
+			'value'=>'$data->myMovieMovie->imdb',
 		),
 		'file_name',
 		'subt_file_name',
@@ -36,15 +36,15 @@ $this->menu=array(
 		),
 		array(
  			'name'=>'title',
-			'value'=>'$data->imdbData->Title',
+			'value'=>'$data->myMovieMovie->original_title',
 		),
 		array(
  			'name'=>'year',
-			'value'=>'$data->imdbData->Year',
+			'value'=>'$data->myMovieMovie->production_year',
 		),
 		array(
  			'name'=>'genre',
-			'value'=>'$data->imdbData->Genre',
+			'value'=>'$data->myMovieMovie->genre',
 		),
 		array(
  			'name'=>'resourceTypeDesc',
