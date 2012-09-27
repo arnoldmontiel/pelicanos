@@ -238,22 +238,27 @@ class Subtitle extends CFormModel
 			OpenSubtitle::model()->deleteAllByAttributes(array('Id_user'=>Yii::app()->user->id));
 			if($searchSubtitles['data']){
 				$sql = '';
-				
+				$regCount = 0;
 				foreach ($searchSubtitles['data'] as $item)
 				{
-					$sql = 'INSERT INTO open_subtitle (Id_user, IDSubtitleFile, SubFileName, ZipDownloadLink, SubtitlesLink, MovieNameEng, MovieByteSize, SeriesSeason, SeriesEpisode, LanguageName)
+					$sql = 'INSERT INTO open_subtitle (Id_user, IDSubtitleFile, SubFileName, ZipDownloadLink, SubtitlesLink, MovieNameEng, MovieName, MovieByteSize, SeriesSeason, SeriesEpisode, LanguageName)
 												 VALUES ("' . Yii::app()->user->id.
 															'", "' . $item['IDSubtitleFile'] .
 												 			'", "' . $item['SubFileName'] . 
 															'", "' . $item['ZipDownloadLink'].
 															'", "' . addslashes($item['SubtitlesLink']).
 															'", "' . addslashes($item['MovieNameEng']).
+															'", "' . addslashes($item['MovieName']).
 															'", "' . $item['MovieByteSize'].
 															'", "' . $item['SeriesSeason'].
 															'", "' . $item['SeriesEpisode'].
 															'", "' . $item['LanguageName']. '");';
 					$command = Yii::app()->db->createCommand($sql);
 					$command->execute();
+					
+					$regCount++;
+					if($regCount > 50)
+						return true;
 				}
 			}
 		}
