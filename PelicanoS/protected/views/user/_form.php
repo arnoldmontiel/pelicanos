@@ -1,4 +1,13 @@
 <div class="form">
+<?php
+Yii::app()->clientScript->registerScript(__CLASS__.'#summaryUserForm', "
+
+$('#cancelButton').click(function(){
+	window.location = '".UserController::createUrl('summary')."';
+	return false;
+});
+");
+?>
 
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'user-form',
@@ -28,7 +37,10 @@
 	</div>
 
 	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
+		<?php 
+			echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); 
+			echo CHtml::submitButton('Cancel', array('id'=>'cancelButton'));
+		?>
 	</div>
 
 <?php $this->endWidget(); ?>
