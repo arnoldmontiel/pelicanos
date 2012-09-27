@@ -1350,26 +1350,17 @@ class NzbController extends Controller
 		if($_POST['selectedRow'] != "")
 		{
 			$this->downloadSubtitle($_POST['selectedRow'], $id);
-			$this->redirect(array(($modelNzb->Id_imdbdata != null) ? 'view' : 'viewEpisode','id'=>$id));
-		}
-
-		if($_POST['Subtitle'])
-		{
-			$model->attributes = $_POST['Subtitle'];
-			try {
-				$model->searchSubtitle();
-			} catch (Exception $e) {
-				throw new CHttpException('Searching Subtitle','Invalid request. The OpenSubtitle API is not working. Please '. CHtml::link('try again',Yii::app()->request->getUrl()) .'.');
-
-			}
+			$this->redirect(array('view','id'=>$id));
 		}
 
 		$modelOpenSubtitle = new OpenSubtitle('search');
-
+		$modelOpenSubtitle->unsetAttributes();
+		
 		if($_GET['OpenSubtitle'])
-		$modelOpenSubtitle->attributes = $_GET['OpenSubtitle'];
-
-
+		{
+			$modelOpenSubtitle->attributes = $_GET['OpenSubtitle'];
+		}
+		
 			
 		$this->render('findSubtitle',array(
 				'model'=>$model,
@@ -1378,6 +1369,23 @@ class NzbController extends Controller
 		));
 	}
 
+	public function actionAjaxDoSearchSubtitle()
+	{
+		$model = new Subtitle('search');
+		
+		if($_POST['Subtitle'] )
+		{
+			
+			$model->attributes = $_POST['Subtitle'];
+			try {
+				$model->searchSubtitle();
+			} catch (Exception $e) {
+				throw new CHttpException('Searching Subtitle','Invalid request. The OpenSubtitle API is not working. Please try again');
+					
+			}
+		}
+	}
+	
 	public function actionUploadSubtitle($id)
 	{
 
