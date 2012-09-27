@@ -1421,7 +1421,7 @@ class NzbController extends Controller
 							}
 						}
 						$transaction->commit();
-						$this->redirect(array(($modelNzb->Id_imdbdata != null ) ? 'view' : 'viewEpisode','id'=>$id));
+						$this->redirect(array('view','id'=>$id));
 					}
 						
 				} catch (Exception $e) {
