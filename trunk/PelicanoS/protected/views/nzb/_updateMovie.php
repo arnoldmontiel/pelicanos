@@ -83,6 +83,12 @@ $('#cancelButton').click(function(){
 		<?php echo CHtml::error($modelMyMovieMovie,'genre'); ?>
 	</div>
 	
+	<div id="points" style="margin-bottom: 5px">
+		<?php echo CHtml::activeLabelEx($model,'is_draft'); ?>
+		<?php echo CHtml::activeCheckBox($model, 'is_draft');?>
+		<?php echo CHtml::error($model,'is_draft'); ?>
+	</div>
+		
 	<?php 
 		echo CHtml::submitButton('Save'); 
 		echo CHtml::submitButton('Cancel', array('id'=>'cancelButton'));

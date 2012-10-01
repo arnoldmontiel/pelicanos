@@ -30,6 +30,30 @@ else
 <?php
 Yii::app()->clientScript->registerScript('viewNZB', "
 	$('#page').css('background-image','url(./images/".$model->myMovieMovie->backdrop.")');
+	
+$('#publishButton').click(function(){
+
+	if (confirm('Are you sure you want to publish this nzb?')) 
+	{
+		$.post('".NzbController::createUrl('AjaxPublishNzb')."',
+		{
+			nzbId : '".$model->Id."'											
+		}
+		).success(
+			function(data) 
+			{
+				$('#publishButton').attr('disabled', 'disabled');
+			}
+		).error(
+			function()
+			{
+				$('#publishButton').removeAttr('disabled');
+			});
+	}
+	return false;
+
+});
+	
 ");
 ?>
 <h1>View Nzb</h1>
@@ -97,6 +121,9 @@ Yii::app()->clientScript->registerScript('viewNZB', "
 		<span class="deleted">Deleted</span>
 		<br />
 		<?php } ?>
+		
+		<?php echo CHtml::submitButton('Publish',array('id'=>'publishButton', 'disabled'=>($model->is_draft)?'':'disabled')); ?>
+		<br />
 		
 	</div>
 	<div class="right-movie-detail-view">
