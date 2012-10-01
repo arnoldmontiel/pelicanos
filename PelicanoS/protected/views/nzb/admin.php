@@ -20,8 +20,18 @@ $this->menu=array(
  			'name'=>'idImdb',
 			'value'=>'$data->myMovieMovie->imdb',
 		),
-		'file_name',
-		'subt_file_name',
+		array(
+ 			'name'=>"is_draft",
+ 			'type'=>'raw',
+ 			'value'=>'CHtml::checkBox("is_draft",$data->is_draft,array("disabled"=>"disabled"))',
+ 			'filter'=>CHtml::listData(
+					array(
+						array('id'=>'0','value'=>'No'),
+						array('id'=>'1','value'=>'Yes')
+					)
+			,'id','value'
+			),
+		),
 		array(
  			'name'=>"deleted",
  			'type'=>'raw',

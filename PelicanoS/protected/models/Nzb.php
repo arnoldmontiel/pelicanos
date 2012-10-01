@@ -9,10 +9,8 @@
  * @property string $file_name
  * @property string $subt_url
  * @property string $subt_file_name
- * @property string $Id_imdbdata
  * @property string $subt_original_name
  * @property integer $Id_resource_type
- * @property string $Id_imdbdata_tv
  * @property integer $deleted
  * @property integer $points
  * @property string $file_original_name
@@ -20,10 +18,9 @@
  *
  * The followings are the available model relations:
  * @property CustomerTransaction[] $customerTransactions
- * @property Imdbdata $idImdbdata
+ * @property MyMovieMovie $myMovieMovie
  * @property Reseller $idReseller
- * @property ImdbdataTv $idImdbdataTv
- * @property ResourceType $idResourceType
+ * @property ResourceType $resourceType
  * @property Customer[] $customers
  */
 class Nzb extends CActiveRecord
@@ -73,12 +70,11 @@ class Nzb extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array(' Id_resource_type, Id_my_movie_movie', 'required'),
-			array('Id_resource_type, deleted, points', 'numerical', 'integerOnly'=>true),
-			array('Id_imdbdata, Id_imdbdata_tv', 'length', 'max'=>45),
+			array('Id_resource_type, deleted, points, is_draft', 'numerical', 'integerOnly'=>true),
 			array('url, subt_url, file_name, subt_file_name, subt_original_name, file_original_name', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id, url, file_name, subt_url, subt_file_name, Id_imdbdata, title, year, idImdb, genre, subt_original_name, resourceTypeDesc, Id_resource_type, Id_imdbdata_tv, deleted, serie_title, season, episode, points, deleted_serie, file_original_name, Id_my_movie_movie', 'safe', 'on'=>'search'),
+			array('Id, url, file_name, subt_url, subt_file_name, title, year, idImdb, genre, subt_original_name, resourceTypeDesc, Id_resource_type, deleted, serie_title, season, episode, points, deleted_serie, file_original_name, Id_my_movie_movie, is_draft', 'safe', 'on'=>'search'),
 		);
 	}
 	
@@ -91,8 +87,6 @@ class Nzb extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'resourceType' => array(self::BELONGS_TO, 'ResourceType', 'Id_resource_type'),
-			'imdbData' => array(self::BELONGS_TO, 'Imdbdata', 'Id_imdbdata'),
-			'imdbDataTv' => array(self::BELONGS_TO, 'ImdbdataTv', 'Id_imdbdata_tv'),
 			'myMovieMovie' => array(self::BELONGS_TO, 'MyMovieMovie', 'Id_my_movie_movie'),
 		);
 	}
@@ -108,15 +102,14 @@ class Nzb extends CActiveRecord
 			'file_name' => 'File Name',
 			'subt_url' => 'Subt Url',
 			'subt_file_name' => 'Subt File Name',
-			'Id_imdbData' => 'Id Imdb Data',
 			'subt_original_name' => 'Subt Original Name',
 			'Id_resource_type' => 'Resource Type',
-			'Id_imdbdata_tv' => 'Id Imdb Data Tv',
 			'deleted' => 'Deleted',
 			'points' => 'Points',
 			'deleted_serie' => 'Deleted from Header',
 			'file_original_name' => 'File Original Name',
 			'Id_my_movie_movie' => 'Id_my_movie_movie',
+			'is_draft' => 'Is Draft',
 		);
 	}
 
@@ -136,10 +129,8 @@ class Nzb extends CActiveRecord
 		$criteria->compare('file_name',$this->file_name,true);
 		$criteria->compare('subt_url',$this->subt_url,true);
 		$criteria->compare('subt_file_name',$this->subt_file_name,true);
-		$criteria->compare('Id_imdbdata',$this->Id_imdbdata,true);
 		$criteria->compare('subt_original_name',$this->subt_original_name,true);
 		$criteria->compare('Id_resource_type',$this->Id_resource_type);
-		$criteria->compare('Id_imdbdata_tv',$this->Id_imdbdata_tv,true);
 		$criteria->compare('deleted',$this->deleted,true);
 		$criteria->compare('points',$this->points);
 		$criteria->compare('file_original_name',$this->file_original_name,true);
@@ -161,14 +152,13 @@ class Nzb extends CActiveRecord
 		$criteria->compare('file_name',$this->file_name,true);
 		$criteria->compare('subt_url',$this->subt_url,true);
 		$criteria->compare('subt_file_name',$this->subt_file_name,true);
-		$criteria->compare('Id_imdbdata',$this->Id_imdbdata,true);
 		$criteria->compare('subt_original_name',$this->subt_original_name,true);
 		$criteria->compare('Id_resource_type',$this->Id_resource_type);
 		$criteria->compare('deleted',$this->deleted,true);
+		$criteria->compare('is_draft',$this->is_draft,true);
 		$criteria->compare('points',$this->points);
 		$criteria->compare('file_original_name',$this->file_original_name,true);
 		
-		$criteria->addCondition('Id_imdbdata_tv is null');
 		
 		$criteria->with[]='myMovieMovie';
 		$criteria->addSearchCondition("myMovieMovie.original_title",$this->title);
@@ -186,9 +176,7 @@ class Nzb extends CActiveRecord
 		// For each relational attribute, create a 'virtual attribute' using the public variable name
 			'Id',
 			'url',
-			'file_name',
-			'subt_url',
-			'subt_url_name',
+			'is_draft',
 			'title' => array(
 				        'asc' => 'myMovieMovie.original_title',
 				        'desc' => 'myMovieMovie.original_title DESC',
@@ -232,12 +220,10 @@ class Nzb extends CActiveRecord
 		$criteria->compare('subt_file_name',$this->subt_file_name,true);
 		$criteria->compare('subt_original_name',$this->subt_original_name,true);
 		$criteria->compare('Id_resource_type',$this->Id_resource_type);
-		$criteria->compare('Id_imdbdata_tv',$this->Id_imdbdata_tv,true);
 		$criteria->compare('deleted',$this->deleted,true);
 		$criteria->compare('points',$this->points);
 		$criteria->compare('file_original_name',$this->file_original_name,true);
 		
-		$criteria->addCondition('Id_imdbdata is null');
 		
 		//$criteria->with[]='imdbDataTv';
 		
@@ -245,16 +231,16 @@ class Nzb extends CActiveRecord
 		$criteria->with[]='resourceType';
 		$criteria->addSearchCondition("resourceType.description",$this->resourceTypeDesc);
 	
-		$criteria->join =	"LEFT OUTER JOIN imdbdata_tv i ON t.Id_imdbdata_tv=i.ID
-							 LEFT OUTER JOIN imdbdata_tv p ON p.ID=i.Id_parent";
-		$criteria->addSearchCondition("i.Title",$this->title);
-		$criteria->addSearchCondition("i.Year",$this->year);
-		$criteria->addSearchCondition("i.ID",$this->idImdb);
-		$criteria->addSearchCondition("i.Genre",$this->genre);
-		$criteria->addSearchCondition("i.Season",$this->season);
-		$criteria->addSearchCondition("i.Episode",$this->episode);
-		$criteria->addSearchCondition("p.Title",$this->serie_title);
-		$criteria->addSearchCondition("p.Deleted_serie",$this->deleted_serie);
+// 		$criteria->join =	"LEFT OUTER JOIN imdbdata_tv i ON t.Id_imdbdata_tv=i.ID
+// 							 LEFT OUTER JOIN imdbdata_tv p ON p.ID=i.Id_parent";
+// 		$criteria->addSearchCondition("i.Title",$this->title);
+// 		$criteria->addSearchCondition("i.Year",$this->year);
+// 		$criteria->addSearchCondition("i.ID",$this->idImdb);
+// 		$criteria->addSearchCondition("i.Genre",$this->genre);
+// 		$criteria->addSearchCondition("i.Season",$this->season);
+// 		$criteria->addSearchCondition("i.Episode",$this->episode);
+// 		$criteria->addSearchCondition("p.Title",$this->serie_title);
+// 		$criteria->addSearchCondition("p.Deleted_serie",$this->deleted_serie);
 		
 		// Create a custom sort
 		$sort=new CSort;
@@ -265,7 +251,6 @@ class Nzb extends CActiveRecord
 				'file_name',
 				'subt_url',
 				'subt_url_name',
-				'Id_imdbdata',
 				'title' => array(
 					        'asc' => 'i.Title',
 					        'desc' => 'i.Title DESC',

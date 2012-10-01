@@ -827,6 +827,17 @@ class NzbController extends Controller
 		));
 	}
 
+	public function actionAjaxPublishNzb()
+	{
+		$id = $_POST['nzbId'];
+		if($id)
+		{
+			$model=$this->loadModel($id);
+			$model->is_draft = 0;
+			$model->save();
+		}
+	}
+	
 	public function actionAjaxFillSeason()
 	{
 		$id = $_POST['ImdbdataTv']['Id_parent'];
@@ -1112,6 +1123,9 @@ class NzbController extends Controller
 				$hasChanged = true;
 
 			if($_POST['Nzb']['points'] != $model->points )
+				$hasChanged = true;
+			
+			if($_POST['Nzb']['is_draft'] != $model->is_draft )
 				$hasChanged = true;
 			
 			$model->attributes = $_POST['Nzb'];
@@ -1528,7 +1542,7 @@ class NzbController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Nzb',array('criteria'=>array('order'=>'Id DESC','condition'=>'Id_imdbdata_tv is null')));
+		$dataProvider=new CActiveDataProvider('Nzb',array('criteria'=>array('order'=>'Id DESC')));
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
@@ -1536,7 +1550,7 @@ class NzbController extends Controller
 	
 	public function actionIndexReseller()
 	{
-		$dataProvider=new CActiveDataProvider('Nzb',array('criteria'=>array('order'=>'Id DESC','condition'=>'Id_imdbdata_tv is null')));
+		$dataProvider=new CActiveDataProvider('Nzb',array('criteria'=>array('order'=>'Id DESC')));
 		$this->render('indexReseller',array(
 				'dataProvider'=>$dataProvider,
 		));
