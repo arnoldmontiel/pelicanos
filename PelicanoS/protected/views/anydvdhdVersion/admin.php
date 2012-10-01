@@ -6,8 +6,10 @@ $this->breadcrumbs=array(
 
 Yii::app()->clientScript->registerScript('anydvdvhd_version', "
 $('#update-button').click(function(){
+	jQuery('#waiting').dialog('open');
 	$.post('".AnydvdhdVersionController::CreateUrl('ajaxUpdateWithLastVersion')."',
 	function(){
+		jQuery('#waiting').dialog('close');
 		$.fn.yiiGridView.update('anydvdhd-version-grid', {
 			data: $('.search-form form').serialize()
 			});
@@ -16,6 +18,12 @@ $('#update-button').click(function(){
 });
 
 ");
+
+$this->widget('ext.processingDialog.processingDialog', array(
+			'buttons'=>array('none'),
+			'idDialog'=>'waiting',
+));
+
 ?>
 
 <h1>Anydvdhd Versions</h1>

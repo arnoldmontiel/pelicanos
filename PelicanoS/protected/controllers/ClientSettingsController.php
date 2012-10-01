@@ -1,6 +1,6 @@
 <?php
 
-class AnydvdhdVersionController extends Controller
+class ClientSettingsController extends Controller
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -49,14 +49,14 @@ class AnydvdhdVersionController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model=new AnydvdhdVersion;
+		$model=new ClientSettings;
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['AnydvdhdVersion']))
+		if(isset($_POST['ClientSettings']))
 		{
-			$model->attributes=$_POST['AnydvdhdVersion'];
+			$model->attributes=$_POST['ClientSettings'];
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->Id));
 		}
@@ -78,9 +78,9 @@ class AnydvdhdVersionController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['AnydvdhdVersion']))
+		if(isset($_POST['ClientSettings']))
 		{
-			$model->attributes=$_POST['AnydvdhdVersion'];
+			$model->attributes=$_POST['ClientSettings'];
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->Id));
 		}
@@ -115,69 +115,26 @@ class AnydvdhdVersionController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$this->redirect(array('admin'));
-// 		$dataProvider=new CActiveDataProvider('AnydvdhdVersion');
-// 		$this->render('index',array(
-// 			'dataProvider'=>$dataProvider,
-// 		));
+		$dataProvider=new CActiveDataProvider('ClientSettings');
+		$this->render('index',array(
+			'dataProvider'=>$dataProvider,
+		));
 	}
-	public function actionAjaxUpdateWithLastVersion()
-	{
-		$this->UpdateToLastFile();
-	}
-	public function UpdateToLastFile()
-	{	
-		$settings = Setting::getInstance();
-		$anydvdhd = new AnydvdhdVersion();
-		
-		$path = $settings->path_anydvd_download;
-				
-		$version_content = @file_get_contents("http://update.slysoft.com/update/AnyDVD.ver");
-		$version_array = explode(":", $version_content);
-		$version = str_replace( "\n", "", $version_array[1]);
-		$anydvdhd->version = $version;
-		
-		$anydvdhd_db = AnydvdhdVersion::model()->findByAttributes(array('version'=>$version));
-		if(!isset($anydvdhd_db))
-		{
-			try {
-				$version = str_replace( ".", "", $version);
-				$fileName= "SetupAnyDVD".$version.".exe";
-				$anydvdhd->file_name = $fileName;
-					
-				$content = @file_get_contents("http://static.slysoft.com/SetupAnyDVD.exe");
-				if ($content !== false) {
-					//$setting = Setting::getInstance();
-					$file = fopen($path.$fileName, 'w');
-					fwrite($file,$content);
-					fclose($file);
-					$anydvdhd->save();
-				} else {
-					// an error happened
-				}
-				
-			}
-			catch (Exception $e)
-			{
-				// an error happened
-			}
-		}
-	}
+
 	/**
 	 * Manages all models.
 	 */
 	public function actionAdmin()
 	{
-		$model=new AnydvdhdVersion('search');
+		$model=new ClientSettings('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['AnydvdhdVersion']))
-			$model->attributes=$_GET['AnydvdhdVersion'];
+		if(isset($_GET['ClientSettings']))
+			$model->attributes=$_GET['ClientSettings'];
 
 		$this->render('admin',array(
 			'model'=>$model,
 		));
 	}
-	
 
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
@@ -186,19 +143,44 @@ class AnydvdhdVersionController extends Controller
 	 */
 	public function loadModel($id)
 	{
-		$model=AnydvdhdVersion::model()->findByPk($id);
+		$model=ClientSettings::model()->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
 	}
-
+	public function actionAjaxUpdateClientToLastVersion()
+	{
+		if(isset($_POST['Id']))
+			$this->UpdateClientToLastVersion($_POST['Id']);
+	}
+	public function UpdateClientToLastVersion($id)
+	{
+		$clientSetting = ClientSettings::model()->findByPk($id);
+		if(isset($clientSetting))
+		{
+			$criteria = new CDbCriteria();
+			$criteria->order = 'Id DESC';
+			$anydvdVersion = AnydvdhdVersion::model()->find($criteria);
+			
+			$settings = Setting::getInstance();
+			$wsSettings = new wsSettings();
+			$wsSettings->updateAnydvd(
+				$anydvdVersion->version,
+				$anydvdVersion->file_name,
+				$settings->path_anydvd_download.$anydvdVersion->file_name
+			);
+			
+			
+		}
+	}
+	
 	/**
 	 * Performs the AJAX validation.
 	 * @param CModel the model to be validated
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='anydvdhd-version-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='client-settings-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
