@@ -5,7 +5,7 @@
  *
  * The followings are the available columns in table 'nzb_customer':
  * @property integer $Id_nzb
- * @property integer $Id_customer
+ * @property integer $Id_device
  * @property integer $need_update
  * @property integer $Id_movie_state
  * @property string $date_sent
@@ -49,12 +49,13 @@ class NzbCustomer extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('Id_nzb, Id_customer', 'required'),
-			array('Id_nzb, Id_customer, need_update, Id_movie_state', 'numerical', 'integerOnly'=>true),
+			array('Id_nzb, Id_device', 'required'),
+			array('Id_nzb, need_update, Id_movie_state', 'numerical', 'integerOnly'=>true),
 			array('date_sent, date_downloaded, date_downloading', 'safe'),
+			array('Id_device', 'length', 'max'=>45),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id_nzb, Id_customer, need_update, Id_movie_state, title, year, genre, movie_status, id_imdb, date_sent, date_downloaded, date_downloading, episode, season, serie_title', 'safe', 'on'=>'search'),
+			array('Id_nzb, Id_device, need_update, Id_movie_state, title, year, genre, movie_status, id_imdb, date_sent, date_downloaded, date_downloading, episode, season, serie_title', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -67,8 +68,7 @@ class NzbCustomer extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'nzb' => array(self::BELONGS_TO, 'Nzb', 'Id_nzb'),
-			'customer' => array(self::BELONGS_TO, 'Customer', 'Id_customer'),
+			'nzb' => array(self::BELONGS_TO, 'Nzb', 'Id_nzb'),			
 			'movieState' => array(self::BELONGS_TO, 'MovieState', 'Id_movie_state'),
 
 		);
@@ -81,7 +81,7 @@ class NzbCustomer extends CActiveRecord
 	{
 		return array(
 			'Id_nzb' => 'Id Nzb',
-			'Id_customer' => 'Id Customer',
+			'Id_device' => 'Id Device',
 			'need_update' => 'Need Update',
 			'Id_movie_state' => 'Id Movie State',
 			'date_sent' => 'Date Sent',
@@ -103,7 +103,7 @@ class NzbCustomer extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('Id_nzb',$this->Id_nzb);
-		$criteria->compare('Id_customer',$this->Id_customer);
+		$criteria->compare('Id_device',$this->Id_device,true);
 		$criteria->compare('need_update',$this->need_update);
 		$criteria->compare('Id_movie_state',$this->Id_movie_state);
 		$criteria->compare('date_sent',$this->date_sent);
@@ -124,7 +124,7 @@ class NzbCustomer extends CActiveRecord
 		$criteria=new CDbCriteria;
 	
 		$criteria->compare('Id_nzb',$this->Id_nzb);
-		$criteria->compare('Id_customer',$this->Id_customer);
+		$criteria->compare('Id_device',$this->Id_device);
 		$criteria->compare('need_update',$this->need_update);
 		$criteria->compare('Id_movie_state',$this->Id_movie_state);
 		$criteria->compare('date_sent',$this->date_sent);
@@ -203,7 +203,7 @@ class NzbCustomer extends CActiveRecord
 		$criteria=new CDbCriteria;
 	
 		$criteria->compare('Id_nzb',$this->Id_nzb);
-		$criteria->compare('Id_customer',$this->Id_customer);
+		$criteria->compare('Id_device',$this->Id_device);
 		$criteria->compare('need_update',$this->need_update);
 		$criteria->compare('Id_movie_state',$this->Id_movie_state);
 		$criteria->compare('date_sent',$this->date_sent);

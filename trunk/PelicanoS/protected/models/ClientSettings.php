@@ -10,6 +10,10 @@
  * @property integer $port_v4
  * @property integer $port_v6
  * @property integer $Id_customer
+ * @property string $last_update
+ * @property string $anydvd_version_installed
+ * @property string $anydvd_version_downloaded
+ * @property string $Id_device
  *
  * The followings are the available model relations:
  * @property Customer $idCustomer
@@ -44,16 +48,12 @@ class ClientSettings extends CActiveRecord
 		return array(
 			array('Id, Id_customer', 'required'),
 			array('Id, port_v4, port_v6, Id_customer', 'numerical', 'integerOnly'=>true),
-			array('ip_v4, ip_v6', 'length', 'max'=>128),
-			array('last_update','default',
-			              'value'=>new CDbExpression('NOW()'),
-			              'setOnEmpty'=>false,'on'=>'update'),
-			array('last_update','default',
-			              'value'=>new CDbExpression('NOW()'),
-			              'setOnEmpty'=>false,'on'=>'insert'),
+			array('ip_v4, ip_v6, anydvd_version_installed, anydvd_version_downloaded', 'length', 'max'=>128),
+			array('Id_device', 'length', 'max'=>45),
+			array('last_update', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id, ip_v4, ip_v6, port_v4, port_v6, Id_customer, last_update', 'safe', 'on'=>'search'),
+			array('Id, ip_v4, ip_v6, port_v4, port_v6, Id_customer, last_update, anydvd_version_installed, anydvd_version_downloaded, Id_device', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -65,7 +65,7 @@ class ClientSettings extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'customer' => array(self::BELONGS_TO, 'Customer', 'Id_customer'),
+			'idCustomer' => array(self::BELONGS_TO, 'Customer', 'Id_customer'),
 		);
 	}
 
@@ -81,6 +81,10 @@ class ClientSettings extends CActiveRecord
 			'port_v4' => 'Port V4',
 			'port_v6' => 'Port V6',
 			'Id_customer' => 'Id Customer',
+			'last_update' => 'Last Update',
+			'anydvd_version_installed' => 'Anydvd Version Installed',
+			'anydvd_version_downloaded' => 'Anydvd Version Downloaded',
+			'Id_device' => 'Id Device',
 		);
 	}
 
@@ -101,6 +105,10 @@ class ClientSettings extends CActiveRecord
 		$criteria->compare('port_v4',$this->port_v4);
 		$criteria->compare('port_v6',$this->port_v6);
 		$criteria->compare('Id_customer',$this->Id_customer);
+		$criteria->compare('last_update',$this->last_update,true);
+		$criteria->compare('anydvd_version_installed',$this->anydvd_version_installed,true);
+		$criteria->compare('anydvd_version_downloaded',$this->anydvd_version_downloaded,true);
+		$criteria->compare('Id_device',$this->Id_device,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

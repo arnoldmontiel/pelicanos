@@ -43,6 +43,10 @@
 		<?php echo CHtml::encode($data->points); ?>
 		<br />
 		
+		<b><?php echo CHtml::encode($data->getAttributeLabel('Share State')); ?>:</b>
+		<?php echo CHtml::encode(($data->is_draft)?'In draft': 'Published'); ?>
+		<br />
+				
 		<?php if($data->deleted == 1){ ?>
 			<b><?php echo CHtml::encode($data->getAttributeLabel('State')); ?>:</b>
 			<span class="deleted">Deleted</span>

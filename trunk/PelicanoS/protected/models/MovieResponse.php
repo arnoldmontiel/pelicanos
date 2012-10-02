@@ -5,7 +5,7 @@ class MovieResponse
 
 	/**
 	 * 
-	 * Set MovieResponse model with attributes from Nzb model (using imdbdata related too).
+	 * Set MovieResponse model with attributes from Nzb model (using myMovieMovie related too).
 	 * @param Nab $modelNzb
 	 */
 	public function setAttributes($modelNzb)
@@ -18,7 +18,7 @@ class MovieResponse
 		}
 		
 		//set imdbdata attributes
-		$attributesArray = $modelNzb->imdbData->attributes;
+		$attributesArray = $modelNzb->myMovieMovie->attributes;
 		while (($value = current($attributesArray)) !== false) {
 			$this->setAttribute(key($attributesArray), $value);
 			next($attributesArray);
@@ -82,100 +82,156 @@ class MovieResponse
 	*/
 	public $points;
 	
+	//----------------------------My Movie Fields---------------------------------------
+	
+	/**
+	* @var string id myMovie
+	* @soap
+	*/
+	public $Id_my_movie_movie;
+		
+	/**
+	* @var integer id parental control
+	* @soap
+	*/
+	public $Id_parental_control;
+
+	/**
+	* @var string local title
+	* @soap
+	*/
+	public $local_title;
+
+	/**
+	* @var string original title
+	* @soap
+	*/
+	public $original_title;
+	
+	/**
+	* @var string sort title
+	* @soap
+	*/
+	public $sort_title;
+				
+	/**
+	* @var string production year
+	* @soap
+	*/
+	public $production_year;
+	
+	/**
+	* @var string running time
+	* @soap
+	*/
+	public $running_time;
+	
+	/**
+	* @var string description
+	* @soap
+	*/
+	public $description;
+	
+	/**
+	* @var string parental rating description
+	* @soap
+	*/
+	public $parental_rating_desc;
+	
 	/**
 	* @var string id imdb
 	* @soap
 	*/
-	public $ID;
-	
-	/**
-	* @var string title
-	* @soap
-	*/
-	public $Title;
-	
-	/**
-	* @var string year
-	* @soap
-	*/
-	public $Year;
-	
-	/**
-	* @var string rated
-	* @soap
-	*/
-	public $Rated;
-	
-	/**
-	* @var string released
-	* @soap
-	*/
-	public $Released;
-	
-	/**
-	* @var string genre
-	* @soap
-	*/
-	public $Genre;
-	
-	/**
-	* @var string director
-	* @soap
-	*/
-	public $Director;
-	
-	/**
-	* @var string writer
-	* @soap
-	*/
-	public $Writer;
-	
-	/**
-	* @var string actors
-	* @soap
-	*/
-	public $Actors;
-	
-	/**
-	* @var string plot
-	* @soap
-	*/
-	public $Plot;
-	
-	/**
-	* @var string poster
-	* @soap
-	*/
-	public $Poster;
-	
-	/**
-	* @var string runtime
-	* @soap
-	*/
-	public $Runtime;
+	public $imdb;
 	
 	/**
 	* @var string rating
 	* @soap
 	*/
-	public $Rating;
+	public $rating;
 	
 	/**
-	* @var string votes
+	* @var string rating votes
 	* @soap
 	*/
-	public $Votes;
+	public $rating_votes;
 	
 	/**
-	* @var string response
+	* @var string genre
 	* @soap
 	*/
-	public $Response;
+	public $genre;
+	
+	/**
+	* @var string studio
+	* @soap
+	*/
+	public $studio;
+	
+	/**
+	* @var string poster original
+	* @soap
+	*/
+	public $poster_original;
+	
+	/**
+	* @var string poster
+	* @soap
+	*/
+	public $poster;
+	
+	/**
+	* @var string backdrop original
+	* @soap
+	*/
+	public $backdrop_original;
 	
 	/**
 	* @var string backdrop
 	* @soap
 	*/
-	public $Backdrop;
+	public $backdrop;
+	
+	/**
+	* @var string integer
+	* @soap
+	*/
+	public $adult;
+	
+	/**
+	* @var string extra features
+	* @soap
+	*/
+	public $extra_features;
+	
+	/**
+	* @var string country
+	* @soap
+	*/
+	public $country;
+	
+	/**
+	* @var string video standard
+	* @soap
+	*/
+	public $video_standard;
+	
+	/**
+	* @var string release date
+	* @soap
+	*/
+	public $release_date;
+	
+	/**
+	* @var string bar code
+	* @soap
+	*/
+	public $bar_code;
+	
+	/**
+	* @var string type
+	* @soap
+	*/
+	public $type;
 
 }
