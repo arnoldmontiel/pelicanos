@@ -104,18 +104,17 @@ class NzbController extends Controller
 	
 	/**
 	 * Returns new and updated movies
-	 * @param integer idCustomer
+	 * @param integer idDevice
 	 * @return MovieResponse[]
 	 * @soap
 	 */
-	public function getNewMovies($idCustomer)
+	public function getNewMovies($idDevice)
 	{
 		
 		$criteria=new CDbCriteria;
 		
-		$criteria->addCondition('t.Id NOT IN(select Id_nzb from nzb_customer where Id_customer = '. $idCustomer.' and need_update = 0)');
-		$criteria->addCondition('t.Id_imdbdata_tv is null');
-		//$criteria->addCondition('t.deleted  <> 1');
+		$criteria->addCondition('t.Id NOT IN(select Id_nzb from nzb_customer where Id_device = "'. $idDevice.'" and need_update = 0)');
+		$criteria->addCondition('t.is_draft = 0');
 		
 		$arrayNbz = Nzb::model()->findAll($criteria);
 		$arrayResponse = array();
@@ -126,7 +125,7 @@ class NzbController extends Controller
 			$movieResponse->setAttributes($modelNbz);
 			$arrayResponse[]=$movieResponse;
 				
-			$nzbCustomerDB = NzbCustomer::model()->findByPk(array('Id_nzb'=>$modelNbz->Id, 'Id_customer'=>$idCustomer));
+			$nzbCustomerDB = NzbCustomer::model()->findByPk(array('Id_nzb'=>$modelNbz->Id, 'Id_device'=>$idDevice));
 			if($nzbCustomerDB != null)
 			{
 				$nzbCustomerDB->need_update = 1;
@@ -138,7 +137,7 @@ class NzbController extends Controller
 
 				$modelNzbCustomer->attributes = array(
 												'Id_nzb'=>$modelNbz->Id,
-												'Id_customer'=>$idCustomer,
+												'Id_device'=>$idDevice,
 												'need_update'=> 1,
 				);
 				$modelNzbCustomer->save();
@@ -1543,6 +1542,7 @@ class NzbController extends Controller
 	public function actionIndex()
 	{
 		$dataProvider=new CActiveDataProvider('Nzb',array('criteria'=>array('order'=>'Id DESC')));
+		
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
