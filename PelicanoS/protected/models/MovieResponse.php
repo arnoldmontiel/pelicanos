@@ -17,10 +17,12 @@ class MovieResponse
 			next($attributesArray);
 		}
 		
-		//set imdbdata attributes
+		//set myMovieMovie attributes
 		$attributesArray = $modelNzb->myMovieMovie->attributes;
 		while (($value = current($attributesArray)) !== false) {
-			$this->setAttribute(key($attributesArray), $value);
+			if(key($attributesArray) != 'Id')
+				$this->setAttribute(key($attributesArray), $value);
+			
 			next($attributesArray);
 		}
 	}
@@ -35,7 +37,7 @@ class MovieResponse
 	}
 	
 	/**
-	* @var integer link ID
+	* @var integer id nzb
 	* @soap
 	*/
 	public $Id;
@@ -82,13 +84,14 @@ class MovieResponse
 	*/
 	public $points;
 	
-	//----------------------------My Movie Fields---------------------------------------
-	
 	/**
 	* @var string id myMovie
 	* @soap
 	*/
 	public $Id_my_movie_movie;
+	
+	//----------------------------My Movie Fields---------------------------------------
+	
 		
 	/**
 	* @var integer id parental control
@@ -173,13 +176,7 @@ class MovieResponse
 	* @soap
 	*/
 	public $poster_original;
-	
-	/**
-	* @var string poster
-	* @soap
-	*/
-	public $poster;
-	
+		
 	/**
 	* @var string backdrop original
 	* @soap
@@ -187,13 +184,7 @@ class MovieResponse
 	public $backdrop_original;
 	
 	/**
-	* @var string backdrop
-	* @soap
-	*/
-	public $backdrop;
-	
-	/**
-	* @var string integer
+	* @var integer adult
 	* @soap
 	*/
 	public $adult;
