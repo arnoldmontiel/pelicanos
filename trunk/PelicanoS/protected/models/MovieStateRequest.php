@@ -6,22 +6,22 @@ class MovieStateRequest
 	
 	
 	/**
-	* @var integer customer id
+	* @var integer device id
 	* @soap
 	*/
-	public $id_customer;
+	public $Id_device;
 	
 	/**
-	* @var integer movie id
+	* @var integer nzb id
 	* @soap
 	*/
-	public $id_movie;
+	public $Id_nzb;
 	
 	/**
 	* @var integer state id
 	* @soap
 	*/
-	public $id_state;
+	public $Id_state;
 	
 	/**
 	* @var integer date

@@ -104,16 +104,16 @@ class NzbController extends Controller
 	
 	/**
 	 * Returns new and updated movies
-	 * @param integer idDevice
+	 * @param string Id_device
 	 * @return MovieResponse[]
 	 * @soap
 	 */
-	public function getNewMovies($idDevice)
+	public function getNewMovies($Id_device)
 	{
 		
 		$criteria=new CDbCriteria;
 		
-		$criteria->addCondition('t.Id NOT IN(select Id_nzb from nzb_customer where Id_device = "'. $idDevice.'" and need_update = 0)');
+		$criteria->addCondition('t.Id NOT IN(select Id_nzb from nzb_customer where Id_device = "'. $Id_device.'" and need_update = 0)');
 		$criteria->addCondition('t.is_draft = 0');
 		
 		$arrayNbz = Nzb::model()->findAll($criteria);
@@ -125,7 +125,7 @@ class NzbController extends Controller
 			$movieResponse->setAttributes($modelNbz);
 			$arrayResponse[]=$movieResponse;
 				
-			$nzbCustomerDB = NzbCustomer::model()->findByPk(array('Id_nzb'=>$modelNbz->Id, 'Id_device'=>$idDevice));
+			$nzbCustomerDB = NzbCustomer::model()->findByAttributes(array('Id_nzb'=>$modelNbz->Id, 'Id_device'=>$Id_device));
 			if($nzbCustomerDB != null)
 			{
 				$nzbCustomerDB->need_update = 1;
@@ -137,7 +137,7 @@ class NzbController extends Controller
 
 				$modelNzbCustomer->attributes = array(
 												'Id_nzb'=>$modelNbz->Id,
-												'Id_device'=>$idDevice,
+												'Id_device'=>$Id_device,
 												'need_update'=> 1,
 				);
 				$modelNzbCustomer->save();
@@ -504,18 +504,18 @@ class NzbController extends Controller
 
 			foreach($movieStateRequest as $item)
 			{
-				$model = NzbCustomer::model()->findByAttributes(array('Id_customer'=>$item->id_customer, 'Id_nzb'=>$item->id_movie));
+				$model = NzbCustomer::model()->findByAttributes(array('Id_device'=>$item->Id_device, 'Id_nzb'=>$item->Id_nzb));
 			
 				if(isset($model))
 				{
-					$model->Id_movie_state = $item->id_state;
-					switch ($item->id_state) {
+					$model->Id_movie_state = $item->Id_state;
+					switch ($item->Id_state) {
 						case 1:
 							$model->date_sent = date("Y-m-d H:i:s",$item->date);
 							break;
 						case 2:
 							$model->date_downloading = date("Y-m-d H:i:s",$item->date);
-							$this->doTransaction($item->id_movie, $item->id_customer);
+							$this->doTransaction($item->Id_nzb, $item->Id_device);
 							break;
 						case 3:
 							$model->date_downloaded = date("Y-m-d H:i:s",$item->date);
