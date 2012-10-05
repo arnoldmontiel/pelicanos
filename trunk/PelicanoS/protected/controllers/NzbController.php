@@ -515,7 +515,7 @@ class NzbController extends Controller
 							break;
 						case 2:
 							$model->date_downloading = date("Y-m-d H:i:s",$item->date);
-							$this->doTransaction($item->Id_nzb, $item->Id_device);
+							//$this->doTransaction($item->Id_nzb, $item->Id_device);
 							break;
 						case 3:
 							$model->date_downloaded = date("Y-m-d H:i:s",$item->date);
@@ -572,7 +572,7 @@ class NzbController extends Controller
 								break;
 							case 2:
 								$model->date_downloading = date("Y-m-d H:i:s",$item->date);
-								$this->doTransaction($item->id_serie_nzb, $item->id_customer);
+								//$this->doTransaction($item->id_serie_nzb, $item->id_customer);
 								break;
 							case 3:
 								$model->date_downloaded = date("Y-m-d H:i:s",$item->date);
