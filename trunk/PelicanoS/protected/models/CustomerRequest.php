@@ -15,6 +15,12 @@ class CustomerRequest
 	public $Id_reseller;
 	
 	/**
+	* @var string id device
+	* @soap
+	*/
+	public $Id_device;
+	
+	/**
 	* @var string name
 	* @soap
 	*/
