@@ -27,28 +27,31 @@ class NzbController extends Controller
 								'LogRequest'=>'LogRequest',
 								'LogResponse'=>'LogResponse',
 								'CustomerRequest'=>'CustomerRequest',
+								'InstallDataResponse'=>'InstallDataResponse',
 		),
 		),
 		);
 	}
 	
 	/**
-	* Get reseller id
+	* Get installation data
 	* @param string username
 	* @param string password
-	* @return integer Id_reseller
+	* @return InstallDataResponse
 	* @soap
 	*/
-	public function getReseller($username, $password)
+	public function getInstallData($username, $password)
 	{
-		$idReseller = 0;
 		$model = User::model()->findByAttributes(array('username'=>$username, 'password'=>$password));
+		$installDataResponse = null;
 		if($model)
 		{
-			$idReseller = $model->Id_reseller;
+			$installDataResponse = new InstallDataResponse();
+			$installDataResponse->Id_reseller = $model->Id_reseller;
+			$installDataResponse->Id_device = uniqid();
 		}
 	
-		return $idReseller;
+		return $installDataResponse;
 	}
 	
 	/**
