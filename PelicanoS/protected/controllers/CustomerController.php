@@ -78,6 +78,21 @@ class CustomerController extends Controller
 		));
 	}
 	
+	public function actionSummaryNzb($id)
+	{
+	 
+		$model=new NzbCustomer('search');
+		$model->unsetAttributes();  // clear any default values
+		$model->Id_customer = $id;
+		if(isset($_GET['NzbCustomer']))
+			$model->attributes=$_GET['NzbCustomer'];
+		
+		$this->render('summaryNzb',array(
+							'model'=>$model,
+		));
+		
+	}
+	
 	public function actionIndexRipped($id)
 	{
 	

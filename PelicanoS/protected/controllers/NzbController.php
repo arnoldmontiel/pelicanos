@@ -282,7 +282,7 @@ class NzbController extends Controller
 	* @return integer idCusomer
 	* @soap
 	*/
-	public function setCustomer($customerRequest )
+	public function setCustomer($customerRequest)
 	{		
 		$idCustomer = 0;
 		try {
@@ -296,6 +296,10 @@ class NzbController extends Controller
 			if($model->save())
 			{
 				$idCustomer = $model->Id;
+				$modelcustomerDevice = new CustomerDevice();
+				$modelcustomerDevice->Id_customer = $idCustomer;
+				$modelcustomerDevice->Id_device = $customerRequest->Id_device;
+				$modelcustomerDevice->save();
 			}
 	
 			
