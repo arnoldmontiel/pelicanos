@@ -64,22 +64,22 @@ $('#Customer_Id').change(function(){
 		'columns'=>array(	
 				array(
 	 				    'name'=>'id_imdb',
-					    'value'=>'$data->nzb->imdbData->ID',
+					    'value'=>'$data->nzb->myMovieMovie->imdb',
 	
 				),
 				array(
 	 				    'name'=>'title',
-					    'value'=>'$data->nzb->imdbData->Title',
+					    'value'=>'$data->nzb->myMovieMovie->original_title',
 	
 				),
 				array(
 	 				    'name'=>'year',
-					    'value'=>'$data->nzb->imdbData->Year',
+					    'value'=>'$data->nzb->myMovieMovie->production_year',
 	
 				),
 				array(
 	 				    'name'=>'genre',
-					    'value'=>'$data->nzb->imdbData->Genre',
+					    'value'=>'$data->nzb->myMovieMovie->genre',
 	
 				),
 				array(
