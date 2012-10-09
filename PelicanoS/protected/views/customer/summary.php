@@ -19,8 +19,10 @@
 				'htmlOptions'=>array('width'=>'80px'),
 		),
 		array(
-				'class'=>'CButtonColumn',
-				'template'=>'',
+				'filter'=>false,
+				'value'=>'CHtml::link("View Downloaded",array("/customer/summaryNzb","id"=>$data->Id))',
+				'type'=>'raw',
+				'htmlOptions'=>array('width'=>'80px'),
 		),
 	),
 )); ?>
