@@ -27,6 +27,7 @@ class NzbController extends Controller
 								'LogRequest'=>'LogRequest',
 								'LogResponse'=>'LogResponse',
 								'CustomerRequest'=>'CustomerRequest',
+								'CustomerResponse'=>'CustomerResponse',
 								'InstallDataResponse'=>'InstallDataResponse',
 		),
 		),
@@ -277,6 +278,40 @@ class NzbController extends Controller
 	
 	/**
 	*
+	* Use customer
+	* @param string code
+	* @param string Id_device
+	* @return CustomerResponse
+	* @soap
+	*/
+	public function useCustomer($code, $Id_device)
+	{
+		$model = Customer::model()->findByAttributes(array('code'=>$code));
+		$customerResponse = null;
+		try {
+			if($model)
+			{
+				$modelcustomerDevice = new CustomerDevice();
+				$modelcustomerDevice->Id_customer = $model->Id;
+				$modelcustomerDevice->Id_device = $Id_device;
+				if($modelcustomerDevice->save())
+				{
+					$customerResponse = new CustomerResponse();
+					
+					$customerResponse->Id = $model->Id;
+					$customerResponse->last_name = $model->last_name;
+					$customerResponse->name = $model->name;
+					$customerResponse->address = $Id_device;
+				}
+			}
+		} catch (Exception $e) {
+			return $customerResponse;
+		}
+		return $customerResponse;
+	}
+	
+	/**
+	*
 	* Create customer
 	* @param CustomerRequest
 	* @return integer idCusomer
@@ -292,6 +327,7 @@ class NzbController extends Controller
 			$model->last_name = $customerRequest->last_name;
 			$model->address = $customerRequest->address;
 			$model->Id_reseller = $customerRequest->Id_reseller;
+			$model->code = uniqid();
 			
 			if($model->save())
 			{
