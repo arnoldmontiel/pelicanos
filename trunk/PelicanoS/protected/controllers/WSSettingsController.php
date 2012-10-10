@@ -23,7 +23,7 @@ class WSSettingsController extends Controller
 	*/
 	public function setClientSettings($settings)
 	{
-		$model = ClientSettings::model()->findByAttributes(array('Id'=>$settings->Id_device));
+		$model = ClientSettings::model()->findByAttributes(array('Id_device'=>$settings->Id_device));
 		if(isset($model))
 		{
 			try {
