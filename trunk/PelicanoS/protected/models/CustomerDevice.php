@@ -39,7 +39,8 @@ class CustomerDevice extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('Id_device, Id_customer', 'required'),
-			array('Id_device, Id_customer', 'numerical', 'integerOnly'=>true),
+			array('Id_customer', 'numerical', 'integerOnly'=>true),
+			array('Id_device', 'length', 'max'=>100),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('Id_device, Id_customer', 'safe', 'on'=>'search'),

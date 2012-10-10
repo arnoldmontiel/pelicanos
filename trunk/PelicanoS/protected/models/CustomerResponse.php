@@ -1,24 +1,12 @@
 <?php
 
-class CustomerRequest
+class CustomerResponse
 {
 	/**
 	* @var integer id
 	* @soap
 	*/
 	public $Id;
-	
-	/**
-	* @var integer id reseller
-	* @soap
-	*/
-	public $Id_reseller;
-	
-	/**
-	* @var string id device
-	* @soap
-	*/
-	public $Id_device;
 	
 	/**
 	* @var string name
