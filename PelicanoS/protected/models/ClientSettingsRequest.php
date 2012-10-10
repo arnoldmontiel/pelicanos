@@ -7,7 +7,7 @@ class ClientSettingsRequest
 	* @var integer Id_client
 	* @soap
 	*/
-	public $Id_client;
+	public $Id_device;
 	
 	/**
 	* @var string ip v4

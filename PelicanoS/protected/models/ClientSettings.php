@@ -49,8 +49,13 @@ class ClientSettings extends CActiveRecord
 			array('Id, Id_customer', 'required'),
 			array('Id, port_v4, port_v6, Id_customer', 'numerical', 'integerOnly'=>true),
 			array('ip_v4, ip_v6, anydvd_version_installed, anydvd_version_downloaded', 'length', 'max'=>128),
+			array('last_update','default',
+						              'value'=>new CDbExpression('NOW()'),
+						              'setOnEmpty'=>false,'on'=>'update'),
+			array('last_update','default',
+						              'value'=>new CDbExpression('NOW()'),
+						              'setOnEmpty'=>false,'on'=>'insert'),
 			array('Id_device', 'length', 'max'=>45),
-			array('last_update', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('Id, ip_v4, ip_v6, port_v4, port_v6, Id_customer, last_update, anydvd_version_installed, anydvd_version_downloaded, Id_device', 'safe', 'on'=>'search'),
