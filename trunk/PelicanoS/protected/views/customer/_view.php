@@ -16,5 +16,8 @@
 	<?php echo CHtml::encode($data->address); ?>
 	<br />
 
+	<b><?php echo CHtml::encode($data->getAttributeLabel('code')); ?>:</b>
+	<?php echo CHtml::encode($data->code); ?>
+	<br />
 
 </div>

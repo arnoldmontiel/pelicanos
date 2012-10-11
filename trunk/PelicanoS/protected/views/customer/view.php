@@ -19,6 +19,7 @@ $this->menu=array(
 		'name',
 		'last_name',
 		'address',
+		'code',
 	),
 )); 
 
