@@ -16,7 +16,7 @@ class WSSettingsController extends Controller
 	}
 	
 	/**
-	* Set romete client settings
+	* Set remote client settings
 	* @param ClientSettingsRequest settings
 	* @return bool success
 	* @soap
@@ -40,6 +40,57 @@ class WSSettingsController extends Controller
 			return true;
 		}
 		return false;
+	}
+	/**
+	* Set wich version has been downloaded
+	* @param string idDevice
+	* @param string version
+	* @return bool success
+	* @soap
+	*/
+	
+	public function setAnydvdVersionDownloaded($idDevice,$version)
+	{
+		$model = ClientSettings::model()->findByAttributes(array('Id_device'=>$idDevice));
+		if(isset($model))
+		{
+			try {
+				$model->anydvd_version_downloaded = $version;
+				$model->save();
+			}
+			catch (Exception $e)
+			{
+				return false;
+			}
+			return true;
+		}
+		return false;
+	}
+	/**
+	* Set wich version has been installed
+	* @param string idDevice
+	* @param string version
+	* @return bool success
+	* @soap
+	*/
+	
+	public function sendAnydvdVersionInstalled($idDevice,$version)
+	{
+		$model = ClientSettings::model()->findByAttributes(array('Id_device'=>$idDevice));
+		if(isset($model))
+		{
+			try {
+				$model->anydvd_version_installed = $version;
+				$model->save();
+			}
+			catch (Exception $e)
+			{
+				return false;
+			}
+			return true;
+		}
+		return false;
+		
 	}
 	
 }
