@@ -70,7 +70,7 @@ class ClientSettings extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'idCustomer' => array(self::BELONGS_TO, 'Customer', 'Id_customer'),
+			'customer' => array(self::BELONGS_TO, 'Customer', 'Id_customer'),
 		);
 	}
 

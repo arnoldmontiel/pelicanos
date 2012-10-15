@@ -1,7 +1,10 @@
 <div class="view">
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('Id')); ?>:</b>
-	<?php echo CHtml::link(CHtml::encode($data->Id), array('view', 'id'=>$data->Id)); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('Id_customer')); ?>:</b>
+	<?php echo CHtml::link(CHtml::encode($data->customer->last_name.' '.$data->customer->name), array('view', 'id'=>$data->Id)); ?>
+	<br />
+	<b><?php echo CHtml::encode($data->getAttributeLabel('Id_device')); ?>:</b>
+	<?php echo CHtml::encode($data->Id_device); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('ip_v4')); ?>:</b>
@@ -20,9 +23,6 @@
 	<?php echo CHtml::encode($data->port_v6); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('Id_customer')); ?>:</b>
-	<?php echo CHtml::encode($data->Id_customer); ?>
-	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('last_update')); ?>:</b>
 	<?php echo CHtml::encode($data->last_update); ?>

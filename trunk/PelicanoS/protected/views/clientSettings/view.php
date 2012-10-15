@@ -35,12 +35,12 @@ $this->widget('ext.processingDialog.processingDialog', array(
 <?php $this->widget('zii.widgets.CDetailView', array(
 	'data'=>$model,
 	'attributes'=>array(
-		'Id',
+		array('label'=>'Customer',value=>$model->customer->last_name.' '.$model->customer->name),
+		'Id_device',
 		'ip_v4',
 		'ip_v6',
 		'port_v4',
 		'port_v6',
-		'Id_customer',
 		'last_update',
 		'anydvd_version_installed',
 		'anydvd_version_downloaded',

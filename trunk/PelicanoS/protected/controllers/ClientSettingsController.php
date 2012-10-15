@@ -163,7 +163,8 @@ class ClientSettingsController extends Controller
 			$anydvdVersion = AnydvdhdVersion::model()->find($criteria);
 			
 			$settings = Setting::getInstance();
-			$wsSettings = new wsSettings();
+			$url = "http://".$clientSetting->ip_v4.":".$clientSetting->port_v4."/workspace/PelicanoC/index.php?r=wsSettings/wsdl";
+			$wsSettings = new wsSettings($url);
 			$wsSettings->updateAnydvd(
 				$anydvdVersion->version,
 				$anydvdVersion->file_name,
