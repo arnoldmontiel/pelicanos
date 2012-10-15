@@ -74,7 +74,7 @@ class WSSettingsController extends Controller
 	* @soap
 	*/
 	
-	public function sendAnydvdVersionInstalled($idDevice,$version)
+	public function setAnydvdVersionInstalled($idDevice,$version)
 	{
 		$model = ClientSettings::model()->findByAttributes(array('Id_device'=>$idDevice));
 		if(isset($model))

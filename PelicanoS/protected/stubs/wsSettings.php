@@ -18,7 +18,7 @@ class wsSettings
 
 );
 
-function __construct($url='http://localhost/workspace/PelicanoC/index.php?r=wssettings/wsdl')
+function __construct($url='http://localhost/workspace/PelicanoC/index.php?r=wsSettings/wsdl')
 {
 $this->soapClient = new SoapClient($url,array("classmap"=>self::$classmap,"trace" => true,"exceptions" => true));
 }

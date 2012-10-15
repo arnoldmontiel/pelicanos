@@ -44,7 +44,7 @@ return array(
 					'notAuthorizedView'=> 'srbac.views.authitem.unauthorized', // default:
 		//srbac.views.authitem.unauthorized, must be an existing alias
 					'alwaysAllowed'=>array( //default: array()
-					'SiteLogin','SiteLogout','SiteError','NzbWsdl'),
+					'SiteLogin','SiteLogout','SiteError','NzbWsdl','WSSettings'),
 					'prefixAlwaysAllowed'=>array( //default: array()
 								'Ajax'),
 					'userActions'=>array('Show','View','List'), //default: array()
