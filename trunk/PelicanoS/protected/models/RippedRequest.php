@@ -1,25 +1,34 @@
 <?php
-
-class RippedRequest 
+class MyMovieSOAP
 {
+	/**
+	* Set model attributes
+	* @param Nab $model
+	*/
+	public function setAttributes($model)
+	{
+		//set attributes
+		$attributesArray = $model->attributes;
+		while (($value = current($attributesArray)) !== false) {
+			$this->setAttribute(key($attributesArray), $value);
+			next($attributesArray);
+		}
+	}
+	
+	public function setAttribute($name,$value)
+	{
+		if(property_exists($this,$name))
+		$this->$name=$value;
+		else
+		return false;
+		return true;
+	}
 	
 	/**
-	* @var integer customer id
+	* @var string Id
 	* @soap
 	*/
-	public $Id_customer;
-
-	/**
-	* @var date ripped_date
-	* @soap
-	*/
-	public $ripped_date;
-	
-	/**
-	* @var string Id_my_movie
-	* @soap
-	*/
-	public $Id_my_movie;
+	public $Id;
 	
 	/**
 	* @var string type
@@ -142,16 +151,16 @@ class RippedRequest
 	public $studio;
 	
 	/**
-	* @var string poster
+	* @var string poster_original
 	* @soap
 	*/
-	public $poster;
+	public $poster_original;
 	
 	/**
-	* @var string backdrop
+	* @var string backdrop_original
 	* @soap
 	*/
-	public $backdrop;
+	public $backdrop_original;
 	
 	/**
 	* @var integer adult
@@ -164,4 +173,77 @@ class RippedRequest
 	* @soap
 	*/
 	public $Id_parental_control;
+}
+
+class MyMovieDiscSOAP
+{	
+	/**
+	* Set model attributes
+	* @param Nab $model
+	*/
+	public function setAttributes($model)
+	{
+		//set attributes
+		$attributesArray = $model->attributes;
+		while (($value = current($attributesArray)) !== false) {
+			$this->setAttribute(key($attributesArray), $value);
+			next($attributesArray);
+		}
+	}
+	
+	public function setAttribute($name,$value)
+	{
+		if(property_exists($this,$name))
+			$this->$name=$value;
+		else
+			return false;
+		return true;
+	}
+	
+	/**
+	 * @var string Id
+	 * @soap
+	 */
+	public $Id;
+	
+	/**
+	 * @var string name
+	 * @soap
+	 */
+	public $name;
+	
+	/**
+	* @var string Id_my_movie
+	* @soap
+	*/
+	public $Id_my_movie;
+}
+
+class RippedRequest 
+{	
+	
+	/**
+	* @var MyMovieSOAP 
+	* @soap
+	*/
+	public $myMovie;
+	
+	/**
+	* @var MyMovieDiscSOAP
+	* @soap
+	*/
+	public $myMovieDisc;
+
+	/**
+	* @var date ripped_date
+	* @soap
+	*/
+	public $ripped_date;
+	
+	/**
+	* @var string Id_device
+	* @soap
+	*/
+	public $Id_device;
+	
 }
