@@ -57,15 +57,15 @@ class NzbController extends Controller
 	
 	/**
 	* Get ripped by customer (feedback to client)
-	* @param integer idCustomer
+	* @param string idDevice
 	* @return RippedResponse[]
 	* @soap
 	*/
-	public function getRipped($idCustomer)
+	public function getRipped($idDevice)
 	{
 		$criteria=new CDbCriteria;
 	
-		$criteria->addCondition('t.Id_customer = '. $idCustomer);
+		$criteria->addCondition('t.Id_device = "'. $idDevice.'"');
 	
 		$arrayRipped = RippedCustomer::model()->findAll($criteria);
 		$arrayResponse = array();
@@ -73,8 +73,8 @@ class NzbController extends Controller
 		foreach ($arrayRipped as $model)
 		{
 			$rippedResponse = new RippedResponse();
-			$rippedResponse->Id_my_movie = $model->Id_my_movie;
-			$rippedResponse->Id_customer = $model->Id_customer;
+			$rippedResponse->Id_my_movie_disc = $model->Id_my_movie_disc;
+			$rippedResponse->Id_device = $model->Id_device;
 			$arrayResponse[]=$rippedResponse;
 		}
 	
@@ -387,109 +387,43 @@ class NzbController extends Controller
 	*/
 	public function setRipped($rippedRequest )
 	{
-	
+		$cadena = '';
 		try {			
 			foreach($rippedRequest as $item)
 			{
-				$rippedCustomerDB = RippedCustomer::model()->findByAttributes(array('Id_my_movie'=>$item->Id_my_movie)); 				
-				if(isset($rippedCustomerDB))
+
+				$modelMyMovieDB = MyMovie::model()->findByPk($item->myMovie->Id);		
+				if(!isset($modelMyMovieDB))
 				{
-					$transaction = $rippedCustomerDB->dbConnection->beginTransaction();
-					try {
-						
-						$rippedCustomerDB->delete();
-						MyMovie::model()->deleteByPk($rippedCustomerDB->Id_my_movie);
-						
-						$transaction->commit();
-					} catch (Exception $e) {
-						$transaction->rollback();
-					}
+					$modelMyMovie = new MyMovie();
+					$modelMyMovie->setAttributes($item->myMovie);
+					$modelMyMovie->poster = $this->getImage($modelMyMovie->poster_original, $modelMyMovie->Id);
+					$modelMyMovie->backdrop = $this->getImage($modelMyMovie->backdrop_original, $modelMyMovie->Id . '_bd');
+					$modelMyMovie->save();
 				}
 				
-				$modelMyMovie = new MyMovie();
+				$modelMyMovieDiscDB = MyMovieDisc::model()->findByPk($item->myMovieDisc->Id);
+				if(!isset($modelMyMovieDiscDB))
+				{
+					$modelMyMovieDisc = new MyMovieDisc();
+					$modelMyMovieDisc->setAttributes($item->myMovieDisc);
+					$modelMyMovieDisc->save();
+				}
 				
-				
-				$transaction = $modelMyMovie->dbConnection->beginTransaction();
-				try {
-				
-					$modelMyMovie->Id = $item->Id_my_movie;
-					$modelMyMovie->type = $item->type;
-					$modelMyMovie->bar_code = $item->bar_code;
-					$modelMyMovie->country = $item->country;
-					$modelMyMovie->local_title = $item->local_title;
-					$modelMyMovie->original_title = $item->original_title;
-					$modelMyMovie->sort_title = $item->sort_title;
-					$modelMyMovie->aspect_ratio = $item->aspect_ratio;
-					$modelMyMovie->video_standard = $item->video_standard;
-					$modelMyMovie->production_year = $item->production_year;
-					$modelMyMovie->release_date = $item->release_date;
-					$modelMyMovie->running_time = $item->running_time;
-					$modelMyMovie->description = $item->description;
-					$modelMyMovie->extra_features = $item->extra_features;
-					$modelMyMovie->parental_rating_desc = $item->parental_rating_desc;
-					$modelMyMovie->imdb = $item->imdb;
-					$modelMyMovie->rating = $item->rating;
-					$modelMyMovie->data_changed = $item->data_changed;
-					$modelMyMovie->covers_changed = $item->covers_changed;
-					$modelMyMovie->genre = $item->genre;
-					$modelMyMovie->studio =  $item->studio;				
-					$modelMyMovie->poster_original =  $item->poster;
-					$modelMyMovie->adult =  $item->adult;
-					$modelMyMovie->Id_parental_control =  $item->Id_parental_control;
-					
-					$validator = new CUrlValidator();
-					
-					if($item->poster!='' && $validator->validateValue($item->poster))
-					{
-						try {
-							$content = @file_get_contents($item->poster);
-							if ($content !== false) {
-								$file = fopen("./images/".$modelMyMovie->Id.".jpg", 'w');
-								fwrite($file,$content);
-								fclose($file);
-								$modelMyMovie->poster = $modelMyMovie->Id.".jpg";
-							} else {
-								// an error happened
-							}
-						} catch (Exception $e) {
-							throw $e;
-							// an error happened
-						}
-					}
-					
-					$modelMyMovie->backdrop_original =  $item->backdrop;
-						
-					if($item->backdrop!='' && $validator->validateValue($item->backdrop))
-					{
-						try {
-							$content = @file_get_contents($item->backdrop);
-							if ($content !== false) {
-								$file = fopen("./images/".$modelMyMovie->Id."_bd.jpg", 'w');
-								fwrite($file,$content);
-								fclose($file);
-								$modelMyMovie->backdrop = $modelMyMovie->Id."_bd.jpg";
-							} else {
-								// an error happened
-							}
-						} catch (Exception $e) {
-							throw $e;
-							// an error happened
-						}
-					}
-					
-					$modelMyMovie->save();
-					
+				$modelRippedCustomerDB = RippedCustomer::model()->findByAttributes(array(
+														'Id_my_movie_disc'=>$item->myMovieDisc->Id,
+														'Id_device'=>$item->Id_device,
+				));
+				if(!isset($modelRippedCustomerDB))
+				{
 					$modelRippedCustomer = new RippedCustomer();
-					$modelRippedCustomer->Id_customer = $item->Id_customer;
-					$modelRippedCustomer->Id_my_movie = $item->Id_my_movie;
+					$modelRippedCustomer->Id_device = $item->Id_device;
+					$modelRippedCustomer->Id_my_movie_disc = $item->myMovieDisc->Id;
 					$modelRippedCustomer->ripped_date = $item->ripped_date;
 					$modelRippedCustomer->save();
-					
-					$transaction->commit();
-				} catch (Exception $e) {
-					//Yii::trace('---------------------------------------------------------'. $e , 'webService');
-					$transaction->rollback();
 				}
+				
+			
 			}
 	
 		} catch (Exception $e) {
@@ -702,6 +636,33 @@ class NzbController extends Controller
 		}
 	}
 	
+	private function getImage($original, $newFileName)
+	{
+		$validator = new CUrlValidator();
+		$setting = Setting::getInstance();
+	
+		$name = 'no_poster.jpg';
+		if($original!='' && $validator->validateValue($original))
+		{
+			try {
+				$content = @file_get_contents($original);
+				if ($content !== false) {
+					$file = fopen($setting->path_images."/".$newFileName.".jpg", 'w');
+					fwrite($file,$content);
+					fclose($file);
+					$name = $newFileName.".jpg";
+				} else {
+					// an error happened
+				}
+			} catch (Exception $e) {
+				throw $e;
+				// an error happened
+			}
+		}
+	
+		return $name;
+	
+	}
 	/**
 	 * @return array action filters
 	 */
