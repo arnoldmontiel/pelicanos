@@ -186,11 +186,6 @@ $('#Nzb_points').keyup(function(){
 		            'type' => 'raw',
 		            'value' => '$data->title'
 		        ),
-				array(
-		            'name' => 'Original Title',
-		            'type' => 'raw',
-		            'value' => '$data->originalTitle'
-				),
 		        array(
 		            'name' => 'country',
 		            'type' => 'raw',
@@ -200,6 +195,11 @@ $('#Nzb_points').keyup(function(){
 		            'name' => 'year',
 		            'type' => 'raw',
 		            'value' => '$data->year'
+				),
+				array(
+		            'name' => 'edition',
+		            'type' => 'raw',
+		            'value' => '$data->edition'
 				),
 				array(
 		            'name' => 'Imdb Id',
