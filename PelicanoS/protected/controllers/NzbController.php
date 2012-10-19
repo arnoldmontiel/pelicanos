@@ -907,10 +907,10 @@ class NzbController extends Controller
 		if(isset($_POST['Upload']) && isset($_POST['hiddenTitleId']))
 		{
 			$modelUpload->attributes=$_POST['Upload'];
-			$titleId = $_POST['hiddenTitleId'];
+			$idTitle = $_POST['hiddenTitleId'];
 			$file=CUploadedFile::getInstance($modelUpload,'file');
 				
-			if($modelUpload->validate() && !empty($titleId))
+			if($modelUpload->validate() && !empty($idTitle))
 			{
 				$transaction = $model->dbConnection->beginTransaction();
 				try {
@@ -925,13 +925,9 @@ class NzbController extends Controller
 						$model->file_original_name = $file->getName();
 						
 						$this->saveFile($file, 'nzb', $fileName);
-					}
-						
-					$myMovie = new MyMoviesAPI();
-					$modelMyMovieMovie = $myMovie->LoadDiscTitleById($titleId, true);
-					$modelMyMovieMovie->save();
+					}				
 					
-					$model->Id_my_movie_movie = $modelMyMovieMovie->Id;
+					$model->Id_my_movie_disc_nzb = MyMovieHelper::saveMyMovieData($idTitle);
 					 
 					if($model->save()){
 						$transaction->commit();
@@ -949,8 +945,7 @@ class NzbController extends Controller
 		if(isset($_GET['SearchDiscRequest']))
 		{
 			$modelSearchDiscRequest->setAttributes($_GET['SearchDiscRequest']);
-			$myMovie = new MyMoviesAPI();
-			$rawData = $myMovie->SearchDiscTitleByTitle($modelSearchDiscRequest);
+			$rawData = MyMovieHelper::searchTitles($modelSearchDiscRequest->Title, $modelSearchDiscRequest->Country);
 		}
 		
 		
@@ -975,15 +970,14 @@ class NzbController extends Controller
 
 	public function actionAjaxGetMovieMoreInfo()
 	{
-		$titleId = isset($_POST['titleId'])?$_POST['titleId']:null;
+		$idTitle = isset($_POST['titleId'])?$_POST['titleId']:null;
 		
-		if(isset($titleId))
+		if(isset($idTitle))
 		{
-			$myMovie = new MyMoviesAPI();
-			$model = $myMovie->LoadDiscTitleById($titleId);
-		
+			$model = MyMovieHelper::getMyMovieData($idTitle,false);		
 			echo $this->renderPartial('_viewInfo', array(
-														'model'=>$model,));
+														'model'=>$model,
+				));
 		}
 	}
 	
