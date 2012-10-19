@@ -18,12 +18,12 @@ $('#cancelButton').click(function(){
 
 	<div class="left-movie-view" >
 	<?php
-		echo CHtml::image("./images/".$model->myMovieMovie->poster,$model->myMovieMovie->original_title,array('id'=>'poster_img', 'style'=>'height: 200px;width: 125px;'));
+		echo CHtml::image("./images/".$model->myMovieDiscNzb->myMovieNzb->poster,$model->myMovieDiscNzb->myMovieNzb->original_title,array('id'=>'poster_img', 'style'=>'height: 200px;width: 125px;'));
 		?>
 	</div>
 	<div class="right-movie-view" >
 		<b><?php echo CHtml::encode($model->getAttributeLabel('Id Imdb')); ?>:</b>
-		<?php echo CHtml::encode($model->myMovieMovie->imdb); ?>
+		<?php echo CHtml::encode($model->myMovieDiscNzb->myMovieNzb->imdb); ?>
 		<br />
 	
 		<b><?php echo CHtml::encode($model->getAttributeLabel('file_name')); ?>:</b>
@@ -35,11 +35,11 @@ $('#cancelButton').click(function(){
 		<br />
 	
 		<b><?php echo CHtml::encode($model->getAttributeLabel('original_title')); ?>:</b>
-		<?php echo CHtml::encode($model->myMovieMovie->original_title); ?>
+		<?php echo CHtml::encode($model->myMovieDiscNzb->myMovieNzb->original_title); ?>
 		<br />
 	
 		<b><?php echo CHtml::encode($model->getAttributeLabel('production_year')); ?>:</b>
-		<?php echo CHtml::encode($model->myMovieMovie->production_year); ?>
+		<?php echo CHtml::encode($model->myMovieDiscNzb->myMovieNzb->production_year); ?>
 		<br />
 		
 	</div>
@@ -66,21 +66,21 @@ $('#cancelButton').click(function(){
 	</div>
 
 	<div id="points" style="margin-bottom: 5px">
-		<?php echo CHtml::activeLabelEx($modelMyMovieMovie,'description'); ?>
-		<?php echo CHtml::activeTextArea($modelMyMovieMovie, 'description',array('cols'=>50));?>
-		<?php echo CHtml::error($modelMyMovieMovie,'description'); ?>
+		<?php echo CHtml::activeLabelEx($modelMyMovieNzb,'description'); ?>
+		<?php echo CHtml::activeTextArea($modelMyMovieNzb, 'description',array('cols'=>50));?>
+		<?php echo CHtml::error($modelMyMovieNzb,'description'); ?>
 	</div>
 	
 	<div id="points" style="margin-bottom: 5px">
-		<?php echo CHtml::activeLabelEx($modelMyMovieMovie,'studio'); ?>
-		<?php echo CHtml::activeTextField($modelMyMovieMovie, 'studio',array('size'=>50));?>
-		<?php echo CHtml::error($modelMyMovieMovie,'studio'); ?>
+		<?php echo CHtml::activeLabelEx($modelMyMovieNzb,'studio'); ?>
+		<?php echo CHtml::activeTextField($modelMyMovieNzb, 'studio',array('size'=>50));?>
+		<?php echo CHtml::error($modelMyMovieNzb,'studio'); ?>
 	</div>
 	
 	<div id="points" style="margin-bottom: 5px">
-		<?php echo CHtml::activeLabelEx($modelMyMovieMovie,'genre'); ?>
-		<?php echo CHtml::activeTextField($modelMyMovieMovie, 'genre',array('size'=>50));?>
-		<?php echo CHtml::error($modelMyMovieMovie,'genre'); ?>
+		<?php echo CHtml::activeLabelEx($modelMyMovieNzb,'genre'); ?>
+		<?php echo CHtml::activeTextField($modelMyMovieNzb, 'genre',array('size'=>50));?>
+		<?php echo CHtml::error($modelMyMovieNzb,'genre'); ?>
 	</div>
 	
 	<div id="points" style="margin-bottom: 5px">
