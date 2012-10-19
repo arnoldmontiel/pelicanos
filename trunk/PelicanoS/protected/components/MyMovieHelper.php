@@ -104,8 +104,8 @@ class MyMovieHelper
 						
 						if($saveImage)
 						{
-							$modelMyMovieNzb->poster = self::getImage($modelMyMovieNzb->poster_original, $idMyMovie);
-							$modelMyMovieNzb->backdrop = self::getImage($modelMyMovieNzb->backdrop_original, $idMyMovie . '_bd');
+							$modelMyMovieNzb->poster = self::getImage($modelMyMovieNzb->poster_original, $modelMyMovieNzb->Id);
+							$modelMyMovieNzb->backdrop = self::getImage($modelMyMovieNzb->backdrop_original, $modelMyMovieNzb->Id . '_bd');
 						}
 						
 						return $modelMyMovieNzb;
@@ -121,17 +121,6 @@ class MyMovieHelper
 			
 	}
 
-	
-// 	public function toArray(SimpleXMLElement $xml) {
-// 		$array = (array)$xml;
-	
-// 		foreach ( array_slice($array, 0) as $key => $value ) {
-// 			if ( $value instanceof SimpleXMLElement ) {
-// 				$array[$key] = empty($value) ? NULL : self::toArray($value);
-// 			}
-// 		}
-// 		return $array;
-// 	}
 	
 	private function getParentalControlId($xml)
 	{
@@ -199,7 +188,7 @@ class MyMovieHelper
 	private function getImage($original, $newFileName)
 	{
 		$validator = new CUrlValidator();
-		$setting = Setting::getInstance();
+		$imagesPath = './images';
 		
 		$name = 'no_poster.jpg';
 		if($original!='' && $validator->validateValue($original))
@@ -207,7 +196,7 @@ class MyMovieHelper
 			try {
 				$content = @file_get_contents($original);
 				if ($content !== false) {
-					$file = fopen($setting->path_images."/".$newFileName.".jpg", 'w');
+					$file = fopen($imagesPath."/".$newFileName.".jpg", 'w');
 					fwrite($file,$content);
 					fclose($file);
 					$name = $newFileName.".jpg";

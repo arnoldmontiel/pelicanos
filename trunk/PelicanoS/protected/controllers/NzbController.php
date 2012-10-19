@@ -893,7 +893,7 @@ class NzbController extends Controller
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 */
-	public function actionCreateMovie()
+	public function actionCreateAutomatic()
 	{
 		$model=new Nzb;
 		$modelUpload=new Upload;
@@ -959,7 +959,7 @@ class NzbController extends Controller
 		
 		));
 		
-		$this->render('createMovie',array(
+		$this->render('createAutomatic',array(
 			'model'=>$model,
 			'modelUpload'=>$modelUpload,
 			'ddlRsrcType'=>$ddlRsrcType,
@@ -968,6 +968,78 @@ class NzbController extends Controller
 		));
 	}
 
+	
+	/**
+	* Creates a new model.
+	* If creation is successful, the browser will be redirected to the 'view' page.
+	*/
+	public function actionCreateManual()
+	{
+		$model=new Nzb;
+		$modelUpload=new Upload;
+		$modelMyMovieNzb = new MyMovieNzb();
+	
+		$ddlRsrcType = ResourceType::model()->findAll();
+	
+		if(isset($_POST['Nzb']))
+			$model->attributes = $_POST['Nzb'];
+	
+		if(isset($_POST['Upload']) && isset($_POST['MyMovieNzb']))
+		{
+			$modelUpload->attributes = $_POST['Upload'];
+			$modelMyMovieNzb->attributes = $_POST['MyMovieNzb'];
+			$modelMyMovieNzb->Id = uniqid();
+			
+			$file=CUploadedFile::getInstance($modelUpload,'file');
+	
+			if($modelUpload->validate() && $modelMyMovieNzb->validate())
+			{
+				$transaction = $model->dbConnection->beginTransaction();
+				try {
+					if($file != null)
+					{
+						$uniqueId = uniqid();
+						$fileName = $uniqueId . '.nzb';
+	
+						$model->url = '/nzb/'.$fileName;
+						$model->file_name = $fileName;
+	
+						$model->file_original_name = $file->getName();
+	
+						$this->saveFile($file, 'nzb', $fileName);
+					}
+					
+					if($modelMyMovieNzb->save())
+					{
+						$modelMyMovieDiscNzb = new MyMovieDiscNzb();
+						$modelMyMovieDiscNzb->Id = uniqid();
+						$modelMyMovieDiscNzb->name = $modelMyMovieNzb->local_title;
+						$modelMyMovieDiscNzb->Id_my_movie_nzb = $modelMyMovieNzb->Id;
+						if($modelMyMovieDiscNzb->save())
+							$model->Id_my_movie_disc_nzb = $modelMyMovieDiscNzb->Id;
+					}
+					
+	
+					if($model->save()){
+						$transaction->commit();
+						$this->redirect(array('findSubtitle','id'=>$model->Id));
+					}
+	
+				} catch (Exception $e) {
+					$transaction->rollback();
+				}
+			}
+		}
+	
+	
+		$this->render('createManual',array(
+				'model'=>$model,
+				'modelUpload'=>$modelUpload,
+				'ddlRsrcType'=>$ddlRsrcType,
+				'modelMyMovieNzb'=>$modelMyMovieNzb,
+		));
+	}
+	
 	public function actionAjaxGetMovieMoreInfo()
 	{
 		$idTitle = isset($_POST['titleId'])?$_POST['titleId']:null;
@@ -1110,7 +1182,7 @@ class NzbController extends Controller
 	{
 		$model=$this->loadModel($id);
 		$modelUpload=new Upload;
-		$modelMyMovieMovie = MyMovieMovie::model()->findByPk($model->Id_my_movie_movie);
+		$modelMyMovieNzb = MyMovieNzb::model()->findByPk($model->myMovieDiscNzb->Id_my_movie_nzb);
 		$ddlRsrcType = ResourceType::model()->findAll();
 		$hasChanged = false;
 
@@ -1128,18 +1200,18 @@ class NzbController extends Controller
 			$model->attributes = $_POST['Nzb'];
 		}
 
-		if(isset($_POST['MyMovieMovie']))
+		if(isset($_POST['MyMovieNzb']))
 		{
-			if($_POST['MyMovieMovie']['description'] != $modelMyMovieMovie->description )
+			if($_POST['MyMovieNzb']['description'] != $modelMyMovieNzb->description )
 				$hasChanged = true;
 		
-			if($_POST['MyMovieMovie']['genre'] != $modelMyMovieMovie->genre )
+			if($_POST['MyMovieNzb']['genre'] != $modelMyMovieNzb->genre )
 				$hasChanged = true;
 				
-			if($_POST['MyMovieMovie']['studio'] != $modelMyMovieMovie->studio )
+			if($_POST['MyMovieNzb']['studio'] != $modelMyMovieNzb->studio )
 				$hasChanged = true;
 			
-			$modelMyMovieMovie->attributes = $_POST['MyMovieMovie'];
+			$modelMyMovieNzb->attributes = $_POST['MyMovieNzb'];
 		}
 		
 		if(isset($_POST['Upload']))
@@ -1160,14 +1232,14 @@ class NzbController extends Controller
 					
 					$this->saveFile($file, 'nzb', $fileName);
 					
-					$modelMyMovieMovie->save();
+					$modelMyMovieNzb->save();
 					$this->saveUpdatedModel($model, $id);
 				}
 			}
 			else
 			{
 				if($hasChanged){
-					$modelMyMovieMovie->save();
+					$modelMyMovieNzb->save();
 					$this->saveUpdatedModel($model, $id);
 				}
 				else
@@ -1177,7 +1249,7 @@ class NzbController extends Controller
 		else
 		{
 			if($hasChanged){
-				$modelMyMovieMovie->save();
+				$modelMyMovieNzb->save();
 				$this->saveUpdatedModel($model, $id);
 			}
 		}
@@ -1185,7 +1257,7 @@ class NzbController extends Controller
 		$this->render('update',array(
 			'model'=>$model,
 			'modelUpload'=>$modelUpload,
-			'modelMyMovieMovie'=>$modelMyMovieMovie,
+			'modelMyMovieNzb'=>$modelMyMovieNzb,
 			'ddlRsrcType'=>$ddlRsrcType,
 		));
 	}
