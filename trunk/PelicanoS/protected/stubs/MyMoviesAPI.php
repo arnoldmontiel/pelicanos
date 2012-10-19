@@ -17,7 +17,7 @@ class MyMovieBase
 	}	
 }
 
-class LoadDiscTitleById extends MyMovieBase
+class LoadDiscTitleByIdRequest extends MyMovieBase
 {
 	public $Handshake; //string;
 	public $Reference; //string;
@@ -37,7 +37,7 @@ class LoadDiscTitleByIdResult
 	public $any; //string;
 }
 
-class SearchDiscTitleByTitle extends MyMovieBase
+class SearchDiscTitleByTitleRequest extends MyMovieBase
 {
 	public $Handshake; //string;
 	public $Reference; //string;
@@ -79,233 +79,44 @@ class MyMoviesAPI
 		$this->soapClient = new SoapClient($url,array("classmap"=>self::$classmap,"trace" => true,"exceptions" => false));
 	}
 	
-	function LoadDiscTitleById($titleId, $saveImage=false)
+	function LoadDiscTitleById($idTitle)
 	{
-		$movieResponse = null;
-		if(!empty($titleId))
-		{
-			$model = new LoadDiscTitleById();
-			
-			$model->TitleId = $titleId; //string;
-			$model->Locale = 0;
-				
-			$LoadDiscTitleByIdResponse = $this->soapClient->LoadDiscTitleById($model);
-				
-			if(isset($LoadDiscTitleByIdResponse))
-			{
-				$movieResponse = $this->getMovieResponse(simplexml_load_string($LoadDiscTitleByIdResponse->LoadDiscTitleByIdResult->any), $saveImage);
-			}
-		}
-		return $movieResponse;
-	}
-	
-	private function getMovieResponse($data, $saveImage)
-	{
-		$modelMyMovieMovie = null;
-		if(!empty($data) && (string)$data['status'] == 'ok')
-		{
-			if(!empty($data->Title))
-			{
-				$data = $data->Title;
-				$modelMyMovieMovie = new MyMovieMovie();
-				
-				$modelMyMovieMovie->Id = (string)$data->ID;
-				$modelMyMovieMovie->type = (string)$data->Type;
-				$modelMyMovieMovie->bar_code = (string)$data->Barcode;
-				$modelMyMovieMovie->country = (string)$data->Country;
-				$modelMyMovieMovie->video_standard = (string)$data->VideoStandard;
-				$modelMyMovieMovie->release_date = (string)$data->ReleaseDate;
-				$modelMyMovieMovie->local_title = (string)$data->LocalTitle;
-				$modelMyMovieMovie->original_title = (string)$data->OriginalTitle;
-				$modelMyMovieMovie->sort_title = (string)$data->SortTitle;
-				$modelMyMovieMovie->production_year = (string)$data->ProductionYear;
-				$modelMyMovieMovie->running_time = (string)$data->RunningTime;
-				$modelMyMovieMovie->description = (string)$data->Description;
-				$modelMyMovieMovie->extra_features = (string)$data->ExtraFeatures;
-				
-				$modelMyMovieMovie->parental_rating_desc = (!empty($data->ParentalRating)?(string)$data->ParentalRating->Description:"");
-				
-				$modelMyMovieMovie->Id_parental_control = $this->getParentalControlId($data);
-				
-				$modelMyMovieMovie->adult = $this->getAdult($data);
-				
-				$modelMyMovieMovie->imdb = (string)$data->IMDB;
-				$modelMyMovieMovie->rating = (string)$data->Rating;
-				$modelMyMovieMovie->rating_votes = (string)$data->RatingVotes;
-				
-				//Poster
-				$modelMyMovieMovie->poster_original = $this->getPoster($data->MovieData);
-				
-				if($saveImage)
-				{
-					$validator = new CUrlValidator();				
-					
-					if($modelMyMovieMovie->poster_original!='' && $validator->validateValue($modelMyMovieMovie->poster_original))
-					{
-						try {
-							$content = @file_get_contents($modelMyMovieMovie->poster_original);
-							if ($content !== false) {
-								$file = fopen("images/".$modelMyMovieMovie->Id.".jpg", 'w');
-								fwrite($file,$content);
-								fclose($file);
-								$modelMyMovieMovie->poster = $modelMyMovieMovie->Id.".jpg";
-							} else {
-								// an error happened
-							}
-						} catch (Exception $e) {
-							throw $e;
-							// an error happened
-						}
-					}
-					else
-					{
-						$modelMyMovieMovie->poster = 'no_poster.jpg';
-					}
-					
-					//Backdrop
-					$modelMyMovieMovie->backdrop_original = $this->getBackdrop($data->MovieData);
-					if($modelMyMovieMovie->backdrop_original!='' && $validator->validateValue($modelMyMovieMovie->backdrop_original))
-					{
-						try {
-							$content = @file_get_contents($modelMyMovieMovie->backdrop_original);
-							if ($content !== false) {
-								$file = fopen("images/".$modelMyMovieMovie->Id."_bd.jpg", 'w');
-								fwrite($file,$content);
-								fclose($file);
-								$modelMyMovieMovie->backdrop = $modelMyMovieMovie->Id."_bd.jpg";
-							} else {
-								// an error happened
-							}
-						} catch (Exception $e) {
-							throw $e;
-							// an error happened
-						}
-					}
-				}
-				//Obtengo la lista de los generos
-				$modelMyMovieMovie->genre = implode(", ",$this->xmlToArray($data->Genres));
-				
-				//Obtengo la lista de los estudios
-				$modelMyMovieMovie->studio =  implode(", ",$this->xmlToArray($data->Studios));
-			}
-		}
-		return $modelMyMovieMovie;
-	}
-	
-	function SearchDiscTitleByTitle($modelSearchDiscRequest)
-	{
-		$response = array();
-		if(isset($modelSearchDiscRequest) && !empty($modelSearchDiscRequest->Title))
-		{
-			$model = new SearchDiscTitleByTitle();
-			$model->Title = $modelSearchDiscRequest->Title;
-			$model->Results = 10;
-			$model->Strict = true;
-			$model->IncludeEnglish = true;
-			$model->IncludeAdult = true;
-			$model->Country = isset($modelSearchDiscRequest->Country)?$modelSearchDiscRequest->Country:'';			
-			$model->Locale = 0;
-			
-			$SearchDiscTitleByTitleResponse = $this->soapClient->SearchDiscTitleByTitle($model);
-			
-			if(isset($SearchDiscTitleByTitleResponse))
-			{
-				$response = $this->getTitlesResponse(simplexml_load_string($SearchDiscTitleByTitleResponse->SearchDiscTitleByTitleResult->any));
-			}
-		}
-		return $response;
-	}
-	
-	private function getTitlesResponse($data)
-	{
-		$titlesResponse = array();
-		if(!empty($data) && (string)$data['status'] == 'ok')
-		{
-			$titles = $this->toArray($data->Titles);
-			
-			foreach($titles['Title'] as $title)
-			{
-				$model = new SearchDiscResponse();
-				$model->setAttributes($this->toArray($title));
-				$titlesResponse[] = $model;
-			}
-		}
-		return $titlesResponse;
-	}
-	
-	public function toArray(SimpleXMLElement $xml) {
-		$array = (array)$xml;
-	
-		foreach ( array_slice($array, 0) as $key => $value ) {
-			if ( $value instanceof SimpleXMLElement ) {
-				$array[$key] = empty($value) ? NULL : $this->toArray($value);
-			}
-		}
-		return $array;
-	}
-	
-	private function xmlToArray($xml)
-	{
-		$xmlArr = array();
-		$index = 0;
-		foreach($xml->children() as $item)
-		{
-			$xmlArr[$index] = (string)$item;
-			$index ++;
-		}
-		return $xmlArr;
-	}
 
-	private function getBackdrop($xml)
-	{
-		if(!empty($xml->Backdrops))
-		{
-			foreach($xml->Backdrops->children() as $item)
-			{
-				return (string)$item['File720P'];
-			}
+		$modelRequest = new LoadDiscTitleByIdRequest();
 		
-		}
-		return "";
-	}
-	
-	private function getParentalControlId($xml)
-	{
-		if(!empty($xml->ParentalRating))
-		{
-			$model = ParentalControl::model()->findByAttributes(array('value'=>$xml->ParentalRating->Value));
+		$modelRequest->TitleId = $idTitle; //string;
+		$modelRequest->Locale = 0;
 			
-			if(isset($model))
-			{
-				return $model->Id;
-			}
-	
-		}
-		return 1;
+		$response = $this->soapClient->LoadDiscTitleById($modelRequest);
+			
+		if(isset($response))
+			return simplexml_load_string($response->LoadDiscTitleByIdResult->any);
+		
+		return null;
 	}
 	
-	private function getAdult($xml)
+	
+	function SearchDiscTitleByTitle($title = '', $country = '')
 	{
-		if(!empty($xml->ParentalRating))
-		{
-			if($xml->ParentalRating['Adult'] == 'True')
-				return 1;
-		}
-		return 0;
+
+		$modelRequest = new SearchDiscTitleByTitleRequest();
+		$modelRequest->Title = $title;
+		$modelRequest->Results = 10;
+		$modelRequest->Strict = true;
+		$modelRequest->IncludeEnglish = true;
+		$modelRequest->IncludeAdult = true;
+		$modelRequest->Country = $country;
+		$modelRequest->Locale = 0;
+		
+		$response = $this->soapClient->SearchDiscTitleByTitle($modelRequest);
+		
+		if(isset($response))
+			return simplexml_load_string($response->SearchDiscTitleByTitleResult->any);
+		
+		return null;
+	
 	}
 	
-	private function getPoster($xml)
-	{
-		if(!empty($xml->Posters))
-		{
-			foreach($xml->Posters->children() as $item)
-			{
-				return (string)$item['File'];
-			}
-	
-		}
-		return "";
-	}
 }
 
 

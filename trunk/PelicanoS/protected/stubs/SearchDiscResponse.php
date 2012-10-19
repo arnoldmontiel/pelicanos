@@ -26,10 +26,8 @@ class SearchDiscResponse
 	public function setAttributes($xml)
 	{
 		//set xml attributes
-		$attributesArray = $xml['@attributes'];
-		while (($value = current($attributesArray)) !== false) {
-			$this->setAttribute(key($attributesArray), $value);
-			next($attributesArray);
+		foreach($xml->attributes() as $key => $value) {
+			$this->setAttribute($key, $value);
 		}
 	
 	}
