@@ -57,7 +57,7 @@ class MyMovieDiscNzb extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'idMyMovieNzb' => array(self::BELONGS_TO, 'MyMovieNzb', 'Id_my_movie_nzb'),
+			'myMovieNzb' => array(self::BELONGS_TO, 'MyMovieNzb', 'Id_my_movie_nzb'),
 			'nzbs' => array(self::HAS_MANY, 'Nzb', 'Id_my_movie_disc_nzb'),
 		);
 	}
