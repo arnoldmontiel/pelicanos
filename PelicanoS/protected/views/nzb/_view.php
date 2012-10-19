@@ -2,13 +2,13 @@
 
 	<div class="left-movie-view" >
 	<?php
-		echo CHtml::link( CHtml::image("./images/".$data->myMovieMovie->poster,$data->myMovieMovie->original_title,array('id'=>'poster_img', 'style'=>'height: 200px;width: 125px;')
+		echo CHtml::link( CHtml::image("./images/".$data->myMovieDiscNzb->myMovieNzb->poster,$data->myMovieDiscNzb->myMovieNzb->original_title,array('id'=>'poster_img', 'style'=>'height: 200px;width: 125px;')
                             ),array('view', 'id'=>$data->Id));
 		?>
 	</div>
 	<div class="right-movie-view" >
 		<b><?php echo CHtml::encode($data->getAttributeLabel('Id Imdb')); ?>:</b>
-		<?php echo CHtml::link(CHtml::encode($data->myMovieMovie->imdb), array('view', 'id'=>$data->Id)); ?>
+		<?php echo CHtml::link(CHtml::encode($data->myMovieDiscNzb->myMovieNzb->imdb), array('view', 'id'=>$data->Id)); ?>
 		<br />
 	
 		<b><?php echo CHtml::encode($data->getAttributeLabel('file_name')); ?>:</b>
@@ -20,15 +20,15 @@
 		<br />
 	
 		<b><?php echo CHtml::encode($data->getAttributeLabel('original_title')); ?>:</b>
-		<?php echo CHtml::encode($data->myMovieMovie->original_title); ?>
+		<?php echo CHtml::encode($data->myMovieDiscNzb->myMovieNzb->original_title); ?>
 		<br />
 	
 		<b><?php echo CHtml::encode($data->getAttributeLabel('production_year')); ?>:</b>
-		<?php echo CHtml::encode($data->myMovieMovie->production_year); ?>
+		<?php echo CHtml::encode($data->myMovieDiscNzb->myMovieNzb->production_year); ?>
 		<br />
 		
 		<b><?php echo CHtml::encode($data->getAttributeLabel('genre')); ?>:</b>
-		<?php echo CHtml::encode($data->myMovieMovie->genre); ?>
+		<?php echo CHtml::encode($data->myMovieDiscNzb->myMovieNzb->genre); ?>
 		<br />
 		
 		<b><?php echo CHtml::encode($data->getAttributeLabel('Id_resource_type')); ?>:</b>
@@ -36,7 +36,7 @@
 		<br />
 		
 		<b><?php echo CHtml::encode($data->getAttributeLabel('rating')); ?>:</b>
-		<?php echo CHtml::encode($data->myMovieMovie->rating); ?>
+		<?php echo CHtml::encode($data->myMovieDiscNzb->myMovieNzb->rating); ?>
 		<br />
 		
 		<b><?php echo CHtml::encode($data->getAttributeLabel('Points')); ?>:</b>

@@ -13,7 +13,7 @@ $this->menu=array(
 
 <?php echo $this->renderPartial('_updateMovie', array('model'=>$model, 
 													'modelUpload'=>$modelUpload, 
-													'modelMyMovieMovie'=>$modelMyMovieMovie, 
+													'modelMyMovieNzb'=>$modelMyMovieNzb, 
 													'ddlRsrcType'=>$ddlRsrcType)); 
 ?>
  
