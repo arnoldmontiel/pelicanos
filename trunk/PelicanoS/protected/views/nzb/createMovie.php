@@ -7,13 +7,13 @@ $this->menu=array(
 );
 ?>
 
-<h1>Create Manual</h1>
+<h1>Create Movie</h1>
 
 <?php 
-echo $this->renderPartial('_formManual', array('model'=>$model,
+echo $this->renderPartial('_formMovie', array('model'=>$model,
 											'modelUpload'=>$modelUpload, 
+											'modelSearchDiscRequest'=>$modelSearchDiscRequest, 
 											'ddlRsrcType'=>$ddlRsrcType,
-											'modelMyMovieNzb'=>$modelMyMovieNzb,
+											'arrayDataProvider'=>$arrayDataProvider,
 									));
 ?>
-	

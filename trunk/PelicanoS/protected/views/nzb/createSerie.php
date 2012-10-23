@@ -7,13 +7,13 @@ $this->menu=array(
 );
 ?>
 
-<h1>Create Automatic</h1>
+<h1>Create Serie</h1>
 
 <?php 
-echo $this->renderPartial('_formAutomatic', array('model'=>$model,
+echo $this->renderPartial('_formSerie', array('model'=>$model,
 											'modelUpload'=>$modelUpload, 
-											'modelSearchDiscRequest'=>$modelSearchDiscRequest, 
 											'ddlRsrcType'=>$ddlRsrcType,
-											'arrayDataProvider'=>$arrayDataProvider,
+											'modelMyMovieSerieHeader'=>$modelMyMovieSerieHeader,
 									));
 ?>
+	
