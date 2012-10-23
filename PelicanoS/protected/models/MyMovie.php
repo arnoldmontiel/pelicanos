@@ -25,6 +25,18 @@
  * @property string $covers_changed
  * @property string $genre
  * @property string $studio
+ * @property string $poster_original
+ * @property string $poster
+ * @property string $backdrop_original
+ * @property string $backdrop
+ * @property integer $adult
+ * @property integer $Id_parental_control
+ * @property string $Id_my_movie_serie_header
+ *
+ * The followings are the available model relations:
+ * @property MyMovieSerieHeader $idMyMovieSerieHeader
+ * @property ParentalControl $idParentalControl
+ * @property MyMovieDisc[] $myMovieDiscs
  */
 class MyMovie extends CActiveRecord
 {
@@ -67,16 +79,17 @@ class MyMovie extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('Id', 'required'),
-			array('Id', 'length', 'max'=>200),
+			array('Id, Id_parental_control', 'required'),
+			array('adult, Id_parental_control', 'numerical', 'integerOnly'=>true),
+			array('Id, Id_my_movie_serie_header', 'length', 'max'=>200),
 			array('type, bar_code, country, aspect_ratio, video_standard, production_year, release_date, running_time, imdb', 'length', 'max'=>45),
 			array('local_title, original_title, sort_title, data_changed, covers_changed', 'length', 'max'=>100),
-			array('parental_rating_desc, genre, studio', 'length', 'max'=>255),
+			array('parental_rating_desc, genre, studio, poster_original, poster, backdrop_original, backdrop', 'length', 'max'=>255),
 			array('rating', 'length', 'max'=>10),
 			array('description, extra_features', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id, type, bar_code, country, local_title, original_title, sort_title, aspect_ratio, video_standard, production_year, release_date, running_time, description, extra_features, parental_rating_desc, imdb, rating, data_changed, covers_changed, genre, studio', 'safe', 'on'=>'search'),
+			array('Id, type, bar_code, country, local_title, original_title, sort_title, aspect_ratio, video_standard, production_year, release_date, running_time, description, extra_features, parental_rating_desc, imdb, rating, data_changed, covers_changed, genre, studio, poster_original, poster, backdrop_original, backdrop, adult, Id_parental_control, Id_my_movie_serie_header', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -88,6 +101,9 @@ class MyMovie extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'myMovieSerieHeader' => array(self::BELONGS_TO, 'MyMovieSerieHeader', 'Id_my_movie_serie_header'),
+			'parentalControl' => array(self::BELONGS_TO, 'ParentalControl', 'Id_parental_control'),
+			'myMovieDiscs' => array(self::HAS_MANY, 'MyMovieDisc', 'Id_my_movie'),
 		);
 	}
 
@@ -118,6 +134,13 @@ class MyMovie extends CActiveRecord
 			'covers_changed' => 'Covers Changed',
 			'genre' => 'Genre',
 			'studio' => 'Studio',
+			'poster_original' => 'Poster Original',
+			'poster' => 'Poster',
+			'backdrop_original' => 'Backdrop Original',
+			'backdrop' => 'Backdrop',
+			'adult' => 'Adult',
+			'Id_parental_control' => 'Id Parental Control',
+			'Id_my_movie_serie_header' => 'Id My Movie Serie Header',
 		);
 	}
 
@@ -153,6 +176,13 @@ class MyMovie extends CActiveRecord
 		$criteria->compare('covers_changed',$this->covers_changed,true);
 		$criteria->compare('genre',$this->genre,true);
 		$criteria->compare('studio',$this->studio,true);
+		$criteria->compare('poster_original',$this->poster_original,true);
+		$criteria->compare('poster',$this->poster,true);
+		$criteria->compare('backdrop_original',$this->backdrop_original,true);
+		$criteria->compare('backdrop',$this->backdrop,true);
+		$criteria->compare('adult',$this->adult);
+		$criteria->compare('Id_parental_control',$this->Id_parental_control);
+		$criteria->compare('Id_my_movie_serie_header',$this->Id_my_movie_serie_header,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

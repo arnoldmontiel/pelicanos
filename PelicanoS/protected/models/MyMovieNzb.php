@@ -32,9 +32,11 @@
  * @property string $aspect_ratio
  * @property string $data_changed
  * @property string $covers_changed
+ * @property string $Id_my_movie_serie_header
  *
  * The followings are the available model relations:
  * @property MyMovieDiscNzb[] $myMovieDiscNzbs
+ * @property MyMovieSerieHeader $idMyMovieSerieHeader
  * @property ParentalControl $idParentalControl
  */
 class MyMovieNzb extends CActiveRecord
@@ -67,7 +69,7 @@ class MyMovieNzb extends CActiveRecord
 		return array(
 			array('Id, Id_parental_control', 'required'),
 			array('Id_parental_control, adult', 'numerical', 'integerOnly'=>true),
-			array('Id', 'length', 'max'=>200),
+			array('Id, Id_my_movie_serie_header', 'length', 'max'=>200),
 			array('local_title, original_title, sort_title', 'length', 'max'=>100),
 			array('production_year, running_time, imdb, country, video_standard, release_date, bar_code, type, media_type, aspect_ratio, data_changed, covers_changed', 'length', 'max'=>45),
 			array('parental_rating_desc, genre, studio, poster_original, poster, backdrop_original, backdrop', 'length', 'max'=>255),
@@ -75,7 +77,7 @@ class MyMovieNzb extends CActiveRecord
 			array('description, extra_features', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id, Id_parental_control, local_title, original_title, sort_title, production_year, running_time, description, parental_rating_desc, imdb, rating, genre, studio, poster_original, poster, backdrop_original, backdrop, adult, extra_features, country, video_standard, release_date, bar_code, type, media_type, aspect_ratio, data_changed, covers_changed', 'safe', 'on'=>'search'),
+			array('Id, Id_parental_control, local_title, original_title, sort_title, production_year, running_time, description, parental_rating_desc, imdb, rating, genre, studio, poster_original, poster, backdrop_original, backdrop, adult, extra_features, country, video_standard, release_date, bar_code, type, media_type, aspect_ratio, data_changed, covers_changed, Id_my_movie_serie_header', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -88,7 +90,8 @@ class MyMovieNzb extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'myMovieDiscNzbs' => array(self::HAS_MANY, 'MyMovieDiscNzb', 'Id_my_movie_nzb'),
-			'idParentalControl' => array(self::BELONGS_TO, 'ParentalControl', 'Id_parental_control'),
+			'myMovieSerieHeader' => array(self::BELONGS_TO, 'MyMovieSerieHeader', 'Id_my_movie_serie_header'),
+			'parentalControl' => array(self::BELONGS_TO, 'ParentalControl', 'Id_parental_control'),
 		);
 	}
 
@@ -126,6 +129,7 @@ class MyMovieNzb extends CActiveRecord
 			'aspect_ratio' => 'Aspect Ratio',
 			'data_changed' => 'Data Changed',
 			'covers_changed' => 'Covers Changed',
+			'Id_my_movie_serie_header' => 'Id My Movie Serie Header',
 		);
 	}
 
@@ -168,6 +172,7 @@ class MyMovieNzb extends CActiveRecord
 		$criteria->compare('aspect_ratio',$this->aspect_ratio,true);
 		$criteria->compare('data_changed',$this->data_changed,true);
 		$criteria->compare('covers_changed',$this->covers_changed,true);
+		$criteria->compare('Id_my_movie_serie_header',$this->Id_my_movie_serie_header,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
