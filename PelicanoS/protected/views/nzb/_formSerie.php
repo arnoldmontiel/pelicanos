@@ -1,21 +1,8 @@
 <div class="form">
 <?php
-Yii::app()->clientScript->registerScript(__CLASS__.'#newMovie', "
-$('#btnSearch').click(function()
-{
-	$('#div-searchResult').animate({opacity: 'hide'},240);
-	$('#saveButton').attr('disabled','disabled');
-	$('#wating').dialog('open');
-	$.fn.yiiGridView.update('search-result-grid', {
-				data: $('#SearchDiscRequest_Title').serialize() + '&' + $('#SearchDiscRequest_Country').serialize()
-	});
-	
-	return false;
-});
-
-
+Yii::app()->clientScript->registerScript(__CLASS__.'#newSerie', "
 $('#Upload_file').change(function() {
-	if($('#hiddenTitleId').val() != '' && $(this).val() != '')
+	if($('#hiddenSerieId').val() != '' && $(this).val() != '')
   		$('#saveButton').removeAttr('disabled');
 });
 
@@ -55,7 +42,7 @@ $('#Nzb_points').keyup(function(){
 <?php echo CHtml::beginForm('','post',array
 		('enctype'=>'multipart/form-data'));
 
-	echo CHtml::hiddenField("hiddenTitleId",'',array('id'=>'hiddenTitleId'));
+	echo CHtml::hiddenField("hiddenSerieId",'',array('id'=>'hiddenSerieId'));
 ?>
 
 <div class="row"> 
@@ -88,6 +75,19 @@ $('#Nzb_points').keyup(function(){
 	'id'=>'my-movie-serie-header-grid',
 	'dataProvider'=>$modelMyMovieSerieHeader->search(),
 	'filter'=>$modelMyMovieSerieHeader,
+	'selectionChanged'=>'js:function(){
+							var idHeader = $.fn.yiiGridView.getSelection("my-movie-serie-header-grid")
+							if(idHeader!=""){
+								$("#hiddenSerieId").val(idHeader);
+								if($("#Upload_file").val() != "")
+									$("#saveButton").removeAttr("disabled");
+							}
+							else
+							{
+								$("#hiddenSerieId").val("");
+								$("#saveButton").attr("disabled","disabled");
+							}
+						}',
 	'columns'=>array(
 		'name',
 		'genre',
