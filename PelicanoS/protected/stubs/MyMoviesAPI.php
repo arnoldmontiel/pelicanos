@@ -17,6 +17,75 @@ class MyMovieBase
 	}	
 }
 
+class LoadDiscTitleByIMDBIdRequest extends MyMovieBase
+{
+	public $Handshake; //string;
+	public $Reference; //string;
+	public $IMDBId; //string;
+	public $Country; //string;
+	public $Type; //string;
+	public $IncludeEnglish; //string;
+	public $IncludeAdult; //string;
+	public $Client; //string;
+	public $Version; //string;
+	public $Locale; //int;
+}
+
+class LoadDiscTitleByIMDBIdResponse
+{
+	public $LoadDiscTitleByIMDBIdResult; //LoadDiscTitleByIMDBIdResult;
+}
+
+class LoadDiscTitleByIMDBIdResult
+{
+	public $any; //string;
+}
+
+class LoadSeriesRequest extends MyMovieBase
+{
+	public $Handshake; //string;
+	public $Reference; //string;
+	public $Id; //string;
+	public $LanguageCode; //string;
+	public $Country; //string;
+	public $Locale; //int;
+}
+
+class LoadSeriesResponse
+{
+	public $LoadSeriesResult; //LoadSeriesResult;
+}
+
+class LoadSeriesResult
+{
+	public $any; //string;
+}
+
+class LoadDiscTitleByTitleRequest extends MyMovieBase
+{
+	public $Handshake; //string;
+	public $Reference; //string;
+	public $Title; //string;
+	public $Country; //string;
+	public $Type; //string;
+	public $Strict; //string;
+	public $IncludeEnglish; //string;
+	public $IncludeAdult; //string;
+	public $Client; //string;
+	public $Version; //string;
+	public $Locale; //int;
+}
+
+class LoadDiscTitleByTitleResponse
+{
+	public $LoadDiscTitleByTitleResult; //LoadDiscTitleByTitleResult;
+}
+
+class LoadDiscTitleByTitleResult
+{
+	public $any; //string;
+}
+
 class LoadDiscTitleByIdRequest extends MyMovieBase
 {
 	public $Handshake; //string;
@@ -95,6 +164,62 @@ class MyMoviesAPI
 		return null;
 	}
 	
+	function LoadDiscTitleByIMDBId($idImdb = '', $country = '')
+	{
+		$modelRequest = new LoadDiscTitleByIMDBIdRequest();
+		
+		$modelRequest->IMDBId = $idImdb; //string;
+		$modelRequest->Country = $country; //string;
+		$modelRequest->Type = ''; //string;
+		$modelRequest->IncludeEnglish = true; //string;
+		$modelRequest->IncludeAdult = true; //string;
+		$modelRequest->Locale = 0;
+		
+		$response = $this->soapClient->LoadDiscTitleByIMDBId($modelRequest);
+			
+		if(isset($response))
+			return simplexml_load_string($response->LoadDiscTitleByIMDBIdResult->any);
+		
+		return null;
+	}
+	
+	function LoadDiscTitleByTitle($title = '', $country = '')
+	{
+	
+		$modelRequest = new LoadDiscTitleByIdRequest();
+	
+		$modelRequest->Title = $title; //string;
+		$modelRequest->Country = $country; //string;
+		$modelRequest->Type = ''; //string;
+		$modelRequest->Strict = true; //string;
+		$modelRequest->IncludeEnglish = true; //string;
+		$modelRequest->IncludeAdult = true; //string;
+		$modelRequest->Locale = 0;
+
+		$response = $this->soapClient->LoadDiscTitleByTitle($modelRequest);
+			
+		if(isset($response))
+			return simplexml_load_string($response->LoadDiscTitleByTitleResult->any);
+	
+		return null;
+	}
+	
+	function LoadSeries($idSerie, $country = '')
+	{
+		$modelRequest = new LoadSeriesRequest();
+		$modelRequest->Id = $idSerie;
+		$modelRequest->Locale = 0;
+	
+		$modelRequest->LanguageCode = '';
+		$modelRequest->Country = $country;
+	
+		$response = $this->soapClient->LoadSeries($modelRequest);
+	
+		if(isset($response))
+			return simplexml_load_string($response->LoadSeriesResult->any);
+			
+		return null;
+	}
 	
 	function SearchDiscTitleByTitle($title = '', $country = '')
 	{
