@@ -893,7 +893,7 @@ class NzbController extends Controller
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 */
-	public function actionCreateAutomatic()
+	public function actionCreateMovie()
 	{
 		$model=new Nzb;
 		$modelUpload=new Upload;
@@ -959,7 +959,7 @@ class NzbController extends Controller
 		
 		));
 		
-		$this->render('createAutomatic',array(
+		$this->render('createMovie',array(
 			'model'=>$model,
 			'modelUpload'=>$modelUpload,
 			'ddlRsrcType'=>$ddlRsrcType,
@@ -968,6 +968,93 @@ class NzbController extends Controller
 		));
 	}
 
+	public function actionCreateSerie()
+	{
+		$model=new Nzb;
+		$modelUpload=new Upload;
+		$modelMyMovieSerieHeader = new MyMovieSerieHeader('search');
+		$modelMyMovieSerieHeader->unsetAttributes();  // clear any default values
+		
+		if(isset($_GET['MyMovieSerieHeader']))
+			$modelMyMovieSerieHeader->attributes=$_GET['MyMovieSerieHeader'];
+		
+		$ddlRsrcType = ResourceType::model()->findAll();
+	
+		if(isset($_POST['Nzb']))
+			$model->attributes = $_POST['Nzb'];
+	
+		if(isset($_POST['Upload']) && isset($_POST['hiddenTitleId']))
+		{
+			$modelUpload->attributes=$_POST['Upload'];
+			$idTitle = $_POST['hiddenTitleId'];
+			$file=CUploadedFile::getInstance($modelUpload,'file');
+	
+			if($modelUpload->validate() && !empty($idTitle))
+			{
+				$transaction = $model->dbConnection->beginTransaction();
+				try {
+					if($file != null)
+					{
+						$uniqueId = uniqid();
+						$fileName = $uniqueId . '.nzb';
+	
+						$model->url = '/nzb/'.$fileName;
+						$model->file_name = $fileName;
+	
+						$model->file_original_name = $file->getName();
+	
+						$this->saveFile($file, 'nzb', $fileName);
+					}
+						
+					$model->Id_my_movie_disc_nzb = MyMovieHelper::saveMyMovieData($idTitle);
+	
+					if($model->save()){
+						$transaction->commit();
+						$this->redirect(array('findSubtitle','id'=>$model->Id));
+					}
+	
+				} catch (Exception $e) {
+					$transaction->rollback();
+				}
+			}
+		}
+	
+		$this->render('createSerie',array(
+				'model'=>$model,
+				'modelUpload'=>$modelUpload,
+				'ddlRsrcType'=>$ddlRsrcType,
+				'modelMyMovieSerieHeader'=>$modelMyMovieSerieHeader,
+		));
+	}
+	
+	public function actionAjaxSearchSerieHeader()
+	{
+		if(isset($_POST['SearchDiscRequest']))
+		{
+			if($_POST['rbnSearchField'] == 'title')
+				$model = MyMovieHelper::searchSerieByTitle($_POST['SearchDiscRequest']['Title'], $_POST['SearchDiscRequest']['Country']);
+			else
+				$model = MyMovieHelper::searchSerieByIMDBId($_POST['SearchDiscRequest']['Title'], $_POST['SearchDiscRequest']['Country']);
+			
+			if(isset($model))
+				echo json_encode($model->attributes);
+		}
+	}
+	
+	public function actionAjaxSaveSerieHeader()
+	{
+		$model = new MyMovieSerieHeader();
+		if(isset($_POST['MyMovieSerieHeader']))
+		{
+			$model->attributes = $_POST['MyMovieSerieHeader'];
+			
+			//si el id es null. El alta es manual
+			if(!isset($model->Id))
+				$model->Id = uniqid();
+			
+			$model->save();
+		}
+	}
 	
 	/**
 	* Creates a new model.
