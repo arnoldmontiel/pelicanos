@@ -1,6 +1,63 @@
 <?php
 class MyMovieHelper
 {
+	/*
+	 * Si encuentra algo en la api con ese titulo y es serie, devuelve el modelo
+	 * serie header, sino devuelve null
+	 */
+	static public function searchSerieByTitle($title, $country)
+	{
+	
+		$myMoviesAPI = new MyMoviesAPI();
+		$response = $myMoviesAPI->LoadDiscTitleByTitle($title, $country);
+	 
+		if(!empty($response) && (string)$response['status'] == 'ok')
+		{
+			
+			if(!empty($response->Title))
+				$data = $response->Title;
+			else
+				return null;
+			
+			$idSerie = !empty($data->TVSeriesID)?(string)$data->TVSeriesID:'';
+			
+			if(!empty($idSerie))
+			{
+				return self::getSerie($idSerie, $country);
+		
+			}
+		}
+		return null;
+	}
+	
+	/*
+	* Si encuentra algo en la api con ese idImdb y es serie, devuelve el modelo
+	* serie header, sino devuelve null
+	*/
+	static public function searchSerieByIMDBId($idImdb, $country)
+	{
+	
+		$myMoviesAPI = new MyMoviesAPI();
+		$response = $myMoviesAPI->LoadDiscTitleByIMDBId($idImdb, $country);
+	
+		if(!empty($response) && (string)$response['status'] == 'ok')
+		{
+				
+			if(!empty($response->Title))
+				$data = $response->Title;
+			else
+				return null;
+				
+			$idSerie = !empty($data->TVSeriesID)?(string)$data->TVSeriesID:'';
+				
+			if(!empty($idSerie))
+			{
+				return self::getSerie($idSerie, $country);
+			}
+		}
+		return null;
+	}
+	
 	static public function searchTitles($title, $country)
 	{
 		$titlesResponse = array();
@@ -121,6 +178,60 @@ class MyMovieHelper
 			
 	}
 
+	private function getSerie($idSerie, $country)
+	{
+		$myMoviesAPI = new MyMoviesAPI();
+		$response = $myMoviesAPI->LoadSeries($idSerie, $country);
+		
+		if(!empty($response) && (string)$response['status'] == 'ok')
+		{
+			if(!empty($response->Serie))
+				$data = $response->Serie;
+			else
+				return null;
+		
+			$description = (string)$data['Description'];
+			$name = (string)$data['EpisodeName'];
+		
+			$modelMyMovieSerieHeader = new MyMovieSerieHeader();
+			$modelMyMovieSerieHeader->Id = (string)$data['Id'];
+			$modelMyMovieSerieHeader->original_network = (string)$data['OriginalNetwork'];
+			$modelMyMovieSerieHeader->original_status = (string)$data['OriginalStatus'];
+			$modelMyMovieSerieHeader->rating = (string)$data['Rating'];
+			$modelMyMovieSerieHeader->description = (!empty($description)) ? $description :(string)$data->EnglishPart['Description'];
+			$modelMyMovieSerieHeader->name = (!empty($name)) ? $name : (string)$data->EnglishPart['Name'];
+			$modelMyMovieSerieHeader->sort_name = (string)$data->EnglishPart['SortName'];
+			$modelMyMovieSerieHeader->genre = self::getSerieGenre($data);
+		
+			//Poster
+			$modelMyMovieSerieHeader->poster_original = self::getPoster($data);
+		
+			return $modelMyMovieSerieHeader;
+		}
+		
+		return null;
+	}
+	
+	/*
+	* Obtiene la lista de generos de la serie
+	* @param xml $xml es la estructura que devuelve la API de MyMovies (LoadSeries->Serie)
+	*/
+	private function getSerieGenre($xml)
+	{
+		if(!empty($xml->Genres))
+		{
+			$xmlArr = array();
+			$index = 0;
+			foreach($xml->Genres->children() as $item)
+			{
+				$xmlArr[$index] = (string)$item['Name'];
+				$index ++;
+			}
+			if(count($xmlArr) > 0 )
+			return implode(',',$xmlArr);
+		}
+		return "";
+	}
 	
 	private function getParentalControlId($xml)
 	{
