@@ -983,13 +983,13 @@ class NzbController extends Controller
 		if(isset($_POST['Nzb']))
 			$model->attributes = $_POST['Nzb'];
 	
-		if(isset($_POST['Upload']) && isset($_POST['hiddenTitleId']))
+		if(isset($_POST['Upload']) && isset($_POST['hiddenSerieId']))
 		{
 			$modelUpload->attributes=$_POST['Upload'];
-			$idTitle = $_POST['hiddenTitleId'];
+			$idSerie = $_POST['hiddenSerieId'];
 			$file=CUploadedFile::getInstance($modelUpload,'file');
 	
-			if($modelUpload->validate() && !empty($idTitle))
+			if($modelUpload->validate() && !empty($idSerie))
 			{
 				$transaction = $model->dbConnection->beginTransaction();
 				try {
@@ -1006,7 +1006,7 @@ class NzbController extends Controller
 						$this->saveFile($file, 'nzb', $fileName);
 					}
 						
-					$model->Id_my_movie_disc_nzb = MyMovieHelper::saveMyMovieData($idTitle);
+					$model->Id_my_movie_disc_nzb = MyMovieHelper::saveMyMovieEmpty($idSerie);
 	
 					if($model->save()){
 						$transaction->commit();

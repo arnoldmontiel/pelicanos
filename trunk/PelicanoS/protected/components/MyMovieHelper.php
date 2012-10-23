@@ -1,6 +1,27 @@
 <?php
 class MyMovieHelper
 {
+	static public function saveMyMovieEmpty($idSerie)
+	{
+		if(!empty($idSerie))
+		{
+			$modelMyMovieNzb = new MyMovieNzb();
+			$modelMyMovieNzb->Id = uniqid();
+			$modelMyMovieNzb->Id_my_movie_serie_header = $idSerie;
+			$modelMyMovieNzb->Id_parental_control = 1;
+			if($modelMyMovieNzb->save())
+			{
+				$model = new MyMovieDiscNzb();
+				$model->Id_my_movie_nzb = $modelMyMovieNzb->Id;
+				$model->Id = uniqid();
+				if($model->save())
+					return $model->Id; 
+			}
+		}
+		
+		return null;	
+	}
+	
 	/*
 	 * Si encuentra algo en la api con ese titulo y es serie, devuelve el modelo
 	 * serie header, sino devuelve null
