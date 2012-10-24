@@ -17,6 +17,28 @@ class MyMovieBase
 	}	
 }
 
+class LoadEpisodeBySeriesIDRequest extends MyMovieBase
+{
+	public $Handshake; //string;
+	public $Reference; //string;
+	public $SerieGuid; //string;
+	public $Seasonnumber; //integer;
+	public $Episodenumber; //integer;
+	public $LanguageCode; //string;
+	public $Country; //string;
+	public $Locale; //int;
+}
+
+class LoadEpisodeBySeriesIDResponse
+{
+	public $LoadEpisodeBySeriesIDResult; //LoadEpisodeBySeriesIDResult;
+}
+
+class LoadEpisodeBySeriesIDResult
+{
+	public $any; //string;
+}
+
 class LoadSeasonBannersRequest extends MyMovieBase
 {
 	public $Handshake; //string;
@@ -281,6 +303,28 @@ class MyMoviesAPI
 	
 	}
 	
+	function LoadEpisodeBySeriesID($idSerie = '', $seasonNumber, $episodeNumber, $country = '')
+	{
+	
+		if(isset($seasonNumber) && $seasonNumber >0 && isset($episodeNumber) && $episodeNumber >0)
+		{
+			$modelRequest = new LoadEpisodeBySeriesIDRequest();
+			$modelRequest->SerieGuid = $idSerie;; //string;
+			$modelRequest->Seasonnumber = $seasonNumber; //integer;
+			$modelRequest->Episodenumber = $episodeNumber; //integer;
+			$modelRequest->Country = $country; //integer;
+			$modelRequest->LanguageCode = '';
+			$modelRequest->Locale = 0;
+				
+			$response = $this->soapClient->LoadEpisodeBySeriesID($modelRequest);
+				
+			if(isset($response))
+				return simplexml_load_string($response->LoadEpisodeBySeriesIDResult->any);
+		}
+	
+		return null;
+	
+	}
 }
 
 
