@@ -17,6 +17,25 @@ class MyMovieBase
 	}	
 }
 
+class LoadSeasonBannersRequest extends MyMovieBase
+{
+	public $Handshake; //string;
+	public $Reference; //string;
+	public $Id; //string;
+	public $Seasonnumber; //integer;
+	public $Locale; //int;
+}
+
+class LoadSeasonBannersResponse
+{
+	public $LoadSeasonBannersResult; //LoadSeasonBannersResult;
+}
+
+class LoadSeasonBannersResult
+{
+	public $any; //string;
+}
+
 class LoadDiscTitleByIMDBIdRequest extends MyMovieBase
 {
 	public $Handshake; //string;
@@ -148,7 +167,7 @@ class MyMoviesAPI
 		$this->soapClient = new SoapClient($url,array("classmap"=>self::$classmap,"trace" => true,"exceptions" => false));
 	}
 	
-	function LoadDiscTitleById($idTitle)
+	function LoadDiscTitleById($idTitle = '')
 	{
 
 		$modelRequest = new LoadDiscTitleByIdRequest();
@@ -238,6 +257,26 @@ class MyMoviesAPI
 		if(isset($response))
 			return simplexml_load_string($response->SearchDiscTitleByTitleResult->any);
 		
+		return null;
+	
+	}
+	
+	function LoadSeasonBanners($id = '', $seasonNumber)
+	{
+	
+		if(isset($seasonNumber) && $seasonNumber >0)
+		{
+			$modelRequest = new LoadSeasonBannersRequest();
+			$modelRequest->Id = $id;; //string;
+			$modelRequest->Seasonnumber = $seasonNumber; //integer;
+			$modelRequest->Locale = 0;
+			
+			$response = $this->soapClient->LoadSeasonBanners($modelRequest);
+			
+			if(isset($response))
+				return simplexml_load_string($response->LoadSeasonBannersResult->any);
+		}
+	
 		return null;
 	
 	}

@@ -1,9 +1,7 @@
 <?php
-class SearchDiscRequest extends CFormModel
+class MyMovieAPIRequest extends CFormModel
 {
 	
-	public $Handshake; //string;
-	public $Reference; //string;
 	public $Title; //string;
 	public $Country; //string;
 	public $Type; //string;
@@ -11,7 +9,8 @@ class SearchDiscRequest extends CFormModel
 	public $Strict; //boolean;
 	public $IncludeEnglish; //boolean;
 	public $IncludeAdult; //boolean;
-	public $Locale; //int;
+	public $Id; //string;
+	public $Seasonnumber; //int;
 	
 	public function setAttributes($array)
 	{
