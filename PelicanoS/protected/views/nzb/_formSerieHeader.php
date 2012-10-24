@@ -14,10 +14,10 @@
                 					'separator'=>' '
                 					));
         	?>
-        	<?php echo CHtml::activeTextField($modelSearchDiscRequest,'Title',array('maxlength'=>255)); ?>
+        	<?php echo CHtml::activeTextField($modelMyMovieAPIRequest,'Title',array('maxlength'=>255)); ?>
 		</div>
 		<div style="width:50%;display: inline-block;">
-			<?php echo CHtml::activeLabelEx($modelSearchDiscRequest,'Country'); ?>
+			<?php echo CHtml::activeLabelEx($modelMyMovieAPIRequest,'Country'); ?>
 			<?php 
 				$country = array('Argentina'=>'Argentina',
 								'France'=>'France',
@@ -28,15 +28,16 @@
 								'United Kingdom'=>'United Kingdom',
 								'United States'=>'United States',);
 				
-				echo CHtml::activeDropDownList($modelSearchDiscRequest, 'Country', $country, array('prompt'=>'Select..')); ?>
+				echo CHtml::activeDropDownList($modelMyMovieAPIRequest, 'Country', $country, array('prompt'=>'Select..')); ?>
 		</div>
 	</div>	
-
+	<div id="div-error" class="messageError" style="display:none;width:100%">
 	<?php echo $form->errorSummary($model); ?>
 
     <div class="row">
         <?php echo $form->labelEx($model,'description'); ?>
         <?php echo $form->textArea($model,'description',array('rows'=>6, 'cols'=>50)); ?>
+        <?php echo $form->textArea($model,'Id',array('style'=>'display:none')); ?>
         <?php echo $form->error($model,'description'); ?>
     </div>
 
@@ -45,6 +46,7 @@
         <?php echo $form->textField($model,'poster_original',array('size'=>60,'maxlength'=>255)); ?>
         <?php echo $form->error($model,'poster_original'); ?>
     </div>
+	<?php echo CHtml::image( "", "",array('id'=>'serie_poster_img', 'style'=>'height: 320px;width: 220px;')); ?>
 
     <div class="row">
         <?php echo $form->labelEx($model,'genre'); ?>

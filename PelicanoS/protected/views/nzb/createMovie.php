@@ -12,7 +12,7 @@ $this->menu=array(
 <?php 
 echo $this->renderPartial('_formMovie', array('model'=>$model,
 											'modelUpload'=>$modelUpload, 
-											'modelSearchDiscRequest'=>$modelSearchDiscRequest, 
+											'modelMyMovieAPIRequest'=>$modelMyMovieAPIRequest, 
 											'ddlRsrcType'=>$ddlRsrcType,
 											'arrayDataProvider'=>$arrayDataProvider,
 									));

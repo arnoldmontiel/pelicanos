@@ -104,7 +104,7 @@ $('#Nzb_points').keyup(function(){
 		<div class="row buttons">
 			<?php 			
 									
-				echo CHtml::submitButton($model->isNewRecord ? 'Create and find Subtitle' : 'Save', array('id'=>'saveButton','disabled'=>'disabled'));
+				echo CHtml::submitButton('Next', array('id'=>'saveButton','disabled'=>'disabled'));
 				echo CHtml::submitButton('Cancel', array('id'=>'cancelButton'));
 			?>		
 		</div>
@@ -158,6 +158,7 @@ $this->widget('ext.processingDialog.processingDialog', array(
 										$("#MyMovieSerieHeader_rating").val(null);
 										$("#MyMovieSerieHeader_original_network").val(null);
 										$("#MyMovieSerieHeader_original_status").val(null);
+										$("#serie_poster_img").attr("src", "");
 										jQuery("#newSerie").dialog( "close" );
 							}',
 							'Buscar'=>'js:function()
@@ -176,6 +177,7 @@ $this->widget('ext.processingDialog.processingDialog', array(
 										$("#MyMovieSerieHeader_rating").val(data.rating);
 										$("#MyMovieSerieHeader_original_network").val(data.original_network);
 										$("#MyMovieSerieHeader_original_status").val(data.original_status);
+										$("#serie_poster_img").attr("src", data.poster_original);
 									}
 									else
 									{
@@ -188,6 +190,7 @@ $this->widget('ext.processingDialog.processingDialog', array(
 										$("#MyMovieSerieHeader_rating").val(null);
 										$("#MyMovieSerieHeader_original_network").val(null);
 										$("#MyMovieSerieHeader_original_status").val(null);
+										$("#serie_poster_img").attr("src", "");
 									}
 								jQuery("#waiting").dialog("close");
 								},"json"
@@ -199,9 +202,9 @@ $this->widget('ext.processingDialog.processingDialog', array(
 	));
 	
 	$modelNewSerie = new MyMovieSerieHeader();
-	$modelSearchDiscRequest = new SearchDiscRequest();
+	$modelMyMovieAPIRequest = new MyMovieAPIRequest();
 	echo $this->renderPartial('_formSerieHeader', array('model'=>$modelNewSerie,
-														'modelSearchDiscRequest'=>$modelSearchDiscRequest,
+														'modelMyMovieAPIRequest'=>$modelMyMovieAPIRequest,
 													));
 	
 	$this->endWidget('zii.widgets.jui.CJuiDialog');
