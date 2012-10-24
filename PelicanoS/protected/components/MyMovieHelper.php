@@ -23,6 +23,41 @@ class MyMovieHelper
 	}
 	
 	/*
+	* Si encuentra algo en la api con ese id de serie y ese numero de
+	* temporada, devuelve el modelo
+	* season, sino devuelve null
+	*/
+	static public function searchSeasonBanner($id, $seasonNumber)
+	{
+	
+		$myMoviesAPI = new MyMoviesAPI();
+		$response = $myMoviesAPI->LoadSeasonBanners($id, $seasonNumber);
+	
+		if(!empty($response) && (string)$response['status'] == 'ok')
+		{
+			if(!empty($response->Banners))
+				$data = $response->Banners;
+			else
+				return null;
+			
+			foreach($data->children() as $item)
+			{
+				if((string)$item['Number'] == "1")
+				{
+					$modelMyMovieSeason = new MyMovieSeason;
+					$modelMyMovieSeason->Id_my_movie_serie_header =  $id;
+					$modelMyMovieSeason->season_number = (string)$item['SeasonNumber'];
+			
+					//banner
+					$modelMyMovieSeason->banner_original = (string)$item['File'];
+					return $modelMyMovieSeason;
+				}
+			}
+		}
+		return null;
+	}
+	
+	/*
 	 * Si encuentra algo en la api con ese titulo y es serie, devuelve el modelo
 	 * serie header, sino devuelve null
 	 */
@@ -317,7 +352,7 @@ class MyMovieHelper
 		return $xmlArr;
 	}
 	
-	private function getImage($original, $newFileName)
+	static public function getImage($original, $newFileName)
 	{
 		$validator = new CUrlValidator();
 		$imagesPath = './images';
