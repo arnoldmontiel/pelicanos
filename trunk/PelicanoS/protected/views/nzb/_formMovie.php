@@ -7,7 +7,7 @@ $('#btnSearch').click(function()
 	$('#saveButton').attr('disabled','disabled');
 	$('#wating').dialog('open');
 	$.fn.yiiGridView.update('search-result-grid', {
-				data: $('#SearchDiscRequest_Title').serialize() + '&' + $('#SearchDiscRequest_Country').serialize()
+				data: $('#MyMovieAPIRequest_Title').serialize() + '&' + $('#MyMovieAPIRequest_Country').serialize()
 	});
 	
 	return false;
@@ -86,11 +86,11 @@ $('#Nzb_points').keyup(function(){
 <div id="search-movie-data">
 	<div class="search-movie-data-fields">	
 		<div style="width:40%;display: inline-block;">
-			<?php echo CHtml::activeLabelEx($modelSearchDiscRequest,'Title'); ?>
-			<?php echo CHtml::activeTextField($modelSearchDiscRequest,'Title',array('size'=>35,'maxlength'=>255)); ?>
+			<?php echo CHtml::activeLabelEx($modelMyMovieAPIRequest,'Title'); ?>
+			<?php echo CHtml::activeTextField($modelMyMovieAPIRequest,'Title',array('size'=>35,'maxlength'=>255)); ?>
 		</div>
 		<div style="width:20%;display: inline-block;">
-			<?php echo CHtml::activeLabelEx($modelSearchDiscRequest,'Country'); ?>
+			<?php echo CHtml::activeLabelEx($modelMyMovieAPIRequest,'Country'); ?>
 			<?php 
 				$country = array('Argentina'=>'Argentina',
 								'France'=>'France',
@@ -101,7 +101,7 @@ $('#Nzb_points').keyup(function(){
 								'United Kingdom'=>'United Kingdom',
 								'United States'=>'United States',);
 				
-				echo CHtml::activeDropDownList($modelSearchDiscRequest, 'Country', $country, array('prompt'=>'Select..')); ?>
+				echo CHtml::activeDropDownList($modelMyMovieAPIRequest, 'Country', $country, array('prompt'=>'Select..')); ?>
 		</div>
 		<div style="width:20%;display: inline-block;">
 			<?php echo CHtml::button('Search', array('id'=>'btnSearch'));?>
