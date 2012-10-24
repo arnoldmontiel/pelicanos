@@ -1053,6 +1053,33 @@ class NzbController extends Controller
 		));
 	}
 	
+	public function actionCreateEpisode($id, $idSeason)
+	{
+		$model = Nzb::model()->findByPk($id);
+		
+		$modelMyMovieEpisode = new MyMovieEpisode('search');
+		$modelMyMovieEpisode->Id_my_movie_season = $idSeason;
+		$modelMyMovieEpisode->unsetAttributes();  // clear any default values
+	
+		if(isset($_GET['MyMovieEpisode']))
+			$modelMyMovieEpisode->attributes=$_GET['MyMovieEpisode'];
+	
+		if(isset($_POST['hiddenSeasonId']))
+		{
+			$idSeason = $_POST['hiddenSeasonId'];
+	
+			if(!empty($idSeason))
+			{
+				$this->redirect(array('createEpisode','id'=>$model->Id, 'idSeason'=>$idSeason));
+			}
+		}
+	
+		$this->render('createEpisode',array(
+						'model'=>$model,
+						'modelMyMovieEpisode'=>$modelMyMovieEpisode,
+		));
+	}
+	
 	public function actionAjaxSearchSeason()
 	{
 		if(isset($_POST['MyMovieAPIRequest']))
@@ -1079,7 +1106,7 @@ class NzbController extends Controller
 			if(!isset($modelMyMovieSeasonDB))
 			{
 				$newFileName = $model->Id_my_movie_serie_header .'_'.$model->season_number;
-				MyMovieHelper::getImage($model->banner_original, $newFileName);
+				$model->banner = MyMovieHelper::getImage($model->banner_original, $newFileName);
 				
 				$model->save();
 			}
@@ -1115,7 +1142,7 @@ class NzbController extends Controller
 			
 			if(!isset($modelMyMovieSerieDB))
 			{
-				MyMovieHelper::getImage($model->poster_original, $model->Id);
+				$model->poster = MyMovieHelper::getImage($model->poster_original, $model->Id);
 				$model->save();
 			}
 		}
