@@ -748,87 +748,6 @@ class NzbController extends Controller
 		$this->render('create');
 	}
 
-	public function actionCreateEpisode()
-	{
-		$model=new Nzb;
-		$modelUpload=new Upload;
-		$modelImdb = new ImdbdataTv;
-		$ddlRsrcType = ResourceType::model()->findAll();
-		$ddlTvShow = ImdbdataTv::model()->findAllByAttributes(array('Id_parent'=>null));
-		$ddlSeason = Season::model()->findAllByAttributes(array('Id_imdbdata_tv'=>$ddlTvShow[0]->ID));
-		$index = 1;
-		$ddlEpisode = array();
-		while ($index <= $ddlSeason[0]->episodes) {
-			$item['episode'] = $index;
-			$ddlEpisode[$index] = $item;
-			$index = $index + 1;
-		}
-
-		if(isset($_POST['Nzb']))
-			$model->attributes = $_POST['Nzb'];
-
-		if(isset($_POST['Upload']) && isset($_POST['ImdbdataTv']))
-		{
-			$modelUpload->attributes=$_POST['Upload'];
-			$modelImdb->attributes=$_POST['ImdbdataTv'];
-			$file=CUploadedFile::getInstance($modelUpload,'file');
-
-			if($modelUpload->validate() && $model->validate())
-			{
-				$transaction = $model->dbConnection->beginTransaction();
-				try {
-					if($file != null)
-					{	
-						$uniqueId = uniqid();
-						$fileName = $uniqueId . '.nzb';
-						
-						$model->url = '/nzb/'.$fileName;
-						$model->file_name = $fileName;
-						
-						$model->file_original_name = $file->getName();
-						
-						$this->saveFile($file, 'nzb', $fileName);
-					}
-
-
-					$validator = new CUrlValidator();
-					if($modelImdb->Poster!='' && $validator->validateValue($modelImdb->Poster))
-					{
-						$content = file_get_contents($modelImdb->Poster);
-						if ($content !== false) {
-							$file = fopen("./images/".$modelImdb->ID.".jpg", 'w');
-							fwrite($file,$content);
-							fclose($file);
-							$modelImdb->Poster_local = $modelImdb->ID.".jpg";
-						} else {
-							// an error happened
-						}
-					}
-					$modelImdb->save();
-					$model->Id_imdbdata_tv = $modelImdb->ID;
-
-					if($model->save()){
-						$transaction->commit();
-						//$this->redirect(array('view','id'=>$model->Id));
-						$this->redirect(array('findSubtitle','id'=>$model->Id));
-					}
-
-				} catch (Exception $e) {
-					$transaction->rollback();
-				}
-			}
-		}
-
-		$this->render('createEpisode',array(
-					'model'=>$model,
-					'modelUpload'=>$modelUpload,
-					'modelImdb'=>$modelImdb,
-					'ddlRsrcType'=>$ddlRsrcType,
-					'ddlTvShow'=>$ddlTvShow,
-					'ddlSeason'=>$ddlSeason,
-					'ddlEpisode'=>$ddlEpisode,
-		));
-	}
 
 	public function actionAjaxPublishNzb()
 	{
@@ -975,6 +894,7 @@ class NzbController extends Controller
 		$modelMyMovieSerieHeader = new MyMovieSerieHeader('search');
 		$modelMyMovieSerieHeader->unsetAttributes();  // clear any default values
 		
+		
 		if(isset($_GET['MyMovieSerieHeader']))
 			$modelMyMovieSerieHeader->attributes=$_GET['MyMovieSerieHeader'];
 		
@@ -1031,8 +951,9 @@ class NzbController extends Controller
 	{
 		$model = Nzb::model()->findByPk($id);
 		$modelMyMovieSeason = new MyMovieSeason('search');
-		$modelMyMovieSeason->Id_my_movie_serie_header = $model->myMovieDiscNzb->myMovieNzb->Id_my_movie_serie_header;
 		$modelMyMovieSeason->unsetAttributes();  // clear any default values
+		$modelMyMovieSeason->Id_my_movie_serie_header = $model->myMovieDiscNzb->myMovieNzb->Id_my_movie_serie_header;
+		
 	
 		if(isset($_GET['MyMovieSeason']))
 			$modelMyMovieSeason->attributes=$_GET['MyMovieSeason'];
@@ -1064,15 +985,15 @@ class NzbController extends Controller
 		if(isset($_GET['MyMovieEpisode']))
 			$modelMyMovieEpisode->attributes=$_GET['MyMovieEpisode'];
 	
-		if(isset($_POST['hiddenSeasonId']))
-		{
-			$idSeason = $_POST['hiddenSeasonId'];
+// 		if(isset($_POST['hiddenSeasonId']))
+// 		{
+// 			$idSeason = $_POST['hiddenSeasonId'];
 	
-			if(!empty($idSeason))
-			{
-				$this->redirect(array('createEpisode','id'=>$model->Id, 'idSeason'=>$idSeason));
-			}
-		}
+// 			if(!empty($idSeason))
+// 			{
+// 				$this->redirect(array('createEpisode','id'=>$model->Id, 'idSeason'=>$idSeason));
+// 			}
+// 		}
 	
 		$this->render('createEpisode',array(
 						'model'=>$model,
