@@ -31,7 +31,6 @@
 				echo CHtml::activeDropDownList($modelMyMovieAPIRequest, 'Country', $country, array('prompt'=>'Select..')); ?>
 		</div>
 	</div>	
-	<div id="div-error" class="messageError" style="display:none;width:100%">
 	<?php echo $form->errorSummary($model); ?>
 
     <div class="row">
