@@ -897,7 +897,7 @@ class NzbController extends Controller
 	{
 		$model=new Nzb;
 		$modelUpload=new Upload;
-		$modelSearchDiscRequest = new SearchDiscRequest;
+		$modelMyMovieAPIRequest = new MyMovieAPIRequest;
 		
 		$ddlRsrcType = ResourceType::model()->findAll();
 
@@ -942,10 +942,10 @@ class NzbController extends Controller
 
 		$rawData = array();
 		
-		if(isset($_GET['SearchDiscRequest']))
+		if(isset($_GET['MyMovieAPIRequest']))
 		{
-			$modelSearchDiscRequest->setAttributes($_GET['SearchDiscRequest']);
-			$rawData = MyMovieHelper::searchTitles($modelSearchDiscRequest->Title, $modelSearchDiscRequest->Country);
+			$modelMyMovieAPIRequest->setAttributes($_GET['MyMovieAPIRequest']);
+			$rawData = MyMovieHelper::searchTitles($modelMyMovieAPIRequest->Title, $modelMyMovieAPIRequest->Country);
 		}
 		
 		
@@ -964,7 +964,7 @@ class NzbController extends Controller
 			'modelUpload'=>$modelUpload,
 			'ddlRsrcType'=>$ddlRsrcType,
 			'arrayDataProvider'=>$arrayDataProvider,
-			'modelSearchDiscRequest'=>$modelSearchDiscRequest,
+			'modelMyMovieAPIRequest'=>$modelMyMovieAPIRequest,
 		));
 	}
 
@@ -1010,7 +1010,7 @@ class NzbController extends Controller
 	
 					if($model->save()){
 						$transaction->commit();
-						$this->redirect(array('findSubtitle','id'=>$model->Id));
+						$this->redirect(array('createSeason','id'=>$model->Id));
 					}
 	
 				} catch (Exception $e) {
@@ -1027,14 +1027,73 @@ class NzbController extends Controller
 		));
 	}
 	
+	public function actionCreateSeason($id)
+	{
+		$model = Nzb::model()->findByPk($id);
+		$modelMyMovieSeason = new MyMovieSeason('search');
+		$modelMyMovieSeason->Id_my_movie_serie_header = $model->myMovieDiscNzb->myMovieNzb->Id_my_movie_serie_header;
+		$modelMyMovieSeason->unsetAttributes();  // clear any default values
+	
+		if(isset($_GET['MyMovieSeason']))
+			$modelMyMovieSeason->attributes=$_GET['MyMovieSeason'];
+	
+		if(isset($_POST['hiddenSeasonId']))
+		{
+			$idSeason = $_POST['hiddenSeasonId'];
+	
+			if(!empty($idSeason))
+			{
+				$this->redirect(array('createEpisode','id'=>$model->Id, 'idSeason'=>$idSeason));
+			}
+		}
+	
+		$this->render('createSeason',array(
+					'model'=>$model,
+					'modelMyMovieSeason'=>$modelMyMovieSeason,
+		));
+	}
+	
+	public function actionAjaxSearchSeason()
+	{
+		if(isset($_POST['MyMovieAPIRequest']))
+		{
+			$model = MyMovieHelper::searchSeasonBanner($_POST['MyMovieAPIRequest']['Id'], $_POST['MyMovieAPIRequest']['Seasonnumber']);
+				
+			if(isset($model))
+				echo json_encode($model->attributes);
+		}
+	}
+	
+	public function actionAjaxSaveSeason()
+	{
+		$model = new MyMovieSeason();
+		if(isset($_POST['MyMovieSeason']))
+		{
+			$model->attributes = $_POST['MyMovieSeason'];
+			
+			$modelMyMovieSeasonDB = MyMovieSeason::model()->findByAttributes(array(
+													'Id_my_movie_serie_header'=>$model->Id_my_movie_serie_header,
+													'season_number'=>$model->season_number,
+			));
+			
+			if(!isset($modelMyMovieSeasonDB))
+			{
+				$newFileName = $model->Id_my_movie_serie_header .'_'.$model->season_number;
+				MyMovieHelper::getImage($model->banner_original, $newFileName);
+				
+				$model->save();
+			}
+		}
+	}
+	
 	public function actionAjaxSearchSerieHeader()
 	{
-		if(isset($_POST['SearchDiscRequest']))
+		if(isset($_POST['MyMovieAPIRequest']))
 		{
 			if($_POST['rbnSearchField'] == 'title')
-				$model = MyMovieHelper::searchSerieByTitle($_POST['SearchDiscRequest']['Title'], $_POST['SearchDiscRequest']['Country']);
+				$model = MyMovieHelper::searchSerieByTitle($_POST['MyMovieAPIRequest']['Title'], $_POST['MyMovieAPIRequest']['Country']);
 			else
-				$model = MyMovieHelper::searchSerieByIMDBId($_POST['SearchDiscRequest']['Title'], $_POST['SearchDiscRequest']['Country']);
+				$model = MyMovieHelper::searchSerieByIMDBId($_POST['MyMovieAPIRequest']['Title'], $_POST['MyMovieAPIRequest']['Country']);
 			
 			if(isset($model))
 				echo json_encode($model->attributes);
@@ -1052,7 +1111,13 @@ class NzbController extends Controller
 			if(!isset($model->Id))
 				$model->Id = uniqid();
 			
-			$model->save();
+			$modelMyMovieSerieDB = MyMovieSerieHeader::model()->findByPk($model->Id);
+			
+			if(!isset($modelMyMovieSerieDB))
+			{
+				MyMovieHelper::getImage($model->poster_original, $model->Id);
+				$model->save();
+			}
 		}
 	}
 	
