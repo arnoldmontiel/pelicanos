@@ -7,7 +7,7 @@ $this->menu=array(
 );
 ?>
 
-<h1>Create Serie</h1>
+<h1>Create Episode</h1>
 
 <?php 
 echo $this->renderPartial('_selectEpisode', array('model'=>$model,

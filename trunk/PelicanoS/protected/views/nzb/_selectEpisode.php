@@ -46,7 +46,7 @@ $(document).keypress(function(e) {
 			),
 			array('label'=>$model->getAttributeLabel('Season'),
 				'type'=>'raw',
-				'value'=>$model->myMovieDiscNzb->myMovieNzb->myMovieSerieHeader->name, 
+				'value'=>$modelMyMovieEpisode->myMovieSeason->season_number, 
 			),
 			array('label'=>'Original Status',
 				'type'=>'raw',
@@ -87,7 +87,9 @@ $(document).keypress(function(e) {
 							}
 						}',
 	'columns'=>array(
-		'season_number',
+		'name',
+		'episode_number',
+		'description',
 	),
 )); ?>
 </div>
@@ -148,21 +150,21 @@ $this->widget('ext.processingDialog.processingDialog', array(
 							'Buscar'=>'js:function()
 								{
 								jQuery("#waiting").dialog("open");
-								jQuery.post("'.Yii::app()->createUrl("nzb/ajaxSearchSeason").'", $("#season-form").serialize(),
+								jQuery.post("'.Yii::app()->createUrl("nzb/ajaxSearchEpisode").'", $("#episode-form").serialize(),
 								function(data) {
 									if(data!=null)
 									{
-										$("#MyMovieSeason_Id").val(data.Id);
-										$("#MyMovieSeason_season_number").val(data.season_number);
-										$("#MyMovieSeason_banner_original").val(data.banner_original);
-										$("#season_banner_img").attr("src", data.banner_original);
+										$("#MyMovieEpisode_Id").val(data.Id);
+										$("#MyMovieEpisode_name").val(data.name);
+										$("#MyMovieEpisode_description").val(data.description);
+										$("#MyMovieEpisode_episode_number").val(data.episode_number);
 									}
 									else
 									{
-										$("#MyMovieSeason_Id").val(null);
-										$("#MyMovieSeason_season_number").val(null);
-										$("#MyMovieSeason_banner_original").val(null);
-										$("#season_banner_img").attr("src", "");
+										$("#MyMovieEpisode_Id").val(null);
+										$("#MyMovieEpisode_name").val(null);
+										$("#MyMovieEpisode_description").val(null);
+										$("#MyMovieEpisode_episode_number").val(null);
 									}
 								jQuery("#waiting").dialog("close");
 								},"json"
