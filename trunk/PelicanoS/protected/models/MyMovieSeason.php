@@ -42,7 +42,7 @@ class MyMovieSeason extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('Id_my_movie_serie_header', 'required'),
+			array('Id_my_movie_serie_header, season_number', 'required'),
 			array('season_number', 'numerical', 'integerOnly'=>true),
 			array('Id_my_movie_serie_header', 'length', 'max'=>200),
 			array('banner, banner_original', 'length', 'max'=>255),
