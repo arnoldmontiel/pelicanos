@@ -979,8 +979,9 @@ class NzbController extends Controller
 		$model = Nzb::model()->findByPk($id);
 		
 		$modelMyMovieEpisode = new MyMovieEpisode('search');
-		$modelMyMovieEpisode->Id_my_movie_season = $idSeason;
 		$modelMyMovieEpisode->unsetAttributes();  // clear any default values
+		
+		$modelMyMovieEpisode->Id_my_movie_season = $idSeason;
 	
 		if(isset($_GET['MyMovieEpisode']))
 			$modelMyMovieEpisode->attributes=$_GET['MyMovieEpisode'];
@@ -999,6 +1000,21 @@ class NzbController extends Controller
 						'model'=>$model,
 						'modelMyMovieEpisode'=>$modelMyMovieEpisode,
 		));
+	}
+	
+	public function actionAjaxSearchEpisode()
+	{
+		if(isset($_POST['MyMovieAPIRequest']))
+		{
+			$model = MyMovieHelper::searchEpisode( $_POST['MyMovieAPIRequest']['SerieGuid'], 
+														$_POST['MyMovieAPIRequest']['Seasonnumber'],
+														$_POST['MyMovieAPIRequest']['Episodenumber'],
+														$_POST['MyMovieAPIRequest']['Country']
+													);
+	
+			if(isset($model))
+				echo json_encode($model->attributes);
+		}
 	}
 	
 	public function actionAjaxSearchSeason()
