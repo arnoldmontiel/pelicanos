@@ -11,6 +11,8 @@ class MyMovieAPIRequest extends CFormModel
 	public $IncludeAdult; //boolean;
 	public $Id; //string;
 	public $Seasonnumber; //int;
+	public $SerieGuid; //string;
+	public $Episodenumber; //integer;
 	
 	public function setAttributes($array)
 	{
