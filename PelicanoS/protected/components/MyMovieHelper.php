@@ -23,6 +23,36 @@ class MyMovieHelper
 	}
 	
 	/*
+	* Si encuentra algo en la api con ese con parametros de entrada, 
+	* devuelve el modelo
+	* season, sino devuelve null
+	*/
+	static public function searchEpisode($idSerie, $seasonNumber, $episodeNumber, $country)
+	{
+	
+		$myMoviesAPI = new MyMoviesAPI();
+		$response = $myMoviesAPI->LoadEpisodeBySeriesID($idSerie, $seasonNumber, $episodeNumber, $country);
+	
+		if(!empty($response) && (string)$response['status'] == 'ok')
+		{
+			if(!empty($response->Episode))
+				$data = $response->Episode;
+			else
+				return null;
+			
+			$description = (string)$data['Description'];
+			$name = (string)$data['EpisodeName'];
+			
+			$modelMyMovieEpisode = new MyMovieEpisode;
+			$modelMyMovieEpisode->description = (!empty($description)) ? $description :(string)$data->EnglishPart['Description'];
+			$modelMyMovieEpisode->name = (!empty($name)) ? $name : (string)$data->EnglishPart['Name'];
+			$modelMyMovieEpisode->episode_number = (string)$data['EpisodeNumber'];
+			return $modelMyMovieEpisode;
+		}
+		return null;
+	}
+	
+	/*
 	* Si encuentra algo en la api con ese id de serie y ese numero de
 	* temporada, devuelve el modelo
 	* season, sino devuelve null
