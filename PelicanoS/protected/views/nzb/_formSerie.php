@@ -67,6 +67,9 @@ $('#Nzb_points').keyup(function(){
 <div class="gridTitle-decoration1">
 	<div class="gridTitle1">
 		Serie Data
+		<div style="display: inline-block;">
+			<?php echo CHtml::link( 'Add new Serie','#',array('onclick'=>'jQuery("#newSerie").dialog("open"); return false;'));?>
+		</div>
 	</div>
 </div>
 
@@ -75,6 +78,7 @@ $('#Nzb_points').keyup(function(){
 	'id'=>'my-movie-serie-header-grid',
 	'dataProvider'=>$modelMyMovieSerieHeader->search(),
 	'filter'=>$modelMyMovieSerieHeader,
+	'summaryText'=>'',
 	'selectionChanged'=>'js:function(){
 							var idHeader = $.fn.yiiGridView.getSelection("my-movie-serie-header-grid")
 							if(idHeader!=""){
@@ -97,9 +101,6 @@ $('#Nzb_points').keyup(function(){
 )); ?>
 </div>
 
-<div style="display: inline-block;">
-	<?php echo CHtml::link( 'Add new Serie','#',array('onclick'=>'jQuery("#newSerie").dialog("open"); return false;'));?>
-</div>
 	<div class="left">
 		<div class="row buttons">
 			<?php 			

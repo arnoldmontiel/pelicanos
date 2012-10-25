@@ -2,8 +2,9 @@
 <?php
 Yii::app()->clientScript->registerScript(__CLASS__.'#newEpisode', "
 
-$('#saveButton').click(function(){
-	$('#wating').dialog('open');
+$('#finishButton').click(function(){
+	window.location = '".NzbController::createUrl('view',array('id'=>$model->Id))."';
+	return false;
 });
 
 $('#cancelButton').click(function(){
@@ -11,23 +12,6 @@ $('#cancelButton').click(function(){
 	return false;
 });
 
-$(document).keypress(function(e) {
-    if(e.keyCode == 13) 
-    {
-    	if($('*:focus').attr('id') == 'Imdbdata_Title' && $('*:focus').val() != '')
-    	{
-    		$('#Imdbdata_Title').change();
-    		return false;
-    	}
-    	
-    	if($('*:focus').attr('id') == 'Imdbdata_ID' && $('*:focus').val() != '')
-    	{
-    		$('#Imdbdata_ID').change();
-    		return false;
-    	}
-		return false; 
-    }
-  });
  
 ");
 ?>
@@ -52,20 +36,16 @@ $(document).keypress(function(e) {
 				'type'=>'raw',
 				'value'=>$model->myMovieDiscNzb->myMovieNzb->myMovieSerieHeader->original_status,
 			),
-			array('label'=>'Rating',
-				'type'=>'raw',
-				'value'=>$model->myMovieDiscNzb->myMovieNzb->myMovieSerieHeader->rating,
-			),
-			'file_original_name',
-			'subt_file_name',
-			'subt_original_name'
 		),
 	)); ?>
 <br>	
 	
 <div class="gridTitle-decoration1">
 	<div class="gridTitle1">
-		Season Data
+		Episode Data
+		<div style="display: inline-block;">
+			<?php echo CHtml::link( 'Add new Episode','#',array('onclick'=>'jQuery("#newEpisode").dialog("open"); return false;'));?>
+		</div>
 	</div>
 </div>
 
@@ -74,18 +54,22 @@ $(document).keypress(function(e) {
 	'id'=>'my-movie-episode-grid',
 	'dataProvider'=>$modelMyMovieEpisode->search(),
 	'filter'=>$modelMyMovieEpisode,
-	'selectionChanged'=>'js:function(){
-							var idEpisode = $.fn.yiiGridView.getSelection("my-episode-grid")
-							if(idSeason!=""){
-								$("#hiddenSeasonId").val(idSeason);
-								$("#saveButton").removeAttr("disabled");
-							}
-							else
+	'summaryText'=>'',
+	'selectionChanged'=>'js:function(){							
+						$.get(	"'.NzbController::createUrl('AjaxAddDiscEpisode').'",
+						{
+							idEpisode:$.fn.yiiGridView.getSelection("my-movie-episode-grid"),
+							idDisc: "'.$model->Id_my_movie_disc_nzb.'"
+						}).success(
+							function() 
 							{
-								$("#hiddenSeasonId").val("");
-								$("#saveButton").attr("disabled","disabled");
+								$.fn.yiiGridView.update("disc-episodes-grid", {
+									data: $(this).serialize()
+								});
+								unselectRow("my-movie-episode-grid");		
 							}
-						}',
+						);
+				}',
 	'columns'=>array(
 		'name',
 		'episode_number',
@@ -94,14 +78,41 @@ $(document).keypress(function(e) {
 )); ?>
 </div>
 
-<div style="display: inline-block;">
-	<?php echo CHtml::link( 'Add new Episode','#',array('onclick'=>'jQuery("#newEpisode").dialog("open"); return false;'));?>
-</div>
+<div class="gridTitle-decoration1">
+		<div class="gridTitle1">
+		Disc Episode
+		</div>
+	</div>
+		<?php 				
+		$this->widget('zii.widgets.grid.CGridView', array(
+			'id'=>'disc-episodes-grid',
+			'dataProvider'=>$modelDiscEpisodes->search(),
+			'filter'=>$modelDiscEpisodes,
+			'summaryText'=>'',
+			'columns'=>array(	
+					'Id_my_movie_episode',
+			array(
+				'class'=>'CButtonColumn',
+				'template'=>'{delete}',
+				'buttons'=>array
+					(
+				        'delete' => array
+						(
+				            'url'=>'Yii::app()->createUrl("nzb/AjaxRemoveDiscEpisode", array("idEpisode"=>$data->Id_my_movie_episode,"idDisc"=>$data->Id_my_movie_disc_nzb))',
+						),
+					),
+				),
+		
+			),			
+			));		
+		?>
+	
+	</div>
 	<div class="left">
 		<div class="row buttons">
 			<?php 			
 									
-				echo CHtml::submitButton('Next', array('id'=>'saveButton','disabled'=>'disabled'));
+				echo CHtml::submitButton('Finish', array('id'=>'finishButton'));
 				echo CHtml::submitButton('Cancel', array('id'=>'cancelButton'));
 			?>		
 		</div>
@@ -128,23 +139,21 @@ $this->widget('ext.processingDialog.processingDialog', array(
 					'buttons'=>	array(
 							'Guardar'=>'js:function(){							
 									jQuery("#waiting").dialog("open");
-									jQuery.post("'.Yii::app()->createUrl("nzb/ajaxSaveSeason").'", $("#season-form").serialize(),
+									jQuery.post("'.Yii::app()->createUrl("nzb/ajaxSaveEpisode").'", $("#episode-form").serialize(),
 									function(data) {
-										$.fn.yiiGridView.update("my-movie-season-grid");										
+										$.fn.yiiGridView.update("my-movie-episode-grid");										
 										jQuery("#waiting").dialog("close");
-										$("#MyMovieSeason_Id").val(null);
-										$("#MyMovieSeason_season_number").val(null);
-										$("#MyMovieSeason_banner_original").val(null);
-										$("#season_banner_img").attr("src", "");
+										$("#MyMovieEpisode_name").val(null);
+										$("#MyMovieEpisode_description").val(null);
+										$("#MyMovieEpisode_episode_number").val(null);
 										jQuery("#newEpisode").dialog( "close" );
 									},"json"
 								);
 							}',
 							'Cancelar'=>'js:function(){
-										$("#MyMovieSeason_Id").val(null);
-										$("#MyMovieSeason_season_number").val(null);
-										$("#MyMovieSeason_banner_original").val(null);
-										$("#season_banner_img").attr("src", "");
+										$("#MyMovieEpisode_name").val(null);
+										$("#MyMovieEpisode_description").val(null);
+										$("#MyMovieEpisode_episode_number").val(null);
 										jQuery("#newEpisode").dialog( "close" );
 							}',
 							'Buscar'=>'js:function()
@@ -154,14 +163,12 @@ $this->widget('ext.processingDialog.processingDialog', array(
 								function(data) {
 									if(data!=null)
 									{
-										$("#MyMovieEpisode_Id").val(data.Id);
 										$("#MyMovieEpisode_name").val(data.name);
 										$("#MyMovieEpisode_description").val(data.description);
 										$("#MyMovieEpisode_episode_number").val(data.episode_number);
 									}
 									else
 									{
-										$("#MyMovieEpisode_Id").val(null);
 										$("#MyMovieEpisode_name").val(null);
 										$("#MyMovieEpisode_description").val(null);
 										$("#MyMovieEpisode_episode_number").val(null);

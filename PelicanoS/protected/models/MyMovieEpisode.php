@@ -43,7 +43,7 @@ class MyMovieEpisode extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('Id_my_movie_season', 'required'),
+			array('Id_my_movie_season, episode_number, name', 'required'),
 			array('Id_my_movie_season, episode_number', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>255),
 			array('description', 'safe'),

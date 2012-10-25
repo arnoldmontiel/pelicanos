@@ -65,6 +65,9 @@ $('#Nzb_points').keyup(function(){
 <div class="gridTitle-decoration1">
 	<div class="gridTitle1">
 		Season Data
+		<div style="display: inline-block;">
+			<?php echo CHtml::link( 'Add new Season','#',array('onclick'=>'jQuery("#newSeason").dialog("open"); return false;'));?>
+		</div>
 	</div>
 </div>
 
@@ -73,6 +76,7 @@ $('#Nzb_points').keyup(function(){
 	'id'=>'my-movie-season-grid',
 	'dataProvider'=>$modelMyMovieSeason->search(),
 	'filter'=>$modelMyMovieSeason,
+	'summaryText'=>'',
 	'selectionChanged'=>'js:function(){
 							var idSeason = $.fn.yiiGridView.getSelection("my-movie-season-grid")
 							if(idSeason!=""){
@@ -91,9 +95,6 @@ $('#Nzb_points').keyup(function(){
 )); ?>
 </div>
 
-<div style="display: inline-block;">
-	<?php echo CHtml::link( 'Add new Season','#',array('onclick'=>'jQuery("#newSeason").dialog("open"); return false;'));?>
-</div>
 	<div class="left">
 		<div class="row buttons">
 			<?php 			
@@ -129,7 +130,6 @@ $this->widget('ext.processingDialog.processingDialog', array(
 									function(data) {
 										$.fn.yiiGridView.update("my-movie-season-grid");										
 										jQuery("#waiting").dialog("close");
-										$("#MyMovieSeason_Id").val(null);
 										$("#MyMovieSeason_season_number").val(null);
 										$("#MyMovieSeason_banner_original").val(null);
 										$("#season_banner_img").attr("src", "");
@@ -138,7 +138,6 @@ $this->widget('ext.processingDialog.processingDialog', array(
 								);
 							}',
 							'Cancelar'=>'js:function(){
-										$("#MyMovieSeason_Id").val(null);
 										$("#MyMovieSeason_season_number").val(null);
 										$("#MyMovieSeason_banner_original").val(null);
 										$("#season_banner_img").attr("src", "");
@@ -151,14 +150,12 @@ $this->widget('ext.processingDialog.processingDialog', array(
 								function(data) {
 									if(data!=null)
 									{
-										$("#MyMovieSeason_Id").val(data.Id);
 										$("#MyMovieSeason_season_number").val(data.season_number);
 										$("#MyMovieSeason_banner_original").val(data.banner_original);
 										$("#season_banner_img").attr("src", data.banner_original);
 									}
 									else
 									{
-										$("#MyMovieSeason_Id").val(null);
 										$("#MyMovieSeason_season_number").val(null);
 										$("#MyMovieSeason_banner_original").val(null);
 										$("#season_banner_img").attr("src", "");
