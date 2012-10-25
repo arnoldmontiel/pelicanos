@@ -90,7 +90,14 @@ $('#cancelButton').click(function(){
 			'filter'=>$modelDiscEpisodes,
 			'summaryText'=>'',
 			'columns'=>array(	
-					'Id_my_movie_episode',
+						array(
+				 			'name'=>'episode_number',
+							'value'=>'$data->myMovieEpisode->episode_number',
+						),
+						array(
+				 			'name'=>'episode_name',
+							'value'=>'$data->myMovieEpisode->name',
+						),
 			array(
 				'class'=>'CButtonColumn',
 				'template'=>'{delete}',
