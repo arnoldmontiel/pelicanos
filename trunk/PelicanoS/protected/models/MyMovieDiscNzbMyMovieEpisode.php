@@ -9,6 +9,8 @@
  */
 class MyMovieDiscNzbMyMovieEpisode extends CActiveRecord
 {
+	public $episode_number;
+	public $episode_name;
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -40,7 +42,7 @@ class MyMovieDiscNzbMyMovieEpisode extends CActiveRecord
 			array('Id_my_movie_disc_nzb', 'length', 'max'=>200),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id_my_movie_disc_nzb, Id_my_movie_episode', 'safe', 'on'=>'search'),
+			array('Id_my_movie_disc_nzb, Id_my_movie_episode, episode_number, episode_name', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -65,6 +67,9 @@ class MyMovieDiscNzbMyMovieEpisode extends CActiveRecord
 		return array(
 			'Id_my_movie_disc_nzb' => 'Id My Movie Disc Nzb',
 			'Id_my_movie_episode' => 'Id My Movie Episode',
+			'episode_number'=>'Number', 
+			'episode_name'=>'Name',
+		
 		);
 	}
 
@@ -82,8 +87,26 @@ class MyMovieDiscNzbMyMovieEpisode extends CActiveRecord
 		$criteria->compare('Id_my_movie_disc_nzb',$this->Id_my_movie_disc_nzb,true);
 		$criteria->compare('Id_my_movie_episode',$this->Id_my_movie_episode);
 
+		$criteria->with[]='myMovieEpisode';
+		$criteria->addSearchCondition("myMovieEpisode.episode_number",$this->episode_number);
+		$criteria->addSearchCondition("myMovieEpisode.name",$this->episode_name);
+		
+		$sort=new CSort;
+		$sort->attributes=array(
+				    'episode_number' => array(
+					        'asc' => 'myMovieEpisode.episode_number',
+					        'desc' => 'myMovieEpisode.episode_number DESC',
+					),
+					'episode_name' => array(
+							'asc' => 'myMovieEpisode.name',
+							'desc' => 'myMovieEpisode.name DESC',
+					),
+				'*',
+		);
+		
 		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
+											'criteria'=>$criteria,
+											'sort'=>$sort,
 		));
 	}
 }
