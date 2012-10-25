@@ -12,6 +12,7 @@ $this->menu=array(
 <?php 
 echo $this->renderPartial('_selectEpisode', array('model'=>$model,
 											'modelMyMovieEpisode'=>$modelMyMovieEpisode,
+											'modelDiscEpisodes'=>$modelDiscEpisodes,
 									));
 ?>
 	

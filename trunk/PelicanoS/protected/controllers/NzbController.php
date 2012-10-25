@@ -978,6 +978,10 @@ class NzbController extends Controller
 	{
 		$model = Nzb::model()->findByPk($id);
 		
+		$modelDiscEpisodes = new MyMovieDiscNzbMyMovieEpisode('search');
+		$modelDiscEpisodes->unsetAttributes();  // clear any default values
+		$modelDiscEpisodes->Id_my_movie_disc_nzb = $model->Id_my_movie_disc_nzb;
+		
 		$modelMyMovieEpisode = new MyMovieEpisode('search');
 		$modelMyMovieEpisode->unsetAttributes();  // clear any default values
 		
@@ -985,6 +989,9 @@ class NzbController extends Controller
 	
 		if(isset($_GET['MyMovieEpisode']))
 			$modelMyMovieEpisode->attributes=$_GET['MyMovieEpisode'];
+		
+		if(isset($_GET['MyMovieDiscNzbMyMovieEpisode']))
+			$modelDiscEpisodes->attributes=$_GET['MyMovieDiscNzbMyMovieEpisode'];
 	
 // 		if(isset($_POST['hiddenSeasonId']))
 // 		{
@@ -999,6 +1006,7 @@ class NzbController extends Controller
 		$this->render('createEpisode',array(
 						'model'=>$model,
 						'modelMyMovieEpisode'=>$modelMyMovieEpisode,
+						'modelDiscEpisodes'=>$modelDiscEpisodes,
 		));
 	}
 	
@@ -1014,6 +1022,25 @@ class NzbController extends Controller
 	
 			if(isset($model))
 				echo json_encode($model->attributes);
+		}
+	}
+	
+	public function actionAjaxSaveEpisode()
+	{
+		$model = new MyMovieEpisode();
+		if(isset($_POST['MyMovieEpisode']))
+		{
+			$model->attributes = $_POST['MyMovieEpisode'];
+				
+			$modelMyMovieEpisodeDB = MyMovieEpisode::model()->findByAttributes(array(
+											'Id_my_movie_season'=>$model->Id_my_movie_season,
+											'episode_number'=>$model->episode_number,
+			));
+				
+			if(!isset($modelMyMovieEpisodeDB))
+			{
+				$model->save();
+			}
 		}
 	}
 	
@@ -1081,6 +1108,38 @@ class NzbController extends Controller
 			{
 				$model->poster = MyMovieHelper::getImage($model->poster_original, $model->Id);
 				$model->save();
+			}
+		}
+	}
+	
+	public function actionAjaxAddDiscEpisode()
+	{
+		$idEpisode = isset($_GET['idEpisode'][0])?$_GET['idEpisode'][0]:'';
+		$idDisc = isset($_GET['idDisc'])?$_GET['idDisc']:'';
+			
+		if(!empty($idEpisode)&&!empty($idDisc))
+		{
+			$relationDB = MyMovieDiscNzbMyMovieEpisode::model()->findByPk(array('Id_my_movie_episode'=>(int) $idEpisode,'Id_my_movie_disc_nzb'=>$idDisc));
+			if(!isset($relationDB))
+			{
+				$model=new MyMovieDiscNzbMyMovieEpisode();
+				$model->attributes = array('Id_my_movie_episode'=>$idEpisode,'Id_my_movie_disc_nzb'=>$idDisc);
+				$model->save();
+			}
+		}
+	}
+	
+	public function actionAjaxRemoveDiscEpisode()
+	{
+		$idEpisode = isset($_GET['idEpisode'])?$_GET['idEpisode']:'';
+		$idDisc = isset($_GET['idDisc'])?$_GET['idDisc']:'';
+			
+		if(!empty($idEpisode)&&!empty($idDisc))
+		{
+			$relationDB = MyMovieDiscNzbMyMovieEpisode::model()->findByPk(array('Id_my_movie_episode'=>(int) $idEpisode,'Id_my_movie_disc_nzb'=>$idDisc));
+			if(isset($relationDB))
+			{
+				$relationDB->delete();
 			}
 		}
 	}
