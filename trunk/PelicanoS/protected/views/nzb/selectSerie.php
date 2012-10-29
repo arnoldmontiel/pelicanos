@@ -7,12 +7,11 @@ $this->menu=array(
 );
 ?>
 
-<h1>Create Episode</h1>
+<h1>Select Serie</h1>
 
 <?php 
-echo $this->renderPartial('_selectEpisode', array('model'=>$model,
-											'modelMyMovieEpisode'=>$modelMyMovieEpisode,
-											'modelDiscEpisodes'=>$modelDiscEpisodes,
+echo $this->renderPartial('_selectSerie', array('model'=>$model,
+											'modelMyMovieSerieHeader'=>$modelMyMovieSerieHeader,
 									));
 ?>
 	

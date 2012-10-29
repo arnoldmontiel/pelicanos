@@ -20,7 +20,7 @@ $this->menu=array(
 	<div style="width:40%;float:right; display: inline-block;">
 		<?php
 			echo CHtml::link( CHtml::image("./images/tv.png","Serie",array('id'=>'tv_img', 'style'=>'width: 128px;')),
-				array('createSerie'), array('title'=>"Serie"));
+				array('createBox'), array('title'=>"Serie"));
 		?>
 	</div>
 </div>
