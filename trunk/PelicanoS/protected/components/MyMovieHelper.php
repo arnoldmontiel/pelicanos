@@ -1,22 +1,15 @@
 <?php
 class MyMovieHelper
 {
-	static public function saveMyMovieEmpty($idSerie)
+	static public function createDisc($idMyMovieNzb)
 	{
-		if(!empty($idSerie))
-		{
-			$modelMyMovieNzb = new MyMovieNzb();
-			$modelMyMovieNzb->Id = uniqid();
-			$modelMyMovieNzb->Id_my_movie_serie_header = $idSerie;
-			$modelMyMovieNzb->Id_parental_control = 1;
-			if($modelMyMovieNzb->save())
-			{
-				$model = new MyMovieDiscNzb();
-				$model->Id_my_movie_nzb = $modelMyMovieNzb->Id;
-				$model->Id = uniqid();
-				if($model->save())
-					return $model->Id; 
-			}
+		if(!empty($idMyMovieNzb))
+		{	
+			$model = new MyMovieDiscNzb();
+			$model->Id_my_movie_nzb = $idMyMovieNzb;
+			$model->Id = uniqid();
+			if($model->save())
+				return $model->Id; 
 		}
 		
 		return null;	
