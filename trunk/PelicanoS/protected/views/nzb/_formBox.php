@@ -30,6 +30,12 @@
         <?php echo $form->error($model,'production_year'); ?>
     </div>
 
+	<div class="row">
+        <?php echo $form->labelEx($model,'description'); ?>
+        <?php echo $form->textArea($model,'description',array('size'=>60,'maxlength'=>255)); ?>
+        <?php echo $form->error($model,'description'); ?>
+    </div>
+    
 	<div id="resourceType" style="margin-bottom: 5px">
 		<?php	$parentalControl = CHtml::listData($ddlParentalControl, 'Id', 'description');?>
 		<?php echo CHtml::activeLabelEx($model,'Id_parental_control'); ?>

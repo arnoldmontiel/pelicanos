@@ -77,6 +77,7 @@ $('#Nzb_points').keyup(function(){
 	'columns'=>array(
 		'original_title',
 		'type',
+		'description',
 		'production_year',
 		'studio',
 	),
@@ -118,6 +119,7 @@ $this->widget('ext.processingDialog.processingDialog', array(
 									function(data) {
 										$.fn.yiiGridView.update("my-movie-nzb-grid");										
 										jQuery("#waiting").dialog("close");
+										$("#MyMovieNzb_description").val(null);
 										$("#MyMovieNzb_original_title").val(null);										
 										$("#MyMovieNzb_type").val(null);										
 										$("#MyMovieNzb_production_year").val(null);										
@@ -128,7 +130,8 @@ $this->widget('ext.processingDialog.processingDialog', array(
 									},"json"
 								);
 							}',
-							'Cancelar'=>'js:function(){																				
+							'Cancelar'=>'js:function(){								
+										$("#MyMovieNzb_description").val(null);												
 										$("#MyMovieNzb_original_title").val(null);										
 										$("#MyMovieNzb_type").val(null);										
 										$("#MyMovieNzb_production_year").val(null);										
