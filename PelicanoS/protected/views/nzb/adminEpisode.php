@@ -3,83 +3,49 @@ $this->menu=array(
 	array('label'=>'List Nzb Movies', 'url'=>array('index')),
 	array('label'=>'List Nzb Episodes', 'url'=>array('indexEpisode')),
 	array('label'=>'Create Nzb', 'url'=>array('create')),
-	array('label'=>'Manage Nzb Movies', 'url'=>array('admin')),
+	array('label'=>'Manage Nzb Episodes', 'url'=>array('adminEpisode')),
 );
 
 ?>
 
-<h1>Manage Nzbs Episodes</h1>
+<h1>Manage Episode</h1>
 
 
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'nzb-grid',
-	'dataProvider'=>$model->searchNzbEpisodes(),
+	'dataProvider'=>$model->search(),
 	'filter'=>$model,
 	'columns'=>array(
 		array(
- 			'name'=>'idImdb',
-			'value'=>'$data->imdbDataTv->ID',
-		),
-		'file_name',
-		'subt_file_name',
-		array(
- 			'name'=>"deleted",
- 			'type'=>'raw',
- 			'value'=>'CHtml::checkBox("deleted",$data->deleted,array("disabled"=>"disabled"))',
- 			'filter'=>CHtml::listData(
-				array(
-					array('id'=>'0','value'=>'No'),
-					array('id'=>'1','value'=>'Yes')
-				)
-				,'id','value'
-			),
+ 			'name'=>'name',
+			'value'=>'$data->myMovieSeason->myMovieSerieHeader->name',
 		),
 		array(
- 			'name'=>"deleted_serie",
- 			'type'=>'raw',
- 			'value'=>'CHtml::checkBox("deleted_serie",$data->imdbDataTv->idParent->Deleted_serie,array("disabled"=>"disabled"))',
- 			'filter'=>CHtml::listData(
-				array(
-					array('id'=>'0','value'=>'No'),
-					array('id'=>'1','value'=>'Yes')
-				)
-				,'id','value'
-			),
+ 			'name'=>'name',
+			'value'=>'$data->myMovieSeason->season_number',
 		),
 		array(
- 			'name'=>'title',
-			'value'=>'$data->imdbDataTv->Title',
+ 			'name'=>'episode_number',
+			'value'=>'$data->episode_number',
 		),
 		array(
- 			'name'=>'year',
-			'value'=>'$data->imdbDataTv->Year',
+ 			'name'=>'name',
+			'value'=>'$data->name',
 		),
 		array(
- 			'name'=>'serie_title',
-			'value'=>'$data->imdbDataTv->idParent->Title',
-		),
-		array(
- 			'name'=>'season',
-			'value'=>'$data->imdbDataTv->Season',
-		),
-		array(
- 			'name'=>'episode',
-			'value'=>'$data->imdbDataTv->Episode',
-		),
-		array(
- 			'name'=>'resourceTypeDesc',
-			'value'=>'$data->resourceType->description',
+ 			'name'=>'description',
+			'value'=>'$data->description',
 		),
 		array(
 			'class'=>'CButtonColumn',
-			'template'=>'{view}',
+			'template'=>'{update}',
 			'buttons'=>array
-			(
-			    'view' => array
 				(
-			    	'url'=>'Yii::app()->createUrl("nzb/viewEpisode", array("id"=>$data->Id))',
+					'update' => array
+					(
+						'url'=>'Yii::app()->createUrl("nzb/updateEpisode", array("id"=>$data->Id))',
+					),
 				),
-			),
 		),
 	),
 )); ?>
