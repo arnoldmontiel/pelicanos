@@ -7,17 +7,11 @@ $('#finishButton').click(function(){
 	return false;
 });
 
-$('#cancelButton').click(function(){
-	window.location = '".NzbController::createUrl('index')."';
-	return false;
-});
-
  
 ");
 ?>
 
 <?php echo CHtml::beginForm('','post');
-	echo CHtml::hiddenField("hiddenSeasonId",'',array('id'=>'hiddenSeasonId'));
 ?>
 
 <?php $this->widget('zii.widgets.CDetailView', array(
@@ -82,7 +76,7 @@ $('#cancelButton').click(function(){
 		<div class="gridTitle1">
 		Disc Episode
 		</div>
-	</div>
+</div>
 		<?php 				
 		$this->widget('zii.widgets.grid.CGridView', array(
 			'id'=>'disc-episodes-grid',
@@ -114,13 +108,11 @@ $('#cancelButton').click(function(){
 			));		
 		?>
 	
-	</div>
 	<div class="left">
 		<div class="row buttons">
 			<?php 			
 									
 				echo CHtml::submitButton('Finish', array('id'=>'finishButton'));
-				echo CHtml::submitButton('Cancel', array('id'=>'cancelButton'));
 			?>		
 		</div>
 	</div>

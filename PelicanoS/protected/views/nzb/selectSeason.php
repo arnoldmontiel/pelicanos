@@ -7,13 +7,11 @@ $this->menu=array(
 );
 ?>
 
-<h1>Create Serie</h1>
+<h1>Select Season</h1>
 
 <?php 
-echo $this->renderPartial('_formSerie', array('model'=>$model,
-											'modelUpload'=>$modelUpload, 
-											'ddlRsrcType'=>$ddlRsrcType,
-											'modelMyMovieSerieHeader'=>$modelMyMovieSerieHeader,
+echo $this->renderPartial('_selectSeason', array('model'=>$model,											
+										'modelMyMovieSeason'=>$modelMyMovieSeason,
 									));
 ?>
 	
