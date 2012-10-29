@@ -1083,6 +1083,8 @@ class NzbController extends Controller
 			if(!isset($modelMyMovieNzbDB))
 			{
 				$model->Id = uniqid();
+				$model->poster = MyMovieHelper::getImage($model->poster_original, $model->Id);
+				$model->backdrop = MyMovieHelper::getImage($model->backdrop_original, $model->Id . '_bd');
 				$model->save();
 			}
 		}
@@ -1281,119 +1283,6 @@ class NzbController extends Controller
 			{
 				$this->redirect(array('uploadError'));
 			}
-		}
-	}
-
-	/**
-	 * Updates a particular model.
-	 * If update is successful, the browser will be redirected to the 'view' page.
-	 * @param integer $id the ID of the model to be updated
-	 */
-	public function actionUpdateEpisode($id)
-	{
-		$model=$this->loadModel($id);
-		$modelUpload=new Upload;
-		$modelImdb = ImdbdataTv::model()->findByPk($model->Id_imdbdata_tv);
-		$ddlRsrcType = ResourceType::model()->findAll();
-		$ddlTvShow = ImdbdataTv::model()->findAllByAttributes(array('Id_parent'=>null));
-		$ddlSeason = Season::model()->findAllByAttributes(array('Id_imdbdata_tv'=>$modelImdb->Id_parent));
-		$hasChanged = false;
-		
-		$index = 1;
-		$ddlEpisode = array();
-
-		while ($index <= $ddlSeason[$modelImdb->Season -1]->episodes) {
-			$item['episode'] = $index;
-			$ddlEpisode[$index] = $item;
-			$index = $index + 1;
-		}
-
-		if(isset($_POST['Nzb']))
-		{
-			if($_POST['Nzb']['Id_resource_type'] != $model->Id_resource_type )
-				$hasChanged = true;
-
-			if($_POST['Nzb']['points'] != $model->points )
-				$hasChanged = true;
-			
-			$model->attributes = $_POST['Nzb'];
-		}
-
-		if(isset($_POST['ImdbdataTv']))
-		{
-			if($_POST['ImdbdataTv']['Id_parent'] != $modelImdb->Id_parent )
-				$hasChanged = true;
-			
-			if($_POST['ImdbdataTv']['Season'] != $modelImdb->Season )
-				$hasChanged = true;
-			
-			if($_POST['ImdbdataTv']['Episode'] != $modelImdb->Episode )
-				$hasChanged = true;
-			
-			$modelImdb->attributes=$_POST['ImdbdataTv'];
-		}
-		
-		if(isset($_POST['Upload']))
-		{
-			$modelUpload->attributes=$_POST['Upload'];
-			$file=CUploadedFile::getInstance($modelUpload,'file');
-			if($file!=null)
-			{
-				if($modelUpload->validate())
-				{
-					
-					$uniqueId = uniqid();
-					$fileName = $uniqueId . '.nzb';
-					
-					$model->url = '/nzb/'.$fileName;
-					$model->file_name = $fileName;
-					
-					$model->file_original_name = $file->getName();
-					
-					$this->saveFile($file, 'nzb', $fileName);
-					
-					
-					$this->saveUpdatedEpisodeModel($model, $modelImdb, $id);
-				}
-			}
-			else
-			{
-				if($hasChanged)
-					$this->saveUpdatedEpisodeModel($model, $modelImdb, $id);
-				else
-					$this->redirect(array('viewEpisode','id'=>$model->Id));
-			}
-		}
-		else
-		{
-			if($hasChanged)
-				$this->saveUpdatedEpisodeModel($model, $modelImdb, $id);
-		}
-
-		$this->render('updateEpisode',array(
-					'model'=>$model,
-					'modelUpload'=>$modelUpload,
-					'modelImdb'=>$modelImdb,
-					'ddlRsrcType'=>$ddlRsrcType,
-					'ddlTvShow'=>$ddlTvShow,
-					'ddlSeason'=>$ddlSeason,
-					'ddlEpisode'=>$ddlEpisode,
-		));
-	}
-
-	private function saveUpdatedEpisodeModel($model, $modelImdb, $id)
-	{
-		$transaction = $model->dbConnection->beginTransaction();
-		try {
-			$modelImdb->save();
-			if($model->save()){
-				$this->updateRelation($id);
-				$transaction->commit();
-				$this->redirect(array('viewEpisode','id'=>$model->Id));
-			}
-				
-		} catch (Exception $e) {
-			$transaction->rollback();
 		}
 	}
 	
@@ -1880,19 +1769,108 @@ class NzbController extends Controller
 		));
 	}
 
+	public function actionAdminSerie()
+	{
+		$model=new MyMovieSerieHeader('search');
+		$model->unsetAttributes();  // clear any default values
+	
+		if(isset($_GET['MyMovieSerieHeader']))
+			$model->attributes=$_GET['MyMovieSerieHeader'];
+	
+		$this->render('adminSerie',array(
+				'model'=>$model,
+		));
+	}
+	
+	public function actionAdminSeason()
+	{
+		$model=new MyMovieSeason('search');
+		$model->unsetAttributes();  // clear any default values
+	
+		if(isset($_GET['MyMovieSeason']))
+			$model->attributes=$_GET['MyMovieSeason'];
+	
+		$this->render('adminSeason',array(
+				'model'=>$model,
+		));
+	}
+	
 	public function actionAdminEpisode()
 	{
-		$model=new Nzb('search');
+		$model=new MyMovieEpisode('search');
 		$model->unsetAttributes();  // clear any default values
-		
-		if(isset($_GET['Nzb']))
-			$model->attributes=$_GET['Nzb'];
+	
+		if(isset($_GET['MyMovieEpisode']))
+			$model->attributes=$_GET['MyMovieEpisode'];
 	
 		$this->render('adminEpisode',array(
 				'model'=>$model,
 		));
 	}
 	
+	public function actionUpdateSerie($id)
+	{
+		$model = MyMovieSerieHeader::model()->findByPk($id);
+		$getPoster = false;
+		
+		if(isset($_POST['MyMovieSerieHeader']))
+		{
+			if($_POST['MyMovieSerieHeader']['poster_original'] != $model->poster_original)
+				$getPoster = true;
+			
+			$model->attributes = $_POST['MyMovieSerieHeader'];
+			
+			if($getPoster)
+				$model->poster = MyMovieHelper::getImage($model->poster_original, $model->Id);
+			
+			if($model->save())
+				$this->redirect(array('adminSerie'));
+		}
+		
+		$this->render('updateSerie',array(
+						'model'=>$model,
+		));
+	}
+	
+	public function actionUpdateSeason($id)
+	{
+		$model = MyMovieSeason::model()->findByPk($id);
+		$getBanner = false;
+		
+		if(isset($_POST['MyMovieSeason']))
+		{
+			if($_POST['MyMovieSeason']['banner_original'] != $model->banner_original)
+				$getBanner = true;
+			
+			$model->attributes = $_POST['MyMovieSeason'];
+			
+			if($getPoster)
+				$model->banner = MyMovieHelper::getImage($model->banner_original, $model->Id);
+			
+			if($model->save())
+				$this->redirect(array('adminSeason'));
+		}
+	
+		$this->render('updateSeason',array(
+							'model'=>$model,
+		));
+	}
+	
+	public function actionUpdateEpisode($id)
+	{
+		$model = MyMovieEpisode::model()->findByPk($id);
+	
+		if(isset($_POST['MyMovieEpisode']))
+		{
+			$model->attributes = $_POST['MyMovieEpisode'];
+			if($model->save())
+				$this->redirect(array('adminEpisode'));
+		}
+	
+		$this->render('updateEpisode',array(
+								'model'=>$model,
+		));
+	}
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
