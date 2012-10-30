@@ -74,7 +74,10 @@ $('#Nzb_points').keyup(function(){
 	'columns'=>array(
 		'name',
 		'genre',
-		'description',
+		array(
+ 			'name'=>'description',
+			'value'=>'(strlen($data->description) > 300)?substr($data->description,0,300)."...":$data->description',
+		),
 		'original_status',
 	),
 )); ?>

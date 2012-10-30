@@ -1,6 +1,6 @@
 <div class="form">
 <?php
-Yii::app()->clientScript->registerScript(__CLASS__.'#updateMovie', "
+Yii::app()->clientScript->registerScript(__CLASS__.'#updateNzb', "
 
 $('#cancelButton').click(function(){
 	window.location = '".NzbController::createUrl('view',array('id'=>$model->Id))."';
@@ -66,21 +66,9 @@ $('#cancelButton').click(function(){
 	</div>
 
 	<div id="points" style="margin-bottom: 5px">
-		<?php echo CHtml::activeLabelEx($modelMyMovieNzb,'description'); ?>
-		<?php echo CHtml::activeTextArea($modelMyMovieNzb, 'description',array('cols'=>50));?>
-		<?php echo CHtml::error($modelMyMovieNzb,'description'); ?>
-	</div>
-	
-	<div id="points" style="margin-bottom: 5px">
-		<?php echo CHtml::activeLabelEx($modelMyMovieNzb,'studio'); ?>
-		<?php echo CHtml::activeTextField($modelMyMovieNzb, 'studio',array('size'=>50));?>
-		<?php echo CHtml::error($modelMyMovieNzb,'studio'); ?>
-	</div>
-	
-	<div id="points" style="margin-bottom: 5px">
-		<?php echo CHtml::activeLabelEx($modelMyMovieNzb,'genre'); ?>
-		<?php echo CHtml::activeTextField($modelMyMovieNzb, 'genre',array('size'=>50));?>
-		<?php echo CHtml::error($modelMyMovieNzb,'genre'); ?>
+		<?php echo CHtml::activeLabelEx($modelMyMovieDiscNzb,'name'); ?>
+		<?php echo CHtml::activeTextField($modelMyMovieDiscNzb, 'name',array('size'=>50));?>
+		<?php echo CHtml::error($modelMyMovieDiscNzb,'name'); ?>
 	</div>
 	
 	<div id="points" style="margin-bottom: 5px">

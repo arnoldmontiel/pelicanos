@@ -67,7 +67,10 @@ $('#finishButton').click(function(){
 	'columns'=>array(
 		'name',
 		'episode_number',
-		'description',
+		array(
+ 			'name'=>'description',
+			'value'=>'(strlen($data->description) > 300)?substr($data->description,0,300)."...":$data->description',
+		),
 	),
 )); ?>
 </div>

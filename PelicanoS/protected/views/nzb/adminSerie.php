@@ -2,6 +2,7 @@
 $this->menu=array(
 	array('label'=>'Create Nzb', 'url'=>array('create')),
 	array('label'=>'List Nzb', 'url'=>array('index')),
+	array('label'=>'Manage Box', 'url'=>array('adminBox')),
 	array('label'=>'Manage Season', 'url'=>array('adminSeason')),
 	array('label'=>'Manage Episode', 'url'=>array('adminEpisode')),
 );
@@ -34,7 +35,7 @@ $this->menu=array(
 		),
 		array(
  			'name'=>'description',
-			'value'=>'$data->description',
+			'value'=>'(strlen($data->description) > 300)?substr($data->description,0,300)."...":$data->description',
 		),
 		array(
  			'name'=>"poster",
