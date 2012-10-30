@@ -16,7 +16,6 @@
  * @property Reseller $idReseller
  * @property CustomerTransaction[] $customerTransactions
  * @property CustomerUsers[] $customerUsers
- * @property ImdbdataTv[] $imdbdataTvs
  * @property Log[] $logs
  * @property Nzb[] $nzbs
  * @property RippedCustomer[] $rippedCustomers
