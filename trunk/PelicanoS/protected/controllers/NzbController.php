@@ -891,6 +891,7 @@ class NzbController extends Controller
 	{
 		$model=new Nzb;
 		$modelUpload=new Upload;
+		$modelMyMovieDiscNzb = new MyMovieDiscNzb();
 		$modelMyMovieNzb = new MyMovieNzb('search');
 		$modelMyMovieNzb->unsetAttributes();  // clear any default values
 	
@@ -904,7 +905,9 @@ class NzbController extends Controller
 	
 		if(isset($_POST['Upload']) && isset($_POST['hiddenMyMovieNzbId']))
 		{
-			$modelUpload->attributes=$_POST['Upload'];
+			$modelUpload->attributes = $_POST['Upload'];
+			$modelMyMovieDiscNzb->attributes = $_POST['MyMovieDiscNzb'];
+			
 			$idMyMovieNzb = $_POST['hiddenMyMovieNzbId'];
 			$file=CUploadedFile::getInstance($modelUpload,'file');
 	
@@ -924,12 +927,20 @@ class NzbController extends Controller
 	
 						$this->saveFile($file, 'nzb', $fileName);
 					}
-	
-					$model->Id_my_movie_disc_nzb = MyMovieHelper::createDisc($idMyMovieNzb);
+					
+					$modelMyMovieDiscNzb->Id_my_movie_nzb = $idMyMovieNzb;
+					
+					$model->Id_my_movie_disc_nzb = MyMovieHelper::createDisc($modelMyMovieDiscNzb);
 	
 					if($model->save()){
 						$transaction->commit();
-						$this->redirect(array('selectSerie','id'=>$model->Id));
+						
+						$myMovieNzb = MyMovieNzb::model()->findByPk($idMyMovieNzb);
+						
+						if(isset($myMovieNzb->Id_my_movie_serie_header))
+							$this->redirect(array('selectSeason','id'=>$model->Id));
+						else
+							$this->redirect(array('selectSerie','id'=>$model->Id));
 					}
 	
 				} catch (Exception $e) {
@@ -943,6 +954,7 @@ class NzbController extends Controller
 					'modelUpload'=>$modelUpload,
 					'ddlRsrcType'=>$ddlRsrcType,
 					'modelMyMovieNzb'=>$modelMyMovieNzb,
+					'modelMyMovieDiscNzb'=>$modelMyMovieDiscNzb,
 		));
 	}
 	
@@ -1085,7 +1097,9 @@ class NzbController extends Controller
 				$model->Id = uniqid();
 				$model->poster = MyMovieHelper::getImage($model->poster_original, $model->Id);
 				$model->backdrop = MyMovieHelper::getImage($model->backdrop_original, $model->Id . '_bd');
+				$model->is_serie = 1;
 				$model->save();
+				return $model->Id; 
 			}
 		}
 	}

@@ -1,12 +1,10 @@
 <?php
 class MyMovieHelper
 {
-	static public function createDisc($idMyMovieNzb)
+	static public function createDisc($model)
 	{
-		if(!empty($idMyMovieNzb))
+		if(isset($model))
 		{	
-			$model = new MyMovieDiscNzb();
-			$model->Id_my_movie_nzb = $idMyMovieNzb;
 			$model->Id = uniqid();
 			if($model->save())
 				return $model->Id; 
