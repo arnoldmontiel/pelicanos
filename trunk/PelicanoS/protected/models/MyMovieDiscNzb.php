@@ -32,6 +32,21 @@ class MyMovieDiscNzb extends CActiveRecord
 		return 'my_movie_disc_nzb';
 	}
 
+	public function getSeason()
+	{
+		if($this->myMovieNzb->is_serie)
+		{
+			$relation = MyMovieDiscNzbMyMovieEpisode::model()->findByAttributes(array(
+															'Id_my_movie_disc_nzb'=>$this->Id,
+														));
+			if(isset($relation))
+			{
+				return $relation->myMovieEpisode->Id_my_movie_season;
+			}
+		}
+		return null;	
+	}
+	
 	/**
 	 * @return array validation rules for model attributes.
 	 */

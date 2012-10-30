@@ -16,6 +16,7 @@
  */
 class MyMovieSeason extends CActiveRecord
 {
+	public $serie_name;
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -48,7 +49,7 @@ class MyMovieSeason extends CActiveRecord
 			array('banner, banner_original', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id, Id_my_movie_serie_header, season_number, banner, banner_original', 'safe', 'on'=>'search'),
+			array('Id, Id_my_movie_serie_header, season_number, banner, banner_original, serie_name', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -76,6 +77,7 @@ class MyMovieSeason extends CActiveRecord
 			'season_number' => 'Season Number',
 			'banner' => 'Banner',
 			'banner_original' => 'Banner Original',
+			'serie_name'=> 'Serie',
 		);
 	}
 
@@ -96,8 +98,23 @@ class MyMovieSeason extends CActiveRecord
 		$criteria->compare('banner',$this->banner,true);
 		$criteria->compare('banner_original',$this->banner_original,true);
 
+		$criteria->with[]='myMovieSerieHeader';
+		$criteria->addSearchCondition("myMovieSerieHeader.name",$this->serie_name);
+		
+		$sort=new CSort;
+		$sort->attributes=array(
+				'banner',
+				'season_number',
+				'serie_name' => array(
+						'asc' => 'myMovieSerieHeader.name',
+						'desc' => 'myMovieSerieHeader.name DESC',
+				),
+				'*',
+		);
+	
 		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
+				'criteria'=>$criteria,
+				'sort'=>$sort,
 		));
 	}
 }

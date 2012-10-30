@@ -17,6 +17,9 @@
  */
 class MyMovieEpisode extends CActiveRecord
 {
+	public $serie_name;
+	public $season_number;
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -49,7 +52,7 @@ class MyMovieEpisode extends CActiveRecord
 			array('description', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id, Id_my_movie_season, episode_number, description, name', 'safe', 'on'=>'search'),
+			array('Id, Id_my_movie_season, episode_number, description, name, serie_name, season_number', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -78,6 +81,8 @@ class MyMovieEpisode extends CActiveRecord
 			'episode_number' => 'Episode Number',
 			'description' => 'Description',
 			'name' => 'Name',
+			'serie_name'=>'Serie',
+			'season_number'=>'Season Number',
 		);
 	}
 
@@ -98,8 +103,30 @@ class MyMovieEpisode extends CActiveRecord
 		$criteria->compare('description',$this->description,true);
 		$criteria->compare('name',$this->name,true);
 
+		$criteria->join =	"LEFT OUTER JOIN my_movie_season sea ON sea.Id=t.Id_my_movie_season
+									LEFT OUTER JOIN my_movie_serie_header sh ON sh.Id = sea.Id_my_movie_serie_header";
+		$criteria->addSearchCondition("sea.season_number",$this->season_number);
+		$criteria->addSearchCondition("sh.name",$this->serie_name);
+		
+		$sort=new CSort;
+		$sort->attributes=array(
+				'episode_number',
+				'description',
+				'name',
+				'season_number' => array(
+						'asc' => 'sea.season_number',
+						'desc' => 'sea.season_number DESC',
+				),
+				'serie_name' => array(
+						'asc' => 'sh.name',
+						'desc' => 'sh.name DESC',
+				),
+				'*',
+		);
+	
 		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
+				'criteria'=>$criteria,
+				'sort'=>$sort,
 		));
 	}
 }
