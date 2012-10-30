@@ -17,6 +17,8 @@ else
 		array('label'=>'List Nzb Movies', 'url'=>array('index')),
 		array('label'=>'Create Nzb', 'url'=>array('create')),
 		array('label'=>'Update Nzb', 'url'=>array('updateNzb', 'id'=>$model->Id)),
+		array('label'=>'Update Box', 'url'=>array('updateBox', 'id'=>$model->myMovieDiscNzb->Id_my_movie_nzb)),
+		array('label'=>'Select Episode', 'url'=>array('selectEpisode', 'id'=>$model->Id, 'idSeason'=>$model->myMovieDiscNzb->getSeason())),
 		array('label'=>'Update Subtitle', 'url'=>array('findSubtitle', 'id'=>$model->Id)),
 		array('label'=>'Upload Subtitle', 'url'=>array('uploadSubtitle', 'id'=>$model->Id)),
 		array('label'=>'Delete Nzb', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->Id),'confirm'=>$confirm)),

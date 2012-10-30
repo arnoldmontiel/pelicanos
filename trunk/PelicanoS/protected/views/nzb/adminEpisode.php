@@ -18,11 +18,11 @@ $this->menu=array(
 	'filter'=>$model,
 	'columns'=>array(
 		array(
- 			'name'=>'name',
+ 			'name'=>'serie_name',
 			'value'=>'$data->myMovieSeason->myMovieSerieHeader->name',
 		),
 		array(
- 			'name'=>'name',
+ 			'name'=>'season_number',
 			'value'=>'$data->myMovieSeason->season_number',
 		),
 		array(
