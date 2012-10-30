@@ -13,6 +13,25 @@ class MyMovieHelper
 		return null;	
 	}
 	
+	static public function saveMyMovieDataByModel($model)
+	{
+		if(isset($model))
+		{
+			$model->Id = uniqid();
+			$model->poster = self::getImage($model->poster_original, $model->Id);
+			$model->backdrop = self::getImage($model->backdrop_original, $model->Id . '_bd');
+			$model->save();
+			$modelMyMovieDiscNzb = new MyMovieDiscNzb();
+			$modelMyMovieDiscNzb->Id = uniqid();
+			$modelMyMovieDiscNzb->name = $model->local_title; 
+			$modelMyMovieDiscNzb->Id_my_movie_nzb = $model->Id;
+			if($modelMyMovieDiscNzb->save())
+				return $modelMyMovieDiscNzb->Id; 
+		}
+		
+		return null;
+	}
+	
 	/*
 	* Si encuentra algo en la api con ese con parametros de entrada, 
 	* devuelve el modelo

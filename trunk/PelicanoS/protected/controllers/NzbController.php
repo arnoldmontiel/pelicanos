@@ -887,6 +887,64 @@ class NzbController extends Controller
 		));
 	}
 
+	public function actionCreateMovieManually()
+	{
+		$model=new Nzb;
+		$modelUpload=new Upload;
+		$modelMyMovieNzb = new MyMovieNzb();
+	
+		$ddlParentalControl = ParentalControl::model()->findAll();
+		$ddlRsrcType = ResourceType::model()->findAll();
+	
+		if(isset($_POST['Nzb']))
+			$model->attributes = $_POST['Nzb'];
+	
+		if(isset($_POST['Upload']))
+		{
+			$modelUpload->attributes=$_POST['Upload'];
+			$modelMyMovieNzb->attributes = $_POST['MyMovieNzb'];
+			
+			$file=CUploadedFile::getInstance($modelUpload,'file');
+	
+			if($modelUpload->validate())
+			{
+				$transaction = $model->dbConnection->beginTransaction();
+				try {
+					if($file != null)
+					{
+						$uniqueId = uniqid();
+						$fileName = $uniqueId . '.nzb';
+	
+						$model->url = '/nzb/'.$fileName;
+						$model->file_name = $fileName;
+	
+						$model->file_original_name = $file->getName();
+	
+						$this->saveFile($file, 'nzb', $fileName);
+					}
+						
+					$model->Id_my_movie_disc_nzb = MyMovieHelper::saveMyMovieDataByModel($modelMyMovieNzb);
+	
+					if($model->save()){
+						$transaction->commit();
+						$this->redirect(array('findSubtitle','id'=>$model->Id));
+					}
+	
+				} catch (Exception $e) {
+					$transaction->rollback();
+				}
+			}
+		}
+	
+		$this->render('createMovieManually',array(
+				'model'=>$model,
+				'modelUpload'=>$modelUpload,
+				'ddlRsrcType'=>$ddlRsrcType,
+				'ddlParentalControl'=>$ddlParentalControl,
+				'modelMyMovieNzb'=>$modelMyMovieNzb,
+		));
+	}
+	
 	public function actionCreateBox()
 	{
 		$model=new Nzb;
