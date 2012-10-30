@@ -14,6 +14,7 @@ echo $this->renderPartial('_selectBox', array('model'=>$model,
 											'modelUpload'=>$modelUpload, 
 											'ddlRsrcType'=>$ddlRsrcType,
 											'modelMyMovieNzb'=>$modelMyMovieNzb,
+											'modelMyMovieDiscNzb'=>$modelMyMovieDiscNzb,
 									));
 ?>
 	

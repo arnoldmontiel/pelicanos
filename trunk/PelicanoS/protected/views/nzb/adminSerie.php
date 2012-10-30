@@ -2,6 +2,8 @@
 $this->menu=array(
 	array('label'=>'Create Nzb', 'url'=>array('create')),
 	array('label'=>'List Nzb', 'url'=>array('index')),
+	array('label'=>'Manage Season', 'url'=>array('adminSeason')),
+	array('label'=>'Manage Episode', 'url'=>array('adminEpisode')),
 );
 
 ?>
@@ -33,6 +35,11 @@ $this->menu=array(
 		array(
  			'name'=>'description',
 			'value'=>'$data->description',
+		),
+		array(
+ 			'name'=>"poster",
+ 			'type'=>'raw',
+ 			'value'=>'CHtml::image("images/".$data->poster ,"",array("style"=>"height: 200px;width: 120px;"))',
 		),
 		array(
 			'class'=>'CButtonColumn',

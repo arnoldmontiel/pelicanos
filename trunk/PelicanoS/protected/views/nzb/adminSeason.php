@@ -2,6 +2,8 @@
 $this->menu=array(
 	array('label'=>'Create Nzb', 'url'=>array('create')),
 	array('label'=>'List Nzb', 'url'=>array('index')),
+	array('label'=>'Manage Serie', 'url'=>array('adminSerie')),
+	array('label'=>'Manage Episode', 'url'=>array('adminEpisode')),
 );
 
 ?>
@@ -21,6 +23,11 @@ $this->menu=array(
 		array(
  			'name'=>'season_number',
 			'value'=>'$data->myMovieSerieHeader->name',
+		),
+		array(
+ 			'name'=>"banner",
+ 			'type'=>'raw',
+ 			'value'=>'CHtml::image("images/".$data->banner ,"",array("style"=>"height: 120px;width: 420px;"))',
 		),
 		array(
 			'class'=>'CButtonColumn',

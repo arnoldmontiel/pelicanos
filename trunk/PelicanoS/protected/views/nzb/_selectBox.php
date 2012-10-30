@@ -46,6 +46,12 @@ $('#Nzb_points').keyup(function(){
 		<?php echo CHtml::error($model,'points'); ?>
 	</div>
 	
+	<div id="name" style="margin-bottom: 5px">
+		<?php echo CHtml::activeLabelEx($modelMyMovieDiscNzb,'name'); ?>
+		<?php echo CHtml::activeTextField($modelMyMovieDiscNzb, 'name');?>
+		<?php echo CHtml::error($modelMyMovieDiscNzb,'name'); ?>
+	</div>
+	
 <div class="gridTitle-decoration1">
 	<div class="gridTitle1">
 		Box Data
@@ -58,7 +64,7 @@ $('#Nzb_points').keyup(function(){
 <div  style="display: inline-block;">
 	<?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'my-movie-nzb-grid',
-	'dataProvider'=>$modelMyMovieNzb->search(),
+	'dataProvider'=>$modelMyMovieNzb->searchSerie(),
 	'filter'=>$modelMyMovieNzb,
 	'summaryText'=>'',
 	'selectionChanged'=>'js:function(){
@@ -117,7 +123,9 @@ $this->widget('ext.processingDialog.processingDialog', array(
 									jQuery("#waiting").dialog("open");
 									jQuery.post("'.Yii::app()->createUrl("nzb/ajaxSaveBox").'", $("#box-form").serialize(),
 									function(data) {
-										$.fn.yiiGridView.update("my-movie-nzb-grid");										
+										$.fn.yiiGridView.update("my-movie-nzb-grid", {
+											data:$("#MyMovieNzb_original_title").serialize()
+										});									
 										jQuery("#waiting").dialog("close");
 										$("#MyMovieNzb_description").val(null);
 										$("#MyMovieNzb_original_title").val(null);										

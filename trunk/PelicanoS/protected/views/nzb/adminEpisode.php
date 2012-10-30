@@ -1,9 +1,9 @@
 <?php
 $this->menu=array(
-	array('label'=>'List Nzb Movies', 'url'=>array('index')),
-	array('label'=>'List Nzb Episodes', 'url'=>array('indexEpisode')),
 	array('label'=>'Create Nzb', 'url'=>array('create')),
-	array('label'=>'Manage Nzb Episodes', 'url'=>array('adminEpisode')),
+	array('label'=>'List Nzb', 'url'=>array('index')),
+	array('label'=>'Manage Serie', 'url'=>array('adminSerie')),
+	array('label'=>'Manage Season', 'url'=>array('adminSeason')),
 );
 
 ?>

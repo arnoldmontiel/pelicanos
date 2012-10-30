@@ -1,6 +1,6 @@
 <div class="form">
 <?php
-Yii::app()->clientScript->registerScript(__CLASS__.'#newSeason', "
+Yii::app()->clientScript->registerScript(__CLASS__.'#selectSeason', "
 
 $('#saveButton').click(function(){
 	$('#wating').dialog('open');
@@ -11,27 +11,6 @@ $('#cancelButton').click(function(){
 	return false;
 });
 
-$(document).keypress(function(e) {
-    if(e.keyCode == 13) 
-    {
-    	if($('*:focus').attr('id') == 'Imdbdata_Title' && $('*:focus').val() != '')
-    	{
-    		$('#Imdbdata_Title').change();
-    		return false;
-    	}
-    	
-    	if($('*:focus').attr('id') == 'Imdbdata_ID' && $('*:focus').val() != '')
-    	{
-    		$('#Imdbdata_ID').change();
-    		return false;
-    	}
-		return false; 
-    }
-  });
- 
-$('#Nzb_points').keyup(function(){
-	validateNumber($(this));
-});  
 ");
 ?>
 
@@ -128,7 +107,9 @@ $this->widget('ext.processingDialog.processingDialog', array(
 									jQuery("#waiting").dialog("open");
 									jQuery.post("'.Yii::app()->createUrl("nzb/ajaxSaveSeason").'", $("#season-form").serialize(),
 									function(data) {
-										$.fn.yiiGridView.update("my-movie-season-grid");										
+										$.fn.yiiGridView.update("my-movie-season-grid", {
+											data:$("#MyMovieSeason_season_number").serialize()
+										});										
 										jQuery("#waiting").dialog("close");
 										$("#MyMovieSeason_season_number").val(null);
 										$("#MyMovieSeason_banner_original").val(null);

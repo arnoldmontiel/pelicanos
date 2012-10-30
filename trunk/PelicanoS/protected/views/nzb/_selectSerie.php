@@ -113,7 +113,9 @@ $this->widget('ext.processingDialog.processingDialog', array(
 									jQuery("#waiting").dialog("open");
 									jQuery.post("'.Yii::app()->createUrl("nzb/ajaxSaveSerieHeader").'", $("#serie-header-form").serialize(),
 									function(data) {
-										$.fn.yiiGridView.update("my-movie-serie-header-grid");										
+										$.fn.yiiGridView.update("my-movie-serie-header-grid", {
+											data:$("#MyMovieSerieHeader_name").serialize()
+										});									
 										jQuery("#waiting").dialog("close");
 										$("#MyMovieSerieHeader_Id").val(null);
 										$("#MyMovieSerieHeader_description").val(null);
