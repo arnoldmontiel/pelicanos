@@ -1300,11 +1300,11 @@ class NzbController extends Controller
 		}
 	}
 	
-	public function actionUpdate($id)
+	public function actionUpdateNzb($id)
 	{
 		$model=$this->loadModel($id);
 		$modelUpload=new Upload;
-		$modelMyMovieNzb = MyMovieNzb::model()->findByPk($model->myMovieDiscNzb->Id_my_movie_nzb);
+		$modelMyMovieDiscNzb = MyMovieDiscNzb::model()->findByPk($model->Id_my_movie_disc_nzb);
 		$ddlRsrcType = ResourceType::model()->findAll();
 		$hasChanged = false;
 
@@ -1322,18 +1322,12 @@ class NzbController extends Controller
 			$model->attributes = $_POST['Nzb'];
 		}
 
-		if(isset($_POST['MyMovieNzb']))
+		if(isset($_POST['MyMovieDiscNzb']))
 		{
-			if($_POST['MyMovieNzb']['description'] != $modelMyMovieNzb->description )
-				$hasChanged = true;
-		
-			if($_POST['MyMovieNzb']['genre'] != $modelMyMovieNzb->genre )
-				$hasChanged = true;
-				
-			if($_POST['MyMovieNzb']['studio'] != $modelMyMovieNzb->studio )
+			if($_POST['MyMovieDiscNzb']['name'] != $modelMyMovieDiscNzb->name )
 				$hasChanged = true;
 			
-			$modelMyMovieNzb->attributes = $_POST['MyMovieNzb'];
+			$modelMyMovieDiscNzb->attributes = $_POST['MyMovieDiscNzb'];
 		}
 		
 		if(isset($_POST['Upload']))
@@ -1354,14 +1348,14 @@ class NzbController extends Controller
 					
 					$this->saveFile($file, 'nzb', $fileName);
 					
-					$modelMyMovieNzb->save();
+					$modelMyMovieDiscNzb->save();
 					$this->saveUpdatedModel($model, $id);
 				}
 			}
 			else
 			{
 				if($hasChanged){
-					$modelMyMovieNzb->save();
+					$modelMyMovieDiscNzb->save();
 					$this->saveUpdatedModel($model, $id);
 				}
 				else
@@ -1371,15 +1365,15 @@ class NzbController extends Controller
 		else
 		{
 			if($hasChanged){
-				$modelMyMovieNzb->save();
+				$modelMyMovieDiscNzb->save();
 				$this->saveUpdatedModel($model, $id);
 			}
 		}
 
-		$this->render('update',array(
+		$this->render('updateNzb',array(
 			'model'=>$model,
 			'modelUpload'=>$modelUpload,
-			'modelMyMovieNzb'=>$modelMyMovieNzb,
+			'modelMyMovieDiscNzb'=>$modelMyMovieDiscNzb,
 			'ddlRsrcType'=>$ddlRsrcType,
 		));
 	}
@@ -1783,6 +1777,19 @@ class NzbController extends Controller
 		));
 	}
 
+	public function actionAdminBox()
+	{
+		$model=new MyMovieNzb('search');
+		$model->unsetAttributes();  // clear any default values
+	
+		if(isset($_GET['MyMovieNzb']))
+			$model->attributes=$_GET['MyMovieNzb'];
+	
+		$this->render('adminBox',array(
+					'model'=>$model,
+		));
+	}
+	
 	public function actionAdminSerie()
 	{
 		$model=new MyMovieSerieHeader('search');
@@ -1819,6 +1826,39 @@ class NzbController extends Controller
 	
 		$this->render('adminEpisode',array(
 				'model'=>$model,
+		));
+	}
+	
+	public function actionUpdateBox($id)
+	{
+		$model = MyMovieNzb::model()->findByPk($id);
+		$ddlParentalControl = ParentalControl::model()->findAll();
+		$getPoster = false;
+		$getBackdrop = false;
+	
+		if(isset($_POST['MyMovieNzb']))
+		{
+			if($_POST['MyMovieNzb']['poster_original'] != $model->poster_original)
+				$getPoster = true;
+				
+			if($_POST['MyMovieNzb']['backdrop_original'] != $model->backdrop_original)
+				$getBackdrop = true;
+			
+			$model->attributes = $_POST['MyMovieNzb'];
+				
+			if($getPoster)
+				$model->poster = MyMovieHelper::getImage($model->poster_original, $model->Id);
+			
+			if($getBackdrop)
+				$model->backdrop = MyMovieHelper::getImage($model->backdrop_original, $model->Id.'_bd');
+			
+			if($model->save())
+				$this->redirect(array('adminBox'));
+		}
+	
+		$this->render('updateBox',array(
+							'model'=>$model,
+							'ddlParentalControl'=>$ddlParentalControl,
 		));
 	}
 	
