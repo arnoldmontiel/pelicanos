@@ -22,7 +22,7 @@ $this->menu=array(
 			'value'=>'$data->season_number',
 		),
 		array(
- 			'name'=>'season_number',
+ 			'name'=>'serie_name',
 			'value'=>'$data->myMovieSerieHeader->name',
 		),
 		array(

@@ -23,28 +23,16 @@ $('#saveButton').click(function(){
 	$('#wating').dialog('open');
 });
 
+$('#manualButton').click(function(){
+	window.location = '".NzbController::createUrl('createMovieManually')."';
+	return false;
+});
+
 $('#cancelButton').click(function(){
 	window.location = '".NzbController::createUrl('index')."';
 	return false;
 });
 
-$(document).keypress(function(e) {
-    if(e.keyCode == 13) 
-    {
-    	if($('*:focus').attr('id') == 'Imdbdata_Title' && $('*:focus').val() != '')
-    	{
-    		$('#Imdbdata_Title').change();
-    		return false;
-    	}
-    	
-    	if($('*:focus').attr('id') == 'Imdbdata_ID' && $('*:focus').val() != '')
-    	{
-    		$('#Imdbdata_ID').change();
-    		return false;
-    	}
-		return false; 
-    }
-  });
  
 $('#Nzb_points').keyup(function(){
 	validateNumber($(this));
@@ -254,6 +242,7 @@ $('#Nzb_points').keyup(function(){
 			<?php 			
 									
 				echo CHtml::submitButton($model->isNewRecord ? 'Create and find Subtitle' : 'Save', array('id'=>'saveButton','disabled'=>'disabled'));
+				echo CHtml::submitButton('Create manually', array('id'=>'manualButton'));
 				echo CHtml::submitButton('Cancel', array('id'=>'cancelButton'));
 			?>		
 		</div>
