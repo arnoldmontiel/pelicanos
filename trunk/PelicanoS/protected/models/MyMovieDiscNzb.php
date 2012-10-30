@@ -69,7 +69,7 @@ class MyMovieDiscNzb extends CActiveRecord
 	{
 		return array(
 			'Id' => 'ID',
-			'name' => 'Name',
+			'name' => 'Disc Name',
 			'Id_my_movie_nzb' => 'Id My Movie Nzb',
 		);
 	}
