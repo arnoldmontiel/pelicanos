@@ -104,7 +104,7 @@ class MyMovieNzb extends CActiveRecord
 	{
 		return array(
 			'Id' => 'ID',
-			'Id_parental_control' => 'Id Parental Control',
+			'Id_parental_control' => 'Parental Control',
 			'local_title' => 'Local Title',
 			'original_title' => 'Original Title',
 			'sort_title' => 'Sort Title',
