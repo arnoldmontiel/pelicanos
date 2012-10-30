@@ -33,11 +33,12 @@
  * @property string $data_changed
  * @property string $covers_changed
  * @property string $Id_my_movie_serie_header
+ * @property integer $is_serie
  *
  * The followings are the available model relations:
  * @property MyMovieDiscNzb[] $myMovieDiscNzbs
- * @property MyMovieSerieHeader $idMyMovieSerieHeader
  * @property ParentalControl $idParentalControl
+ * @property MyMovieSerieHeader $idMyMovieSerieHeader
  */
 class MyMovieNzb extends CActiveRecord
 {
@@ -59,6 +60,7 @@ class MyMovieNzb extends CActiveRecord
 		return 'my_movie_nzb';
 	}
 
+	
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -68,7 +70,7 @@ class MyMovieNzb extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('Id, Id_parental_control', 'required'),
-			array('Id_parental_control, adult', 'numerical', 'integerOnly'=>true),
+			array('Id_parental_control, adult, is_serie', 'numerical', 'integerOnly'=>true),
 			array('Id, Id_my_movie_serie_header', 'length', 'max'=>200),
 			array('local_title, original_title, sort_title', 'length', 'max'=>100),
 			array('production_year, running_time, imdb, country, video_standard, release_date, bar_code, type, media_type, aspect_ratio, data_changed, covers_changed', 'length', 'max'=>45),
@@ -77,7 +79,7 @@ class MyMovieNzb extends CActiveRecord
 			array('description, extra_features', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id, Id_parental_control, local_title, original_title, sort_title, production_year, running_time, description, parental_rating_desc, imdb, rating, genre, studio, poster_original, poster, backdrop_original, backdrop, adult, extra_features, country, video_standard, release_date, bar_code, type, media_type, aspect_ratio, data_changed, covers_changed, Id_my_movie_serie_header', 'safe', 'on'=>'search'),
+			array('Id, Id_parental_control, local_title, original_title, sort_title, production_year, running_time, description, parental_rating_desc, imdb, rating, genre, studio, poster_original, poster, backdrop_original, backdrop, adult, extra_features, country, video_standard, release_date, bar_code, type, media_type, aspect_ratio, data_changed, covers_changed, Id_my_movie_serie_header, is_serie', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -90,8 +92,8 @@ class MyMovieNzb extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'myMovieDiscNzbs' => array(self::HAS_MANY, 'MyMovieDiscNzb', 'Id_my_movie_nzb'),
-			'myMovieSerieHeader' => array(self::BELONGS_TO, 'MyMovieSerieHeader', 'Id_my_movie_serie_header'),
 			'parentalControl' => array(self::BELONGS_TO, 'ParentalControl', 'Id_parental_control'),
+			'myMovieSerieHeader' => array(self::BELONGS_TO, 'MyMovieSerieHeader', 'Id_my_movie_serie_header'),
 		);
 	}
 
@@ -130,6 +132,7 @@ class MyMovieNzb extends CActiveRecord
 			'data_changed' => 'Data Changed',
 			'covers_changed' => 'Covers Changed',
 			'Id_my_movie_serie_header' => 'Id My Movie Serie Header',
+			'is_serie' => 'Is Serie',
 		);
 	}
 
@@ -173,9 +176,53 @@ class MyMovieNzb extends CActiveRecord
 		$criteria->compare('data_changed',$this->data_changed,true);
 		$criteria->compare('covers_changed',$this->covers_changed,true);
 		$criteria->compare('Id_my_movie_serie_header',$this->Id_my_movie_serie_header,true);
+		$criteria->compare('is_serie',$this->is_serie);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
+		));
+	}
+	
+	public function searchSerie()
+	{
+		// Warning: Please modify the following code to remove attributes that
+		// should not be searched.
+	
+		$criteria=new CDbCriteria;
+	
+		$criteria->compare('Id',$this->Id,true);
+		$criteria->compare('Id_parental_control',$this->Id_parental_control);
+		$criteria->compare('local_title',$this->local_title,true);
+		$criteria->compare('original_title',$this->original_title,true);
+		$criteria->compare('sort_title',$this->sort_title,true);
+		$criteria->compare('production_year',$this->production_year,true);
+		$criteria->compare('running_time',$this->running_time,true);
+		$criteria->compare('description',$this->description,true);
+		$criteria->compare('parental_rating_desc',$this->parental_rating_desc,true);
+		$criteria->compare('imdb',$this->imdb,true);
+		$criteria->compare('rating',$this->rating,true);
+		$criteria->compare('genre',$this->genre,true);
+		$criteria->compare('studio',$this->studio,true);
+		$criteria->compare('poster_original',$this->poster_original,true);
+		$criteria->compare('poster',$this->poster,true);
+		$criteria->compare('backdrop_original',$this->backdrop_original,true);
+		$criteria->compare('backdrop',$this->backdrop,true);
+		$criteria->compare('adult',$this->adult);
+		$criteria->compare('extra_features',$this->extra_features,true);
+		$criteria->compare('country',$this->country,true);
+		$criteria->compare('video_standard',$this->video_standard,true);
+		$criteria->compare('release_date',$this->release_date,true);
+		$criteria->compare('bar_code',$this->bar_code,true);
+		$criteria->compare('type',$this->type,true);
+		$criteria->compare('media_type',$this->media_type,true);
+		$criteria->compare('aspect_ratio',$this->aspect_ratio,true);
+		$criteria->compare('data_changed',$this->data_changed,true);
+		$criteria->compare('covers_changed',$this->covers_changed,true);
+		$criteria->compare('Id_my_movie_serie_header',$this->Id_my_movie_serie_header,true);
+		$criteria->compare('is_serie',1);
+	
+		return new CActiveDataProvider($this, array(
+				'criteria'=>$criteria,
 		));
 	}
 }
