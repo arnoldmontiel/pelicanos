@@ -1,6 +1,6 @@
 <div class="form">
 <?php
-Yii::app()->clientScript->registerScript(__CLASS__.'#newEpisode', "
+Yii::app()->clientScript->registerScript(__CLASS__.'#selectEpisode', "
 
 $('#finishButton').click(function(){
 	window.location = '".NzbController::createUrl('view',array('id'=>$model->Id))."';
@@ -140,7 +140,9 @@ $this->widget('ext.processingDialog.processingDialog', array(
 									jQuery("#waiting").dialog("open");
 									jQuery.post("'.Yii::app()->createUrl("nzb/ajaxSaveEpisode").'", $("#episode-form").serialize(),
 									function(data) {
-										$.fn.yiiGridView.update("my-movie-episode-grid");										
+										$.fn.yiiGridView.update("my-movie-episode-grid", {
+											data:$("#MyMovieEpisode_episode_number").serialize()
+										});										
 										jQuery("#waiting").dialog("close");
 										$("#MyMovieEpisode_name").val(null);
 										$("#MyMovieEpisode_description").val(null);
