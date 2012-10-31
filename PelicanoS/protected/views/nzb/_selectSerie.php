@@ -3,17 +3,14 @@
 Yii::app()->clientScript->registerScript(__CLASS__.'#selectSerie', "
 
 $('#saveButton').click(function(){
-	$('#wating').dialog('open');
+	$('#waiting').dialog('open');
 });
 
 $('#cancelButton').click(function(){
 	window.location = '".NzbController::createUrl('indexTv')."';
 	return false;
 });
- 
-$('#Nzb_points').keyup(function(){
-	validateNumber($(this));
-});  
+  
 ");
 ?>
 

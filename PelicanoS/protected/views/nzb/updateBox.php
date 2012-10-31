@@ -2,6 +2,10 @@
 <?php
 Yii::app()->clientScript->registerScript(__CLASS__.'#updateBox', "
 
+$('#saveButton').click(function(){
+	$('#waiting').dialog('open');
+});
+
 $('#cancelButton').click(function(){
 	window.location = '".NzbController::createUrl('adminBox')."';
 	return false;
@@ -14,7 +18,15 @@ $('#cancelButton').click(function(){
 <?php $form=$this->beginWidget('CActiveForm', array(
     'id'=>'box-form',
     'enableAjaxValidation'=>false,
-)); ?>
+)); 
+
+
+$this->widget('ext.processingDialog.processingDialog', array(
+			'buttons'=>array('none'),
+			'idDialog'=>'waiting',
+));
+
+?>
 
     <p class="note">Fields with <span class="required">*</span> are required.</p>
 
@@ -178,7 +190,7 @@ $('#cancelButton').click(function(){
     </div>
 
     <div class="row buttons">
-        <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
+        <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save', array('id'=>'saveButton')); ?>
         <?php echo CHtml::submitButton('Cancel', array('id'=>'cancelButton'));?>
     </div>
 

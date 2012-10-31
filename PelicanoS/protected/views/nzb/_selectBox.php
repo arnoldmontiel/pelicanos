@@ -7,7 +7,7 @@ $('#Upload_file').change(function() {
 });
 
 $('#saveButton').click(function(){
-	$('#wating').dialog('open');
+	$('#waiting').dialog('open');
 });
 
 $('#cancelButton').click(function(){
