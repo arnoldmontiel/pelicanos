@@ -3,7 +3,7 @@
 Yii::app()->clientScript->registerScript(__CLASS__.'#selectSeason', "
 
 $('#saveButton').click(function(){
-	$('#wating').dialog('open');
+	$('#waiting').dialog('open');
 });
 
 $('#cancelButton').click(function(){
