@@ -47,6 +47,41 @@ class MyMovieDiscNzb extends CActiveRecord
 		return null;	
 	}
 	
+	public function getSeasonNumber()
+	{
+		$id = $this->getSeason();
+		if(isset($id))
+		{
+			$model = MyMovieSeason::model()->findByPk($id);
+			
+			if(isset($model))
+			{
+				return $model->season_number;
+			}
+		}
+		return null;
+	}
+	
+	public function getEpisodes()
+	{
+		if($this->myMovieNzb->is_serie)
+		{
+			$array = MyMovieDiscNzbMyMovieEpisode::model()->findAllByAttributes(array(
+															'Id_my_movie_disc_nzb'=>$this->Id,
+														));
+			if(isset($array))
+			{
+				$episodes = array();
+				foreach($array as $item)
+				{
+					$episodes[] = $item->myMovieEpisode->episode_number;
+				}
+				return implode(',',$episodes);
+			}
+		}
+		return null;	
+	}
+	
 	/**
 	 * @return array validation rules for model attributes.
 	 */
