@@ -1785,28 +1785,29 @@ class NzbController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Nzb',array('criteria'=>array('order'=>'Id DESC')));
+		$model = new Nzb();
+		$dataProvider= $model->searchMovie();
 		
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
 	}
+
+	public function actionIndexTv()
+	{
+		$model = new Nzb();
+		$dataProvider= $model->searchTv();
+		
+		$this->render('indexTv',array(
+					'dataProvider'=>$dataProvider,
+		));
+	}
+	
 	
 	public function actionIndexReseller()
 	{
 		$dataProvider=new CActiveDataProvider('Nzb',array('criteria'=>array('order'=>'Id DESC')));
 		$this->render('indexReseller',array(
-				'dataProvider'=>$dataProvider,
-		));
-	}
-
-	/**
-	 * Lists all models.
-	 */
-	public function actionIndexEpisode()
-	{
-		$dataProvider=new CActiveDataProvider('Nzb',array('criteria'=>array('order'=>'Id DESC','condition'=>'Id_imdbdata is null')));
-		$this->render('indexEpisode',array(
 				'dataProvider'=>$dataProvider,
 		));
 	}

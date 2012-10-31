@@ -125,4 +125,38 @@ class Nzb extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+	
+	public function searchMovie()
+	{
+		// Warning: Please modify the following code to remove attributes that
+		// should not be searched.
+	
+		$criteria=new CDbCriteria;
+	
+		$criteria->join =	"LEFT OUTER JOIN my_movie_disc_nzb dn ON dn.Id = t.Id_my_movie_disc_nzb
+										LEFT OUTER JOIN my_movie_nzb n ON n.Id = dn.Id_my_movie_nzb";
+		$criteria->compare('n.is_serie',0);
+		$criteria->order = 't.Id DESC';
+		
+		return new CActiveDataProvider($this, array(
+				'criteria'=>$criteria,
+		));
+	}
+	
+	public function searchTv()
+	{
+		// Warning: Please modify the following code to remove attributes that
+		// should not be searched.
+	
+		$criteria=new CDbCriteria;
+	
+		$criteria->join =	"LEFT OUTER JOIN my_movie_disc_nzb dn ON dn.Id = t.Id_my_movie_disc_nzb
+											LEFT OUTER JOIN my_movie_nzb n ON n.Id = dn.Id_my_movie_nzb";
+		$criteria->compare('n.is_serie',1);
+		$criteria->order = 't.Id DESC';
+		
+		return new CActiveDataProvider($this, array(
+				'criteria'=>$criteria,
+		));
+	}
 }
