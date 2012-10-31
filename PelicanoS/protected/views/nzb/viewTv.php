@@ -18,6 +18,7 @@ else
 		array('label'=>'Create Nzb', 'url'=>array('create')),
 		array('label'=>'Update Nzb', 'url'=>array('updateNzb', 'id'=>$model->Id)),
 		array('label'=>'Update Box', 'url'=>array('updateBox', 'id'=>$model->myMovieDiscNzb->Id_my_movie_nzb)),
+		array('label'=>'Select Episode', 'url'=>array('selectEpisode', 'id'=>$model->Id, 'idSeason'=>$model->myMovieDiscNzb->getSeason())),
 		array('label'=>'Update Subtitle', 'url'=>array('findSubtitle', 'id'=>$model->Id)),
 		array('label'=>'Upload Subtitle', 'url'=>array('uploadSubtitle', 'id'=>$model->Id)),
 		array('label'=>'Delete Nzb', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->Id),'confirm'=>$confirm)),
@@ -57,10 +58,27 @@ $('#publishButton').click(function(){
 	
 ");
 ?>
-<h1>View Nzb</h1>
+<h1>View Disc</h1>
 
 <div class="movie-detail-view" >
 	<div class="left-movie-detail-view" >
+	
+		<b><?php echo CHtml::encode($model->getAttributeLabel('name')); ?>:</b>
+		<?php echo CHtml::encode($model->myMovieDiscNzb->name); ?>
+		<br />
+	
+		<b><?php echo CHtml::encode($model->getAttributeLabel('serie')); ?>:</b>
+		<?php echo CHtml::encode($model->myMovieDiscNzb->myMovieNzb->myMovieSerieHeader->name); ?>
+		<br />
+		
+		<b><?php echo CHtml::encode($model->getAttributeLabel('season')); ?>:</b>
+		<?php echo CHtml::encode($model->myMovieDiscNzb->getSeasonNumber()); ?>
+		<br />
+		
+		<b><?php echo CHtml::encode($model->getAttributeLabel('episodes')); ?>:</b>
+		<?php echo CHtml::encode($model->myMovieDiscNzb->getEpisodes()); ?>
+		<br />
+		
 		<b><?php echo CHtml::encode($model->getAttributeLabel('file_name')); ?>:</b>
 		<?php echo CHtml::link($model->file_original_name, NzbController::createUrl('AjaxDownloadFile',array('fileName'=>$model->file_name, 'root'=>'nzb'))); ?>
 		<br />
@@ -71,10 +89,6 @@ $('#publishButton').click(function(){
 	
 		<b><?php echo CHtml::encode($model->getAttributeLabel('subt_original_name')); ?>:</b>
 		<?php echo CHtml::encode($model->subt_original_name); ?>
-		<br />
-	
-		<b><?php echo CHtml::encode($model->getAttributeLabel('Id imdb')); ?>:</b>
-		<?php echo CHtml::encode($model->myMovieDiscNzb->myMovieNzb->imdb); ?>
 		<br />
 		
 		<b><?php echo CHtml::encode($model->getAttributeLabel('original_title')); ?>:</b>
@@ -119,6 +133,25 @@ $('#publishButton').click(function(){
 		<br />
 		<?php } ?>
 		
+	<?php 				
+		$this->widget('zii.widgets.grid.CGridView', array(
+			'id'=>'disc-episodes-grid',
+			'dataProvider'=>$modelDiscEpisodes->search(),
+			'filter'=>$modelDiscEpisodes,
+			'summaryText'=>'',
+			'columns'=>array(	
+						array(
+				 			'name'=>'episode_number',
+							'value'=>'$data->myMovieEpisode->episode_number',
+						),
+						array(
+				 			'name'=>'episode_name',
+							'value'=>'$data->myMovieEpisode->name',
+						),
+		
+			),			
+			));		
+		?>	
 		<?php echo CHtml::submitButton('Publish',array('id'=>'publishButton', 'disabled'=>($model->is_draft)?'':'disabled')); ?>
 		<br />
 		

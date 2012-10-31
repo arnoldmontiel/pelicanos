@@ -698,16 +698,25 @@ class NzbController extends Controller
 		));
 	}
 
-	public function actionViewReseller($id)
+	public function actionViewTv($id)
 	{
-		$this->render('viewReseller',array(
-				'model'=>$this->loadModel($id),
+		$model = $this->loadModel($id);
+		$modelDiscEpisodes = new MyMovieDiscNzbMyMovieEpisode('search');
+		$modelDiscEpisodes->unsetAttributes();  // clear any default values
+		$modelDiscEpisodes->Id_my_movie_disc_nzb = $model->Id_my_movie_disc_nzb;
+		
+		if(isset($_GET['MyMovieDiscNzbMyMovieEpisode']))
+			$modelDiscEpisodes->attributes=$_GET['MyMovieDiscNzbMyMovieEpisode'];
+		
+		$this->render('viewTv',array(
+					'model'=>$model,
+					'modelDiscEpisodes'=>$modelDiscEpisodes,
 		));
 	}
 	
-	public function actionViewEpisode($id)
+	public function actionViewReseller($id)
 	{
-		$this->render('viewEpisode',array(
+		$this->render('viewReseller',array(
 				'model'=>$this->loadModel($id),
 		));
 	}

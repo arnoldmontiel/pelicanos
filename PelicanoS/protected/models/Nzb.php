@@ -83,7 +83,7 @@ class Nzb extends CActiveRecord
 	{
 		return array(
 			'Id' => 'ID',
-			'Id_resource_type' => 'Id Resource Type',
+			'Id_resource_type' => 'Resource Type',
 			'url' => 'Url',
 			'file_name' => 'File Name',
 			'subt_url' => 'Subt Url',
@@ -94,6 +94,7 @@ class Nzb extends CActiveRecord
 			'file_original_name' => 'File Original Name',
 			'is_draft' => 'Is Draft',
 			'Id_my_movie_disc_nzb' => 'Id My Movie Disc Nzb',
+			'name'=>'Disc Name',
 		);
 	}
 

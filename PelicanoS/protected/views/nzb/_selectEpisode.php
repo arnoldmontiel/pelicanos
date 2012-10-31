@@ -3,7 +3,7 @@
 Yii::app()->clientScript->registerScript(__CLASS__.'#selectEpisode', "
 
 $('#finishButton').click(function(){
-	window.location = '".NzbController::createUrl('view',array('id'=>$model->Id))."';
+	window.location = '".NzbController::createUrl('viewTv',array('id'=>$model->Id))."';
 	return false;
 });
 

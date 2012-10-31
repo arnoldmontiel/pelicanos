@@ -7,7 +7,7 @@ $('#saveButton').click(function(){
 });
 
 $('#cancelButton').click(function(){
-	window.location = '".NzbController::createUrl('index')."';
+	window.location = '".NzbController::createUrl('indexTv')."';
 	return false;
 });
 
