@@ -183,6 +183,10 @@ class MyMovieHelper
 		if(isset($modelMyMovieNzb))
 		{
 			$modelMyMovieNzb->save();
+			
+			//salvo audioTrack y subtitlos
+			self::saveExtraInfo($idTitle);
+			
 			$modelMyMovieDiscNzb = new MyMovieDiscNzb();
 			$modelMyMovieDiscNzb->Id = uniqid();
 			$modelMyMovieDiscNzb->name = $modelMyMovieNzb->local_title; 
@@ -420,10 +424,28 @@ class MyMovieHelper
 		
 	}
 	
+	private function saveExtraInfo($idTitle)
+	{
+		$myMoviesAPI = new MyMoviesAPI();	
+		$response = $myMoviesAPI->LoadDiscTitleById($idTitle);
+		
+		if(!empty($response) && (string)$response['status'] == 'ok')
+		{
+			if(!empty($response->Title))
+				$data = $response->Title;
+			else
+				return null;
+			
+			self::saveAudioTrack($data);
+			self::saveSubtitle($data);
+		}
+			
+	}
+	
 	private function saveAudioTrack($xml)
 	{
 	
-		$idMyMovie = (string)$xml->ID;
+		$idMyMovieNzb = (string)$xml->ID;
 	
 		foreach($xml->AudioTracks->children() as $item)
 		{
@@ -436,12 +458,12 @@ class MyMovieHelper
 														'type'=>$type,
 														'chanel'=>$chanels,));
 				
-			$modelMyMovieAudioTrack = new MyMovieAudioTrack();
-			$modelMyMovieAudioTrack->Id_my_movie = $idMyMovie;
+			$modelMyMovieNzbAudioTrack = new MyMovieNzbAudioTrack();
+			$modelMyMovieNzbAudioTrack->Id_my_movie_nzb = $idMyMovieNzb;
 				
 			if(isset($modelAudioTrackDB))
 			{
-				$modelMyMovieAudioTrack->Id_audio_track = $modelAudioTrackDB->Id;
+				$modelMyMovieNzbAudioTrack->Id_audio_track = $modelAudioTrackDB->Id;
 			}
 			else
 			{
@@ -451,14 +473,14 @@ class MyMovieHelper
 				$modelAudioTrack->chanel = $chanels;
 				$modelAudioTrack->save();
 	
-				$modelMyMovieAudioTrack->Id_audio_track = $modelAudioTrack->Id;
+				$modelMyMovieNzbAudioTrack->Id_audio_track = $modelAudioTrack->Id;
 			}
 				
-			$model = MyMovieAudioTrack::model()->findByAttributes(array(
-														'Id_my_movie'=>$idMyMovie, 
-														'Id_audio_track'=>$modelMyMovieAudioTrack->Id_audio_track));
+			$model = MyMovieNzbAudioTrack::model()->findByAttributes(array(
+														'Id_my_movie_nzb'=>$idMyMovieNzb, 
+														'Id_audio_track'=>$modelMyMovieNzbAudioTrack->Id_audio_track));
 			if(!isset($model))
-			$modelMyMovieAudioTrack->save();
+				$modelMyMovieNzbAudioTrack->save();
 	
 		}
 	}
@@ -466,7 +488,7 @@ class MyMovieHelper
 	private function saveSubtitle($xml)
 	{
 	
-		$idMyMovie = (string)$xml->ID;
+		$idMyMovieNzb = (string)$xml->ID;
 	
 		foreach($xml->Subtitles->children() as $item)
 		{
@@ -476,12 +498,12 @@ class MyMovieHelper
 															'language'=>$language,
 			));
 	
-			$modelMyMovieSubtitle = new MyMovieSubtitle();
-			$modelMyMovieSubtitle->Id_my_movie = $idMyMovie;
+			$modelMyMovieNzbSubtitle = new MyMovieNzbSubtitle();
+			$modelMyMovieNzbSubtitle->Id_my_movie_nzb = $idMyMovieNzb;
 	
 			if(isset($modelSubtitleDB))
 			{
-				$modelMyMovieSubtitle->Id_subtitle = $modelSubtitleDB->Id;
+				$modelMyMovieNzbSubtitle->Id_subtitle = $modelSubtitleDB->Id;
 			}
 			else
 			{
@@ -489,14 +511,14 @@ class MyMovieHelper
 				$modelSubtitle->language = $language;
 				$modelSubtitle->save();
 	
-				$modelMyMovieSubtitle->Id_subtitle = $modelSubtitle->Id;
+				$modelMyMovieNzbSubtitle->Id_subtitle = $modelSubtitle->Id;
 			}
 	
-			$model = MyMovieSubtitle::model()->findByAttributes(array(
-															'Id_my_movie'=>$idMyMovie, 
-															'Id_subtitle'=>$modelMyMovieSubtitle->Id_subtitle));
+			$model = MyMovieNzbSubtitle::model()->findByAttributes(array(
+															'Id_my_movie_nzb'=>$idMyMovieNzb, 
+															'Id_subtitle'=>$modelMyMovieNzbSubtitle->Id_subtitle));
 			if(!isset($model))
-			$modelMyMovieSubtitle->save();
+				$modelMyMovieNzbSubtitle->save();
 	
 		}
 	}
