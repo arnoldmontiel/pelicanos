@@ -1,7 +1,7 @@
 <?php
 $this->menu=array(
 	array('label'=>'Create Nzb', 'url'=>array('create')),
-	array('label'=>'List Nzb', 'url'=>array('index')),
+	array('label'=>'List Nzb', 'url'=>array('indexTv')),
 	array('label'=>'Manage Box', 'url'=>array('adminBox')),
 	array('label'=>'Manage Season', 'url'=>array('adminSeason')),
 	array('label'=>'Manage Episode', 'url'=>array('adminEpisode')),
