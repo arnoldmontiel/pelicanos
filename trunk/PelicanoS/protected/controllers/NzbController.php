@@ -387,7 +387,6 @@ class NzbController extends Controller
 	*/
 	public function setRipped($rippedRequest )
 	{
-		$cadena = '';
 		try {			
 			foreach($rippedRequest as $item)
 			{
