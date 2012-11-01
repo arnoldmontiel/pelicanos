@@ -1608,7 +1608,7 @@ class NzbController extends Controller
 	 */
 	public function actionFindSubtitle($id)
 	{
-		$model = new Subtitle('search');
+		$model = new Osubtitle('search');
 		$modelNzb = Nzb::model()->findByPk($id);
 
 		$model->attributes = array('query'=>str_replace('.nzb','',$modelNzb->file_original_name));
@@ -1637,12 +1637,12 @@ class NzbController extends Controller
 
 	public function actionAjaxDoSearchSubtitle()
 	{
-		$model = new Subtitle('search');
+		$model = new Osubtitle('search');
 		
-		if($_POST['Subtitle'] )
+		if($_POST['Osubtitle'] )
 		{
 			
-			$model->attributes = $_POST['Subtitle'];
+			$model->attributes = $_POST['Osubtitle'];
 			try {
 				$model->searchSubtitle();
 			} catch (Exception $e) {
@@ -1707,7 +1707,7 @@ class NzbController extends Controller
 		$openSubtitle = OpenSubtitle::model()->findByPk($idOpenSubtitle);
 
 		try {
-			$zip = Subtitle::downloadSubtitle($openSubtitle->IDSubtitleFile);
+			$zip = Osubtitle::downloadSubtitle($openSubtitle->IDSubtitleFile);
 		} catch (Exception $e) {
 			throw new CHttpException('Downloading subtitle','Invalid request. The OpenSubtitle API is not working. Please '. CHtml::link('try again',Yii::app()->request->getUrl()) .'.');
 		}
