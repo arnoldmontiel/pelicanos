@@ -32,6 +32,7 @@
  * @property integer $adult
  * @property integer $Id_parental_control
  * @property string $Id_my_movie_serie_header
+ * @property integer $is_serie
  *
  * The followings are the available model relations:
  * @property MyMovieSerieHeader $idMyMovieSerieHeader
@@ -89,7 +90,7 @@ class MyMovie extends CActiveRecord
 			array('description, extra_features', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id, type, bar_code, country, local_title, original_title, sort_title, aspect_ratio, video_standard, production_year, release_date, running_time, description, extra_features, parental_rating_desc, imdb, rating, data_changed, covers_changed, genre, studio, poster_original, poster, backdrop_original, backdrop, adult, Id_parental_control, Id_my_movie_serie_header', 'safe', 'on'=>'search'),
+			array('Id, type, bar_code, country, local_title, original_title, sort_title, aspect_ratio, video_standard, production_year, release_date, running_time, description, extra_features, parental_rating_desc, imdb, rating, data_changed, covers_changed, genre, studio, poster_original, poster, backdrop_original, backdrop, adult, Id_parental_control, Id_my_movie_serie_header, is_serie', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -141,6 +142,7 @@ class MyMovie extends CActiveRecord
 			'adult' => 'Adult',
 			'Id_parental_control' => 'Id Parental Control',
 			'Id_my_movie_serie_header' => 'Id My Movie Serie Header',
+			'is_serie'=>'Is Serie',
 		);
 	}
 
@@ -183,7 +185,8 @@ class MyMovie extends CActiveRecord
 		$criteria->compare('adult',$this->adult);
 		$criteria->compare('Id_parental_control',$this->Id_parental_control);
 		$criteria->compare('Id_my_movie_serie_header',$this->Id_my_movie_serie_header,true);
-
+		$criteria->compare('is_serie',$this->is_serie);
+		
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
