@@ -26,12 +26,12 @@ $('#searchButton').click(function(){
 	$('#downloadSubtitle').attr('disabled', 'disabled');
 	$('#selectedRow').val('');
 	$('#div-error').animate({opacity: 'hide'},2000);
-	var dataString = $('#Subtitle_query').serialize() + '&' 
-							+ $('#Subtitle_season').serialize() + '&'
-							+ $('#Subtitle_episode').serialize() + '&'
-							+ $('#Subtitle_idImdb').serialize() + '&'
-							+ $('#Subtitle_movieHash').serialize() + '&'
-							+ $('#Subtitle_movieSize').serialize() + '&'
+	var dataString = $('#Osubtitle_query').serialize() + '&' 
+							+ $('#Osubtitle_season').serialize() + '&'
+							+ $('#Osubtitle_episode').serialize() + '&'
+							+ $('#Osubtitle_idImdb').serialize() + '&'
+							+ $('#Osubtitle_movieHash').serialize() + '&'
+							+ $('#Osubtitle_movieSize').serialize() + '&'
 							+ $('#div-language').find('input:checked').serialize();
 							
 	$.post(
@@ -70,22 +70,22 @@ $(function() {
 				
 		        if($(ui.tab).attr('id') == 'Q')
 		        {
-			        $('#Subtitle_idImdb').val(null);
-					$('#Subtitle_movieHash').val(null);
-					$('#Subtitle_movieSize').val(null);
+			        $('#Osubtitle_idImdb').val(null);
+					$('#Osubtitle_movieHash').val(null);
+					$('#Osubtitle_movieSize').val(null);
 		        }
 		        else
 		        {
 		        	if($(ui.tab).attr('id') == 'I')
 		        	{
-						$('#Subtitle_query').val(null);
-						$('#Subtitle_movieHash').val(null);
-						$('#Subtitle_movieSize').val(null);
+						$('#Osubtitle_query').val(null);
+						$('#Osubtitle_movieHash').val(null);
+						$('#Osubtitle_movieSize').val(null);
 		        	}
 		        	else
 		        	{
-		        		$('#Subtitle_idImdb').val(null);
-						$('#Subtitle_query').val(null);
+		        		$('#Osubtitle_idImdb').val(null);
+						$('#Osubtitle_query').val(null);
 		        	}
 		        }
 	    	}
@@ -93,11 +93,11 @@ $(function() {
 		}
 		);
 				
-		if($('#Subtitle_idImdb').val() != '')
+		if($('#Osubtitle_idImdb').val() != '')
 			$( '#tabs' ).tabs().tabs('select',1);
 		else
 		{
-			if($('#Subtitle_movieHash').val() != '')
+			if($('#Osubtitle_movieHash').val() != '')
 				$( '#tabs' ).tabs().tabs('select',2);
 		}
 });
