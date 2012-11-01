@@ -1,22 +1,24 @@
 <?php
 
 /**
- * This is the model class for table "subtitle".
+ * This is the model class for table "audio_track".
  *
- * The followings are the available columns in table 'subtitle':
+ * The followings are the available columns in table 'audio_track':
  * @property integer $Id
  * @property string $language
+ * @property string $type
+ * @property string $chanel
  *
  * The followings are the available model relations:
- * @property MyMovieNzb[] $myMovieNzbs
  * @property MyMovie[] $myMovies
+ * @property MyMovieNzb[] $myMovieNzbs
  */
-class Subtitle extends CActiveRecord
+class AudioTrack extends CActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return Subtitle the static model class
+	 * @return AudioTrack the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -28,7 +30,7 @@ class Subtitle extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'subtitle';
+		return 'audio_track';
 	}
 
 	/**
@@ -39,10 +41,11 @@ class Subtitle extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('language', 'length', 'max'=>45),
+			array('language, type', 'length', 'max'=>45),
+			array('chanel', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id, language', 'safe', 'on'=>'search'),
+			array('Id, language, type, chanel', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -54,8 +57,8 @@ class Subtitle extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'myMovieNzbs' => array(self::MANY_MANY, 'MyMovieNzb', 'my_movie_nzb_subtitle(Id_subtitle, Id_my_movie_nzb)'),
-			'myMovies' => array(self::MANY_MANY, 'MyMovie', 'my_movie_subtitle(Id_subtitle, Id_my_movie)'),
+			'myMovies' => array(self::MANY_MANY, 'MyMovie', 'my_movie_audio_track(Id_audio_track, Id_my_movie)'),
+			'myMovieNzbs' => array(self::MANY_MANY, 'MyMovieNzb', 'my_movie_nzb_audio_track(Id_audio_track, Id_my_movie_nzb)'),
 		);
 	}
 
@@ -67,6 +70,8 @@ class Subtitle extends CActiveRecord
 		return array(
 			'Id' => 'ID',
 			'language' => 'Language',
+			'type' => 'Type',
+			'chanel' => 'Chanel',
 		);
 	}
 
@@ -83,6 +88,8 @@ class Subtitle extends CActiveRecord
 
 		$criteria->compare('Id',$this->Id);
 		$criteria->compare('language',$this->language,true);
+		$criteria->compare('type',$this->type,true);
+		$criteria->compare('chanel',$this->chanel,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
