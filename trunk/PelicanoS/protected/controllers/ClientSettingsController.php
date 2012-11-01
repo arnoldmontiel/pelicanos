@@ -151,7 +151,15 @@ class ClientSettingsController extends Controller
 	public function actionAjaxUpdateClientToLastVersion()
 	{
 		if(isset($_POST['Id']))
-			$this->UpdateClientToLastVersion($_POST['Id']);
+		{
+			$clientSetting = ClientSettings::model()->findByPk($_POST['Id']);
+			if(isset($clientSetting))
+			{
+				$clientSetting->need_update = true;
+				$clientSetting->save();
+			}				
+			//$this->UpdateClientToLastVersion($_POST['Id']);
+		}
 	}
 	public function UpdateClientToLastVersion($id)
 	{
