@@ -44,6 +44,7 @@ $this->widget('ext.processingDialog.processingDialog', array(
 		'last_update',
 		'anydvd_version_installed',
 		'anydvd_version_downloaded',
+		'need_update',
 ),
 )); ?>
 
