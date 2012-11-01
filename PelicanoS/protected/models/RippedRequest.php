@@ -173,6 +173,12 @@ class MyMovieSOAP
 	* @soap
 	*/
 	public $Id_parental_control;
+	
+	/**
+	* @var integer is serie
+	* @soap
+	*/
+	public $is_serie;
 }
 
 class MyMovieDiscSOAP
