@@ -1,24 +1,29 @@
 <?php
 $this->menu=array(
-	array('label'=>'List Nzb Movies', 'url'=>array('index')),
-	array('label'=>'List Nzb Episodes', 'url'=>array('indexEpisode')),
-	array('label'=>'Create Nzb', 'url'=>array('create')),
-	array('label'=>'Manage Nzb Episodes', 'url'=>array('adminEpisode')),
+	array('label'=>'Create', 'url'=>array('create')),
+	array('label'=>'Manage Box', 'url'=>array('adminBox')),
+	array('label'=>'Manage Serie', 'url'=>array('adminSerie')),
+	array('label'=>'Manage Season', 'url'=>array('adminSeason')),
+	array('label'=>'Manage Episode', 'url'=>array('adminEpisode')),
 );
 
 ?>
 
-<h1>Manage Nzbs Movies</h1>
+<h1>Manage Nzbs Tv</h1>
 
 
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'nzb-grid',
-	'dataProvider'=>$model->searchMovie(),
+	'dataProvider'=>$model->searchTv(),
 	'filter'=>$model,
 	'columns'=>array(
 		array(
  			'name'=>'idImdb',
 			'value'=>'$data->myMovieDiscNzb->myMovieNzb->imdb',
+		),
+		array(
+ 			'name'=>'disc_name',
+			'value'=>'$data->myMovieDiscNzb->name',
 		),
 		array(
  			'name'=>"is_draft",

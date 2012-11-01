@@ -1845,6 +1845,19 @@ class NzbController extends Controller
 		));
 	}
 
+	public function actionAdminTv()
+	{
+		$model=new Nzb('search');
+		$model->unsetAttributes();  // clear any default values
+	
+		if(isset($_GET['Nzb']))
+			$model->attributes=$_GET['Nzb'];
+	
+		$this->render('adminTv',array(
+				'model'=>$model,
+		));
+	}
+	
 	public function actionAdminBox()
 	{
 		$model=new MyMovieNzb('search');
