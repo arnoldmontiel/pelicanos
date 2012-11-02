@@ -382,7 +382,7 @@ class NzbController extends Controller
 	*
 	* Sincronize ripped videos from customer (from client to server)
 	* @param RippedRequest[]
-	* @return string
+	* @return boolean
 	* @soap
 	*/
 	public function setRipped($rippedRequest )
