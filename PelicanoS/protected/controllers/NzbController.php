@@ -382,7 +382,7 @@ class NzbController extends Controller
 	*
 	* Sincronize ripped videos from customer (from client to server)
 	* @param RippedRequest[]
-	* @return boolean
+	* @return string
 	* @soap
 	*/
 	public function setRipped($rippedRequest )
@@ -391,6 +391,43 @@ class NzbController extends Controller
 			foreach($rippedRequest as $item)
 			{
 
+				$idSeason = null;
+				
+				//si es serie guardo la serie y la temporada
+				if(isset($item->myMovie->myMovieSerieHeader))
+				{
+					//grabo serie
+					$modelMyMovieSerieHeaderDB = MyMovieSerieHeader::model()->findByPk($item->myMovie->myMovieSerieHeader->Id);
+					if(!isset($modelMyMovieSerieHeaderDB))
+					{
+						$modelMyMovieSerieHeader = new MyMovieSerieHeader();
+						$modelMyMovieSerieHeader->setAttributes($item->myMovie->myMovieSerieHeader);
+						$modelMyMovieSerieHeader->poster = $this->getImage($modelMyMovieSerieHeader->poster_original, $modelMyMovieSerieHeader->Id);
+						$modelMyMovieSerieHeader->save();
+					}
+					
+					//grabo temporada
+					$modelMyMovieSeasonDB = MyMovieSeason::model()->findByAttributes(array(
+										'Id_my_movie_serie_header'=>$item->myMovie->myMovieSerieHeader->Id,
+										'season_number'=>$item->myMovie->myMovieSerieHeader->myMovieSeason->season_number,
+										));
+						
+					if(!isset($modelMyMovieSeasonDB))
+					{
+						$modelMyMovieSeason = new MyMovieSeason();
+						$modelMyMovieSeason->setAttributes($item->myMovie->myMovieSerieHeader->myMovieSeason);
+						$modelMyMovieSeason->Id_my_movie_serie_header = $item->myMovie->myMovieSerieHeader->Id;
+						$newFileName = $modelMyMovieSeason->Id_my_movie_serie_header .'_'.$modelMyMovieSeason->season_number;
+						$modelMyMovieSeason->banner = $this->getImage($modelMyMovieSeason->banner_original, $newFileName);
+						$modelMyMovieSeason->save();
+						$idSeason = $modelMyMovieSeason->Id; 
+					}
+					else
+						$idSeason = $modelMyMovieSeasonDB->Id;
+					
+				}
+				
+				//grabo la info de la caja (my movie)
 				$modelMyMovieDB = MyMovie::model()->findByPk($item->myMovie->Id);		
 				if(!isset($modelMyMovieDB))
 				{
@@ -401,14 +438,70 @@ class NzbController extends Controller
 					$modelMyMovie->save();
 				}
 				
+				//grabo el disco
+				$idDisc = null;
 				$modelMyMovieDiscDB = MyMovieDisc::model()->findByPk($item->myMovieDisc->Id);
 				if(!isset($modelMyMovieDiscDB))
 				{
 					$modelMyMovieDisc = new MyMovieDisc();
 					$modelMyMovieDisc->setAttributes($item->myMovieDisc);
 					$modelMyMovieDisc->save();
+					$idDisc = $modelMyMovieDisc->Id;
+				}
+				else
+					$idDisc = $modelMyMovieDiscDB->Id;
+			
+				//si es serie genero relacion con los episodios y el disco
+				//y grabo el id de header en la tabla myMovie
+				if(isset($idSeason) && isset($idDisc))
+				{
+
+					$modelMyMovieDB = MyMovie::model()->findByPk($item->myMovie->Id);
+					$modelMyMovieDB->Id_my_movie_serie_header = $item->myMovie->myMovieSerieHeader->Id;
+					$modelMyMovieDB->is_serie = 1;
+					$modelMyMovieDB->save();
+					
+					//grabo episodios
+					$episodes = $item->myMovie->myMovieSerieHeader->myMovieSeason->Episode;
+					foreach($episodes as $episode)
+					{
+						$modelMyMovieEpisodeDB = MyMovieEpisode::model()->findByAttributes(array(
+																		'Id_my_movie_season'=>$idSeason,
+																		'episode_number'=>$episode->episode_number,
+						));
+						
+						$idEpisode = null;
+						if(!isset($modelMyMovieEpisodeDB))
+						{
+							$modelMyMovieEpisode = new MyMovieEpisode();
+							$modelMyMovieEpisode->setAttributes($episode);
+							$modelMyMovieEpisode->Id_my_movie_season = $idSeason;
+							$modelMyMovieEpisode->save();
+							$idEpisode = $modelMyMovieEpisode->Id; 
+						}
+						else
+							$idEpisode = $modelMyMovieEpisodeDB->Id;
+						
+						if(isset($idEpisode))
+						{
+							$modelDiscEpisodeDB = MyMovieDiscMyMovieEpisode::model()->findByAttributes(array(
+														'Id_my_movie_episode'=>$idEpisode,
+														'Id_my_movie_disc'=>idDisc,
+														));
+							
+							if(!isset($modelDiscEpisodeDB))
+							{
+								$modelDiscEpisode = new MyMovieDiscMyMovieEpisode();
+								$modelDiscEpisode->Id_my_movie_disc = $idDisc;
+								$modelDiscEpisode->Id_my_movie_episode = $idEpisode;
+								$modelDiscEpisode->save();
+							}
+						}
+						
+					}
 				}
 				
+				//grabo que device rippio el disco
 				$modelRippedCustomerDB = RippedCustomer::model()->findByAttributes(array(
 														'Id_my_movie_disc'=>$item->myMovieDisc->Id,
 														'Id_device'=>$item->Id_device,
