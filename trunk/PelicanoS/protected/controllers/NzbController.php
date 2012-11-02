@@ -486,7 +486,7 @@ class NzbController extends Controller
 						{
 							$modelDiscEpisodeDB = MyMovieDiscMyMovieEpisode::model()->findByAttributes(array(
 														'Id_my_movie_episode'=>$idEpisode,
-														'Id_my_movie_disc'=>idDisc,
+														'Id_my_movie_disc'=>$idDisc,
 														));
 							
 							if(!isset($modelDiscEpisodeDB))
