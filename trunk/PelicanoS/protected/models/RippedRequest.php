@@ -181,6 +181,12 @@ class MyMovieSOAP
 	public $is_serie;
 	
 	/**
+	* @var MyMovieSerieHeaderSOAP
+	* @soap
+	*/
+	public $myMovieSerieHeader;
+	
+	/**
 	* @var MyMovieSubtitleSOAP[]
 	* @soap
 	*/
@@ -222,6 +228,112 @@ class MyMovieAudioTrackSOAP
 	* @soap
 	*/
 	public $chanel;
+}
+
+class MyMovieSerieHeaderSOAP
+{
+	/**
+	* @var string Id
+	* @soap
+	*/
+	public $Id;
+	
+	/**
+	* @var string description
+	* @soap
+	*/
+	public $description;
+	
+	/**
+	* @var string poster_original
+	* @soap
+	*/
+	public $poster_original;
+	
+	/**
+	* @var string genre
+	* @soap
+	*/
+	public $genre;
+	
+	/**
+	* @var string name
+	* @soap
+	*/
+	public $name;
+	
+	/**
+	* @var string sort_name
+	* @soap
+	*/
+	public $sort_name;
+	
+	/**
+	* @var string rating
+	* @soap
+	*/
+	public $rating;
+	
+	/**
+	* @var string original_network
+	* @soap
+	*/
+	public $original_network;
+	
+	/**
+	* @var string original_status
+	* @soap
+	*/
+	public $original_status;
+	
+	/**
+	* @var MyMovieSeasonSOAP
+	* @soap
+	*/
+	public $myMovieSeason;
+}
+
+class MyMovieSeasonSOAP
+{	
+	/**
+	* @var integer season_number
+	* @soap
+	*/
+	public $season_number;
+	
+	/**
+	* @var string banner_original
+	* @soap
+	*/
+	public $banner_original;
+	
+	/**
+	* @var MyMovieEpisodeSOAP[]
+	* @soap
+	*/
+	public $Episode;
+	
+}
+
+class MyMovieEpisodeSOAP
+{
+	/**
+	* @var integer episode_number
+	* @soap
+	*/
+	public $episode_number;
+	
+	/**
+	* @var string description
+	* @soap
+	*/
+	public $description;
+	
+	/**
+	* @var string name
+	* @soap
+	*/
+	public $name;
 }
 
 class MyMovieDiscSOAP
