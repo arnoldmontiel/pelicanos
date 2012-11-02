@@ -31,6 +31,19 @@ class MyMovieEpisode extends CActiveRecord
 	}
 
 	/**
+	* Set model attributes by array
+	* @param Nab $model
+	*/
+	public function setAttributes($array)
+	{
+		$attributesArray = get_object_vars($array);
+		while (($value = current($attributesArray)) !== false) {
+			$this->setAttribute(key($attributesArray), $value);
+			next($attributesArray);
+		}
+	}
+	
+	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
