@@ -70,7 +70,7 @@ class MyMovieDisc extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'idMyMovie' => array(self::BELONGS_TO, 'MyMovie', 'Id_my_movie'),
+			'myMovie' => array(self::BELONGS_TO, 'MyMovie', 'Id_my_movie'),
 			'rippedCustomers' => array(self::HAS_MANY, 'RippedCustomer', 'Id_my_movie_disc'),
 		);
 	}

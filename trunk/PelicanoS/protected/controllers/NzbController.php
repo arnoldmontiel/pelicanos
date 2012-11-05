@@ -402,7 +402,7 @@ class NzbController extends Controller
 					{
 						$modelMyMovieSerieHeader = new MyMovieSerieHeader();
 						$modelMyMovieSerieHeader->setAttributes($item->myMovie->myMovieSerieHeader);
-						$modelMyMovieSerieHeader->poster = $this->getImage($modelMyMovieSerieHeader->poster_original, $modelMyMovieSerieHeader->Id);
+						$modelMyMovieSerieHeader->poster = MyMovieHelper::getImage($modelMyMovieSerieHeader->poster_original, $modelMyMovieSerieHeader->Id);
 						$modelMyMovieSerieHeader->save();
 					}
 					
@@ -418,7 +418,7 @@ class NzbController extends Controller
 						$modelMyMovieSeason->setAttributes($item->myMovie->myMovieSerieHeader->myMovieSeason);
 						$modelMyMovieSeason->Id_my_movie_serie_header = $item->myMovie->myMovieSerieHeader->Id;
 						$newFileName = $modelMyMovieSeason->Id_my_movie_serie_header .'_'.$modelMyMovieSeason->season_number;
-						$modelMyMovieSeason->banner = $this->getImage($modelMyMovieSeason->banner_original, $newFileName);
+						$modelMyMovieSeason->banner = MyMovieHelper::getImage($modelMyMovieSeason->banner_original, $newFileName);
 						$modelMyMovieSeason->save();
 						$idSeason = $modelMyMovieSeason->Id; 
 					}
@@ -433,8 +433,8 @@ class NzbController extends Controller
 				{
 					$modelMyMovie = new MyMovie();
 					$modelMyMovie->setAttributes($item->myMovie);
-					$modelMyMovie->poster = $this->getImage($modelMyMovie->poster_original, $modelMyMovie->Id);
-					$modelMyMovie->backdrop = $this->getImage($modelMyMovie->backdrop_original, $modelMyMovie->Id . '_bd');
+					$modelMyMovie->poster = MyMovieHelper::getImage($modelMyMovie->poster_original, $modelMyMovie->Id);
+					$modelMyMovie->backdrop = MyMovieHelper::getImage($modelMyMovie->backdrop_original, $modelMyMovie->Id . '_bd');
 					$modelMyMovie->save();
 				}
 				
@@ -728,33 +728,6 @@ class NzbController extends Controller
 		}
 	}
 	
-	private function getImage($original, $newFileName)
-	{
-		$validator = new CUrlValidator();
-		$setting = Setting::getInstance();
-	
-		$name = 'no_poster.jpg';
-		if($original!='' && $validator->validateValue($original))
-		{
-			try {
-				$content = @file_get_contents($original);
-				if ($content !== false) {
-					$file = fopen($setting->path_images."/".$newFileName.".jpg", 'w');
-					fwrite($file,$content);
-					fclose($file);
-					$name = $newFileName.".jpg";
-				} else {
-					// an error happened
-				}
-			} catch (Exception $e) {
-				throw $e;
-				// an error happened
-			}
-		}
-	
-		return $name;
-	
-	}
 	/**
 	 * @return array action filters
 	 */
