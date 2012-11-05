@@ -32,7 +32,7 @@ class MyMovieSerieHeader extends CActiveRecord
 		return parent::model($className);
 	}
 
-	public function setAttributes($array)
+	public function setAttributesByArray($array)
 	{
 		$attributesArray = get_object_vars($array);
 		while (($value = current($attributesArray)) !== false) {

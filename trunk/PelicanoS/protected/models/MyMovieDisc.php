@@ -28,7 +28,7 @@ class MyMovieDisc extends CActiveRecord
 	* Set model attributes by array
 	* @param Nab $model
 	*/
-	public function setAttributes($array)
+	public function setAttributesByArray($array)
 	{
 		$attributesArray = get_object_vars($array);
 		while (($value = current($attributesArray)) !== false) {
