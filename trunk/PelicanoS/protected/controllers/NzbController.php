@@ -14,7 +14,7 @@ class NzbController extends Controller
 		            'wsdl'=>array(
 		                'class'=>'CWebServiceAction',
 					'classMap'=>array(
-			                    'MovieResponse'=>'MovieResponse',  // or simply 'Post'
+			                    'NzbResponse'=>'NzbResponse',  // or simply 'Post'
 								'SerieResponse'=>'SerieResponse',  // or simply 'Post'
 								'SeasonResponse'=>'SeasonResponse',
 								'SerieStateRequest'=>'SerieStateRequest',
@@ -107,12 +107,12 @@ class NzbController extends Controller
 	}
 	
 	/**
-	 * Returns new and updated movies
+	 * Returns new and updated nzbs
 	 * @param string Id_device
-	 * @return MovieResponse[]
+	 * @return NzbResponse[]
 	 * @soap
 	 */
-	public function getNewMovies($Id_device)
+	public function getNewNzbs($Id_device)
 	{
 		
 		$criteria=new CDbCriteria;
@@ -125,9 +125,13 @@ class NzbController extends Controller
 
 		foreach ($arrayNbz as $modelNbz)
 		{
-			$movieResponse = new MovieResponse;
-			$movieResponse->setAttributes($modelNbz);
-			$arrayResponse[]=$movieResponse;
+			$nzbResponse = new NzbResponse();
+			$nzbResponse->nzb->setAttributes($modelNbz);
+			$nzbResponse->myMovieDisc->setAttributes($modelNbz->myMovieDiscNzb);
+			$nzbResponse->myMovie->setAttributes($modelNbz->myMovieDiscNzb->myMovieNzb);
+			$nzbResponse->myMovie->myMovieSerieHeader = self::getSerie($modelNbz->myMovieDiscNzb);
+
+			$arrayResponse[]=$nzbResponse;
 				
 			$nzbCustomerDB = NzbCustomer::model()->findByAttributes(array('Id_nzb'=>$modelNbz->Id, 'Id_device'=>$Id_device));
 			if($nzbCustomerDB != null)
@@ -151,6 +155,34 @@ class NzbController extends Controller
 		return $arrayResponse;
 	}
 
+	private function getSerie($modelMyMovieDiscNzb)
+	{
+		if(isset($modelMyMovieDiscNzb->myMovieNzb->myMovieSerieHeader))
+		{
+			$modelSerieHeader = new MyMovieSerieHeaderSOAP();
+			$modelSerieHeader->setAttributes($modelMyMovieDiscNzb->myMovieNzb->myMovieSerieHeader);
+				
+			$discEpisodesNzb = MyMovieDiscNzbMyMovieEpisode::model()->findAllByAttributes(array('Id_my_movie_disc_nzb'=>$modelMyMovieDiscNzb->Id));
+			$setSeason = true;
+			foreach($discEpisodesNzb as $item)
+			{
+				if($setSeason)
+				{
+					$modelSeason = MyMovieSeason::model()->findByPk($item->myMovieEpisode->Id_my_movie_season);
+					$modelSerieHeader->myMovieSeason->setAttributes($modelSeason);
+					$setSeason = false;
+				}
+	
+				$episodeSOAP = new MyMovieEpisodeSOAP();
+				$episodeSOAP->setAttributes($item->myMovieEpisode);
+				$modelSerieHeader->myMovieSeason->Episode[] = $episodeSOAP;
+			}
+				
+			return $modelSerieHeader;
+		}
+	
+		return null;
+	}
 	
 	/**
 	* Returns new and updated series
@@ -401,7 +433,7 @@ class NzbController extends Controller
 					if(!isset($modelMyMovieSerieHeaderDB))
 					{
 						$modelMyMovieSerieHeader = new MyMovieSerieHeader();
-						$modelMyMovieSerieHeader->setAttributes($item->myMovie->myMovieSerieHeader);
+						$modelMyMovieSerieHeader->setAttributesByArray($item->myMovie->myMovieSerieHeader);
 						$modelMyMovieSerieHeader->poster = MyMovieHelper::getImage($modelMyMovieSerieHeader->poster_original, $modelMyMovieSerieHeader->Id);
 						$modelMyMovieSerieHeader->save();
 					}
@@ -415,7 +447,7 @@ class NzbController extends Controller
 					if(!isset($modelMyMovieSeasonDB))
 					{
 						$modelMyMovieSeason = new MyMovieSeason();
-						$modelMyMovieSeason->setAttributes($item->myMovie->myMovieSerieHeader->myMovieSeason);
+						$modelMyMovieSeason->setAttributesByArray($item->myMovie->myMovieSerieHeader->myMovieSeason);
 						$modelMyMovieSeason->Id_my_movie_serie_header = $item->myMovie->myMovieSerieHeader->Id;
 						$newFileName = $modelMyMovieSeason->Id_my_movie_serie_header .'_'.$modelMyMovieSeason->season_number;
 						$modelMyMovieSeason->banner = MyMovieHelper::getImage($modelMyMovieSeason->banner_original, $newFileName);
@@ -432,7 +464,7 @@ class NzbController extends Controller
 				if(!isset($modelMyMovieDB))
 				{
 					$modelMyMovie = new MyMovie();
-					$modelMyMovie->setAttributes($item->myMovie);
+					$modelMyMovie->setAttributesByArray($item->myMovie);
 					$modelMyMovie->poster = MyMovieHelper::getImage($modelMyMovie->poster_original, $modelMyMovie->Id);
 					$modelMyMovie->backdrop = MyMovieHelper::getImage($modelMyMovie->backdrop_original, $modelMyMovie->Id . '_bd');
 					$modelMyMovie->save();
@@ -444,7 +476,7 @@ class NzbController extends Controller
 				if(!isset($modelMyMovieDiscDB))
 				{
 					$modelMyMovieDisc = new MyMovieDisc();
-					$modelMyMovieDisc->setAttributes($item->myMovieDisc);
+					$modelMyMovieDisc->setAttributesByArray($item->myMovieDisc);
 					$modelMyMovieDisc->save();
 					$idDisc = $modelMyMovieDisc->Id;
 				}
@@ -474,7 +506,7 @@ class NzbController extends Controller
 						if(!isset($modelMyMovieEpisodeDB))
 						{
 							$modelMyMovieEpisode = new MyMovieEpisode();
-							$modelMyMovieEpisode->setAttributes($episode);
+							$modelMyMovieEpisode->setAttributesByArray($episode);
 							$modelMyMovieEpisode->Id_my_movie_season = $idSeason;
 							$modelMyMovieEpisode->save();
 							$idEpisode = $modelMyMovieEpisode->Id; 
