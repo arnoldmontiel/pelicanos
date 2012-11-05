@@ -41,4 +41,10 @@ class MyMovieDiscSOAP
 	 * @soap
 	 */
 	public $Id_my_movie;
+	
+	/**
+	* @var string Id_my_movie_nzb
+	* @soap
+	*/
+	public $Id_my_movie_nzb;
 }
