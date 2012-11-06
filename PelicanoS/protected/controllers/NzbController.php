@@ -547,7 +547,63 @@ class NzbController extends Controller
 					$modelRippedCustomer->save();
 				}
 				
+				//grabo los audiotrack del disco rippeado
+				foreach($item->myMovie->AudioTrack as $audio)
+				{
+					$modelAudio = AudioTrack::model()->findByAttributes(array(
+														'language'=>$audio->language,
+														'type'=>$audio->type,
+														'chanel'=>$audio->chanel,
+															));
+					if(!isset($modelAudio))
+					{
+						$modelAudio = new AudioTrack();
+						$modelAudio->language = $audio->language;
+						$modelAudio->type = $audio->type;
+						$modelAudio->chanel = $audio->chanel;
+						$modelAudio->save();
+					}
+					
+					$myMovieAudioTrack = MyMovieAudioTrack::model()->findByAttributes(array(
+																	'Id_my_movie'=>$item->myMovie->Id,
+																	'Id_audio_track'=>$modelAudio->Id,
+																	));
+					if(!isset($myMovieAudioTrack))
+					{
+						$myMovieAudioTrack = new MyMovieAudioTrack();
+						$myMovieAudioTrack->Id_audio_track = $modelAudio->Id;
+						$myMovieAudioTrack->Id_my_movie = $item->myMovie->Id;
+						$myMovieAudioTrack->save();
+					}
+					
+				}
 			
+				//grabo los subtitulos del disco rippeado
+				foreach($item->myMovie->Subtitle as $sub)
+				{
+					$modelSub = Subtitle::model()->findByAttributes(array(
+																		'language'=>$sub->language,																		
+																	));
+					if(!isset($modelSub))
+					{
+						$modelSub = new Subtitle();
+						$modelSub->language = $sub->language;
+						$modelSub->save();
+					}
+						
+					$myMovieSubtitle = MyMovieSubtitle::model()->findByAttributes(array(
+																	'Id_my_movie'=>$item->myMovie->Id,
+																	'Id_subtitle'=>$modelSub->Id,
+															));
+					if(!isset($myMovieSubtitle))
+					{
+						$myMovieSubtitle = new MyMovieSubtitle();
+						$myMovieSubtitle->Id_subtitle = $modelSub->Id;
+						$myMovieSubtitle->Id_my_movie = $item->myMovie->Id;
+						$myMovieSubtitle->save();
+					}
+						
+				}
 			}
 	
 		} catch (Exception $e) {
