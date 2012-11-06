@@ -9,6 +9,8 @@
  */
 class MyMovieNzbSubtitle extends CActiveRecord
 {
+	public $language;
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -40,7 +42,7 @@ class MyMovieNzbSubtitle extends CActiveRecord
 			array('Id_my_movie_nzb', 'length', 'max'=>200),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id_my_movie_nzb, Id_subtitle', 'safe', 'on'=>'search'),
+			array('Id_my_movie_nzb, Id_subtitle, language', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -52,6 +54,8 @@ class MyMovieNzbSubtitle extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'myMovieNzb' => array(self::BELONGS_TO, 'MyMovieNzb', 'Id_my_movie_nzb'),
+			'subtitle' => array(self::BELONGS_TO, 'Subtitle', 'Id_subtitle'),
 		);
 	}
 
@@ -80,8 +84,21 @@ class MyMovieNzbSubtitle extends CActiveRecord
 		$criteria->compare('Id_my_movie_nzb',$this->Id_my_movie_nzb,true);
 		$criteria->compare('Id_subtitle',$this->Id_subtitle);
 
+		$criteria->with[]='subtitle';
+		$criteria->addSearchCondition("subtitle.language",$this->language);
+				
+		$sort=new CSort;
+		$sort->attributes=array(
+									'language' => array(
+											        'asc' => 'subtitle.language',
+											        'desc' => 'subtitle.language DESC',
+		),
+								'*',
+		);
+		
 		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
+															'criteria'=>$criteria,
+															'sort'=>$sort,
 		));
 	}
 }
