@@ -1089,7 +1089,7 @@ class NzbController extends Controller
 	
 					if($model->save()){
 						$transaction->commit();
-						$this->redirect(array('findSubtitle','id'=>$model->Id));
+						$this->redirect(array('selectSpecification','id'=>$model->Id));
 					}
 	
 				} catch (Exception $e) {
@@ -1104,6 +1104,45 @@ class NzbController extends Controller
 				'ddlRsrcType'=>$ddlRsrcType,
 				'ddlParentalControl'=>$ddlParentalControl,
 				'modelMyMovieNzb'=>$modelMyMovieNzb,
+		));
+	}
+	
+	public function actionSelectSpecification($id)
+	{
+		$model = Nzb::model()->findByPk($id);
+		
+		$modelSubtitle = new Subtitle('search');
+		$modelSubtitle->unsetAttributes();  // clear any default values
+		
+		$modelAudioTrack = new AudioTrack('search');
+		$modelAudioTrack->unsetAttributes();  // clear any default values
+		
+		$modelNzbSubtitle = new MyMovieNzbSubtitle('search');
+		$modelNzbSubtitle->unsetAttributes();  // clear any default values
+		$modelNzbSubtitle->Id_my_movie_nzb = $model->myMovieDiscNzb->Id_my_movie_nzb;
+		
+		$modelNzbAudioTrack = new MyMovieNzbAudioTrack('search');
+		$modelNzbAudioTrack->unsetAttributes();  // clear any default values
+		$modelNzbAudioTrack->Id_my_movie_nzb = $model->myMovieDiscNzb->Id_my_movie_nzb;
+		
+		if(isset($_GET['Subtitle']))
+			$modelSubtitle->attributes=$_GET['Subtitle'];
+		
+		if(isset($_GET['AudioTrack']))
+			$modelAudioTrack->attributes=$_GET['AudioTrack'];
+		
+		if(isset($_GET['MyMovieNzbSubtitle']))
+			$modelNzbSubtitle->attributes=$_GET['MyMovieNzbSubtitle'];
+		
+		if(isset($_GET['MyMovieNzbAudioTrack']))
+			$modelNzbAudioTrack->attributes=$_GET['MyMovieNzbAudioTrack'];
+		
+		$this->render('selectSpecification',array(
+						'model'=>$model,
+						'modelSubtitle'=>$modelSubtitle,
+						'modelAudioTrack'=>$modelAudioTrack,
+						'modelNzbSubtitle'=>$modelNzbSubtitle,
+						'modelNzbAudioTrack'=>$modelNzbAudioTrack,
 		));
 	}
 	
@@ -1324,6 +1363,44 @@ class NzbController extends Controller
 		}
 	}
 	
+	public function actionAjaxSaveAudioTrack()
+	{
+		$model = new AudioTrack();
+		if(isset($_POST['AudioTrack']))
+		{
+			$model->attributes = $_POST['AudioTrack'];
+	
+			$modelAudioTrackDB = AudioTrack::model()->findByAttributes(array(
+													'language'=>$model->language,
+													'type'=>$model->type,
+													'chanel'=>$model->chanel,
+			));
+	
+			if(!isset($modelAudioTrackDB))
+			{
+				$model->save();
+			}
+		}
+	}
+
+	public function actionAjaxSaveSubtitle()
+	{
+		$model = new Subtitle();
+		if(isset($_POST['Subtitle']))
+		{
+			$model->attributes = $_POST['Subtitle'];
+	
+			$modelSubtitleDB = Subtitle::model()->findByAttributes(array(
+														'language'=>$model->language,
+			));
+	
+			if(!isset($modelSubtitleDB))
+			{
+				$model->save();
+			}
+		}
+	}
+	
 	public function actionAjaxSearchSeason()
 	{
 		if(isset($_POST['MyMovieAPIRequest']))
@@ -1392,6 +1469,44 @@ class NzbController extends Controller
 		}
 	}
 	
+	public function actionAjaxAddAudioTrack()
+	{
+		$idAudioTrack = isset($_GET['idAudioTrack'][0])?$_GET['idAudioTrack'][0]:'';
+		$idMyMovieNzb = isset($_GET['idMyMovieNzb'])?$_GET['idMyMovieNzb']:'';
+			
+		if(!empty($idAudioTrack)&&!empty($idMyMovieNzb))
+		{
+			$relationDB = MyMovieNzbAudioTrack::model()->findByPk(array(
+											'Id_audio_track'=>(int) $idAudioTrack,
+											'Id_my_movie_nzb'=>$idMyMovieNzb));
+			if(!isset($relationDB))
+			{
+				$model=new MyMovieNzbAudioTrack();
+				$model->attributes = array('Id_audio_track'=>$idAudioTrack,'Id_my_movie_nzb'=>$idMyMovieNzb);
+				$model->save();
+			}
+		}
+	}
+	
+	public function actionAjaxAddSubtitle()
+	{
+		$idSubtitle = isset($_GET['idSubtitle'][0])?$_GET['idSubtitle'][0]:'';
+		$idMyMovieNzb = isset($_GET['idMyMovieNzb'])?$_GET['idMyMovieNzb']:'';
+			
+		if(!empty($idSubtitle)&&!empty($idMyMovieNzb))
+		{
+			$relationDB = MyMovieNzbSubtitle::model()->findByPk(array(
+												'Id_subtitle'=>(int) $idSubtitle,
+												'Id_my_movie_nzb'=>$idMyMovieNzb));
+			if(!isset($relationDB))
+			{
+				$model=new MyMovieNzbSubtitle();
+				$model->attributes = array('Id_subtitle'=>$idSubtitle,'Id_my_movie_nzb'=>$idMyMovieNzb);
+				$model->save();
+			}
+		}
+	}
+	
 	public function actionAjaxAddDiscEpisode()
 	{
 		$idEpisode = isset($_GET['idEpisode'][0])?$_GET['idEpisode'][0]:'';
@@ -1417,6 +1532,36 @@ class NzbController extends Controller
 		if(!empty($idEpisode)&&!empty($idDisc))
 		{
 			$relationDB = MyMovieDiscNzbMyMovieEpisode::model()->findByPk(array('Id_my_movie_episode'=>(int) $idEpisode,'Id_my_movie_disc_nzb'=>$idDisc));
+			if(isset($relationDB))
+			{
+				$relationDB->delete();
+			}
+		}
+	}
+	
+	public function actionAjaxRemoveAudioTrack()
+	{
+		$idAudioTrack = isset($_GET['idAudioTrack'])?$_GET['idAudioTrack']:'';
+		$idMyMovieNzb = isset($_GET['idMyMovieNzb'])?$_GET['idMyMovieNzb']:'';
+			
+		if(!empty($idAudioTrack)&&!empty($idMyMovieNzb))
+		{
+			$relationDB = MyMovieNzbAudioTrack::model()->findByPk(array('Id_audio_track'=>(int) $idAudioTrack,'Id_my_movie_nzb'=>$idMyMovieNzb));
+			if(isset($relationDB))
+			{
+				$relationDB->delete();
+			}
+		}
+	}
+	
+	public function actionAjaxRemoveSubtitle()
+	{
+		$idSubtitle = isset($_GET['idSubtitle'])?$_GET['idSubtitle']:'';
+		$idMyMovieNzb = isset($_GET['idMyMovieNzb'])?$_GET['idMyMovieNzb']:'';
+			
+		if(!empty($idSubtitle)&&!empty($idMyMovieNzb))
+		{
+			$relationDB = MyMovieNzbSubtitle::model()->findByPk(array('Id_subtitle'=>(int) $idSubtitle,'Id_my_movie_nzb'=>$idMyMovieNzb));
 			if(isset($relationDB))
 			{
 				$relationDB->delete();
