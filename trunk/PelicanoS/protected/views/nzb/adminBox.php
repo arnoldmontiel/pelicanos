@@ -44,12 +44,16 @@ $this->menu=array(
 		),
 		array(
 			'class'=>'CButtonColumn',
-			'template'=>'{update}',
+			'template'=>'{update} {specification}',
 			'buttons'=>array
 				(
 					'update' => array
 					(
 						'url'=>'Yii::app()->createUrl("nzb/updateBox", array("id"=>$data->Id))',
+					),
+					'specification' => array
+					(
+						'url'=>'Yii::app()->createUrl("nzb/updateSpecification", array("id"=>$data->Id))',
 					),
 				),
 		),
