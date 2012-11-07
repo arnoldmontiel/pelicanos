@@ -1069,6 +1069,45 @@ class NzbController extends Controller
 		));
 	}
 	
+	public function actionUpdateSpecification($id)
+	{
+		$model = MyMovieNzb::model()->findByPk($id);
+	
+		$modelSubtitle = new Subtitle('search');
+		$modelSubtitle->unsetAttributes();  // clear any default values
+	
+		$modelAudioTrack = new AudioTrack('search');
+		$modelAudioTrack->unsetAttributes();  // clear any default values
+	
+		$modelNzbSubtitle = new MyMovieNzbSubtitle('search');
+		$modelNzbSubtitle->unsetAttributes();  // clear any default values
+		$modelNzbSubtitle->Id_my_movie_nzb = $id;
+	
+		$modelNzbAudioTrack = new MyMovieNzbAudioTrack('search');
+		$modelNzbAudioTrack->unsetAttributes();  // clear any default values
+		$modelNzbAudioTrack->Id_my_movie_nzb = $id;
+	
+		if(isset($_GET['Subtitle']))
+			$modelSubtitle->attributes=$_GET['Subtitle'];
+	
+		if(isset($_GET['AudioTrack']))
+			$modelAudioTrack->attributes=$_GET['AudioTrack'];
+	
+		if(isset($_GET['MyMovieNzbSubtitle']))
+			$modelNzbSubtitle->attributes=$_GET['MyMovieNzbSubtitle'];
+	
+		if(isset($_GET['MyMovieNzbAudioTrack']))
+			$modelNzbAudioTrack->attributes=$_GET['MyMovieNzbAudioTrack'];
+	
+		$this->render('updateSpecification',array(
+							'model'=>$model,
+							'modelSubtitle'=>$modelSubtitle,
+							'modelAudioTrack'=>$modelAudioTrack,
+							'modelNzbSubtitle'=>$modelNzbSubtitle,
+							'modelNzbAudioTrack'=>$modelNzbAudioTrack,
+		));
+	}
+	
 	public function actionCreateBox()
 	{
 		$model=new Nzb;
