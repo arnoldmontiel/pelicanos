@@ -227,7 +227,7 @@ $('#Nzb_points').keyup(function(){
 		<div class="row buttons">
 			<?php 			
 									
-				echo CHtml::submitButton($model->isNewRecord ? 'Create and find Subtitle' : 'Save', array('id'=>'saveButton','disabled'=>'disabled'));
+				echo CHtml::submitButton($model->isNewRecord ? 'Next' : 'Save', array('id'=>'saveButton','disabled'=>'disabled'));
 				echo CHtml::submitButton('Cancel', array('id'=>'cancelButton'));
 			?>		
 		</div>
