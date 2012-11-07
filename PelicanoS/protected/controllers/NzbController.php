@@ -14,8 +14,7 @@ class NzbController extends Controller
 		            'wsdl'=>array(
 		                'class'=>'CWebServiceAction',
 					'classMap'=>array(
-			                    'NzbResponse'=>'NzbResponse',  // or simply 'Post'
-								'SerieResponse'=>'SerieResponse',  // or simply 'Post'
+			                    'NzbResponse'=>'NzbResponse',  // or simply 'Post'								
 								'SeasonResponse'=>'SeasonResponse',
 								'SerieStateRequest'=>'SerieStateRequest',
 								'MovieStateRequest'=>'MovieStateRequest',
@@ -131,6 +130,24 @@ class NzbController extends Controller
 			$nzbResponse->myMovie->setAttributes($modelNbz->myMovieDiscNzb->myMovieNzb);
 			$nzbResponse->myMovie->myMovieSerieHeader = self::getSerie($modelNbz->myMovieDiscNzb);
 
+			//set audio track
+			$relAudioTracks = MyMovieNzbAudioTrack::model()->findAllByAttributes(array('Id_my_movie_nzb'=>$modelNbz->myMovieDiscNzb->Id_my_movie_nzb));
+			foreach($relAudioTracks as $relAudioTrack)
+			{
+				$audioTrackSOAP = new MyMovieAudioTrackSOAP();
+				$audioTrackSOAP->setAttributes($relAudioTrack->audioTrack);
+				$nzbResponse->myMovie->AudioTrack[] = $audioTrackSOAP;
+			}
+			
+			//set subtitle
+			$relSubtitles = MyMovieNzbSubtitle::model()->findAllByAttributes(array('Id_my_movie_nzb'=>$modelNbz->myMovieDiscNzb->Id_my_movie_nzb));
+			foreach($relSubtitles as $relSubtitle)
+			{
+				$subtitleSOAP = new MyMovieSubtitleSOAP();
+				$subtitleSOAP->setAttributes($relSubtitle->subtitle);
+				$nzbResponse->myMovie->Subtitle[] = $subtitleSOAP;
+			}
+			
 			$arrayResponse[]=$nzbResponse;
 				
 			$nzbCustomerDB = NzbCustomer::model()->findByAttributes(array('Id_nzb'=>$modelNbz->Id, 'Id_device'=>$Id_device));
@@ -182,100 +199,6 @@ class NzbController extends Controller
 		}
 	
 		return null;
-	}
-	
-	/**
-	* Returns new and updated series
-	* @param integer idCustomer
-	* @return SerieResponse[]
-	* @soap
-	*/
-	public function getNewSeries($idCustomer)
-	{
-		$criteria=new CDbCriteria;
-		
-		$criteria->addCondition('t.Id NOT IN(select Id_nzb from nzb_customer where Id_customer = '. $idCustomer.' and need_update = 0)');
-		$criteria->addCondition('t.Id_imdbdata_tv is not null');
-		//$criteria->addCondition('t.deleted  <> 1');
-		
-		$arrayNbz = Nzb::model()->findAll($criteria);
-		$arrayResponse = array();
-		
-		
-		//check if there are headers which need update
-		$imdbdataTvCustomerDB = ImdbdataTvCustomer::model()->findAllByAttributes(array('need_update'=>1));
-		foreach ($imdbdataTvCustomerDB as $item)
-		{
-			$imdbdataTv = ImdbdataTv::model()->findByPk($item->Id_imdbdata_tv);
-			$serieResponse = new SerieResponse;
-			$serieResponse->setHeaderAttributes($imdbdataTv);
-			$serieResponse->setSeasons( Season::model()->findAllByAttributes(array('Id_imdbdata_tv'=>$imdbdataTv->ID)));
-			$arrayResponse[]=$serieResponse;
-		}
-		
-		foreach ($arrayNbz as $modelNbz) //add Serie Header
-		{
-			$imdbdataTv = ImdbdataTv::model()->findByPk($modelNbz->imdbDataTv->Id_parent);
-			if(!$this->findImdbID($imdbdataTv->ID, $arrayResponse)) // insert just once
-			{
-				$imdbdataTvCustomerDB = ImdbdataTvCustomer::model()->findByPk(array('Id_imdbdata_tv'=>$imdbdataTv->ID,'Id_customer'=>$idCustomer));
-				if($imdbdataTvCustomerDB == null) //insert send Serie Header
-				{
-					$modelImdbCustomer = new ImdbdataTvCustomer;
-					
-					$modelImdbCustomer->attributes = array(
-															'Id_imdbdata_tv'=>$imdbdataTv->ID,
-															'Id_customer'=>$idCustomer,
-															'need_update'=> 1,
-					);
-					$modelImdbCustomer->save();
-					
-					$serieResponse = new SerieResponse;
-					$serieResponse->setHeaderAttributes($imdbdataTv);
-					$serieResponse->setSeasons( Season::model()->findAllByAttributes(array('Id_imdbdata_tv'=>$imdbdataTv->ID)));
-					$arrayResponse[]=$serieResponse;
-				}
-				else 
-				{
-					if($imdbdataTvCustomerDB->need_update == 1)
-					{
-						$serieResponse = new SerieResponse;
-						$serieResponse->setHeaderAttributes($imdbdataTv);
-						$serieResponse->setSeasons( Season::model()->findAllByAttributes(array('Id_imdbdata_tv'=>$imdbdataTv->ID)));
-						$arrayResponse[]=$serieResponse;
-					}
-				}
-			}
-				
-		}
-		
-		foreach ($arrayNbz as $modelNbz) //add episode (nzb)
-		{
-			
-			$serieResponse = new SerieResponse;
-			$serieResponse->setAttributes($modelNbz);
-			$arrayResponse[]=$serieResponse;
-	
-			$nzbCustomerDB = NzbCustomer::model()->findByPk(array('Id_nzb'=>$modelNbz->Id, 'Id_customer'=>$idCustomer));
-			if($nzbCustomerDB != null)
-			{
-				$nzbCustomerDB->need_update = 1;
-				$nzbCustomerDB->save();
-			}
-			else
-			{
-				$modelNzbCustomer = new NzbCustomer;
-	
-				$modelNzbCustomer->attributes = array(
-													'Id_nzb'=>$modelNbz->Id,
-													'Id_customer'=>$idCustomer,
-													'need_update'=> 1,
-				);
-				$modelNzbCustomer->save();
-			}
-		}
-	
-		return $arrayResponse;
 	}
 	
 	/**
