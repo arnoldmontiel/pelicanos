@@ -113,7 +113,7 @@ class NzbController extends Controller
 	 */
 	public function getNewNzbs($Id_device)
 	{
-		
+				
 		$criteria=new CDbCriteria;
 		
 		$criteria->addCondition('t.Id NOT IN(select Id_nzb from nzb_customer where Id_device = "'. $Id_device.'" and need_update = 0)');
@@ -121,7 +121,7 @@ class NzbController extends Controller
 		
 		$arrayNbz = Nzb::model()->findAll($criteria);
 		$arrayResponse = array();
-
+		 
 		foreach ($arrayNbz as $modelNbz)
 		{
 			$nzbResponse = new NzbResponse();
@@ -201,35 +201,35 @@ class NzbController extends Controller
 		return null;
 	}
 	
-	/**
-	*
-	* Update customer
-	* @param CustomerRequest
-	* @return integer idCusomer
-	* @soap
-	*/
-	public function updateCustomer($customerRequest )
-	{
-		$idCustomer = 0;
-		try {
+// 	/**
+// 	*
+// 	* Update customer
+// 	* @param CustomerRequest
+// 	* @return integer idCusomer
+// 	* @soap
+// 	*/
+// 	public function updateCustomer($customerRequest )
+// 	{
+// 		$idCustomer = 0;
+// 		try {
 				
-			$model = Customer::model()->findByPk($customerRequest->Id);
-			if($model)
-			{
-				$model->name = $customerRequest->name;
-				$model->last_name = $customerRequest->last_name;
-				$model->address = $customerRequest->address;
-				if($model->save())
-				{
-					$idCustomer = $model->Id;
-				}
-			}
+// 			$model = Customer::model()->findByPk($customerRequest->Id);
+// 			if($model)
+// 			{
+// 				$model->name = $customerRequest->name;
+// 				$model->last_name = $customerRequest->last_name;
+// 				$model->address = $customerRequest->address;
+// 				if($model->save())
+// 				{
+// 					$idCustomer = $model->Id;
+// 				}
+// 			}
 				
-		} catch (Exception $e) {
-			return $idCustomer;
-		}
-		return $idCustomer;
-	}
+// 		} catch (Exception $e) {
+// 			return $idCustomer;
+// 		}
+// 		return $idCustomer;
+// 	}
 	
 	/**
 	*
