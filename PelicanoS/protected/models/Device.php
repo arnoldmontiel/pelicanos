@@ -1,19 +1,23 @@
 <?php
 
 /**
- * This is the model class for table "customer_device".
+ * This is the model class for table "device".
  *
- * The followings are the available columns in table 'customer_device':
- * @property string $Id_device
- * @property integer $Id_customer
+ * The followings are the available columns in table 'device':
+ * @property string $Id
+ * @property string $description
+ *
+ * The followings are the available model relations:
+ * @property ClientSettings[] $clientSettings
+ * @property Customer[] $customers
+ * @property SettingsRipper[] $settingsRippers
  */
-class CustomerDevice extends CActiveRecord
+class Device extends CActiveRecord
 {
-	public $device_description;
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return CustomerDevice the static model class
+	 * @return Device the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -25,7 +29,7 @@ class CustomerDevice extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'customer_device';
+		return 'device';
 	}
 
 	/**
@@ -36,12 +40,12 @@ class CustomerDevice extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('Id_device, Id_customer', 'required'),
-			array('Id_customer', 'numerical', 'integerOnly'=>true),
-			array('Id_device', 'length', 'max'=>45),
+			array('Id', 'required'),
+			array('Id', 'length', 'max'=>45),
+			array('description', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id_device, Id_customer, device_description', 'safe', 'on'=>'search'),
+			array('Id, description', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -53,8 +57,9 @@ class CustomerDevice extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'customer' => array(self::BELONGS_TO, 'Customer', 'Id_customer'),
-			'device' => array(self::BELONGS_TO, 'Device', 'Id_device'),
+			'clientSettings' => array(self::HAS_MANY, 'ClientSettings', 'Id_device'),
+			'customers' => array(self::MANY_MANY, 'Customer', 'customer_device(Id_device, Id_customer)'),
+			'settingsRippers' => array(self::HAS_MANY, 'SettingsRipper', 'Id_device'),
 		);
 	}
 
@@ -64,8 +69,8 @@ class CustomerDevice extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'Id_device' => 'Device',
-			'Id_customer' => 'Id Customer',
+			'Id' => 'ID',
+			'description' => 'Description',
 		);
 	}
 
@@ -80,12 +85,9 @@ class CustomerDevice extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('Id_device',$this->Id_device,true);
-		$criteria->compare('Id_customer',$this->Id_customer);
+		$criteria->compare('Id',$this->Id,true);
+		$criteria->compare('description',$this->description,true);
 
-		$criteria->with[]='device';
-		$criteria->compare('device.description',$device_description);
-		
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
