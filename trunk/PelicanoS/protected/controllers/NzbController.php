@@ -25,7 +25,7 @@ class NzbController extends Controller
 								'RippedResponse'=>'RippedResponse',
 								'LogRequest'=>'LogRequest',
 								'LogResponse'=>'LogResponse',
-								'CustomerRequest'=>'CustomerRequest',
+								'setupResponse'=>'setupResponse',
 								'CustomerResponse'=>'CustomerResponse',
 								'InstallDataResponse'=>'InstallDataResponse',
 		),
@@ -267,37 +267,29 @@ class NzbController extends Controller
 	
 	/**
 	*
-	* Create customer
-	* @param CustomerRequest
-	* @return integer idCusomer
+	* Is use to install pelicano in cliente.
+	* @param string idDevice
+	* @return SetupResponse
 	* @soap
 	*/
-	public function setCustomer($customerRequest)
+	public function setup($idDevice)
 	{		
-		$idCustomer = 0;
 		try {
 			
-			$model = new Customer();
-			$model->name = $customerRequest->name;
-			$model->last_name = $customerRequest->last_name;
-			$model->address = $customerRequest->address;
-			$model->Id_reseller = $customerRequest->Id_reseller;
-			$model->code = uniqid();
+			$modelRel = CustomerDevice::model()->findByAttributes(array('Id_device'=>$idDevice));
 			
-			if($model->save())
+			if(isset($modelRel))
 			{
-				$idCustomer = $model->Id;
-				$modelcustomerDevice = new CustomerDevice();
-				$modelcustomerDevice->Id_customer = $idCustomer;
-				$modelcustomerDevice->Id_device = $customerRequest->Id_device;
-				$modelcustomerDevice->save();
+				$modelResponse = new SetupResponse();
+				$modelResponse->Id_device = $idDevice;
+				$modelResponse->Id_customer = $modelRel->Id_customer;
+				$modelResponse->setAttributes($modelRel->customer);
+				
+				return $modelResponse;
 			}
-	
-			
 		} catch (Exception $e) {
-			return $idCustomer;
+			return null;
 		}
-		return $idCustomer;
 	}
 	
 	/**

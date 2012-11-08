@@ -38,6 +38,9 @@ class CustomerController extends Controller
 	 */
 	public function actionView($id)
 	{
+		$modelCustDev = new CustomerDevice('search');
+		$modelCustDev->unsetAttributes();
+		$modelCustDev->Id_customer = $id;
 		
 		$modelCustUsers = new CustomerUsers('search');
 		$modelCustUsers->unsetAttributes();
@@ -46,10 +49,48 @@ class CustomerController extends Controller
 		if(isset($_GET['CustomerUsers']))
 			$modelCustUsers->attributes=$_GET['CustomerUsers'];
 		
+		if(isset($_GET['CustomerDevice']))
+			$modelCustDev->attributes=$_GET['CustomerDevice'];
+		
 		$this->render('view',array(
 			'model'=>$this->loadModel($id),
 			'modelCustUsr'=>$modelCustUsers,
+			'modelCustDev'=>$modelCustDev,
 		));
+	}
+	
+	public function actionAjaxSaveDevice()
+	{
+		$model = new Device();
+		if(isset($_POST['Device']) && isset($_POST['idCustomer']))
+		{
+			$model->attributes = $_POST['Device'];
+			$model->Id = uniqid();
+			if($model->save())
+			{
+				$modelRel = new CustomerDevice();
+				$modelRel->Id_customer = (int)$_POST['idCustomer'];
+				$modelRel->Id_device = $model->Id;
+				$modelRel->save();
+			}
+		}
+	}
+	
+	public function actionAjaxRemoveCustomerDevice()
+	{
+		$idDevice = $_GET['idDevice'];
+		$idCustomer = $_GET['idCustomer'];
+
+		if(isset($idDevice) && isset($idCustomer))
+		{
+			$model = CustomerDevice::model()->findByAttributes(array(
+												'Id_customer'=>$idCustomer,
+												'Id_device'=>$idDevice,
+				));
+			if(isset($model))
+				$model->delete();
+			
+		}
 	}
 	
 	public function actionViewRipped($id)
@@ -144,6 +185,7 @@ class CustomerController extends Controller
 		if(isset($_POST['Customer']))
 		{
 			$model->attributes=$_POST['Customer'];
+			$model->Id_reseller = User::getResellerId();
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->Id));
 		}
