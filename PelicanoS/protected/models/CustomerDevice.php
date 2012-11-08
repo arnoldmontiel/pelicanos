@@ -4,11 +4,8 @@
  * This is the model class for table "customer_device".
  *
  * The followings are the available columns in table 'customer_device':
- * @property integer $Id_device
+ * @property string $Id_device
  * @property integer $Id_customer
- *
- * The followings are the available model relations:
- * @property Customer $idCustomer
  */
 class CustomerDevice extends CActiveRecord
 {
@@ -40,7 +37,7 @@ class CustomerDevice extends CActiveRecord
 		return array(
 			array('Id_device, Id_customer', 'required'),
 			array('Id_customer', 'numerical', 'integerOnly'=>true),
-			array('Id_device', 'length', 'max'=>100),
+			array('Id_device', 'length', 'max'=>45),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('Id_device, Id_customer', 'safe', 'on'=>'search'),
@@ -55,7 +52,8 @@ class CustomerDevice extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'idCustomer' => array(self::BELONGS_TO, 'Customer', 'Id_customer'),
+			'customer' => array(self::BELONGS_TO, 'Customer', 'Id_customer'),
+			'device' => array(self::BELONGS_TO, 'Device', 'Id_device'),
 		);
 	}
 
@@ -81,7 +79,7 @@ class CustomerDevice extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('Id_device',$this->Id_device);
+		$criteria->compare('Id_device',$this->Id_device,true);
 		$criteria->compare('Id_customer',$this->Id_customer);
 
 		return new CActiveDataProvider($this, array(
