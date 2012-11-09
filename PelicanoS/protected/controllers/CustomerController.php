@@ -98,7 +98,12 @@ class CustomerController extends Controller
 	
 		$model = MyMovie::model()->findByPk($id);
 		
-		$modelRippedCustomer = RippedCustomer::model()->findByAttributes(array('Id_my_movie'=>$id));
+		$criteria=new CDbCriteria;
+	
+		$criteria->join =	"LEFT OUTER JOIN ripped_customer rc ON rc.Id_device=t.Id_device";
+		$criteria->addCondition('rc.Id_my_movie_disc = "'. $id.'"');
+		
+		$modelCustomerDevice = CustomerDevice::model()->find($criteria);
 	
 		$this->render('viewRipped',array(
 				'model'=>$model,
@@ -143,7 +148,7 @@ class CustomerController extends Controller
 	{
 	
 		$criteria=new CDbCriteria;
-		$criteria->addCondition('t.Id_customer = '. $id);
+		$criteria->addCondition('t.Id_device IN (select Id_device from customer_device where Id_customer = '.$id.')');
 		
 		$dataProvider=new CActiveDataProvider('RippedCustomer', array(
 								'criteria'=>$criteria,

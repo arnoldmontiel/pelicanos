@@ -26,32 +26,11 @@ class NzbController extends Controller
 								'LogRequest'=>'LogRequest',
 								'LogResponse'=>'LogResponse',
 								'CustomerResponse'=>'CustomerResponse',
-								'InstallDataResponse'=>'InstallDataResponse',
 		),
 		),
 		);
 	}
 	
-	/**
-	* Get installation data
-	* @param string username
-	* @param string password
-	* @return InstallDataResponse
-	* @soap
-	*/
-	public function getInstallData($username, $password)
-	{
-		$model = User::model()->findByAttributes(array('username'=>$username, 'password'=>$password));
-		$installDataResponse = null;
-		if($model)
-		{
-			$installDataResponse = new InstallDataResponse();
-			$installDataResponse->Id_reseller = $model->Id_reseller;
-			$installDataResponse->Id_device = uniqid();
-		}
-	
-		return $installDataResponse;
-	}
 	
 	/**
 	* Get ripped by customer (feedback to client)
@@ -200,35 +179,6 @@ class NzbController extends Controller
 		return null;
 	}
 	
-// 	/**
-// 	*
-// 	* Update customer
-// 	* @param CustomerRequest
-// 	* @return integer idCusomer
-// 	* @soap
-// 	*/
-// 	public function updateCustomer($customerRequest )
-// 	{
-// 		$idCustomer = 0;
-// 		try {
-				
-// 			$model = Customer::model()->findByPk($customerRequest->Id);
-// 			if($model)
-// 			{
-// 				$model->name = $customerRequest->name;
-// 				$model->last_name = $customerRequest->last_name;
-// 				$model->address = $customerRequest->address;
-// 				if($model->save())
-// 				{
-// 					$idCustomer = $model->Id;
-// 				}
-// 			}
-				
-// 		} catch (Exception $e) {
-// 			return $idCustomer;
-// 		}
-// 		return $idCustomer;
-// 	}
 	
 	/**
 	*
