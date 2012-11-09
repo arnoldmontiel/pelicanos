@@ -15,4 +15,7 @@ $this->menu=array(
 
 <h1>Update ClientSettings <?php echo $model->Id; ?></h1>
 
-<?php echo $this->renderPartial('_form', array('model'=>$model)); ?>
+<?php echo $this->renderPartial('_form', array('model'=>$model,
+	'modelClientSettings'=>$modelClientSettings,
+	'modelSettingsRipper'=>$modelSettingsRipper)); 
+?>

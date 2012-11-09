@@ -5,7 +5,6 @@
 	'enableAjaxValidation'=>false,
 )); ?>
 
-	<p class="note">Fields with <span class="required">*</span> are required.</p>
 
 	<?php echo $form->errorSummary($model); ?>
 
@@ -45,12 +44,6 @@
 		<?php echo $form->labelEx($model,'port_v6'); ?>
 		<?php echo $form->textField($model,'port_v6'); ?>
 		<?php echo $form->error($model,'port_v6'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'last_update'); ?>
-		<?php echo $form->textField($model,'last_update'); ?>
-		<?php echo $form->error($model,'last_update'); ?>
 	</div>
 
 	<div class="row buttons">

@@ -94,7 +94,7 @@ class WSSettingsController extends Controller
 		
 	}
 	/**
-	* Set wich version has been downloaded
+	* check for a now version of anydvd
 	* @param string idDevice
 	* @return ServerAnydvdUpdateResponse response
 	* @soap
@@ -121,6 +121,29 @@ class WSSettingsController extends Controller
 					$response->version = $anydvdVersion->version;						
 				}				
 			}
+		}
+		return $response;
+	}
+	/**
+	* Returns the device configuration
+	* @param string idDevice
+	* @return ServerSettingsRipperResponse response
+	* @soap
+	*/
+	
+	public function getRipperSettings($idDevice)
+	{
+		$response = new ServerSettingsRipperResponse;
+		$model = SettingsRipper::model()->findByAttributes(array('Id_device'=>$idDevice));
+		if(isset($model))
+		{
+			$response->drive_letter = $model->drive_letter;
+			$response->final_folder_ripping = $model->final_folder_ripping;
+			$response->mymovies_password = $model->mymovies_password;
+			$response->mymovies_username = $model->mymovies_username;
+			$response->temp_folder_ripping = $model->temp_folder_ripping;
+			$response->time_from_reboot = $model->time_from_reboot;
+			$response->time_to_reboot = $model->time_to_reboot;
 		}
 		return $response;
 	}

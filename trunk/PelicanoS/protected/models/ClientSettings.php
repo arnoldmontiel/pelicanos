@@ -48,7 +48,7 @@ class ClientSettings extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('Id, Id_customer, Id_device', 'required'),
+			array('Id_customer, Id_device', 'required'),
 			array('Id, port_v4, port_v6, Id_customer, need_update', 'numerical', 'integerOnly'=>true),
 			array('ip_v4, ip_v6, anydvd_version_installed, anydvd_version_downloaded', 'length', 'max'=>128),
 			array('Id_device', 'length', 'max'=>45),
