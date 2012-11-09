@@ -10,6 +10,7 @@ class WSSettingsController extends Controller
 		                'class'=>'CWebServiceAction',
 					'classMap'=>array(
 			                    'ClientSettingsRequest'=>'ClientSettingsRequest',
+			                    'CustomerSettingsResponse'=>'CustomerSettingsResponse',
 		),
 		),
 		);
@@ -146,6 +147,59 @@ class WSSettingsController extends Controller
 			$response->time_to_reboot = $model->time_to_reboot;
 		}
 		return $response;
+	}
+	
+	/**
+	*
+	* Returns the customer configuration
+	* @param string idDevice
+	* @return CustomerSettingsResponse
+	* @soap
+	*/
+	public function getCustomerSettings($idDevice)
+	{
+		try {
+				
+			$modelRel = CustomerDevice::model()->findByAttributes(array('Id_device'=>$idDevice, 'need_update'=>1));
+				
+			if(isset($modelRel))
+			{	
+				$modelResponse = new CustomerSettingsResponse();
+				$modelResponse->Id_device = $idDevice;
+				$modelResponse->Id_customer = $modelRel->Id_customer;
+				$modelResponse->setAttributes($modelRel->customer);
+					
+				return $modelResponse;
+			}
+		} catch (Exception $e) {
+			return null;
+		}
+	}
+	
+	/**
+	*
+	* Set "getCustomerSettings" acknowledge
+	* @param string idDevice
+	* @return boolean response
+	* @soap
+	*/
+	public function ackCustomerSettings($idDevice)
+	{
+		try {
+	
+			$modelRel = CustomerDevice::model()->findByAttributes(array('Id_device'=>$idDevice, 'need_update'=>1));
+	
+			if(isset($modelRel))
+			{
+				$modelRel->need_update = 0;
+				$modelRel->last_read_date = new CDbExpression('NOW()');
+				if($modelRel->save())	
+					return true;
+			}
+		} catch (Exception $e) {
+			return false;
+		}
+		return false;
 	}
 	
 }

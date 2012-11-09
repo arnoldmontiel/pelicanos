@@ -25,7 +25,6 @@ class NzbController extends Controller
 								'RippedResponse'=>'RippedResponse',
 								'LogRequest'=>'LogRequest',
 								'LogResponse'=>'LogResponse',
-								'setupResponse'=>'setupResponse',
 								'CustomerResponse'=>'CustomerResponse',
 								'InstallDataResponse'=>'InstallDataResponse',
 		),
@@ -265,32 +264,6 @@ class NzbController extends Controller
 		return $customerResponse;
 	}
 	
-	/**
-	*
-	* Is use to install pelicano in cliente.
-	* @param string idDevice
-	* @return SetupResponse
-	* @soap
-	*/
-	public function setup($idDevice)
-	{		
-		try {
-			
-			$modelRel = CustomerDevice::model()->findByAttributes(array('Id_device'=>$idDevice));
-			
-			if(isset($modelRel))
-			{
-				$modelResponse = new SetupResponse();
-				$modelResponse->Id_device = $idDevice;
-				$modelResponse->Id_customer = $modelRel->Id_customer;
-				$modelResponse->setAttributes($modelRel->customer);
-				
-				return $modelResponse;
-			}
-		} catch (Exception $e) {
-			return null;
-		}
-	}
 	
 	/**
 	*
