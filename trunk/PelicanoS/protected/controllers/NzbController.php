@@ -864,7 +864,12 @@ class NzbController extends Controller
 		if(isset($_GET['MyMovieAPIRequest']))
 		{
 			$modelMyMovieAPIRequest->setAttributes($_GET['MyMovieAPIRequest']);
-			$rawData = MyMovieHelper::searchTitles($modelMyMovieAPIRequest->Title, $modelMyMovieAPIRequest->Country);
+			
+			if($_GET['rbnSearchField'] == 'title')
+				$rawData = MyMovieHelper::searchTitles($modelMyMovieAPIRequest->Title, $modelMyMovieAPIRequest->Country);
+			else
+				$rawData = MyMovieHelper::searchTitlesByIMDBId($modelMyMovieAPIRequest->Title, $modelMyMovieAPIRequest->Country);
+			
 		}
 		
 		

@@ -7,7 +7,8 @@ $('#btnSearch').click(function()
 	$('#saveButton').attr('disabled','disabled');
 	$('#wating').dialog('open');
 	$.fn.yiiGridView.update('search-result-grid', {
-				data: $('#MyMovieAPIRequest_Title').serialize() + '&' + $('#MyMovieAPIRequest_Country').serialize()
+				data: $('#MyMovieAPIRequest_Title').serialize() + '&' + $('#MyMovieAPIRequest_Country').serialize() +
+				'&' + $('input:radio').serialize()
 	});
 	
 	return false;
@@ -74,8 +75,13 @@ $('#Nzb_points').keyup(function(){
 <div id="search-movie-data">
 	<div class="search-movie-data-fields">	
 		<div style="width:40%;display: inline-block;">
-			<?php echo CHtml::activeLabelEx($modelMyMovieAPIRequest,'Title'); ?>
-			<?php echo CHtml::activeTextField($modelMyMovieAPIRequest,'Title',array('size'=>35,'maxlength'=>255)); ?>
+			<?php
+			echo CHtml::radioButtonList('rbnSearchField','title', array('title'=>'Title', 'imdb'=>'Imdb'), array(
+									'labelOptions'=>array('style'=>'display:inline'),
+                					'separator'=>' '
+                					));
+        	?>
+        	<?php echo CHtml::activeTextField($modelMyMovieAPIRequest,'Title',array('maxlength'=>255)); ?>
 		</div>
 		<div style="width:20%;display: inline-block;">
 			<?php echo CHtml::activeLabelEx($modelMyMovieAPIRequest,'Country'); ?>
