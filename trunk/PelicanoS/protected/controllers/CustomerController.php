@@ -212,7 +212,10 @@ class CustomerController extends Controller
 		{
 			$model->attributes=$_POST['Customer'];
 			if($model->save())
+			{
+				$this->updateDevice($model);
 				$this->redirect(array('view','id'=>$model->Id));
+			}
 		}
 
 		$this->render('update',array(
@@ -220,6 +223,15 @@ class CustomerController extends Controller
 		));
 	}
 
+	private function updateDevice($model)
+	{
+		$array = CustomerDevice::model()->findAllByAttributes(array('Id_customer'=>$model->Id));
+		foreach($array as $item)
+		{
+			$item->need_update = 1;
+			$item->save();
+		}
+	}
 	/**
 	 * Deletes a particular model.
 	 * If deletion is successful, the browser will be redirected to the 'admin' page.
