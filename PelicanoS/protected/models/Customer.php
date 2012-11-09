@@ -52,7 +52,6 @@ class Customer extends CActiveRecord
 			array('Id_reseller', 'required'),
 			array('current_points, Id_reseller', 'numerical', 'integerOnly'=>true),
 			array('name, last_name, address', 'length', 'max'=>45),
-			array('code', 'length', 'max'=>100),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('Id, name, last_name, address, current_points, Id_reseller, reseller_desc', 'safe', 'on'=>'search'),
@@ -90,7 +89,6 @@ class Customer extends CActiveRecord
 			'current_points' => 'Current Points',
 			'Id_reseller' => 'Reseller',
 			'reseller_desc'=>'Reseller',
-			'code' => 'Code',
 		);
 	}
 
