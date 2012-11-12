@@ -67,7 +67,20 @@ class CustomerUsersController extends Controller
 		{
 			$model->attributes=$_POST['CustomerUsers'];
 			if($model->save())
+			{
+				$this->updateDevice($model->Id_customer);
 				echo json_encode($model->attributes);
+			}
+		}
+	}
+	
+	private function updateDevice($idCustomer)
+	{
+		$array = CustomerDevice::model()->findAllByAttributes(array('Id_customer'=>$idCustomer));
+		foreach($array as $item)
+		{
+			$item->need_update = 1;
+			$item->save();
 		}
 	}
 	
@@ -85,7 +98,7 @@ class CustomerUsersController extends Controller
 		if(isset($_POST['CustomerUsers']))
 		{
 			$model->attributes=$_POST['CustomerUsers'];
-			$model->need_update = 1;
+			$this->updateDevice($model->Id_customer);
 			if($model->save())
 				$this->redirect(array('customer/view','id'=>$model->Id_customer));
 		}

@@ -10,7 +10,6 @@
  * @property string $email
  * @property integer $Id_customer
  * @property integer $deleted
- * @property integer $need_update
  * @property string $birth_date
  *
  * The followings are the available model relations:
@@ -69,13 +68,13 @@ class CustomerUsers extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('username, Id_customer, password', 'required'),
-			array('adult_section, Id_customer, deleted, need_update', 'numerical', 'integerOnly'=>true),
+			array('adult_section, Id_customer, deleted', 'numerical', 'integerOnly'=>true),
 			array('username, password, email', 'length', 'max'=>128),
 			array('birth_date', 'length', 'max'=>20),		
 			 array('*', 'compositeUniqueKeysValidator'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('username, password, adult_section, email, Id_customer, deleted, need_update, birth_date', 'safe', 'on'=>'search'),
+			array('username, password, adult_section, email, Id_customer, deleted, birth_date', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -103,7 +102,6 @@ class CustomerUsers extends CActiveRecord
 			'email' => 'Email',
 			'Id_customer' => 'Id Customer',
 			'deleted' => 'Deleted',
-			'need_update' => 'Need Update',
 			'birth_date' => 'Birth Date',
 		);
 	}
@@ -125,7 +123,6 @@ class CustomerUsers extends CActiveRecord
 		$criteria->compare('email',$this->email,true);
 		$criteria->compare('Id_customer',$this->Id_customer);
 		$criteria->compare('deleted',$this->deleted);
-		$criteria->compare('need_update',$this->need_update);
 		$criteria->compare('birth_date',$this->birth_date);
 
 		return new CActiveDataProvider($this, array(
