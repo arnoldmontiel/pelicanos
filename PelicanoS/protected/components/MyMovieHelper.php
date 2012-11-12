@@ -174,6 +174,28 @@ class MyMovieHelper
 		return $titlesResponse;
 	}
 	
+	static public function searchTitlesByIMDBId($idImdb, $country)
+	{
+	
+		$titlesResponse = array();
+		
+		$myMoviesAPI = new MyMoviesAPI();
+		$response = $myMoviesAPI->SearchDiscTitleByIMDBId($idImdb, $country);
+		if(!empty($response) && (string)$response['status'] == 'ok')
+		{
+	
+			$titles = $response->Titles;
+			
+			foreach($titles->children() as $title)
+			{
+				$model = new SearchDiscResponse();
+				$model->setAttributes($title);
+				$titlesResponse[] = $model;
+			}
+		}
+		return $titlesResponse;
+	}
+	
 	/*
 	 * Save and return my_movie_disc_nzb id
 	 */
