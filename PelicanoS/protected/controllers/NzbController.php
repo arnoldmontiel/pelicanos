@@ -14,18 +14,13 @@ class NzbController extends Controller
 		            'wsdl'=>array(
 		                'class'=>'CWebServiceAction',
 					'classMap'=>array(
-			                    'NzbResponse'=>'NzbResponse',  // or simply 'Post'								
-								'SeasonResponse'=>'SeasonResponse',
-								'SerieStateRequest'=>'SerieStateRequest',
-								'MovieStateRequest'=>'MovieStateRequest',
+			                    'NzbResponse'=>'NzbResponse',  // or simply 'Post'	
+								'NzbStateRequest'=>'NzbStateRequest',
 								'TransactionResponse'=>'TransactionResponse',
-								'UserResponse'=>'UserResponse',
-								'UserStateRequest'=>'UserStateRequest',
 								'RippedRequest'=>'RippedRequest',
 								'RippedResponse'=>'RippedResponse',
 								'LogRequest'=>'LogRequest',
 								'LogResponse'=>'LogResponse',
-								'CustomerResponse'=>'CustomerResponse',
 		),
 		),
 		);
@@ -55,31 +50,6 @@ class NzbController extends Controller
 			$arrayResponse[]=$rippedResponse;
 		}
 	
-		return $arrayResponse;
-	}
-	
-	/**
-	* Get new users by customer
-	* @param integer idCustomer
-	* @return UserResponse[]
-	* @soap
-	*/
-	public function getNewUser($idCustomer)
-	{
-		$criteria=new CDbCriteria;
-		
-		$criteria->addCondition('t.Id_customer = '. $idCustomer.' and need_update = 1');
-				
-		$arrayCustomerUsers = CustomerUsers::model()->findAll($criteria);
-		$arrayResponse = array();
-		
-		foreach ($arrayCustomerUsers as $model)
-		{
-			$userResponse = new UserResponse();
-			$userResponse->setAttributes($model);
-			$arrayResponse[]=$userResponse;
-		}
-		
 		return $arrayResponse;
 	}
 	
@@ -178,42 +148,6 @@ class NzbController extends Controller
 	
 		return null;
 	}
-	
-	
-	/**
-	*
-	* Use customer
-	* @param string code
-	* @param string Id_device
-	* @return CustomerResponse
-	* @soap
-	*/
-	public function useCustomer($code, $Id_device)
-	{
-		$model = Customer::model()->findByAttributes(array('code'=>$code));
-		$customerResponse = null;
-		try {
-			if($model)
-			{
-				$modelcustomerDevice = new CustomerDevice();
-				$modelcustomerDevice->Id_customer = $model->Id;
-				$modelcustomerDevice->Id_device = $Id_device;
-				if($modelcustomerDevice->save())
-				{
-					$customerResponse = new CustomerResponse();
-					
-					$customerResponse->Id = $model->Id;
-					$customerResponse->last_name = $model->last_name;
-					$customerResponse->name = $model->name;
-					$customerResponse->address = $Id_device;
-				}
-			}
-		} catch (Exception $e) {
-			return $customerResponse;
-		}
-		return $customerResponse;
-	}
-	
 	
 	/**
 	*
@@ -451,44 +385,15 @@ class NzbController extends Controller
 	
 	}
 	
-	/**
-	*
-	* Change customerUser status in relation customer/user
-	* @param UserStateRequest[]
-	* @return boolean
-	* @soap
-	*/
-	public function setUserState($userStateRequest )
-	{
-	
-		try {
-	
-			foreach($userStateRequest as $item)
-			{
-				$model = CustomerUsers::model()->findByAttributes(array('username'=>$item->username, 'Id_customer'=>$item->Id_customer));
-				if(isset($model))
-				{
-					$model->need_update = 0;
-					$model->save();
-				}
-				
-			}
-				
-		} catch (Exception $e) {
-			return false;
-		}
-		return true;
-	
-	}
 	
 	/**
 	 *
-	 * Change movie status in relation customer/nzb
-	 * @param MovieStateRequest[]
+	 * Change nzb status in relation device/nzb
+	 * @param NzbStateRequest[]
 	 * @return boolean
 	 * @soap
 	 */
-	public function setMovieState($movieStateRequest )
+	public function setNzbState($nzbStateRequest )
 	{
 		// 		Yii::trace('date param: '. $date, 'webService');
 		// 		Yii::trace('idCustomer param: '. $idCustomer, 'webService');
@@ -497,7 +402,7 @@ class NzbController extends Controller
 		
 		try {
 
-			foreach($movieStateRequest as $item)
+			foreach($nzbStateRequest as $item)
 			{
 				$model = NzbCustomer::model()->findByAttributes(array('Id_device'=>$item->Id_device, 'Id_nzb'=>$item->Id_nzb));
 			
@@ -506,14 +411,14 @@ class NzbController extends Controller
 					$model->Id_movie_state = $item->Id_state;
 					switch ($item->Id_state) {
 						case 1:
-							$model->date_sent = date("Y-m-d H:i:s",$item->date);
+							$model->date_sent = date("Y-m-d H:i:s",$item->change_state_date);
 							break;
 						case 2:
-							$model->date_downloading = date("Y-m-d H:i:s",$item->date);
+							$model->date_downloading = date("Y-m-d H:i:s",$item->change_state_date);
 							//$this->doTransaction($item->Id_nzb, $item->Id_device);
 							break;
 						case 3:
-							$model->date_downloaded = date("Y-m-d H:i:s",$item->date);
+							$model->date_downloaded = date("Y-m-d H:i:s",$item->change_state_date);
 							break;
 					}
 					$model->need_update = 0;
@@ -529,73 +434,6 @@ class NzbController extends Controller
 
 	}
 
-
-	/**
-	*
-	* Change serie status in relation customer/serie
-	* @param SerieStateRequest[]
-	* @return boolean
-	* @soap
-	*/
-	public function setSerieState($serieStateRequest )
-	{
-// 				Yii::trace('date param: '. $date, 'webService');
-// 				Yii::trace('idCustomer param: '. $idCustomer, 'webService');
-// 				Yii::trace('idMovie param: '. $idMovie, 'webService');
-// 				Yii::trace('idState param: '. $idState, 'webService');
-// 				foreach($serieStateRequest as $item)
-// 		 		{
-// 		 			Yii::trace('id_serie_nzb param: '. $item->id_serie_nzb, 'webService');
-// 		 			Yii::trace('date param: '. $item->date, 'webService');
-// 		 			Yii::trace('state param: '. $item->id_state, 'webService');
-// 		 			Yii::trace('CUSTOMER param: '. $item->id_customer, 'webService');
-// 		 			Yii::trace('id_imdbdata_tv param: '. $item->id_imdbdata_tv, 'webService');
-// 		 			Yii::trace('---------------------------------------------------', 'webService');
-// 		 		}
-		try {
-			foreach($serieStateRequest as $item)
-			{
-				if($item->id_serie_nzb != null) //is serie episode
-				{
-					$model = NzbCustomer::model()->findByAttributes(array('Id_customer'=>$item->id_customer, 'Id_nzb'=>$item->id_serie_nzb));
-					if(isset($model))
-					{
-						$model->Id_movie_state = $item->id_state;
-						switch ( $item->id_state) {
-							case 1:
-								$model->date_sent = date("Y-m-d H:i:s",$item->date);
-								break;
-							case 2:
-								$model->date_downloading = date("Y-m-d H:i:s",$item->date);
-								//$this->doTransaction($item->id_serie_nzb, $item->id_customer);
-								break;
-							case 3:
-								$model->date_downloaded = date("Y-m-d H:i:s",$item->date);
-							break;
-						}
-						
-						$model->need_update = 0;
-						$model->save();
-					}
-					
-				}
-				else //is serie header
-				{
-					$model = ImdbdataTvCustomer::model()->findByAttributes(array('Id_customer'=>$item->id_customer, 'Id_imdbdata_tv'=>$item->id_imdbdata_tv));
-					if(isset($model))
-					{
-						$model->date_sent = date("Y-m-d H:i:s",$item->date);
-						$model->need_update = 0;
-						$model->save();
-					}
-				}
-			}
-			
-		} catch (Exception $e) {
-			return false;
-		}
-		return true;
-	}
 
 	/**
 	*
