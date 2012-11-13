@@ -1,8 +1,7 @@
 <?php
-
-class CustomerSettingsResponse
+class UserSOAP
 {
-/**
+	/**
 	* Set model attributes
 	* @param Nab $model
 	*/
@@ -26,44 +25,38 @@ class CustomerSettingsResponse
 	}
 	
 	/**
-	* @var integer id customer
-	* @soap
-	*/
-	public $Id_customer;
-	
-	/**
-	* @var integer id reseller
-	* @soap
-	*/
-	public $Id_reseller;
-	
-	/**
-	* @var string id device
-	* @soap
-	*/
-	public $Id_device;
-	
-	/**
-	* @var string name
-	* @soap
-	*/
-	public $name;
+	 * @var string username
+	 * @soap
+	 */
+	public $username;
 
 	/**
-	* @var string last_name
-	* @soap
-	*/
-	public $last_name;
+	 * @var string password
+	 * @soap
+	 */
+	public $password;
+
+	/**
+	 * @var integer adult_section
+	 * @soap
+	 */
+	public $adult_section;
 	
 	/**
-	* @var string address
+	* @var string email
 	* @soap
 	*/
-	public $address;
+	public $email;
 	
 	/**
-	* @var UserSOAP[]
+	* @var integer deleted
 	* @soap
 	*/
-	public $Users;
+	public $deleted;
+	
+	/**
+	 * @var date birth_date
+	 * @soap
+	 */
+	public $birth_date;
 }
