@@ -168,7 +168,16 @@ class WSSettingsController extends Controller
 				$modelResponse->Id_device = $idDevice;
 				$modelResponse->Id_customer = $modelRel->Id_customer;
 				$modelResponse->setAttributes($modelRel->customer);
-					
+
+				$users = CustomerUsers::model()->findAllByAttributes(array('Id_customer'=>$modelRel->Id_customer));
+				
+				foreach($users as $user)
+				{
+					$modelUser = new UserSOAP();
+					$modelUser->setAttributes($user);
+					$modelResponse->Users[] = $modelUser;
+				}
+				
 				return $modelResponse;
 			}
 		} catch (Exception $e) {
