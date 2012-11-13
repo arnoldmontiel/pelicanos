@@ -12,7 +12,6 @@
 		'name',
 		'last_name',
 		'address',
-		'code',
 		array(
 				'filter'=>false,
 				'value'=>'CHtml::link("View Ripped",array("/customer/summaryRipped","id"=>$data->Id))',
