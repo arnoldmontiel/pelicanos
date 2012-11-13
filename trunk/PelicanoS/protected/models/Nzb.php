@@ -79,7 +79,7 @@ class Nzb extends CActiveRecord
 			'customerTransactions' => array(self::HAS_MANY, 'CustomerTransaction', 'Id_nzb'),
 			'myMovieDiscNzb' => array(self::BELONGS_TO, 'MyMovieDiscNzb', 'Id_my_movie_disc_nzb'),
 			'resourceType' => array(self::BELONGS_TO, 'ResourceType', 'Id_resource_type'),
-			'nzbCustomers' => array(self::HAS_MANY, 'NzbCustomer', 'Id_nzb'),
+			'nzbDevices' => array(self::HAS_MANY, 'NzbDevice', 'Id_nzb'),
 		);
 	}
 

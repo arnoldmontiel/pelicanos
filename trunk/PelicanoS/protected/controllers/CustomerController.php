@@ -132,11 +132,11 @@ class CustomerController extends Controller
 	public function actionSummaryNzb($id)
 	{
 	 
-		$model=new NzbCustomer('search');
+		$model=new NzbDevice('search');
 		$model->unsetAttributes();  // clear any default values
 		$model->Id_customer = $id;
-		if(isset($_GET['NzbCustomer']))
-			$model->attributes=$_GET['NzbCustomer'];
+		if(isset($_GET['NzbDevice']))
+			$model->attributes=$_GET['NzbDevice'];
 		
 		$this->render('summaryNzb',array(
 							'model'=>$model,

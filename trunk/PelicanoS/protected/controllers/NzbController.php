@@ -64,7 +64,7 @@ class NzbController extends Controller
 				
 		$criteria=new CDbCriteria;
 		
-		$criteria->addCondition('t.Id NOT IN(select Id_nzb from nzb_customer where Id_device = "'. $Id_device.'" and need_update = 0)');
+		$criteria->addCondition('t.Id NOT IN(select Id_nzb from nzb_device where Id_device = "'. $Id_device.'" and need_update = 0)');
 		$criteria->addCondition('t.is_draft = 0');
 		
 		$arrayNbz = Nzb::model()->findAll($criteria);
@@ -98,22 +98,22 @@ class NzbController extends Controller
 			
 			$arrayResponse[]=$nzbResponse;
 				
-			$nzbCustomerDB = NzbCustomer::model()->findByAttributes(array('Id_nzb'=>$modelNbz->Id, 'Id_device'=>$Id_device));
-			if($nzbCustomerDB != null)
+			$nzbDeviceDB = NzbDevice::model()->findByAttributes(array('Id_nzb'=>$modelNbz->Id, 'Id_device'=>$Id_device));
+			if($nzbDeviceDB != null)
 			{
-				$nzbCustomerDB->need_update = 1;
-				$nzbCustomerDB->save();
+				$nzbDeviceDB->need_update = 1;
+				$nzbDeviceDB->save();
 			}
 			else
 			{
-				$modelNzbCustomer = new NzbCustomer;
+				$modelNzbDevice = new NzbDevice();
 
-				$modelNzbCustomer->attributes = array(
+				$modelNzbDevice->attributes = array(
 												'Id_nzb'=>$modelNbz->Id,
 												'Id_device'=>$Id_device,
 												'need_update'=> 1,
 				);
-				$modelNzbCustomer->save();
+				$modelNzbDevice->save();
 			}
 		}
 
@@ -404,11 +404,11 @@ class NzbController extends Controller
 
 			foreach($nzbStateRequest as $item)
 			{
-				$model = NzbCustomer::model()->findByAttributes(array('Id_device'=>$item->Id_device, 'Id_nzb'=>$item->Id_nzb));
+				$model = NzbDevice::model()->findByAttributes(array('Id_device'=>$item->Id_device, 'Id_nzb'=>$item->Id_nzb));
 			
 				if(isset($model))
 				{
-					$model->Id_movie_state = $item->Id_state;
+					$model->Id_nzb_state = $item->Id_state;
 					switch ($item->Id_state) {
 						case 1:
 							$model->date_sent = date("Y-m-d H:i:s",$item->change_state_date);
@@ -1480,7 +1480,7 @@ class NzbController extends Controller
 	
 	private function updateRelation($id)
 	{
-		$modelRelation = NzbCustomer::model()->findAllByAttributes(array('Id_nzb'=>$id));
+		$modelRelation = NzbDevice::model()->findAllByAttributes(array('Id_nzb'=>$id));
 		
 		if(!empty($modelRelation) )
 		{
@@ -1683,7 +1683,7 @@ class NzbController extends Controller
 
 			if($model->validate())
 			{
-				$modelRelation = NzbCustomer::model()->findAllByAttributes(array('Id_nzb'=>$id));
+				$modelRelation = NzbDevice::model()->findAllByAttributes(array('Id_nzb'=>$id));
 
 				$transaction = $modelNzb->dbConnection->beginTransaction();
 				try {
@@ -1749,7 +1749,7 @@ class NzbController extends Controller
 		try {
 			$nzb->save();
 				
-			$modelRelation = NzbCustomer::model()->findAllByAttributes(array('Id_nzb'=>$idNzb));
+			$modelRelation = NzbDevice::model()->findAllByAttributes(array('Id_nzb'=>$idNzb));
 			if(!empty($modelRelation) )
 			{
 				foreach ($modelRelation as $modelRel){
@@ -1766,45 +1766,6 @@ class NzbController extends Controller
 			throw new CHttpException('DB','There was an error saving the file '. $openSubtitle->SubFileName);
 		}
 
-	}
-
-
-	public function actionBackdrop($id)
-	{
-		$model = Nzb::model()->findByPk($id);
-		if(isset($_POST['img']))
-		{
-			$imdb = Imdbdata::model()->findByPk($model->Id_imdbdata);
-			if($imdb != null)
-			{
-				$imdb->Backdrop = $_POST['img'];
-
-				$transaction = $imdb->dbConnection->beginTransaction();
-				try {
-					if($imdb->save())
-					{
-						$modelRelation = NzbCustomer::model()->findAllByAttributes(array('Id_nzb'=>$id));
-						if(!empty($modelRelation) )
-						{
-							foreach ($modelRelation as $modelRel){
-								$modelRel->need_update = 1;
-								$modelRel->save();
-							}
-						}
-						$transaction->commit();
-						$this->redirect(array('view','id'=>$id));
-					}
-				} catch (Exception $e) {
-					$transaction->rollback();
-				}
-
-			}
-		}
-
-		$this->render('backdrop',array(
-				'idImdb'=>$model->Id_imdbdata,
-				'id'=>$id
-		));
 	}
 
 	/**
