@@ -23,6 +23,11 @@ $this->menu=array(
 	
 				),
 				array(
+	 				    'name'=>'genre',
+					    'value'=>'$data->nzb->myMovieDiscNzb->name',
+
+				),
+				array(
 	 				    'name'=>'year',
 					    'value'=>'$data->nzb->myMovieDiscNzb->myMovieNzb->production_year',
 	
@@ -33,8 +38,8 @@ $this->menu=array(
 	
 				),
 				array(
-	 				    'name'=>'movie_status',
-					    'value'=>'$data->movieState->description',
+	 				    'name'=>'nzb_status',
+					    'value'=>'$data->nzbState->description',
 	
 				),
 				date_sent,
