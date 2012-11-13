@@ -1,9 +1,7 @@
 <?php
 
-class MovieStateRequest 
+class NzbStateRequest 
 {
-
-	
 	
 	/**
 	* @var integer device id
@@ -24,9 +22,9 @@ class MovieStateRequest
 	public $Id_state;
 	
 	/**
-	* @var integer date
+	* @var integer change_state_date
 	* @soap
 	*/
-	public $date;
+	public $change_state_date;
 	
 }
