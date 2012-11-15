@@ -129,9 +129,8 @@ class AnydvdhdVersionController extends Controller
 	{	
 		$settings = Setting::getInstance();
 		$anydvdhd = new AnydvdhdVersion();
-		
 		$path = $settings->path_anydvd_download;
-				
+		
 		$version_content = @file_get_contents("http://update.slysoft.com/update/AnyDVD.ver");
 		$version_array = explode(":", $version_content);
 		$version = str_replace( "\n", "", $version_array[1]);
@@ -145,7 +144,8 @@ class AnydvdhdVersionController extends Controller
 				$fileName= "SetupAnyDVD".$version.".exe";
 				$anydvdhd->file_name = $fileName;
 					
-				$content = @file_get_contents("http://static.slysoft.com/SetupAnyDVD.exe");
+				ini_set('memory_limit', '128M');
+				$content = file_get_contents("http://static.slysoft.com/SetupAnyDVD.exe");
 				if ($content !== false) {
 					//$setting = Setting::getInstance();
 					$file = fopen($path.$fileName, 'w');
