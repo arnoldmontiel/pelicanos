@@ -989,6 +989,7 @@ class NzbController extends Controller
 	
 			if(!empty($idSeason))
 			{
+				$this->getEpisodes($modelMyMovieSeason->Id_my_movie_serie_header, $idSeason);
 				$this->redirect(array('selectEpisode','id'=>$model->Id, 'idSeason'=>$idSeason));
 			}
 		}
@@ -997,6 +998,43 @@ class NzbController extends Controller
 					'model'=>$model,
 					'modelMyMovieSeason'=>$modelMyMovieSeason,
 		));
+	}
+	
+	private function getEpisodes($idSerie, $idSeason)
+	{
+		$modelSeason = MyMovieSeason::model()->findByPk($idSeason);
+		
+		$criteria=new CDbCriteria;
+		
+		$criteria->select = 'max(episode_number) max_episode';
+		$criteria->addCondition('t.Id_my_movie_season = "'. $idSeason.'"');
+		
+		
+		$modelEpisodeDB = MyMovieEpisode::model()->find($criteria);
+		
+		if(isset($modelEpisodeDB))
+			$newEpisodeNumber = $modelEpisodeDB->max_episode;
+		else 
+			$newEpisodeNumber = 0;
+		
+		$findNext = true;
+		while ($findNext) 
+		{
+			$newEpisodeNumber++;
+			$model = MyMovieHelper::searchEpisode( $idSerie,
+												   $modelSeason->season_number,
+												   $newEpisodeNumber,
+												   ''
+													);
+			if(isset($model))
+			{
+				$model->Id_my_movie_season = $idSeason;
+				$model->save();
+			}
+			else
+				$findNext = false;
+		}
+		
 	}
 	
 	public function actionSelectEpisode($id, $idSeason)
