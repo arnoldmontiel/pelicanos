@@ -19,7 +19,7 @@ class MyMovieEpisode extends CActiveRecord
 {
 	public $serie_name;
 	public $season_number;
-	
+	public $max_episode;
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
