@@ -23,5 +23,9 @@
 		<b><?php echo CHtml::encode($data->getAttributeLabel('genre')); ?>:</b>
 		<?php echo CHtml::encode($data->myMovieDisc->myMovie->genre); ?>
 		<br />
+		
+		<b><?php echo CHtml::encode($data->getAttributeLabel('Disc Name')); ?>:</b>
+		<?php echo CHtml::encode($data->myMovieDisc->name); ?>
+		<br />
 	</div>
 </div>
