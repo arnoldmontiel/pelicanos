@@ -208,6 +208,8 @@ class MyMoviesAPI
 	function __construct($url='https://api.mymovies.dk/default.asmx?WSDL')
 	{
 		ini_set ('soap.wsdl_cache_enabled',0);
+		$model = ExternalWsdl::model()->findByAttributes(array('description'=>'MyMovie'));
+		$url = $model->url;
 		$this->soapClient = new SoapClient($url,array("classmap"=>self::$classmap,"trace" => true,"exceptions" => false));
 	}
 	
