@@ -1,6 +1,6 @@
 <?php
 class MonitorHelper
-{
+{ 
 	static public function getStatistics()
 	{
 		$monitorAPI = new WsMonitor();
