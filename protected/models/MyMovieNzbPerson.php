@@ -9,6 +9,10 @@
  */
 class MyMovieNzbPerson extends CActiveRecord
 {
+	public $name;
+	public $type;
+	public $role;
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -40,7 +44,7 @@ class MyMovieNzbPerson extends CActiveRecord
 			array('Id_my_movie_nzb', 'length', 'max'=>200),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id_my_movie_nzb, Id_person', 'safe', 'on'=>'search'),
+			array('Id_my_movie_nzb, Id_person, name, type, role', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -82,8 +86,31 @@ class MyMovieNzbPerson extends CActiveRecord
 		$criteria->compare('Id_my_movie_nzb',$this->Id_my_movie_nzb,true);
 		$criteria->compare('Id_person',$this->Id_person);
 
+		$criteria->with[]='person';
+		$criteria->addSearchCondition("person.name",$this->name);
+		$criteria->addSearchCondition("person.type",$this->type);
+		$criteria->addSearchCondition("person.role",$this->role);
+		
+		$sort=new CSort;
+		$sort->attributes=array(
+											'name' => array(
+													        'asc' => 'person.name',
+													        'desc' => 'person.name DESC',
+		),
+										    'type' => array(
+											        'asc' => 'person.type',
+											        'desc' => 'person.type DESC',
+		),
+											'role' => array(
+													'asc' => 'person.role',
+													'desc' => 'person.role DESC',
+		),
+										'*',
+		);
+		
 		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
+																	'criteria'=>$criteria,
+																	'sort'=>$sort,
 		));
 	}
 }

@@ -839,6 +839,9 @@ class NzbController extends Controller
 		$modelAudioTrack = new AudioTrack('search');
 		$modelAudioTrack->unsetAttributes();  // clear any default values
 		
+		$modelPerson = new Person('search');
+		$modelPerson->unsetAttributes();  // clear any default values
+		
 		$modelNzbSubtitle = new MyMovieNzbSubtitle('search');
 		$modelNzbSubtitle->unsetAttributes();  // clear any default values
 		$modelNzbSubtitle->Id_my_movie_nzb = $model->myMovieDiscNzb->Id_my_movie_nzb;
@@ -847,11 +850,18 @@ class NzbController extends Controller
 		$modelNzbAudioTrack->unsetAttributes();  // clear any default values
 		$modelNzbAudioTrack->Id_my_movie_nzb = $model->myMovieDiscNzb->Id_my_movie_nzb;
 		
+		$modelNzbPerson = new MyMovieNzbPerson('search');
+		$modelNzbPerson->unsetAttributes();  // clear any default values
+		$modelNzbPerson->Id_my_movie_nzb = $model->myMovieDiscNzb->Id_my_movie_nzb;
+		
 		if(isset($_GET['Subtitle']))
 			$modelSubtitle->attributes=$_GET['Subtitle'];
 		
 		if(isset($_GET['AudioTrack']))
 			$modelAudioTrack->attributes=$_GET['AudioTrack'];
+		
+		if(isset($_GET['Person']))
+			$modelPerson->attributes=$_GET['Person'];
 		
 		if(isset($_GET['MyMovieNzbSubtitle']))
 			$modelNzbSubtitle->attributes=$_GET['MyMovieNzbSubtitle'];
@@ -859,12 +869,17 @@ class NzbController extends Controller
 		if(isset($_GET['MyMovieNzbAudioTrack']))
 			$modelNzbAudioTrack->attributes=$_GET['MyMovieNzbAudioTrack'];
 		
+		if(isset($_GET['MyMovieNzbPerson']))
+			$modelNzbPerson->attributes=$_GET['MyMovieNzbPerson'];
+		
 		$this->render('selectSpecification',array(
 						'model'=>$model,
 						'modelSubtitle'=>$modelSubtitle,
 						'modelAudioTrack'=>$modelAudioTrack,
+						'modelPerson'=>$modelPerson,
 						'modelNzbSubtitle'=>$modelNzbSubtitle,
 						'modelNzbAudioTrack'=>$modelNzbAudioTrack,
+						'modelNzbPerson'=>$modelNzbPerson,
 		));
 	}
 	
@@ -1200,6 +1215,26 @@ class NzbController extends Controller
 		}
 	}
 	
+	public function actionAjaxSavePerson()
+	{
+		$model = new Person();
+		if(isset($_POST['Person']))
+		{
+			$model->attributes = $_POST['Person'];
+	
+			$modelPersonDB = Person::model()->findByAttributes(array(
+															'name'=>$model->name,
+															'type'=>$model->type,
+															'role'=>$model->role,
+			));
+	
+			if(!isset($modelPersonDB))
+			{
+				$model->save();
+			}
+		}
+	}
+	
 	public function actionAjaxSearchSeason()
 	{
 		if(isset($_POST['MyMovieAPIRequest']))
@@ -1306,6 +1341,25 @@ class NzbController extends Controller
 		}
 	}
 	
+	public function actionAjaxAddPerson()
+	{
+		$idPerson = isset($_GET['idPerson'][0])?$_GET['idPerson'][0]:'';
+		$idMyMovieNzb = isset($_GET['idMyMovieNzb'])?$_GET['idMyMovieNzb']:'';
+			
+		if(!empty($idPerson)&&!empty($idMyMovieNzb))
+		{
+			$relationDB = MyMovieNzbPerson::model()->findByPk(array(
+													'Id_person'=>(int) $idPerson,
+													'Id_my_movie_nzb'=>$idMyMovieNzb));
+			if(!isset($relationDB))
+			{
+				$model=new MyMovieNzbPerson();
+				$model->attributes = array('Id_person'=>$idPerson,'Id_my_movie_nzb'=>$idMyMovieNzb);
+				$model->save();
+			}
+		}
+	}
+	
 	public function actionAjaxAddDiscEpisode()
 	{
 		$idEpisode = isset($_GET['idEpisode'][0])?$_GET['idEpisode'][0]:'';
@@ -1361,6 +1415,21 @@ class NzbController extends Controller
 		if(!empty($idSubtitle)&&!empty($idMyMovieNzb))
 		{
 			$relationDB = MyMovieNzbSubtitle::model()->findByPk(array('Id_subtitle'=>(int) $idSubtitle,'Id_my_movie_nzb'=>$idMyMovieNzb));
+			if(isset($relationDB))
+			{
+				$relationDB->delete();
+			}
+		}
+	}
+	
+	public function actionAjaxRemovePerson()
+	{
+		$idPerson = isset($_GET['idPerson'])?$_GET['idPerson']:'';
+		$idMyMovieNzb = isset($_GET['idMyMovieNzb'])?$_GET['idMyMovieNzb']:'';
+			
+		if(!empty($idPerson)&&!empty($idMyMovieNzb))
+		{
+			$relationDB = MyMovieNzbPerson::model()->findByPk(array('Id_person'=>(int) $idPerson,'Id_my_movie_nzb'=>$idMyMovieNzb));
 			if(isset($relationDB))
 			{
 				$relationDB->delete();

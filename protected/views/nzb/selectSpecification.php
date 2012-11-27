@@ -13,8 +13,10 @@ $this->menu=array(
 echo $this->renderPartial('_selectSpecification', array('model'=>$model,
 											'modelSubtitle'=>$modelSubtitle,
 											'modelAudioTrack'=>$modelAudioTrack,
+											'modelPerson'=>$modelPerson,
 											'modelNzbSubtitle'=>$modelNzbSubtitle,
 											'modelNzbAudioTrack'=>$modelNzbAudioTrack,
+											'modelNzbPerson'=>$modelNzbPerson,
 									));
 ?>
 	
