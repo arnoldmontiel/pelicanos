@@ -460,6 +460,7 @@ class MyMovieHelper
 			
 			self::saveAudioTrack($data);
 			self::saveSubtitle($data);
+			self::savePerson($data);
 		}
 			
 	}
@@ -541,6 +542,51 @@ class MyMovieHelper
 															'Id_subtitle'=>$modelMyMovieNzbSubtitle->Id_subtitle));
 			if(!isset($model))
 				$modelMyMovieNzbSubtitle->save();
+	
+		}
+	}
+	
+	private function savePerson($xml)
+	{
+	
+		$idMyMovieNzb = (string)$xml->ID;
+	
+		foreach($xml->Persons->children() as $item)
+		{
+			$name = (string)$item->Name;
+			$type = (string)$item->Type;
+			$role = (string)$item->Role;
+			$photo_original = (string)$item->Photo;
+	
+			$modelPersonDB = Person::model()->findByAttributes(array(
+																'name'=>$name,
+																'type'=>$type,
+																'role'=>$role,));
+	
+			$modelMyMovieNzbPerson = new MyMovieNzbPerson();
+			$modelMyMovieNzbPerson->Id_my_movie_nzb = $idMyMovieNzb;
+	
+			if(isset($modelPersonDB))
+			{
+				$modelMyMovieNzbPerson->Id_person = $modelPersonDB->Id;
+			}
+			else
+			{
+				$modelPerson = new Person();
+				$modelPerson->name = $name;
+				$modelPerson->type = $type;
+				$modelPerson->role = $role;
+				$modelPerson->photo_original = $photo_original;
+				$modelPerson->save();
+	
+				$modelMyMovieNzbPerson->Id_person = $modelPerson->Id;
+			}
+	
+			$model = MyMovieNzbPerson::model()->findByAttributes(array(
+																'Id_my_movie_nzb'=>$idMyMovieNzb, 
+																'Id_person'=>$modelMyMovieNzbPerson->Id_person));
+			if(!isset($model))
+				$modelMyMovieNzbPerson->save();
 	
 		}
 	}
