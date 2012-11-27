@@ -96,6 +96,15 @@ class NzbController extends Controller
 				$nzbResponse->myMovie->Subtitle[] = $subtitleSOAP;
 			}
 			
+			//set subtitle
+			$relPersons = MyMovieNzbPerson::model()->findAllByAttributes(array('Id_my_movie_nzb'=>$modelNbz->myMovieDiscNzb->Id_my_movie_nzb));
+			foreach($relPersons as $relPerson)
+			{
+				$personSOAP = new MyMoviePersonSOAP();
+				$personSOAP->setAttributes($relPerson->person);
+				$nzbResponse->myMovie->Person[] = $personSOAP;
+			}
+			
 			$arrayResponse[]=$nzbResponse;
 				
 			$nzbDeviceDB = NzbDevice::model()->findByAttributes(array('Id_nzb'=>$modelNbz->Id, 'Id_device'=>$Id_device));
