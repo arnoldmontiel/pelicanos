@@ -197,5 +197,11 @@ class MyMovieSOAP
 	 * @soap
 	 */
 	public $AudioTrack;
+	
+	/**
+	* @var MyMoviePersonSOAP[]
+	* @soap
+	*/
+	public $Person;
 
 }

@@ -376,6 +376,38 @@ class NzbController extends Controller
 					}
 						
 				}
+				
+				//grabo las personas del disco rippeado
+				foreach($item->myMovie->Person as $person)
+				{
+					$modelPerson = Person::model()->findByAttributes(array(
+																		'name'=>$person->name,
+																		'type'=>$person->type,
+																		'role'=>$person->role,
+					));
+					if(!isset($modelPerson))
+					{
+						$modelPerson = new Person();
+						$modelPerson->name = $person->name;
+						$modelPerson->type = $person->type;
+						$modelPerson->role = $person->role;
+						$modelPerson->photo_original = $person->photo_original;
+						$modelPerson->save();
+					}
+						
+					$myMoviePerson = MyMoviePerson::model()->findByAttributes(array(
+															'Id_my_movie'=>$item->myMovie->Id,
+															'Id_person'=>$modelPerson->Id,
+					));
+					if(!isset($myMoviePerson))
+					{
+						$myMoviePerson = new MyMoviePerson();
+						$myMoviePerson->Id_person = $modelPerson->Id;
+						$myMoviePerson->Id_my_movie = $item->myMovie->Id;
+						$myMoviePerson->save();
+					}
+						
+				}
 			}
 	
 		} catch (Exception $e) {
