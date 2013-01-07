@@ -77,7 +77,7 @@ return array(
 	        'class'=>'application.extensions.file.CFile',
 		),
 		'db'=>array(
-			'connectionString' => 'mysql:host=localhost;dbname=PelicanoS',
+			'connectionString' => 'mysql:host=localhost;dbname=pelicanos',
 			'emulatePrepare' => true,
 			'username' => 'root',
 			'password' => '',
