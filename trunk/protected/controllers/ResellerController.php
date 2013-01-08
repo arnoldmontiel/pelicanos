@@ -51,7 +51,7 @@ class ResellerController extends Controller
 	{
 		$model=new Reseller;
 		$modelUser = new User();
-		
+		$ass = new Assignments();
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
@@ -67,6 +67,12 @@ class ResellerController extends Controller
 					$model->save();
 					$modelUser->Id_reseller = $model->Id;
 					$modelUser->save();
+
+					$ass->userid = $modelUser->username;
+					$ass->data = 's:0:"";';
+					$ass->itemname = 'Operator';
+					$ass->save();
+						
 					$transaction->commit();
 					$this->redirect(array('view','id'=>$model->Id));
 				} catch (Exception $e) {
