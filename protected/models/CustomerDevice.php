@@ -84,7 +84,7 @@ class CustomerDevice extends CActiveRecord
 		$criteria->compare('Id_customer',$this->Id_customer);
 
 		$criteria->with[]='device';
-		$criteria->compare('device.description',$device_description);
+		$criteria->compare('device.description',$this->device_description);
 		
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
