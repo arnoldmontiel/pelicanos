@@ -32,7 +32,7 @@
 				array('label'=>'Login', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
 				array('label'=>'Movies', 'url'=>array('/nzb/indexReseller'), 'visible'=>Yii::app()->user->checkAccess('Operator')),
 				array('label'=>'Movie', 'url'=>array('/nzb/index'), 'visible'=>Yii::app()->user->checkAccess('Administrator')),				
-				array('label'=>'Serie', 'url'=>array('/imdbdataTv/indexReseller'), 'visible'=>Yii::app()->user->checkAccess('Operator')),
+				array('label'=>'Serie', 'url'=>array('/nzb/indexTvReseller'), 'visible'=>Yii::app()->user->checkAccess('Operator')),
 				array('label'=>'Serie', 'url'=>array('/nzb/indexTv'), 'visible'=>Yii::app()->user->checkAccess('Administrator')),
 				array('label'=>'Customer', 'url'=>array('/customer/index'), 'visible'=>Yii::app()->user->checkAccess('Operator')),
 				array('label'=>'Customer', 'url'=>array('/customer/summary'), 'visible'=>Yii::app()->user->checkAccess('Administrator')),
