@@ -140,7 +140,7 @@ class Nzb extends CActiveRecord
 		// should not be searched.
 	
 		$criteria=new CDbCriteria;
-	
+		
 		$criteria->join =	"LEFT OUTER JOIN my_movie_disc_nzb dn ON dn.Id = t.Id_my_movie_disc_nzb
 										LEFT OUTER JOIN my_movie_nzb n ON n.Id = dn.Id_my_movie_nzb";
 		
@@ -199,7 +199,7 @@ class Nzb extends CActiveRecord
 		// should not be searched.
 	
 		$criteria=new CDbCriteria;
-	
+		
 		$criteria->join =	"LEFT OUTER JOIN my_movie_disc_nzb dn ON dn.Id = t.Id_my_movie_disc_nzb
 											LEFT OUTER JOIN my_movie_nzb n ON n.Id = dn.Id_my_movie_nzb";
 		$criteria->addSearchCondition("n.original_title",$this->title);
@@ -253,6 +253,132 @@ class Nzb extends CActiveRecord
 		return new CActiveDataProvider($this, array(
 				'criteria'=>$criteria,
 				'sort'=>$sort,
+		));
+	}
+	
+	public function searchMovieReseller()
+	{
+		// Warning: Please modify the following code to remove attributes that
+		// should not be searched.
+	
+		$criteria=new CDbCriteria;
+	
+		$criteria->compare('is_draft',0);
+	
+		$criteria->join =	"LEFT OUTER JOIN my_movie_disc_nzb dn ON dn.Id = t.Id_my_movie_disc_nzb
+											LEFT OUTER JOIN my_movie_nzb n ON n.Id = dn.Id_my_movie_nzb";
+	
+		$criteria->addSearchCondition("n.original_title",$this->title);
+		$criteria->addSearchCondition("n.production_year",$this->year);
+		$criteria->addSearchCondition("n.imdb",$this->idImdb);
+		$criteria->addSearchCondition("n.genre",$this->genre);
+	
+		$criteria->with[]='resourceType';
+		$criteria->addSearchCondition("resourceType.description",$this->resourceTypeDesc);
+	
+		$criteria->compare('n.is_serie',0);
+	
+		// Create a custom sort
+		$sort=new CSort;
+		$sort->attributes=array(
+		// For each relational attribute, create a 'virtual attribute' using the public variable name
+						'Id',
+						'url',
+						'file_name',
+						'subt_url',
+						'subt_url_name',
+						'title' => array(
+							        'asc' => 'n.original_title',
+							        'desc' => 'n.original_title DESC',
+		),
+						'year' => array(
+							        'asc' => 'n.production_year',
+							        'desc' => 'n.production_year DESC',
+		),
+						'idImdb' => array(
+							        'asc' => 'n.imdb',
+							        'desc' => 'n.imdb DESC',
+		),
+						'genre' => array(
+							        'asc' => 'n.genre',
+							        'desc' => 'n.genre DESC',
+		),
+						'resourceTypeDesc' => array(
+							        'asc' => 'resourceType.description',
+							        'desc' => 'resourceType.description DESC',
+		),
+						'*',
+		);
+		$sort->defaultOrder = 't.Id DESC';
+	
+		return new CActiveDataProvider($this, array(
+					'criteria'=>$criteria,
+					'sort'=>$sort,
+		));
+	}
+	
+	public function searchTvReseller()
+	{
+		// Warning: Please modify the following code to remove attributes that
+		// should not be searched.
+	
+		$criteria=new CDbCriteria;
+	
+		$criteria->compare('is_draft',0);
+	
+		$criteria->join =	"LEFT OUTER JOIN my_movie_disc_nzb dn ON dn.Id = t.Id_my_movie_disc_nzb
+												LEFT OUTER JOIN my_movie_nzb n ON n.Id = dn.Id_my_movie_nzb";
+		$criteria->addSearchCondition("n.original_title",$this->title);
+		$criteria->addSearchCondition("n.production_year",$this->year);
+		$criteria->addSearchCondition("n.imdb",$this->idImdb);
+		$criteria->addSearchCondition("n.genre",$this->genre);
+		$criteria->addSearchCondition("dn.name",$this->disc_name);
+	
+		$criteria->with[]='resourceType';
+		$criteria->addSearchCondition("resourceType.description",$this->resourceTypeDesc);
+	
+		$criteria->compare('n.is_serie',1);
+	
+		// Create a custom sort
+		$sort=new CSort;
+		$sort->attributes=array(
+		// For each relational attribute, create a 'virtual attribute' using the public variable name
+						'Id',
+						'url',
+						'file_name',
+						'subt_url',
+						'subt_url_name',
+						'disc_name' => array(
+									        'asc' => 'dn.name',
+									        'desc' => 'dn.name DESC',
+		),
+						'title' => array(
+							        'asc' => 'n.original_title',
+							        'desc' => 'n.original_title DESC',
+		),
+						'year' => array(
+							        'asc' => 'n.production_year',
+							        'desc' => 'n.production_year DESC',
+		),
+						'idImdb' => array(
+							        'asc' => 'n.imdb',
+							        'desc' => 'n.imdb DESC',
+		),
+						'genre' => array(
+							        'asc' => 'n.genre',
+							        'desc' => 'n.genre DESC',
+		),
+						'resourceTypeDesc' => array(
+							        'asc' => 'resourceType.description',
+							        'desc' => 'resourceType.description DESC',
+		),
+						'*',
+		);
+		$sort->defaultOrder = 't.Id DESC';
+	
+		return new CActiveDataProvider($this, array(
+					'criteria'=>$criteria,
+					'sort'=>$sort,
 		));
 	}
 }
