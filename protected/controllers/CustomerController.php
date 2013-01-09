@@ -62,17 +62,28 @@ class CustomerController extends Controller
 	public function actionAjaxSaveDevice()
 	{
 		$model = new Device();
-		if(isset($_POST['Device']) && isset($_POST['idCustomer']))
-		{
-			$model->attributes = $_POST['Device'];
-			$model->Id = uniqid();
-			if($model->save())
+		$transaction = $model->dbConnection->beginTransaction();
+		try {
+		
+			if(isset($_POST['Device']) && isset($_POST['idCustomer']))
 			{
-				$modelRel = new CustomerDevice();
-				$modelRel->Id_customer = (int)$_POST['idCustomer'];
-				$modelRel->Id_device = $model->Id;
-				$modelRel->save();
+				$model->attributes = $_POST['Device'];
+				$model->Id = uniqid();
+				if($model->save())
+				{
+					$modelRel = new CustomerDevice();
+					$modelRel->Id_customer = (int)$_POST['idCustomer'];
+					$modelRel->Id_device = $model->Id;
+					$modelRel->save();
+					$modelClientSettings = new ClientSettings();
+					
+					$modelClientSettings->Id_device = $model->Id;
+					$modelClientSettings->Id_customer = $modelRel->Id_customer;
+					$modelClientSettings->save();
+				}
 			}
+		}catch (Exception $e) {
+			$transaction->rollback();
 		}
 	}
 	
@@ -89,6 +100,14 @@ class CustomerController extends Controller
 				));
 			if(isset($model))
 				$model->delete();
+			
+			$modelClient = ClientSettings::model()->findByAttributes(array(
+												'Id_customer'=>$idCustomer,
+												'Id_device'=>$idDevice,
+				));
+			if(isset($modelClient))
+				$modelClient->delete();
+			
 			
 		}
 	}
