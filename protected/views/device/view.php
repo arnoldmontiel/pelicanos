@@ -19,7 +19,7 @@ $this->menu=array(
 	'data'=>$model,
 	'attributes'=>array(
 		array('label'=>'Device','value'=>$model->Id),
-		array('label'=>'Customer',value=>$modelClientSettings->customer->last_name.' '.$modelClientSettings->customer->name),
+		array('label'=>'Customer','value'=>$modelClientSettings->customer->last_name.' '.$modelClientSettings->customer->name),
 		'description',
 	),
 )); ?>
