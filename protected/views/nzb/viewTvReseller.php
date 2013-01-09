@@ -1,23 +1,61 @@
 <?php
 
-	$this->menu=array(
-		array('label'=>'List Movies', 'url'=>array('indexReseller')),
-	);	
+
+$this->menu=array(
+	array('label'=>'List Series', 'url'=>array('indexTvReseller')),
+);	
 
 ?>
 
 <?php
-Yii::app()->clientScript->registerScript('viewNzbReseller', "
+Yii::app()->clientScript->registerScript('viewNZB', "
 	$('#page').css('background-image','url(./images/".$model->myMovieDiscNzb->myMovieNzb->backdrop.")');
+	
+$('#publishButton').click(function(){
+
+	if (confirm('Are you sure you want to publish this nzb?')) 
+	{
+		$.post('".NzbController::createUrl('AjaxPublishNzb')."',
+		{
+			nzbId : '".$model->Id."'											
+		}
+		).success(
+			function(data) 
+			{
+				$('#publishButton').attr('disabled', 'disabled');
+			}
+		).error(
+			function()
+			{
+				$('#publishButton').removeAttr('disabled');
+			});
+	}
+	return false;
+
+});
+	
 ");
 ?>
-<h1>View Movie</h1>
+<h1>View Disc</h1>
 
 <div class="movie-detail-view" >
-	<div class="left-movie-detail-view" >			
-		<b><?php echo CHtml::encode($model->getAttributeLabel('Id imdb')); ?>:</b>
-		<?php echo CHtml::encode($model->myMovieDiscNzb->myMovieNzb->imdb); ?>
+	<div class="left-movie-detail-view" >
+	
+		<b><?php echo CHtml::encode($model->getAttributeLabel('name')); ?>:</b>
+		<?php echo CHtml::encode($model->myMovieDiscNzb->name); ?>
 		<br />
+	
+		<b><?php echo CHtml::encode($model->getAttributeLabel('serie')); ?>:</b>
+		<?php echo CHtml::encode($model->myMovieDiscNzb->myMovieNzb->myMovieSerieHeader->name); ?>
+		<br />
+		
+		<b><?php echo CHtml::encode($model->getAttributeLabel('season')); ?>:</b>
+		<?php echo CHtml::encode($model->myMovieDiscNzb->getSeasonNumber()); ?>
+		<br />
+		
+		<b><?php echo CHtml::encode($model->getAttributeLabel('episodes')); ?>:</b>
+		<?php echo CHtml::encode($model->myMovieDiscNzb->getEpisodes()); ?>
+		<br />				
 		
 		<b><?php echo CHtml::encode($model->getAttributeLabel('original_title')); ?>:</b>
 		<?php echo CHtml::encode($model->myMovieDiscNzb->myMovieNzb->original_title); ?>
@@ -53,6 +91,27 @@ Yii::app()->clientScript->registerScript('viewNzbReseller', "
 			
 		<b><?php echo CHtml::encode($model->getAttributeLabel('points')); ?>:</b>
 		<?php echo CHtml::encode($model->points); ?>
+		<br />		
+		
+	<?php 				
+		$this->widget('zii.widgets.grid.CGridView', array(
+			'id'=>'disc-episodes-grid',
+			'dataProvider'=>$modelDiscEpisodes->search(),
+			'filter'=>$modelDiscEpisodes,
+			'summaryText'=>'',
+			'columns'=>array(	
+						array(
+				 			'name'=>'episode_number',
+							'value'=>'$data->myMovieEpisode->episode_number',
+						),
+						array(
+				 			'name'=>'episode_name',
+							'value'=>'$data->myMovieEpisode->name',
+						),
+		
+			),			
+			));		
+		?>			
 		<br />
 		
 	</div>
