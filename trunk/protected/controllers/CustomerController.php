@@ -82,6 +82,14 @@ class CustomerController extends Controller
 					$modelClientSettings->Id_customer = $modelRel->Id_customer;
 					$modelClientSettings->save();
 					$transaction->commit();
+					
+					$modelSettingsRipper = new SettingsRipper();
+						
+					$modelSettingsRipper->Id_device = $model->Id;
+					$modelSettingsRipper->save();
+					
+					$transaction->commit();
+						
 				}
 			}
 		}catch (Exception $e) {
