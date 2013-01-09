@@ -75,11 +75,13 @@ class CustomerController extends Controller
 					$modelRel->Id_customer = (int)$_POST['idCustomer'];
 					$modelRel->Id_device = $model->Id;
 					$modelRel->save();
+
 					$modelClientSettings = new ClientSettings();
 					
 					$modelClientSettings->Id_device = $model->Id;
 					$modelClientSettings->Id_customer = $modelRel->Id_customer;
 					$modelClientSettings->save();
+					$transaction->commit();
 				}
 			}
 		}catch (Exception $e) {
