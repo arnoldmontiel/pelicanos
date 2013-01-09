@@ -101,12 +101,6 @@ class CustomerController extends Controller
 			if(isset($model))
 				$model->delete();
 			
-			$modelClient = ClientSettings::model()->findByAttributes(array(
-												'Id_customer'=>$idCustomer,
-												'Id_device'=>$idDevice,
-				));
-			if(isset($modelClient))
-				$modelClient->delete();
 			
 			
 		}
