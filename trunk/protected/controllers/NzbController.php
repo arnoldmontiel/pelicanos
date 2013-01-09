@@ -591,6 +591,22 @@ class NzbController extends Controller
 		));
 	}
 	
+	public function actionViewTvReseller($id)
+	{
+		$model = $this->loadModel($id);
+		$modelDiscEpisodes = new MyMovieDiscNzbMyMovieEpisode('search');
+		$modelDiscEpisodes->unsetAttributes();  // clear any default values
+		$modelDiscEpisodes->Id_my_movie_disc_nzb = $model->Id_my_movie_disc_nzb;
+	
+		if(isset($_GET['MyMovieDiscNzbMyMovieEpisode']))
+		$modelDiscEpisodes->attributes=$_GET['MyMovieDiscNzbMyMovieEpisode'];
+	
+		$this->render('viewTvReseller',array(
+						'model'=>$model,
+						'modelDiscEpisodes'=>$modelDiscEpisodes,
+		));
+	}
+	
 	public function actionViewEpisodeReseller($id)
 	{
 		$this->render('viewEpisodeReseller',array(
@@ -1942,10 +1958,22 @@ class NzbController extends Controller
 	
 	public function actionIndexReseller()
 	{
-		$dataProvider=new CActiveDataProvider('Nzb',array('criteria'=>array('order'=>'Id DESC')));
+		$model = new Nzb();
+		$dataProvider= $model->searchMovieReseller();
+		
 		$this->render('indexReseller',array(
-				'dataProvider'=>$dataProvider,
-		));
+					'dataProvider'=>$dataProvider,
+		));		
+	}
+	
+	public function actionIndexTvReseller()
+	{
+		$model = new Nzb();
+		$dataProvider= $model->searchTvReseller();
+		
+		$this->render('indexTvReseller',array(
+							'dataProvider'=>$dataProvider,
+		));		
 	}
 
 	public function actionIndexEpisodeReseller()
