@@ -1795,7 +1795,7 @@ class NzbController extends Controller
 
 		$model->attributes = array('query'=>str_replace('.nzb','',$modelNzb->file_original_name));
 
-		if($_POST['selectedRow'] != "")
+		if(isset($_POST['selectedRow']) && $_POST['selectedRow'] != "")
 		{
 			$this->downloadSubtitle($_POST['selectedRow'], $id);
 			$this->redirect(array('view','id'=>$id));
