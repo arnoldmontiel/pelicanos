@@ -12,9 +12,9 @@ class MyMovieBase
 	
 	function __construct()
 	{
-		$settings = Setting::getInstance();
-		$this->UserName = $settings->mymovies_username;
-		$this->Password =  $settings->mymovies_password;
+		$model = ExternalWsdl::model()->findByAttributes(array('description'=>'MyMovie'));
+		$this->UserName = $model->username;
+		$this->Password =  $model->password;
 	}	
 }
 
