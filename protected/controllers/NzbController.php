@@ -1804,7 +1804,7 @@ class NzbController extends Controller
 		$modelOpenSubtitle = new OpenSubtitle('search');
 		$modelOpenSubtitle->unsetAttributes();
 		
-		if($_GET['OpenSubtitle'])
+		if(isset($_GET['OpenSubtitle']))
 		{
 			$modelOpenSubtitle->attributes = $_GET['OpenSubtitle'];
 		}
