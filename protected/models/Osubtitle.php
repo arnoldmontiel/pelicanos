@@ -1,5 +1,4 @@
 <?php
-require_once 'XML/RPC.php';
 class Osubtitle extends CFormModel
 {
 	private $_attributes = array();
