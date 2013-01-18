@@ -7,7 +7,7 @@ class MonitorCommand extends CConsoleCommand  {
 	function actionReadData()
 	{
 
-		PelicanoHelper::getStatistics();
+		MonitorHelper::getStatistics();
 		return true;
 
 	}
