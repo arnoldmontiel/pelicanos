@@ -143,23 +143,6 @@ $('#Nzb_points').keyup(function(){
 												});
 								});
 
-						$("#search-result-grid").find(".lnkImage").each(
-											function(index, item){
-														$(item).click(function(){
-															return false;
-														});
-														$(item).hover(
-															function () {
-    															$(this).find("spam").hide();
-    															$(this).find("img").show();
-  															}, 
-  															function () {
-  																$(this).find("img").hide();
-  																$(this).find("spam").show();
-  															}															
-																	
-												);
-								});	
 					}',
 			'selectionChanged'=>'js:function(){
 						var titleId = $.fn.yiiGridView.getSelection("search-result-grid")
@@ -221,7 +204,7 @@ $('#Nzb_points').keyup(function(){
 				),
 				array(
 							'name'=>'',
-							'value'=>'CHtml::link("<spam>image</spam>". CHtml::image($data->thumbnail,"",array("style"=>"display:none",)) ,
+							'value'=>'CHtml::link("<spam>image</spam>". CHtml::image($data->thumbnail,"",array()) ,
 														"#",
 														array(
 																"id"=>$data->id. "_img",
