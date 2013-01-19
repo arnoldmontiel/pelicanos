@@ -277,6 +277,11 @@ class MyMovieHelper
 							
 						//Poster
 						$modelMyMovieNzb->poster_original = self::getPoster($data->MovieData);
+						if($modelMyMovieNzb->poster_original=="")
+						{
+							$modelMyMovieNzb->poster_original = self::getCovers($data->MovieData);
+								
+						}
 						
 						//Backdrop
 						$modelMyMovieNzb->backdrop_original = self::getBackdrop($data->MovieData);
@@ -379,7 +384,14 @@ class MyMovieHelper
 		}
 		return 0;
 	}
-	
+	private function getCovers($xml)
+	{
+		if(!empty($xml->Covers))
+		{
+			return $xml->Covers->Front;
+		}
+		return "";
+	}
 	private function getPoster($xml)
 	{
 		if(!empty($xml->Posters))
