@@ -204,13 +204,12 @@ $('#Nzb_points').keyup(function(){
 				),
 				array(
 							'name'=>'',
-							'value'=>'CHtml::link("<spam>image</spam>". CHtml::image($data->thumbnail,"",array()) ,
+							'value'=>'CHtml::image($data->thumbnail,"",array()) ,
 														"#",
 														array(
 																"id"=>$data->id. "_img",
 																"class"=>"lnkImage",
-															)
-													)',
+															)',
 		
 							'type'=>'raw',					
 							'htmlOptions'=>array("style"=>"text-align:right;"),
