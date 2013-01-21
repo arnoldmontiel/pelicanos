@@ -279,7 +279,7 @@ class MyMovieHelper
 						$modelMyMovieNzb->poster_original = self::getPoster($data->MovieData);
 						if($modelMyMovieNzb->poster_original=="")
 						{
-							$modelMyMovieNzb->poster_original = self::getCovers($data->MovieData);
+							$modelMyMovieNzb->poster_original = self::getCovers($data);
 								
 						}
 						
