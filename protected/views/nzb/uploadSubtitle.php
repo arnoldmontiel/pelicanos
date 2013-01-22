@@ -29,15 +29,15 @@ $this->menu=array(
 		'attributes'=>array(
 			array('label'=>$modelNzb->getAttributeLabel('Imdb'),
 				'type'=>'raw',
-				'value'=>$modelNzb->myMovieMovie->imdb
+				'value'=>$modelNzb->myMovieDiscNzb->myMovieNzb->imdb
 			),
 			array('label'=>$modelNzb->getAttributeLabel('Title'),
 				'type'=>'raw',
-				'value'=>$modelNzb->myMovieMovie->original_title
+				'value'=>$modelNzb->myMovieDiscNzb->myMovieNzb->original_title
 			),
 			array('label'=>$modelNzb->getAttributeLabel('Year'),
 				'type'=>'raw',
-				'value'=>$modelNzb->myMovieMovie->production_year
+				'value'=>$modelNzb->myMovieDiscNzb->myMovieNzb->production_year,
 			),
 			'file_original_name',
 			'subt_file_name',
