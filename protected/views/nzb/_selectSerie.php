@@ -19,21 +19,23 @@ $('#cancelButton').click(function(){
 	echo CHtml::hiddenField("hiddenSerieId",'',array('id'=>'hiddenSerieId'));
 ?>
 
-<?php $this->widget('zii.widgets.CDetailView', array(
+<?php 
+	$modelSerie = $model->myMovieDiscNzb->myMovieNzb->myMovieSerieHeader;
+	$this->widget('zii.widgets.CDetailView', array(
 		'data'=>$model,
 		'cssFile'=>Yii::app()->baseUrl . '/css/detail-view-blue.css',
 		'attributes'=>array(
 			array('label'=>$model->getAttributeLabel('Serie'),
 				'type'=>'raw',
-				'value'=>$model->myMovieDiscNzb->myMovieNzb->myMovieSerieHeader->name, 
+				'value'=>isset($modelSerie)?$modelSerie->name:'', 
 			),
 			array('label'=>'Original Status',
 				'type'=>'raw',
-				'value'=>$model->myMovieDiscNzb->myMovieNzb->myMovieSerieHeader->original_status,
+				'value'=>isset($modelSerie)?$modelSerie->original_status:'',
 			),
 			array('label'=>'Rating',
 				'type'=>'raw',
-				'value'=>$model->myMovieDiscNzb->myMovieNzb->myMovieSerieHeader->rating,
+				'value'=>isset($modelSerie)?$modelSerie->rating:'',
 			),
 			'file_original_name',
 			'subt_file_name',
