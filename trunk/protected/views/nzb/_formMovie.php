@@ -76,7 +76,7 @@ $('#Nzb_points').keyup(function(){
 	<div class="search-movie-data-fields">	
 		<div style="width:40%;display: inline-block;">
 			<?php
-			echo CHtml::radioButtonList('rbnSearchField','title', array('title'=>'Title', 'imdb'=>'Imdb'), array(
+			echo CHtml::radioButtonList('rbnSearchField','imdb', array('title'=>'Title', 'imdb'=>'Imdb'), array(
 									'labelOptions'=>array('style'=>'display:inline'),
                 					'separator'=>' '
                 					));
@@ -94,7 +94,7 @@ $('#Nzb_points').keyup(function(){
 								'Spain'=>'Spain',
 								'United Kingdom'=>'United Kingdom',
 								'United States'=>'United States',);
-				
+				$modelMyMovieAPIRequest->Country = 'United States';
 				echo CHtml::activeDropDownList($modelMyMovieAPIRequest, 'Country', $country, array('prompt'=>'Select..')); ?>
 		</div>
 		<div style="width:20%;display: inline-block;">
