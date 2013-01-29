@@ -567,7 +567,7 @@ class MyMovieHelper
 		{
 			$name = (string)$item->Name;
 			$type = (string)$item->Type;
-			$role = (string)$item->Role;
+			$role = preg_replace('/[^a-zA-Z0-9_ %\[().\]\\/-]/s', '', (string)$item->Role);			
 			$photo_original = (string)$item->Photo;
 	
 			$modelPersonDB = Person::model()->findByAttributes(array(
