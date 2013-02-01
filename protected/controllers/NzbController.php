@@ -1618,8 +1618,8 @@ class NzbController extends Controller
 			if($hasChanged){
 				$modelMyMovieDiscNzb->save();
 				$this->saveUpdatedModel($model, $id);
+				$this->redirect(array('view','id'=>$model->Id));
 			}
-			$this->redirect(array('view','id'=>$model->Id));
 		}
 
 		$this->render('updateNzb',array(
