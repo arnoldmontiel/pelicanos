@@ -1559,9 +1559,10 @@ class NzbController extends Controller
 
 		if(isset($_POST['Nzb']))
 		{
+			$hasChanged = true;
 			if($_POST['Nzb']['Id_resource_type'] != $model->Id_resource_type )
 				$hasChanged = true;
-
+				
 			if($_POST['Nzb']['points'] != $model->points )
 				$hasChanged = true;
 			
