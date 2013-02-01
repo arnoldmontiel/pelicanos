@@ -62,7 +62,8 @@ class Nzb extends CActiveRecord
 			array('Id_resource_type, deleted, points, is_draft', 'numerical', 'integerOnly'=>true),
 			array('url, file_name, subt_url, subt_file_name, subt_original_name, file_original_name', 'length', 'max'=>255),
 			array('Id_my_movie_disc_nzb', 'length', 'max'=>200),
-			// The following rule is used by search().
+			array('final_content_path', 'length', 'max'=>256),
+		// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('Id, Id_resource_type, url, file_name, subt_url, subt_file_name, subt_original_name, deleted, points, file_original_name, is_draft, Id_my_movie_disc_nzb, year, idImdb, genre, title, resourceTypeDesc, disc_name', 'safe', 'on'=>'search'),
 		);
@@ -102,6 +103,7 @@ class Nzb extends CActiveRecord
 			'is_draft' => 'Is Draft',
 			'Id_my_movie_disc_nzb' => 'Id My Movie Disc Nzb',
 			'name'=>'Disc Name',
+			'final_content_path'=>'Path content',
 		);
 	}
 
@@ -128,6 +130,7 @@ class Nzb extends CActiveRecord
 		$criteria->compare('file_original_name',$this->file_original_name,true);
 		$criteria->compare('is_draft',$this->is_draft);
 		$criteria->compare('Id_my_movie_disc_nzb',$this->Id_my_movie_disc_nzb,true);
+		$criteria->compare('final_content_path',$this->final_content_path,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

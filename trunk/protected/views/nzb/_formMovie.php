@@ -59,6 +59,11 @@ $('#Nzb_points').keyup(function(){
 		<?php echo CHtml::activeDropDownList($model, 'Id_resource_type', $rsrcType);?>
 		<?php echo CHtml::error($model,'Id_resource_type'); ?>
 	</div>
+	<div id="filePath" style="margin-bottom: 5px">
+		<?php echo CHtml::activeLabelEx($model,'final_content_path'); ?>
+		<?php echo CHtml::activeTextField($model, 'final_content_path',array('size'=>50,'maxlength'=>256));?>
+		<?php echo CHtml::error($model,'final_content_path'); ?>
+	</div>
 
 	<div id="points" style="margin-bottom: 5px">
 		<?php echo CHtml::activeLabelEx($model,'points'); ?>

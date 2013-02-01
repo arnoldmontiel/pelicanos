@@ -77,4 +77,11 @@ class NzbSOAP
 	* @soap
 	*/
 	public $Id_my_movie_disc_nzb;
+	
+	/**
+	* @var string final content path
+	* @soap
+	*/
+	public $final_content_path;
+	
 }
