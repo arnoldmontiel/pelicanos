@@ -1610,8 +1610,7 @@ class NzbController extends Controller
 					$modelMyMovieDiscNzb->save();
 					$this->saveUpdatedModel($model, $id);
 				}
-				else
-					$this->redirect(array('view','id'=>$model->Id));
+				$this->redirect(array('view','id'=>$model->Id));
 			}
 		}
 		else
@@ -1620,6 +1619,7 @@ class NzbController extends Controller
 				$modelMyMovieDiscNzb->save();
 				$this->saveUpdatedModel($model, $id);
 			}
+			$this->redirect(array('view','id'=>$model->Id));
 		}
 
 		$this->render('updateNzb',array(
