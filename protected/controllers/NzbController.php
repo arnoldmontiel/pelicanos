@@ -1568,6 +1568,9 @@ class NzbController extends Controller
 			if($_POST['Nzb']['is_draft'] != $model->is_draft )
 				$hasChanged = true;
 			
+			if($_POST['Nzb']['final_content_path'] != $model->final_content_path )
+				$hasChanged = true;
+				
 			$model->attributes = $_POST['Nzb'];
 		}
 
