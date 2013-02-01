@@ -60,12 +60,11 @@ class Nzb extends CActiveRecord
 		return array(
 			array('Id_resource_type, Id_my_movie_disc_nzb', 'required'),
 			array('Id_resource_type, deleted, points, is_draft', 'numerical', 'integerOnly'=>true),
-			array('url, file_name, subt_url, subt_file_name, subt_original_name, file_original_name', 'length', 'max'=>255),
+			array('url, file_name, subt_url, subt_file_name, subt_original_name, file_original_name,final_content_path', 'length', 'max'=>255),
 			array('Id_my_movie_disc_nzb', 'length', 'max'=>200),
-			array('final_content_path', 'length', 'max'=>256),
 		// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id, Id_resource_type, url, file_name, subt_url, subt_file_name, subt_original_name, deleted, points, file_original_name, is_draft, Id_my_movie_disc_nzb, year, idImdb, genre, title, resourceTypeDesc, disc_name', 'safe', 'on'=>'search'),
+			array('Id, Id_resource_type, url, file_name, subt_url, subt_file_name, subt_original_name, deleted, points, file_original_name,final_content_path, is_draft, Id_my_movie_disc_nzb, year, idImdb, genre, title, resourceTypeDesc, disc_name', 'safe', 'on'=>'search'),
 		);
 	}
 
