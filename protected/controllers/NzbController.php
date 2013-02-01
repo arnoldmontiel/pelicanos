@@ -1610,7 +1610,8 @@ class NzbController extends Controller
 					$modelMyMovieDiscNzb->save();
 					$this->saveUpdatedModel($model, $id);
 				}
-				$this->redirect(array('view','id'=>$model->Id));
+				else
+					$this->redirect(array('view','id'=>$model->Id));
 			}
 		}
 		else
@@ -1618,9 +1619,13 @@ class NzbController extends Controller
 			if($hasChanged){
 				$modelMyMovieDiscNzb->save();
 				$this->saveUpdatedModel($model, $id);
-				$this->redirect(array('view','id'=>$model->Id));
 			}
 		}
+		if(isset($_POST['Nzb'])||isset($_POST['Upload'])||isset($_POST['MyMovieDiscNzb']))
+		{
+			$this->redirect(array('view','id'=>$model->Id));				
+		}
+		
 
 		$this->render('updateNzb',array(
 			'model'=>$model,
