@@ -398,7 +398,7 @@ class MyMovieHelper
 		{
 			foreach($xml->Posters->children() as $item)
 			{
-				return (string)$item['File'];
+				return (string)$item['FileThumb'];
 			}
 	
 		}
