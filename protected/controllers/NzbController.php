@@ -2099,7 +2099,11 @@ class NzbController extends Controller
 			
 			if($model->save())
 			{
-				$this->updateRelation($id);
+				foreach($model->myMovieDiscNzbs as $discs)
+				{
+					foreach($discs->nzbs as $nzb)
+						$this->updateRelation($nzb->Id);
+				}				
 				$this->redirect(array('adminBox'));
 			}
 		}
