@@ -2098,7 +2098,10 @@ class NzbController extends Controller
 				$model->backdrop = MyMovieHelper::getImage($model->backdrop_original, $model->Id.'_bd');
 			
 			if($model->save())
+			{
+				$this->updateRelation($id);
 				$this->redirect(array('adminBox'));
+			}
 		}
 	
 		$this->render('updateBox',array(
