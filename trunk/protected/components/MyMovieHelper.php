@@ -388,7 +388,7 @@ class MyMovieHelper
 	{
 		if(!empty($xml->Covers))
 		{
-			return $xml->Covers->Front;
+			return (string)$xml->Covers->Front['Medium'];
 		}
 		return "";
 	}
