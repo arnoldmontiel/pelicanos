@@ -933,7 +933,6 @@ class NzbController extends Controller
 	public function actionCreateBox()
 	{
 		$model=new Nzb;
-		$modelUpload=new Upload;
 		$modelMyMovieDiscNzb = new MyMovieDiscNzb();
 		$modelMyMovieNzb = new MyMovieNzb('search');
 		$modelMyMovieNzb->unsetAttributes();  // clear any default values
@@ -946,31 +945,23 @@ class NzbController extends Controller
 		if(isset($_POST['Nzb']))
 			$model->attributes = $_POST['Nzb'];
 	
-		if(isset($_POST['Upload']) && isset($_POST['hiddenMyMovieNzbId']))
-		{
-			$modelUpload->attributes = $_POST['Upload'];
+		if(isset($_POST['hiddenMyMovieNzbId']))
+		{			
 			$modelMyMovieDiscNzb->attributes = $_POST['MyMovieDiscNzb'];
 			
-			$idMyMovieNzb = $_POST['hiddenMyMovieNzbId'];
-			$file=CUploadedFile::getInstance($modelUpload,'file');
+			$idMyMovieNzb = $_POST['hiddenMyMovieNzbId'];			
 	
-			if($modelUpload->validate() && !empty($idMyMovieNzb))
+			if(!empty($idMyMovieNzb))
 			{
 				$transaction = $model->dbConnection->beginTransaction();
 				try {
-					if($file != null)
-					{
-						$uniqueId = uniqid();
-						$fileName = $uniqueId . '.nzb';
-	
-						$model->url = '/nzb/'.$fileName;
-						$model->file_name = $fileName;
-	
-						$model->file_original_name = $file->getName();
-	
-						$this->saveFile($file, 'nzb', $fileName);
-					}
 					
+					$model->file_original_name = uniqid() . '.nzb';
+						
+					$model->file_password = uniqid();
+					
+					$model->final_content_path = $this->createFileFinalPath($model);
+	
 					$modelMyMovieDiscNzb->Id_my_movie_nzb = $idMyMovieNzb;
 					
 					$model->Id_my_movie_disc_nzb = MyMovieHelper::createDisc($modelMyMovieDiscNzb);
@@ -993,8 +984,7 @@ class NzbController extends Controller
 		}
 	
 		$this->render('selectBox',array(
-					'model'=>$model,
-					'modelUpload'=>$modelUpload,
+					'model'=>$model,					
 					'ddlRsrcType'=>$ddlRsrcType,
 					'modelMyMovieNzb'=>$modelMyMovieNzb,
 					'modelMyMovieDiscNzb'=>$modelMyMovieDiscNzb,
@@ -1054,7 +1044,7 @@ class NzbController extends Controller
 			if(!empty($idSeason))
 			{
 				$this->getEpisodes($modelMyMovieSeason->Id_my_movie_serie_header, $idSeason);
-				$this->redirect(array('selectEpisode','id'=>$model->Id, 'idSeason'=>$idSeason));
+				$this->redirect(array('selectEpisode','id'=>$model->Id, 'idSeason'=>$idSeason, 'fromSeason'=>true));
 			}
 		}
 	
@@ -1101,7 +1091,7 @@ class NzbController extends Controller
 		
 	}
 	
-	public function actionSelectEpisode($id, $idSeason)
+	public function actionSelectEpisode($id, $idSeason, $fromSeason = false)
 	{
 		$model = Nzb::model()->findByPk($id);
 		
@@ -1120,10 +1110,15 @@ class NzbController extends Controller
 		if(isset($_GET['MyMovieDiscNzbMyMovieEpisode']))
 			$modelDiscEpisodes->attributes=$_GET['MyMovieDiscNzbMyMovieEpisode'];
 	
+		$redirectActionPage = 'viewTv';
+		if($fromSeason)
+			$redirectActionPage = 'updateNzb';
+		
 		$this->render('selectEpisode',array(
 						'model'=>$model,
 						'modelMyMovieEpisode'=>$modelMyMovieEpisode,
 						'modelDiscEpisodes'=>$modelDiscEpisodes,
+						'redirectActionPage'=>$redirectActionPage,
 		));
 	}
 	
