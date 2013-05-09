@@ -3,7 +3,7 @@
 Yii::app()->clientScript->registerScript(__CLASS__.'#selectEpisode', "
 
 $('#finishButton').click(function(){
-	window.location = '".NzbController::createUrl('findSubtitle',array('id'=>$model->Id))."';
+	window.location = '".NzbController::createUrl($redirectActionPage,array('id'=>$model->Id))."';
 	return false;
 });
 
@@ -258,7 +258,7 @@ $('#finishButton').click(function(){
 		<div class="row buttons">
 			<?php 			
 									
-				echo CHtml::submitButton('Next', array('id'=>'finishButton'));
+				echo CHtml::submitButton('Finish', array('id'=>'finishButton'));
 			?>		
 		</div>
 	</div>

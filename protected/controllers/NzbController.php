@@ -837,7 +837,7 @@ class NzbController extends Controller
 		));
 	}
 	
-	public function actionSelectSpecification($id)
+	public function actionSelectSpecification($id,$redirectActionPage)
 	{
 		$model = Nzb::model()->findByPk($id);
 		
@@ -888,6 +888,7 @@ class NzbController extends Controller
 						'modelNzbSubtitle'=>$modelNzbSubtitle,
 						'modelNzbAudioTrack'=>$modelNzbAudioTrack,
 						'modelNzbPerson'=>$modelNzbPerson,
+						'redirectActionPage'=>$redirectActionPage,
 		));
 	}
 	
@@ -901,6 +902,9 @@ class NzbController extends Controller
 		$modelAudioTrack = new AudioTrack('search');
 		$modelAudioTrack->unsetAttributes();  // clear any default values
 	
+		$modelPerson = new Person('search');
+		$modelPerson->unsetAttributes();  // clear any default values
+		
 		$modelNzbSubtitle = new MyMovieNzbSubtitle('search');
 		$modelNzbSubtitle->unsetAttributes();  // clear any default values
 		$modelNzbSubtitle->Id_my_movie_nzb = $id;
@@ -908,7 +912,11 @@ class NzbController extends Controller
 		$modelNzbAudioTrack = new MyMovieNzbAudioTrack('search');
 		$modelNzbAudioTrack->unsetAttributes();  // clear any default values
 		$modelNzbAudioTrack->Id_my_movie_nzb = $id;
-	
+			
+		$modelNzbPerson = new MyMovieNzbPerson('search');
+		$modelNzbPerson->unsetAttributes();  // clear any default values
+		$modelNzbPerson->Id_my_movie_nzb = $id;
+		
 		if(isset($_GET['Subtitle']))
 			$modelSubtitle->attributes=$_GET['Subtitle'];
 	
@@ -921,12 +929,17 @@ class NzbController extends Controller
 		if(isset($_GET['MyMovieNzbAudioTrack']))
 			$modelNzbAudioTrack->attributes=$_GET['MyMovieNzbAudioTrack'];
 	
+		if(isset($_GET['MyMovieNzbPerson']))
+			$modelNzbPerson->attributes=$_GET['MyMovieNzbPerson'];
+		
 		$this->render('updateSpecification',array(
 							'model'=>$model,
 							'modelSubtitle'=>$modelSubtitle,
 							'modelAudioTrack'=>$modelAudioTrack,
+							'modelPerson'=>$modelPerson,
 							'modelNzbSubtitle'=>$modelNzbSubtitle,
 							'modelNzbAudioTrack'=>$modelNzbAudioTrack,
+							'modelNzbPerson'=>$modelNzbPerson,
 		));
 	}
 	
