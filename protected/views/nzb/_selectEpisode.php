@@ -3,7 +3,7 @@
 Yii::app()->clientScript->registerScript(__CLASS__.'#selectEpisode', "
 
 $('#finishButton').click(function(){
-	window.location = '".NzbController::createUrl('viewTv',array('id'=>$model->Id))."';
+	window.location = '".NzbController::createUrl($redirectActionPage,array('id'=>$model->Id))."';
 	return false;
 });
 
@@ -25,6 +25,10 @@ $('#finishButton').click(function(){
 			array('label'=>$model->getAttributeLabel('Season'),
 				'type'=>'raw',
 				'value'=>$modelMyMovieEpisode->myMovieSeason->season_number, 
+			),
+			array('label'=>$model->getAttributeLabel('Disc Name'),
+				'type'=>'raw',
+				'value'=>$model->myMovieDiscNzb->name, 
 			),
 			array('label'=>'Original Status',
 				'type'=>'raw',

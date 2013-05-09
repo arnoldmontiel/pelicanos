@@ -10,8 +10,7 @@ $this->menu=array(
 <h1>Create Box</h1>
 
 <?php 
-echo $this->renderPartial('_selectBox', array('model'=>$model,
-											'modelUpload'=>$modelUpload, 
+echo $this->renderPartial('_selectBox', array('model'=>$model, 
 											'ddlRsrcType'=>$ddlRsrcType,
 											'modelMyMovieNzb'=>$modelMyMovieNzb,
 											'modelMyMovieDiscNzb'=>$modelMyMovieDiscNzb,
