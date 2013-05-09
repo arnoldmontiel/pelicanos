@@ -14,7 +14,29 @@ $('#cancelButton').click(function(){
 	window.location = '".NzbController::createUrl('index')."';
 	return false;
 });
- 
+
+$('input:radio').change(function(){
+
+	unselectRow('my-movie-nzb-grid');
+	$('#MyMovieNzb_backdrop_original').val('');
+	//if true -> is single chapter
+	if($(this).val() == 'true')
+	{
+		$('#is-not-single-chapter').hide();
+		$('#is-single-chapter').show();		
+		$('#hiddenMyMovieNzbId').val('');
+		if($('#Upload_file').val() != '')
+			$('#saveButton').removeAttr('disabled');
+	}
+	else
+	{
+		$('#is-not-single-chapter').show();
+		$('#is-single-chapter').hide();
+		$('#hiddenMyMovieNzbId').val('');
+		$('#saveButton').attr('disabled','disabled');
+	}	
+});
+
 $('#Nzb_points').keyup(function(){
 	validateNumber($(this));
 });  
@@ -58,6 +80,25 @@ $('#Nzb_points').keyup(function(){
 		<?php echo CHtml::error($modelMyMovieDiscNzb,'name'); ?>
 	</div>
 	
+	<div id="isSingleChapter" style="margin-bottom: 5px">
+		<?php echo CHtml::activeLabelEx($modelMyMovieNzb,'is_serie'); ?>
+		<?php
+			echo CHtml::radioButtonList('rbnIsSingleChapter','false', array('false'=>'No', 'true'=>'Yes'), array(
+									'labelOptions'=>array('style'=>'display:inline'),
+                					'separator'=>' '
+                					));
+        ?>        
+	</div>
+
+<div id="is-single-chapter" style="display:none">	
+	 <div class="row">
+        <?php echo CHtml::activeLabelEx($modelMyMovieNzb,'backdrop_original'); ?>
+        <?php echo CHtml::activeTextField($modelMyMovieNzb,'backdrop_original',array('size'=>60,'maxlength'=>255)); ?>
+    	<?php echo CHtml::error($modelMyMovieNzb,'backdrop_original'); ?>
+	</div>
+</div>
+
+<div id="is-not-single-chapter">	
 <div class="gridTitle-decoration1">
 	<div class="gridTitle1">
 		Box Data
@@ -95,7 +136,7 @@ $('#Nzb_points').keyup(function(){
 	),
 )); ?>
 </div>
-
+</div>
 	<div class="left">
 		<div class="row buttons">
 			<?php 			

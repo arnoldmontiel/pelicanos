@@ -12,13 +12,9 @@
 		<br />
 	
 		<b><?php echo CHtml::encode($data->getAttributeLabel('file_name')); ?>:</b>
-		<?php echo CHtml::link($data->file_original_name, NzbController::createUrl('AjaxDownloadFile',array('fileName'=>$data->file_name, 'root'=>'nzb'))); ?>
+		<?php echo (isset($data->file_name))?CHtml::link($data->file_original_name, NzbController::createUrl('AjaxDownloadFile',array('fileName'=>$data->file_name, 'root'=>'nzb'))):''; ?>
 		<br />
-	
-		<b><?php echo CHtml::encode($data->getAttributeLabel('subt_file_name')); ?>:</b>
-		<?php echo CHtml::link($data->subt_file_name, NzbController::createUrl('AjaxDownloadFile',array('fileName'=>$data->subt_file_name, 'root'=>'subtitles'))); ?>
-		<br />
-	
+		
 		<b><?php echo CHtml::encode($data->getAttributeLabel('original_title')); ?>:</b>
 		<?php echo CHtml::encode($data->myMovieDiscNzb->myMovieNzb->original_title); ?>
 		<br />

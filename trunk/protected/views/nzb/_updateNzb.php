@@ -27,13 +27,13 @@ $('#cancelButton').click(function(){
 		<br />
 	
 		<b><?php echo CHtml::encode($model->getAttributeLabel('file_name')); ?>:</b>
-		<?php echo CHtml::link($model->file_original_name, NzbController::createUrl('AjaxDownloadFile',array('fileName'=>$model->file_name, 'root'=>'nzb'))); ?>
+		<?php echo CHtml::encode($model->file_original_name); ?>
 		<br />
-	
-		<b><?php echo CHtml::encode($model->getAttributeLabel('subt_file_name')); ?>:</b>
-		<?php echo CHtml::link($model->subt_file_name, NzbController::createUrl('AjaxDownloadFile',array('fileName'=>$model->subt_file_name, 'root'=>'subtitles'))); ?>
+		
+		<b><?php echo CHtml::encode($model->getAttributeLabel('file_password')); ?>:</b>
+		<?php echo CHtml::encode($model->file_password); ?>
 		<br />
-	
+			
 		<b><?php echo CHtml::encode($model->getAttributeLabel('original_title')); ?>:</b>
 		<?php echo CHtml::encode($model->myMovieDiscNzb->myMovieNzb->original_title); ?>
 		<br />
@@ -48,7 +48,7 @@ $('#cancelButton').click(function(){
 
 	<div class="row"> 
 		<?php echo CHtml::activeLabelEx($modelUpload,'File *.nzb'); ?>
-		<?php echo CHtml::activeFileField($modelUpload, 'file')?> <?php echo CHtml::link($model->file_original_name, NzbController::createUrl('AjaxDownloadFile',array('fileName'=>$model->file_name, 'root'=>'nzb'))); ?>
+		<?php echo CHtml::activeFileField($modelUpload, 'file')?> <?php echo (isset($model->file_name))?CHtml::link($model->file_original_name, NzbController::createUrl('AjaxDownloadFile',array('fileName'=>$model->file_name, 'root'=>'nzb'))):''; ?>
 		<?php echo CHtml::error($modelUpload, 'file')?>
 	</div>	
 
@@ -58,11 +58,7 @@ $('#cancelButton').click(function(){
 		<?php echo CHtml::activeDropDownList($model, 'Id_resource_type', $rsrcType);?>
 		<?php echo CHtml::error($model,'Id_resource_type'); ?>
 	</div>
-	<div id="filePath" style="margin-bottom: 5px">
-		<?php echo CHtml::activeLabelEx($model,'final_content_path'); ?>
-		<?php echo CHtml::activeTextField($model, 'final_content_path',array('size'=>50,'maxlength'=>256));?>
-		<?php echo CHtml::error($model,'final_content_path'); ?>
-	</div>
+	
 	<div id="points" style="margin-bottom: 5px">
 		<?php echo CHtml::activeLabelEx($model,'points'); ?>
 		<?php echo CHtml::activeTextField($model, 'points');?>

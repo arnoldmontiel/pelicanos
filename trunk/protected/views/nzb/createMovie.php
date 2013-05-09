@@ -11,7 +11,6 @@ $this->menu=array(
 
 <?php 
 echo $this->renderPartial('_formMovie', array('model'=>$model,
-											'modelUpload'=>$modelUpload, 
 											'modelMyMovieAPIRequest'=>$modelMyMovieAPIRequest, 
 											'ddlRsrcType'=>$ddlRsrcType,
 											'arrayDataProvider'=>$arrayDataProvider,
