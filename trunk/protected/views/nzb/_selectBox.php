@@ -1,10 +1,6 @@
 <div class="form">
 <?php
 Yii::app()->clientScript->registerScript(__CLASS__.'#selectBox', "
-$('#Upload_file').change(function() {
-	if($('#hiddenMyMovieNzbId').val() != '' && $(this).val() != '')
-  		$('#saveButton').removeAttr('disabled');
-});
 
 $('#saveButton').click(function(){
 	$('#waiting').dialog('open');
@@ -13,28 +9,6 @@ $('#saveButton').click(function(){
 $('#cancelButton').click(function(){
 	window.location = '".NzbController::createUrl('index')."';
 	return false;
-});
-
-$('input:radio').change(function(){
-
-	unselectRow('my-movie-nzb-grid');
-	$('#MyMovieNzb_backdrop_original').val('');
-	//if true -> is single chapter
-	if($(this).val() == 'true')
-	{
-		$('#is-not-single-chapter').hide();
-		$('#is-single-chapter').show();		
-		$('#hiddenMyMovieNzbId').val('');
-		if($('#Upload_file').val() != '')
-			$('#saveButton').removeAttr('disabled');
-	}
-	else
-	{
-		$('#is-not-single-chapter').show();
-		$('#is-single-chapter').hide();
-		$('#hiddenMyMovieNzbId').val('');
-		$('#saveButton').attr('disabled','disabled');
-	}	
 });
 
 $('#Nzb_points').keyup(function(){
@@ -49,11 +23,6 @@ $('#Nzb_points').keyup(function(){
 	echo CHtml::hiddenField("hiddenMyMovieNzbId",'',array('id'=>'hiddenMyMovieNzbId'));
 ?>
 
-<div class="row"> 
-	<?php echo CHtml::activeLabelEx($modelUpload,'File *.nzb'); ?>
-	<?php echo CHtml::activeFileField($modelUpload, 'file',array('size'=>50))?>
-	<?php echo CHtml::error($modelUpload, 'file')?>
-</div>	
 
 	<div id="resourceType" style="margin-bottom: 5px">
 		<?php	$rsrcType = CHtml::listData($ddlRsrcType, 'Id', 'description');?>
@@ -61,16 +30,10 @@ $('#Nzb_points').keyup(function(){
 		<?php echo CHtml::activeDropDownList($model, 'Id_resource_type', $rsrcType);?>
 		<?php echo CHtml::error($model,'Id_resource_type'); ?>
 	</div>
-
-	<div id="filePath" style="margin-bottom: 5px">
-		<?php echo CHtml::activeLabelEx($model,'final_content_path'); ?>
-		<?php echo CHtml::activeTextField($model, 'final_content_path',array('size'=>50,'maxlength'=>256));?>
-		<?php echo CHtml::error($model,'final_content_path'); ?>
-	</div>
 	
 	<div id="points" style="margin-bottom: 5px">
 		<?php echo CHtml::activeLabelEx($model,'points'); ?>
-		<?php echo CHtml::activeTextField($model, 'points');?>
+		<?php echo CHtml::activeTextField($model, 'points',array('size'=>5));?>
 		<?php echo CHtml::error($model,'points'); ?>
 	</div>
 	
@@ -79,26 +42,8 @@ $('#Nzb_points').keyup(function(){
 		<?php echo CHtml::activeTextField($modelMyMovieDiscNzb, 'name');?>
 		<?php echo CHtml::error($modelMyMovieDiscNzb,'name'); ?>
 	</div>
-	
-	<div id="isSingleChapter" style="margin-bottom: 5px">
-		<?php echo CHtml::activeLabelEx($modelMyMovieNzb,'is_serie'); ?>
-		<?php
-			echo CHtml::radioButtonList('rbnIsSingleChapter','false', array('false'=>'No', 'true'=>'Yes'), array(
-									'labelOptions'=>array('style'=>'display:inline'),
-                					'separator'=>' '
-                					));
-        ?>        
-	</div>
 
-<div id="is-single-chapter" style="display:none">	
-	 <div class="row">
-        <?php echo CHtml::activeLabelEx($modelMyMovieNzb,'backdrop_original'); ?>
-        <?php echo CHtml::activeTextField($modelMyMovieNzb,'backdrop_original',array('size'=>60,'maxlength'=>255)); ?>
-    	<?php echo CHtml::error($modelMyMovieNzb,'backdrop_original'); ?>
-	</div>
-</div>
 
-<div id="is-not-single-chapter">	
 <div class="gridTitle-decoration1">
 	<div class="gridTitle1">
 		Box Data
@@ -117,9 +62,8 @@ $('#Nzb_points').keyup(function(){
 	'selectionChanged'=>'js:function(){
 							var idMyMovieNzb = $.fn.yiiGridView.getSelection("my-movie-nzb-grid")
 							if(idMyMovieNzb!=""){
-								$("#hiddenMyMovieNzbId").val(idMyMovieNzb);
-								if($("#Upload_file").val() != "")
-									$("#saveButton").removeAttr("disabled");
+								$("#hiddenMyMovieNzbId").val(idMyMovieNzb);								
+								$("#saveButton").removeAttr("disabled");
 							}
 							else
 							{
@@ -135,7 +79,6 @@ $('#Nzb_points').keyup(function(){
 		'studio',
 	),
 )); ?>
-</div>
 </div>
 	<div class="left">
 		<div class="row buttons">
