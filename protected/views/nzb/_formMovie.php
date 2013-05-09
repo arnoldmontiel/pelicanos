@@ -14,12 +14,6 @@ $('#btnSearch').click(function()
 	return false;
 });
 
-
-$('#Upload_file').change(function() {
-	if($('#hiddenTitleId').val() != '' && $(this).val() != '')
-  		$('#saveButton').removeAttr('disabled');
-});
-
 $('#saveButton').click(function(){
 	$('#wating').dialog('open');
 });
@@ -47,35 +41,19 @@ $('#Nzb_points').keyup(function(){
 	echo CHtml::hiddenField("hiddenTitleId",'',array('id'=>'hiddenTitleId'));
 ?>
 
-<div class="row"> 
-	<?php echo CHtml::activeLabelEx($modelUpload,'File *.nzb'); ?>
-	<?php echo CHtml::activeFileField($modelUpload, 'file',array('size'=>50))?>
-	<?php echo CHtml::error($modelUpload, 'file')?>
-</div>	
-
 	<div id="resourceType" style="margin-bottom: 5px">
 		<?php	$rsrcType = CHtml::listData($ddlRsrcType, 'Id', 'description');?>
 		<?php echo CHtml::activeLabelEx($model,'Id_resource_type'); ?>
 		<?php echo CHtml::activeDropDownList($model, 'Id_resource_type', $rsrcType);?>
 		<?php echo CHtml::error($model,'Id_resource_type'); ?>
-	</div>
-	<div id="filePath" style="margin-bottom: 5px">
-		<?php echo CHtml::activeLabelEx($model,'final_content_path'); ?>
-		<?php echo CHtml::activeTextField($model, 'final_content_path',array('size'=>50,'maxlength'=>256));?>
-		<?php echo CHtml::error($model,'final_content_path'); ?>
-	</div>
+	</div>	
 
 	<div id="points" style="margin-bottom: 5px">
 		<?php echo CHtml::activeLabelEx($model,'points'); ?>
-		<?php echo CHtml::activeTextField($model, 'points');?>
+		<?php echo CHtml::activeTextField($model, 'points',array('size'=>5));?>
 		<?php echo CHtml::error($model,'points'); ?>
 	</div>
-	
-<div class="gridTitle-decoration1">
-	<div class="gridTitle1">
-		Movie Data
-	</div>
-</div>
+
 	
 <div id="search-movie-data">
 	<div class="search-movie-data-fields">	
@@ -153,8 +131,7 @@ $('#Nzb_points').keyup(function(){
 						var titleId = $.fn.yiiGridView.getSelection("search-result-grid")
 						if(titleId!=""){
 							$("#hiddenTitleId").val(titleId);
-							if($("#Upload_file").val() != "")
-								$("#saveButton").removeAttr("disabled");
+							$("#saveButton").removeAttr("disabled");
 						}
 						else
 						{

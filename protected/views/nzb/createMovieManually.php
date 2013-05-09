@@ -10,8 +10,7 @@ $this->menu=array(
 <h1>Create Movie Manually</h1>
 
 <?php 
-echo $this->renderPartial('_formMovieManual', array('model'=>$model,
-										'modelUpload'=>$modelUpload,
+echo $this->renderPartial('_formMovieManual', array('model'=>$model,										
 										'ddlRsrcType'=>$ddlRsrcType,
 										'ddlParentalControl'=>$ddlParentalControl,
 										'modelMyMovieNzb'=>$modelMyMovieNzb,

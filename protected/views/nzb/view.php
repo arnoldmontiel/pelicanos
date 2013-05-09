@@ -65,15 +65,7 @@ $('#publishButton').click(function(){
 		<b><?php echo CHtml::encode($model->getAttributeLabel('file_name')); ?>:</b>
 		<?php echo CHtml::link($model->file_original_name, NzbController::createUrl('AjaxDownloadFile',array('fileName'=>$model->file_name, 'root'=>'nzb'))); ?>
 		<br />
-	
-		<b><?php echo CHtml::encode($model->getAttributeLabel('subt_file_name')); ?>:</b>
-		<?php echo CHtml::link($model->subt_file_name, NzbController::createUrl('AjaxDownloadFile',array('fileName'=>$model->subt_file_name, 'root'=>'subtitles'))); ?>
-		<br />
-	
-		<b><?php echo CHtml::encode($model->getAttributeLabel('subt_original_name')); ?>:</b>
-		<?php echo CHtml::encode($model->subt_original_name); ?>
-		<br />
-	
+			
 		<b><?php echo CHtml::encode($model->getAttributeLabel('Id imdb')); ?>:</b>
 		<?php echo CHtml::encode($model->myMovieDiscNzb->myMovieNzb->imdb); ?>
 		<br />

@@ -2,12 +2,6 @@
 <?php
 Yii::app()->clientScript->registerScript(__CLASS__.'#newMovieManual', "
 
-
-$('#Upload_file').change(function() {
-	if($(this).val() != '')
-  		$('#saveButton').removeAttr('disabled');
-});
-
 $('#saveButton').click(function(){
 	$('#wating').dialog('open');
 });
@@ -28,12 +22,6 @@ $('#Nzb_points').keyup(function(){
 		('enctype'=>'multipart/form-data'));
 ?>
 
-<div class="row"> 
-	<?php echo CHtml::activeLabelEx($modelUpload,'File *.nzb'); ?>
-	<?php echo CHtml::activeFileField($modelUpload, 'file',array('size'=>50))?>
-	<?php echo CHtml::error($modelUpload, 'file')?>
-</div>	
-
 	<div id="resourceType" style="margin-bottom: 5px">
 		<?php	$rsrcType = CHtml::listData($ddlRsrcType, 'Id', 'description');?>
 		<?php echo CHtml::activeLabelEx($model,'Id_resource_type'); ?>
@@ -43,15 +31,10 @@ $('#Nzb_points').keyup(function(){
 
 	<div id="points" style="margin-bottom: 5px">
 		<?php echo CHtml::activeLabelEx($model,'points'); ?>
-		<?php echo CHtml::activeTextField($model, 'points');?>
+		<?php echo CHtml::activeTextField($model, 'points',array('size'=>5));?>
 		<?php echo CHtml::error($model,'points'); ?>
 	</div>
 	
-<div class="gridTitle-decoration1">
-	<div class="gridTitle1">
-		Movie Data
-	</div>
-</div>
 	
 <div id="search-movie-data">
 
@@ -227,7 +210,7 @@ $('#Nzb_points').keyup(function(){
 		<div class="row buttons">
 			<?php 			
 									
-				echo CHtml::submitButton($model->isNewRecord ? 'Next' : 'Save', array('id'=>'saveButton','disabled'=>'disabled'));
+				echo CHtml::submitButton($model->isNewRecord ? 'Next' : 'Save', array('id'=>'saveButton'));
 				echo CHtml::submitButton('Cancel', array('id'=>'cancelButton'));
 			?>		
 		</div>
@@ -235,24 +218,3 @@ $('#Nzb_points').keyup(function(){
 <?php echo CHtml::endForm()?>
 
 </div><!-- form -->
-
-<?php
-//ProductType
-	$this->beginWidget('zii.widgets.jui.CJuiDialog', array(
-			'id'=>'ViewMoreInfo',
-			// additional javascript options for the dialog plugin
-			'options'=>array(
-					'title'=>'Movie Info',
-					'autoOpen'=>false,
-					'modal'=>true,
-					'width'=> '600',
-					'buttons'=>	array(
-							'Aceptar'=>'js:function(){jQuery("#ViewMoreInfo").dialog( "close" );}',
-					),
-			),
-	));
-	echo CHtml::openTag('div',array('id'=>'popup-view-movie-info','style'=>'position:relative;display:inline-block;width:97%'));
-	echo CHtml::closeTag('div');
-	
-	$this->endWidget('zii.widgets.jui.CJuiDialog');
-?>
