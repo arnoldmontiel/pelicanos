@@ -175,6 +175,83 @@ $('#finishButton').click(function(){
 			),			
 			));		
 		?>	
+<div class="gridTitle-decoration1">
+	<div class="gridTitle1">
+		Person
+		<div style="display: inline-block;">
+			<?php echo CHtml::link( 'Add new Person','#',array('onclick'=>'jQuery("#newPerson").dialog("open"); return false;'));?>
+		</div>
+	</div>
+</div>
+
+<div  style="display: inline-block;">
+	<?php $this->widget('zii.widgets.grid.CGridView', array(
+	'id'=>'person-grid',
+	'dataProvider'=>$modelPerson->search(),
+	'filter'=>$modelPerson,
+	'summaryText'=>'',
+	'selectionChanged'=>'js:function(){							
+						$.get(	"'.NzbController::createUrl('AjaxAddPerson').'",
+						{
+							idPerson:$.fn.yiiGridView.getSelection("person-grid"),
+							idMyMovieNzb: "'.$model->Id.'"
+						}).success(
+							function() 
+							{
+								$.fn.yiiGridView.update("my-movie-nzb-person-grid", {
+									data: $(this).serialize()
+								});
+								unselectRow("person-grid");		
+							}
+						);
+				}',
+	'columns'=>array(
+		'name',
+		'type',
+		'role',
+	),
+)); ?>
+</div>
+
+<div class="gridTitle-decoration1">
+		<div class="gridTitle1">
+		Person Selected
+		</div>
+</div>
+		<?php 				
+		$this->widget('zii.widgets.grid.CGridView', array(
+			'id'=>'my-movie-nzb-person-grid',
+			'dataProvider'=>$modelNzbPerson->search(),
+			'filter'=>$modelNzbPerson,
+			'summaryText'=>'',
+			'columns'=>array(	
+						array(
+				 			'name'=>'name',
+							'value'=>'$data->person->name',
+						),
+						array(
+				 			'name'=>'type',
+							'value'=>'$data->person->type',
+						),
+						array(
+				 			'name'=>'role',
+							'value'=>'$data->person->role',
+						),
+			array(
+				'class'=>'CButtonColumn',
+				'template'=>'{delete}',
+				'buttons'=>array
+					(
+				        'delete' => array
+						(
+				            'url'=>'Yii::app()->createUrl("nzb/AjaxRemovePerson", array("idPerson"=>$data->Id_person,"idMyMovieNzb"=>$data->Id_my_movie_nzb))',
+						),
+					),
+				),
+		
+			),			
+			));		
+		?>	
 	<div class="left">
 		<div class="row buttons">
 			<?php 			
@@ -267,6 +344,45 @@ $this->widget('ext.processingDialog.processingDialog', array(
 	
 	$modelNewSubtitle = new Subtitle();
 	echo $this->renderPartial('_formSubtitle', array('model'=>$modelNewSubtitle,
+	));
+	
+	$this->endWidget('zii.widgets.jui.CJuiDialog');
+	
+//New person dialog
+	$this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+						'id'=>'newPerson',
+	// additional javascript options for the dialog plugin
+						'options'=>array(
+								'title'=>'New Person',
+								'autoOpen'=>false,
+								'modal'=>true,
+								'width'=> '600',
+								'buttons'=>	array(
+										'Guardar'=>'js:function(){							
+												jQuery("#waiting").dialog("open");
+												jQuery.post("'.Yii::app()->createUrl("nzb/ajaxSavePerson").'", $("#person-form").serialize(),
+												function(data) {
+													$.fn.yiiGridView.update("person-grid", {
+														data:$("#Person_name").serialize() 
+													});									
+													jQuery("#waiting").dialog("close");
+													$("#Person_name").val(null);												
+													$("#Person_role").val(null);
+													jQuery("#newPerson").dialog( "close" );
+												},"json"
+											);
+										}',
+										'Cancelar'=>'js:function(){								
+													$("#Person_name").val(null);												
+													$("#Person_role").val(null);												
+													jQuery("#newPerson").dialog( "close" );
+										}',
+	),
+	),
+	));
+	
+	$modelNewPerson = new Person();
+	echo $this->renderPartial('_formPerson', array('model'=>$modelNewPerson,
 	));
 	
 	$this->endWidget('zii.widgets.jui.CJuiDialog');

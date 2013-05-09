@@ -17,6 +17,7 @@ echo $this->renderPartial('_selectSpecification', array('model'=>$model,
 											'modelNzbSubtitle'=>$modelNzbSubtitle,
 											'modelNzbAudioTrack'=>$modelNzbAudioTrack,
 											'modelNzbPerson'=>$modelNzbPerson,
+											'redirectActionPage'=>$redirectActionPage,
 									));
 ?>
 	
