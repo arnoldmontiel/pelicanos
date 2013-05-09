@@ -16,6 +16,8 @@
  * @property string $file_original_name
  * @property integer $is_draft
  * @property string $Id_my_movie_disc_nzb
+ * @property string $file_password
+ * @property string $final_content_path
  *
  * The followings are the available model relations:
  * @property CustomerTransaction[] $customerTransactions
@@ -60,11 +62,11 @@ class Nzb extends CActiveRecord
 		return array(
 			array('Id_resource_type, Id_my_movie_disc_nzb', 'required'),
 			array('Id_resource_type, deleted, points, is_draft', 'numerical', 'integerOnly'=>true),
-			array('url, file_name, subt_url, subt_file_name, subt_original_name, file_original_name,final_content_path', 'length', 'max'=>255),
+			array('url, file_name, subt_url, subt_file_name, subt_original_name, file_original_name,final_content_path, file_password', 'length', 'max'=>255),
 			array('Id_my_movie_disc_nzb', 'length', 'max'=>200),
 		// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id, Id_resource_type, url, file_name, subt_url, subt_file_name, subt_original_name, deleted, points, file_original_name,final_content_path, is_draft, Id_my_movie_disc_nzb, year, idImdb, genre, title, resourceTypeDesc, disc_name', 'safe', 'on'=>'search'),
+			array('Id, Id_resource_type, url, file_name, subt_url, subt_file_name, subt_original_name, deleted, points, file_original_name,final_content_path, is_draft, Id_my_movie_disc_nzb, year, idImdb, genre, title, resourceTypeDesc, disc_name, file_password', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -103,6 +105,7 @@ class Nzb extends CActiveRecord
 			'Id_my_movie_disc_nzb' => 'Id My Movie Disc Nzb',
 			'name'=>'Disc Name',
 			'final_content_path'=>'Path content',
+			'file_password'=> 'File Password',
 		);
 	}
 
