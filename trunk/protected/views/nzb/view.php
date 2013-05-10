@@ -110,7 +110,13 @@ $('#publishButton').click(function(){
 		<br />
 		<?php } ?>
 		
-		<?php echo CHtml::submitButton('Publish',array('id'=>'publishButton', 'disabled'=>($model->is_draft)?'':'disabled')); ?>
+		<?php
+		$state = $model->getCreationState();
+		if(isset($state)&&$state->Id_creation_state== 5)
+		{
+			echo CHtml::submitButton('Publish',array('id'=>'publishButton', 'disabled'=>($model->is_draft)?'':'disabled'));
+		} 
+		?>
 		<br />
 		
 	</div>
@@ -128,7 +134,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 	'dataProvider'=>$modelNzbCreationState->search(),
 	'filter'=>$modelNzbCreationState,
 	'columns'=>array(
-		array('name'=>'user_username','value'=>'$data->user->name." ".$data->user->last_name'),
+		array('name'=>'user_username','value'=>'$data->user->username'),
 		array('name'=>'Id_creation_state','value'=>'$data->creationState->description'),
 		'date',
 	),
