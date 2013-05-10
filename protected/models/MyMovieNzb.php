@@ -74,7 +74,8 @@ class MyMovieNzb extends CActiveRecord
 			array('Id, Id_my_movie_serie_header', 'length', 'max'=>200),
 			array('local_title, original_title, sort_title', 'length', 'max'=>100),
 			array('production_year, running_time, imdb, country, video_standard, release_date, bar_code, type, media_type, aspect_ratio, data_changed, covers_changed', 'length', 'max'=>45),
-			array('parental_rating_desc, genre, studio, poster_original, poster, backdrop_original, backdrop', 'length', 'max'=>255),
+			array('parental_rating_desc, genre, poster_original, poster, backdrop_original, backdrop', 'length', 'max'=>255),
+			array('studio', 'length', 'max'=>512),
 			array('rating', 'length', 'max'=>10),
 			array('description, extra_features', 'safe'),
 			// The following rule is used by search().
