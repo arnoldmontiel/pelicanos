@@ -94,7 +94,7 @@ class NzbCreationState extends CActiveRecord
 		$criteria->compare('Id_creation_state',$this->Id_creation_state);
 		$criteria->compare('date',$this->date,true);
 		$criteria->compare('user_username',$this->user_username,true);
-
+		$criteria->order = 'Id DESC';
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
