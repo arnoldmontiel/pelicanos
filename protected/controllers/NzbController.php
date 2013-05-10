@@ -652,6 +652,12 @@ class NzbController extends Controller
 			$model=$this->loadModel($id);
 			$model->is_draft = 0;
 			$model->save();
+			$nzbCreationState = new NzbCreationState();
+			$nzbCreationState->Id_creation_state = 5;
+			$nzbCreationState->Id_nzb = $id;
+			$nzbCreationState->user_username = Yii::app()->user->name;
+			$nzbCreationState->save();
+				
 		}
 	}
 	

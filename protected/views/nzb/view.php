@@ -90,6 +90,7 @@ $('#publishButton').click(function(){
 			function(data) 
 			{
 				$('#publishButton').attr('disabled', 'disabled');
+				$.fn.yiiGridView.update('history-grid');			
 			}
 		).error(
 			function()
@@ -170,7 +171,7 @@ $('#publishButton').click(function(){
 		{
 			$verified = true;
 		}		
-		elseif(isset($state)&&$state->Id_creation_state== 4)
+		elseif(isset($state)&&($state->Id_creation_state == 4||$state->Id_creation_state == 5))
 		{
 			$publish = true;
 		} 
@@ -198,9 +199,10 @@ $('#publishButton').click(function(){
 <?php
 $modelNzbCreationState = new NzbCreationState();
 $modelNzbCreationState->Id_nzb = $model->Id;
+$provider = $modelNzbCreationState->search();
 $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'history-grid',
-	'dataProvider'=>$modelNzbCreationState->search(),
+	'dataProvider'=>$provider,
 	'filter'=>$modelNzbCreationState,
 	'columns'=>array(
 		array('name'=>'user_username','value'=>'$data->user->username'),
