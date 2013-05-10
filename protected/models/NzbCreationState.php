@@ -60,9 +60,9 @@ class NzbCreationState extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'idNzb' => array(self::BELONGS_TO, 'Nzb', 'Id_nzb'),
-			'idCreationState' => array(self::BELONGS_TO, 'CreationState', 'Id_creation_state'),
-			'userUsername' => array(self::BELONGS_TO, 'User', 'user_username'),
+			'nzb' => array(self::BELONGS_TO, 'Nzb', 'Id_nzb'),
+			'creationState' => array(self::BELONGS_TO, 'CreationState', 'Id_creation_state'),
+			'user' => array(self::BELONGS_TO, 'User', 'user_username'),
 		);
 	}
 
@@ -73,9 +73,9 @@ class NzbCreationState extends CActiveRecord
 	{
 		return array(
 			'Id_nzb' => 'Id Nzb',
-			'Id_creation_state' => 'Id Creation State',
+			'Id_creation_state' => 'State',
 			'date' => 'Date',
-			'user_username' => 'User Username',
+			'username' => 'User',
 		);
 	}
 

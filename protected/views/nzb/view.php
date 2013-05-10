@@ -118,4 +118,19 @@ $('#publishButton').click(function(){
 		<?php echo CHtml::image( "./images/".$model->myMovieDiscNzb->myMovieNzb->poster, $model->myMovieDiscNzb->myMovieNzb->original_title,array('id'=>'poster_img', 'style'=>'height: 320px;width: 220px;')); ?>
 	</div>
 </div>
+<h1>Historial</h1>
+
+<?php
+$modelNzbCreationState = new NzbCreationState();
+$modelNzbCreationState->Id_nzb = $model->Id;
+$this->widget('zii.widgets.grid.CGridView', array(
+	'id'=>'history-grid',
+	'dataProvider'=>$modelNzbCreationState->search(),
+	'filter'=>$modelNzbCreationState,
+	'columns'=>array(
+		array('name'=>'user_username','value'=>'$data->user->name." ".$data->user->last_name'),
+		array('name'=>'Id_creation_state','value'=>'$data->creationState->description'),
+		'date',
+	),
+)); ?>
 
