@@ -63,7 +63,7 @@ class Nzb extends CActiveRecord
 		$currentState = new CreationState();
 		if(!empty($states))
 		{
-			$currentState =$states[0]; 
+			$currentState =$states[count($states)-1]; 
 		}
 		return $currentState;
 	}

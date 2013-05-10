@@ -1490,20 +1490,20 @@ class NzbController extends Controller
 		if(isset($_POST['Nzb']))
 		{
 			$hasChanged = true;
-			if($_POST['Nzb']['Id_resource_type'] != $model->Id_resource_type )
+			if(isset($_POST['Nzb']['Id_resource_type'])&& $_POST['Nzb']['Id_resource_type'] != $model->Id_resource_type )
 			{
 				$hasChanged = true;
 				$model->Id_resource_type = $_POST['Nzb']['Id_resource_type']; 
 				$model->final_content_path = $this->createFileFinalPath($model);
 			}
 				
-			if($_POST['Nzb']['points'] != $model->points )
+			if(isset($_POST['Nzb']['points'])&& $_POST['Nzb']['points'] != $model->points )
 				$hasChanged = true;
 			
-			if($_POST['Nzb']['is_draft'] != $model->is_draft )
+			if(isset($_POST['Nzb']['is_draft'])&& $_POST['Nzb']['is_draft'] != $model->is_draft )
 				$hasChanged = true;
 			
-			if($_POST['Nzb']['final_content_path'] != $model->final_content_path )
+			if(isset($_POST['Nzb']['final_content_path'])&& $_POST['Nzb']['final_content_path'] != $model->final_content_path )
 				$hasChanged = true;
 				
 			$model->attributes = $_POST['Nzb'];
@@ -1511,7 +1511,7 @@ class NzbController extends Controller
 
 		if(isset($_POST['MyMovieDiscNzb']))
 		{
-			if($_POST['MyMovieDiscNzb']['name'] != $modelMyMovieDiscNzb->name )
+			if(isset($_POST['MyMovieDiscNzb']['name'])&& $_POST['MyMovieDiscNzb']['name'] != $modelMyMovieDiscNzb->name )
 				$hasChanged = true;
 			
 			$modelMyMovieDiscNzb->attributes = $_POST['MyMovieDiscNzb'];
@@ -1535,6 +1535,13 @@ class NzbController extends Controller
 					$this->saveFile($file, 'nzb', $fileName);
 					
 					$modelMyMovieDiscNzb->save();
+					
+					$nzbCreationState = new NzbCreationState();
+					$nzbCreationState->Id_creation_state = 2;
+					$nzbCreationState->Id_nzb = $model->Id;						
+					$nzbCreationState->user_username = Yii::app()->user->name;
+					$nzbCreationState->save();
+									
 					$this->saveUpdatedModel($model, $id);
 				}
 			}
@@ -1759,6 +1766,20 @@ class NzbController extends Controller
 		));
 	}
 
+	
+	public function actionAjaxChangeCreationState()
+	{
+		if(isset($_POST['Id_nzb'])&&$_POST['Id_creation_state'])
+		{
+			$nzbCreationState = new NzbCreationState();
+			$nzbCreationState->Id_creation_state = $_POST['Id_creation_state'];
+			$nzbCreationState->Id_nzb = $_POST['Id_nzb'];
+			$nzbCreationState->user_username = Yii::app()->user->name;
+			$nzbCreationState->save();
+		}
+		
+	}
+	
 	public function actionAjaxDoSearchSubtitle()
 	{
 		$model = new Osubtitle('search');

@@ -30,10 +30,57 @@ else
 <?php
 Yii::app()->clientScript->registerScript('viewNZB', "
 	$('#page').css('background-image','url(./images/".$model->myMovieDiscNzb->myMovieNzb->backdrop.")');
-	
+
+$('#uploadButton').click(function(){
+
+	if (confirm('¿Seguro que ha terminado se subir el contenido?')) 
+	{
+		$.post('".NzbController::createUrl('AjaxChangeCreationState')."',
+		{
+			Id_creation_state : 3,Id_nzb : '".$model->Id."'											
+		}
+		).success(
+			function(data) 
+			{
+				$('#divUploadButton').hide();
+				$('#divVerifiedButton').show();
+				$.fn.yiiGridView.update('history-grid');
+			}
+		).error(
+			function()
+			{
+			});
+	}
+	return false;
+
+});
+$('#verifiedButton').click(function(){
+
+	if (confirm('¿Seguro que se ha verificado el contenido?')) 
+	{
+		$.post('".NzbController::createUrl('AjaxChangeCreationState')."',
+		{
+			Id_creation_state : 4,Id_nzb : '".$model->Id."'											
+		}
+		).success(
+			function(data) 
+			{
+				$('#divVerifiedButton').hide();
+				$('#divPublishButton').show();
+				$.fn.yiiGridView.update('history-grid');
+			}
+		).error(
+			function()
+			{
+			});
+	}
+	return false;
+
+});
+			
 $('#publishButton').click(function(){
 
-	if (confirm('Are you sure you want to publish this nzb?')) 
+	if (confirm('¿Seguro que desea publicar el NZB?')) 
 	{
 		$.post('".NzbController::createUrl('AjaxPublishNzb')."',
 		{
@@ -112,10 +159,32 @@ $('#publishButton').click(function(){
 		
 		<?php
 		$state = $model->getCreationState();
-		if(isset($state)&&$state->Id_creation_state== 5)
+		$upload = false;
+		$verified = false;
+		$publish = false;
+		if(isset($state)&&$state->Id_creation_state== 2)
 		{
-			echo CHtml::submitButton('Publish',array('id'=>'publishButton', 'disabled'=>($model->is_draft)?'':'disabled'));
+			$upload = true;
+		}
+		elseif(isset($state)&&$state->Id_creation_state== 3)
+		{
+			$verified = true;
+		}		
+		elseif(isset($state)&&$state->Id_creation_state== 4)
+		{
+			$publish = true;
 		} 
+		echo CHtml::openTag('div',array('id'=>'divUploadButton','style'=>!$upload?'display:none':''));
+		echo CHtml::submitButton('Upload Complete',array('id'=>'uploadButton'));
+		echo CHtml::closeTag('div');
+
+		echo CHtml::openTag('div',array('id'=>'divVerifiedButton','style'=>!$verified?'display:none':''));
+		echo CHtml::submitButton('Verificado',array('id'=>'verifiedButton'));
+		echo CHtml::closeTag('div');
+		
+		echo CHtml::openTag('div',array('id'=>'divPublishButton','style'=>!$publish?'display:none':''));
+		echo CHtml::submitButton('Publish',array('id'=>'publishButton', 'disabled'=>($model->is_draft)?'':'disabled'));
+		echo CHtml::closeTag('div');
 		?>
 		<br />
 		
@@ -124,8 +193,8 @@ $('#publishButton').click(function(){
 		<?php echo CHtml::image( "./images/".$model->myMovieDiscNzb->myMovieNzb->poster, $model->myMovieDiscNzb->myMovieNzb->original_title,array('id'=>'poster_img', 'style'=>'height: 320px;width: 220px;')); ?>
 	</div>
 </div>
+<br />
 <h1>Historial</h1>
-
 <?php
 $modelNzbCreationState = new NzbCreationState();
 $modelNzbCreationState->Id_nzb = $model->Id;
