@@ -24,6 +24,7 @@
  * @property MyMovieDiscNzb $idMyMovieDiscNzb
  * @property ResourceType $idResourceType
  * @property NzbCustomer[] $nzbCustomers
+ * @property NzbCreationState[] $nzbCreationStates
  */
 class Nzb extends CActiveRecord
 {
@@ -44,6 +45,18 @@ class Nzb extends CActiveRecord
 		return parent::model($className);
 	}
 
+	protected function afterSave()
+	{
+		parent::afterSave();
+		if($this->isNewRecord)
+		{
+			$nzbCreationState = new NzbCreationState();
+			$nzbCreationState->Id_creation_state = 1;
+			$nzbCreationState->Id_nzb = $this->Id;						
+			$nzbCreationState->user_username = Yii::app()->user->username;
+			$nzbCreationState->save();				
+		}
+	}
 	/**
 	 * @return string the associated database table name
 	 */
@@ -82,6 +95,7 @@ class Nzb extends CActiveRecord
 			'myMovieDiscNzb' => array(self::BELONGS_TO, 'MyMovieDiscNzb', 'Id_my_movie_disc_nzb'),
 			'resourceType' => array(self::BELONGS_TO, 'ResourceType', 'Id_resource_type'),
 			'nzbDevices' => array(self::HAS_MANY, 'NzbDevice', 'Id_nzb'),
+			'nzbCreationState' => array(self::HAS_MANY, 'NzbCreationState', 'Id_nzb'),
 		);
 	}
 
