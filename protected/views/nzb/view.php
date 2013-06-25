@@ -163,15 +163,15 @@ $('#publishButton').click(function(){
 		$upload = false;
 		$verified = false;
 		$publish = false;
-		if(isset($state)&&$state->Id_creation_state== 2)
+		if(isset($state)&&$state->Id== 2)
 		{
 			$upload = true;
 		}
-		elseif(isset($state)&&$state->Id_creation_state== 3)
+		elseif(isset($state)&&$state->Id== 3)
 		{
 			$verified = true;
 		}		
-		elseif(isset($state)&&($state->Id_creation_state == 4||$state->Id_creation_state == 5))
+		elseif(isset($state)&&($state->Id == 4||$state->Id == 5))
 		{
 			$publish = true;
 		} 
