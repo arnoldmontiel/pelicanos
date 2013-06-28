@@ -734,7 +734,9 @@ class NzbController extends Controller
 															
 					$model->file_original_name = uniqid() . '.nzb';
 					
-					$model->file_password = uniqid();
+					//dejo la clave solo de 9 caracteres xq sino el sabnzb no descomprime el .rar
+					$pwd = uniqid();
+					$model->file_password = substr($pwd, -9);
 					
 					$model->Id_my_movie_disc_nzb = MyMovieHelper::saveMyMovieData($idTitle);
 
