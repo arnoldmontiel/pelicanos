@@ -35,9 +35,15 @@ class WsAutoRipperController extends Controller
 				$modelAutoRipper->Id_auto_ripper_state = $idState;
 				$modelAutoRipper->save();
 				
-				$autoRipperState = new AutoRipperAutoRipperState();
-				$autoRipperState->Id_auto_ripper = $id;
-				$autoRipperState->Id_auto_ripper_state = $idState;
+				$autoRipperState = AutoRipperAutoRipperState::model()->findByAttributes(array(
+												'Id_auto_ripper'=>$id,
+												'Id_auto_ripper_state'=>$idState));
+				if(!isset($autoRipperState))
+				{
+					$autoRipperState = new AutoRipperAutoRipperState();
+					$autoRipperState->Id_auto_ripper = $id;
+					$autoRipperState->Id_auto_ripper_state = $idState;
+				}
 				$autoRipperState->description = $description;
 				$autoRipperState->save();
 				
@@ -57,8 +63,9 @@ class WsAutoRipperController extends Controller
 	*/
 	public function ripperStart($idDisc)
 	{
+		
 		$autoRipperId = 0;
-		if(empty($idDisc))
+		if(!empty($idDisc))
 		{
 			$modelAutoRipper = new AutoRipper();
 			$modelAutoRipper->Id_disc = $idDisc;
