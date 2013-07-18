@@ -1,6 +1,11 @@
 <?php
 Yii::app()->clientScript->registerScript(__CLASS__.'#update-auto-ripper', "
 
+$('#cancelButton').click(function(){
+	window.location = '".AutoRipperController::createUrl('admin')."';
+	return false;
+});
+
 $('#btnSearch').click(function()
 {
 	$('#div-searchResult').animate({opacity: 'hide'},240);
@@ -17,7 +22,7 @@ $('#btnSearch').click(function()
 $('.lnkMoreInfo').click(function(){
 	$('#wating').dialog('open');
 	var idTitle = $(this).attr('id');
-	$.post('".NzbController::createUrl('AjaxGetMovieMoreInfo')."',
+	$.post('".AutoRipperController::createUrl('AjaxGetMovieMoreInfo')."',
 		{
 			titleId :idTitle											
 		}
@@ -54,7 +59,21 @@ $('.lnkMoreInfo').click(function(){
 echo CHtml::hiddenField("hiddenTitleId",'',array('id'=>'hiddenTitleId'));
 ?>
 
-	<?php $this->widget('zii.widgets.CDetailView', array(
+	<?php 
+		$modelNzb = (isset($model->nzb))?$model->nzb:null;
+		$title = '';
+		$year = '';
+		$description = '';
+		$poster = '';
+		if(isset($modelNzb))
+		{
+			$year = $modelNzb->myMovieDiscNzb->myMovieNzb->original_title;
+			$title = $modelNzb->myMovieDiscNzb->myMovieNzb->production_year;
+			$description = $modelNzb->myMovieDiscNzb->myMovieNzb->description;
+			$poster = $modelNzb->myMovieDiscNzb->myMovieNzb->poster;
+		}
+		
+		$this->widget('zii.widgets.CDetailView', array(
 		'data'=>$model,
 		'cssFile'=>Yii::app()->baseUrl . '/css/detail-view-blue.css',
 		'attributes'=>array(
@@ -73,6 +92,22 @@ echo CHtml::hiddenField("hiddenTitleId",'',array('id'=>'hiddenTitleId'));
 			array('label'=>$model->getAttributeLabel('password'),
 					'type'=>'raw',
 					'value'=>$model->password,
+			),
+			array('label'=>$model->getAttributeLabel('Title'),
+					'type'=>'raw',
+					'value'=>$title,
+			),
+			array('label'=>$model->getAttributeLabel('Year'),
+								'type'=>'raw',
+								'value'=>$year,
+			),
+			array('label'=>$model->getAttributeLabel('Description'),
+											'type'=>'raw',
+											'value'=>$description,
+			),
+			array('label'=>$model->getAttributeLabel('Poster'),
+								'type'=>'raw',
+								'value'=>CHtml::image('images/'.$poster),
 			),
 		),
 	)); ?>
@@ -218,7 +253,9 @@ echo CHtml::hiddenField("hiddenTitleId",'',array('id'=>'hiddenTitleId'));
 </div>
 
 <div class="row buttons">
-	<?php echo CHtml::submitButton('Save', array('id'=>'saveButton','disabled'=>'disabled')); ?>
+	<?php echo CHtml::submitButton('Save', array('id'=>'saveButton','disabled'=>'disabled')); 
+		echo CHtml::submitButton('Cancel', array('id'=>'cancelButton'));
+	?>
 </div>
 
 <?php $this->endWidget(); ?>
