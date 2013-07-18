@@ -75,22 +75,94 @@ class AutoRipperController extends Controller
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
-
+		$modelMyMovieAPIRequest = new MyMovieAPIRequest;
+		
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['AutoRipper']))
-		{
-			$model->attributes=$_POST['AutoRipper'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->Id));
+		if(isset($_POST['hiddenTitleId']))
+		{			
+			$idTitle = $_POST['hiddenTitleId'];			
+				
+			if(!empty($idTitle))
+			{
+				$transaction = $model->dbConnection->beginTransaction();
+				try {
+					
+					//guardo los datos de mymovies
+					$idMyMovieDiscNzb = MyMovieHelper::saveMyMovieData($idTitle, $model->Id_disc);
+
+					if(isset($idMyMovieDiscNzb))
+					{
+						$modelNzb = Nzb::model()->findByPk($model->Id_nzb);
+						if(!isset($modelNzb))
+						{
+							$modelNzb = new Nzb();
+							$modelNzb->Id_resource_type = 1; //bluray
+						}
+						
+						$modelNzb->Id_my_movie_disc_nzb = $idMyMovieDiscNzb;
+						
+						$modelNzb->save();
+						$model->Id_nzb = $modelNzb->Id;
+					}					
+					
+					if($model->save()){
+						$transaction->commit();
+						$this->redirect(array('admin'));
+					}
+						
+				} catch (Exception $e) {
+					$transaction->rollback();
+				}
+			}
 		}
 
+		$rawData = array();
+		
+		if(isset($_GET['MyMovieAPIRequest']))
+		{
+			$modelMyMovieAPIRequest->setAttributes($_GET['MyMovieAPIRequest']);
+				
+			if($_GET['rbnSearchField'] == 'title')
+				$rawData = MyMovieHelper::searchTitles($modelMyMovieAPIRequest->Title, $modelMyMovieAPIRequest->Country);
+			else
+				$rawData = MyMovieHelper::searchTitlesByIMDBId($modelMyMovieAPIRequest->Title, $modelMyMovieAPIRequest->Country);
+				
+		}
+		else
+			$rawData = MyMovieHelper::searchTitlesByDiscId($model->Id_disc,'');
+		
+		$arrayDataProvider=new CArrayDataProvider($rawData, array(
+						    'id'=>'id',
+						 	'sort'=>array(
+								'attributes'=>array('year', 'type', 'country'),
+		),
+		
+						          'pagination'=>array('pageSize'=>10),
+		
+		));
+		
 		$this->render('update',array(
 			'model'=>$model,
+			'arrayDataProvider'=>$arrayDataProvider,
+			'modelMyMovieAPIRequest'=>$modelMyMovieAPIRequest,
 		));
 	}
 
+	public function actionAjaxGetMovieMoreInfo()
+	{
+		$idTitle = isset($_POST['titleId'])?$_POST['titleId']:null;
+	
+		if(isset($idTitle))
+		{
+			$model = MyMovieHelper::getMyMovieData($idTitle,false);
+			echo $this->renderPartial('_viewInfo', array(
+															'model'=>$model,
+			));
+		}
+	}
+	
 	/**
 	 * Deletes a particular model.
 	 * If deletion is successful, the browser will be redirected to the 'admin' page.
