@@ -174,6 +174,26 @@ class MyMovieHelper
 		return $titlesResponse;
 	}
 	
+	static public function searchTitlesByDiscId($idDisc, $country)
+	{
+		$titlesResponse = array();
+	
+		$myMoviesAPI = new MyMoviesAPI();
+		$response = $myMoviesAPI->SearchDiscTitleByDiscIds($idDisc, $country);
+		if(!empty($response) && (string)$response['status'] == 'ok')
+		{
+			$titles = $response->Titles;
+	
+			foreach($titles->children() as $title)
+			{
+				$model = new SearchDiscResponse();
+				$model->setAttributes($title);
+				$titlesResponse[] = $model;
+			}
+		}
+		return $titlesResponse;
+	}
+	
 	static public function searchTitlesByIMDBId($idImdb, $country)
 	{
 	
@@ -199,7 +219,7 @@ class MyMovieHelper
 	/*
 	 * Save and return my_movie_disc_nzb id
 	 */
-	static public function saveMyMovieData($idTitle)
+	static public function saveMyMovieData($idTitle, $idDisc = null)
 	{
 		$modelMyMovieNzb = self::getMyMovieData($idTitle);
 		if(isset($modelMyMovieNzb))
@@ -209,12 +229,20 @@ class MyMovieHelper
 			//salvo audioTrack y subtitlos
 			self::saveExtraInfo($idTitle);
 			
-			$modelMyMovieDiscNzb = new MyMovieDiscNzb();
-			$modelMyMovieDiscNzb->Id = uniqid();
-			$modelMyMovieDiscNzb->name = $modelMyMovieNzb->local_title; 
-			$modelMyMovieDiscNzb->Id_my_movie_nzb = $idTitle;
-			if($modelMyMovieDiscNzb->save())
-				return $modelMyMovieDiscNzb->Id; 
+			$newDiscId = (isset($idDisc))?$idDisc:uniqid();
+			
+			$modelMyMovieDiscNzb = MyMovieDiscNzb::model()->findByPk($newDiscId);
+			
+			if(!isset($modelMyMovieDiscNzb))
+			{
+				$modelMyMovieDiscNzb = new MyMovieDiscNzb();
+				$modelMyMovieDiscNzb->Id = $newDiscId;
+				$modelMyMovieDiscNzb->name = $modelMyMovieNzb->local_title;
+				$modelMyMovieDiscNzb->Id_my_movie_nzb = $idTitle;
+				$modelMyMovieDiscNzb->save();
+			}			
+			
+			return $modelMyMovieDiscNzb->Id; 
 		}
 		
 		return null;
