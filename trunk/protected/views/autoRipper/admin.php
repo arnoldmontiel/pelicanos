@@ -16,22 +16,24 @@ $('.btn-admin-state').click(function(){
 	'id'=>'auto-ripper-grid',
 	'dataProvider'=>$model->search(),
 	'filter'=>$model,
-	'columns'=>array(
-		'Id',
+	'columns'=>array(		
 		'Id_disc',
-		'Id_auto_ripper_state',
+		array(
+		    'name'=>'auto_ripper_state_description',
+		    'value'=>'$data->autoRipperState->description',		    
+		),
 		'name',
 		'password',
 		'Id_nzb',
 		'percentage',
-		array(
-				'name'=>"name",
+		array(				
 				'htmlOptions' => array('style'=>'width:100px;'),
 			 	'type'=>'raw',
 			 	'value'=>'CHtml::button("Ver Estado",array("id"=>$data->Id, "class"=>"btn-admin-state"))',			 			
 			),
 		array(
 			'class'=>'CButtonColumn',
+			'template'=>'{view} {update}',
 		),
 	),
 )); ?>
