@@ -19,6 +19,7 @@
  */
 class AutoRipper extends CActiveRecord
 {
+	public $auto_ripper_state_description;
 	/**
 	 * @return string the associated database table name
 	 */
@@ -41,7 +42,7 @@ class AutoRipper extends CActiveRecord
 			array('name, password', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('Id, Id_disc, Id_auto_ripper_state, name, password, Id_nzb, percentage', 'safe', 'on'=>'search'),
+			array('Id, Id_disc, Id_auto_ripper_state, name, password, Id_nzb, percentage, auto_ripper_state_description', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -72,6 +73,7 @@ class AutoRipper extends CActiveRecord
 			'password' => 'Password',
 			'Id_nzb' => 'Id Nzb',
 			'percentage' => 'Percentage',
+			'auto_ripper_state_description'=> 'State',
 		);
 	}
 
@@ -100,10 +102,31 @@ class AutoRipper extends CActiveRecord
 		$criteria->compare('password',$this->password,true);
 		$criteria->compare('Id_nzb',$this->Id_nzb);
 		$criteria->compare('percentage',$this->percentage);
-
+		
+		$criteria->with[]='autoRipperState';
+		$criteria->addSearchCondition("autoRipperState.description",$this->auto_ripper_state_description);
+		
+		// Create a custom sort
+		$sort=new CSort;
+		$sort->attributes=array(
+		// For each relational attribute, create a 'virtual attribute' using the public variable name
+							'Id',
+							'Id_disc',
+							'name',
+							'password',
+							'percentage',
+							'auto_ripper_state_description' => array(
+								        'asc' => 'autoRipperState.description',
+								        'desc' => 'autoRipperState.description DESC',
+		),
+							'*',
+		);
+		
+		
 		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
+						'criteria'=>$criteria,
+						'sort'=>$sort,
+		));		
 	}
 
 	/**
