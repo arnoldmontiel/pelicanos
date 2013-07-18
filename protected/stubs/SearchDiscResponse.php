@@ -10,6 +10,8 @@ class SearchDiscResponse
 	public $edition;
 	public $year;
 	public $imdb;
+	public $discs;
+	public $discname;
 	public $thumbnail;
 	public $thumbnailwidth;
 	public $thumbnailheight; 
