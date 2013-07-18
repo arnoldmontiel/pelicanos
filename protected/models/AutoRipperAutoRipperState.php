@@ -11,6 +11,8 @@
  */
 class AutoRipperAutoRipperState extends CActiveRecord
 {
+	public $auto_ripper_state_description;
+	
 	/**
 	 * @return string the associated database table name
 	 */
@@ -33,7 +35,7 @@ class AutoRipperAutoRipperState extends CActiveRecord
 			array('change_date', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('Id_auto_ripper, Id_auto_ripper_state, change_date, description', 'safe', 'on'=>'search'),
+			array('Id_auto_ripper, Id_auto_ripper_state, change_date, description, auto_ripper_state_description', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -44,7 +46,9 @@ class AutoRipperAutoRipperState extends CActiveRecord
 	{
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
-		return array(
+			return array(
+			'autoRipper' => array(self::BELONGS_TO, 'AutoRipper', 'Id_auto_ripper'),
+			'autoRipperState' => array(self::BELONGS_TO, 'AutoRipperState', 'Id_auto_ripper_state'),
 		);
 	}
 
@@ -84,8 +88,26 @@ class AutoRipperAutoRipperState extends CActiveRecord
 		$criteria->compare('change_date',$this->change_date,true);
 		$criteria->compare('description',$this->description,true);
 
+		$criteria->with[]='autoRipperState';
+		$criteria->addSearchCondition("autoRipperState.description",$this->auto_ripper_state_description);
+		
+		// Create a custom sort
+		$sort=new CSort;
+		$sort->attributes=array(
+		// For each relational attribute, create a 'virtual attribute' using the public variable name
+									'change_date',
+									'description',
+									'auto_ripper_state_description' => array(
+										        'asc' => 'autoRipperState.description',
+										        'desc' => 'autoRipperState.description DESC',
+		),
+									'*',
+		);
+		
+		
 		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
+								'criteria'=>$criteria,
+								'sort'=>$sort,
 		));
 	}
 

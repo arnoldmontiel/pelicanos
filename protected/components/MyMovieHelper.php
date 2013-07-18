@@ -236,11 +236,12 @@ class MyMovieHelper
 			if(!isset($modelMyMovieDiscNzb))
 			{
 				$modelMyMovieDiscNzb = new MyMovieDiscNzb();
-				$modelMyMovieDiscNzb->Id = $newDiscId;
-				$modelMyMovieDiscNzb->name = $modelMyMovieNzb->local_title;
-				$modelMyMovieDiscNzb->Id_my_movie_nzb = $idTitle;
-				$modelMyMovieDiscNzb->save();
-			}			
+				$modelMyMovieDiscNzb->Id = $newDiscId;				
+			}
+						
+			$modelMyMovieDiscNzb->name = $modelMyMovieNzb->local_title;
+			$modelMyMovieDiscNzb->Id_my_movie_nzb = $idTitle;
+			$modelMyMovieDiscNzb->save();
 			
 			return $modelMyMovieDiscNzb->Id; 
 		}
