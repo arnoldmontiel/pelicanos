@@ -113,14 +113,14 @@ class WsAutoRipperController extends Controller
 	}
 
 	/**
-	* Get name and password by id
+	* Get name by id
 	* @param integer id
-	* @return GetNameAndPwdResponse response (object with name and passowrd attributes)
+	* @return string name
 	* @soap
 	*/
-	public function getNameAndPwd($id)
+	public function getName($id)
 	{
-		$response = null;
+		$name = null;
 		
 		$modelAutoRipper = AutoRipper::model()->findByPk($id);
 	
@@ -128,29 +128,19 @@ class WsAutoRipperController extends Controller
 		{
 			$response = new GetNameAndPwdResponse();
 			
-			if(empty($modelAutoRipper->name) && empty($modelAutoRipper->password))
+			if(empty($modelAutoRipper->name))
 			{
 				$modelAutoRipper->name = uniqid();
-					
-				//dejo la clave solo de 9 caracteres xq sino el sabnzb no descomprime el .rar
-				$pwd = uniqid();
-				$modelAutoRipper->password = substr($pwd, -9);
 				
 				if($modelAutoRipper->save())
-				{
-					$response->name = $modelAutoRipper->name;
-					$response->password = $modelAutoRipper->password;
-				}
+					$name = $modelAutoRipper->name;
 				
 			}	
 			else
-			{
-				$response->name = $modelAutoRipper->name;
-				$response->password = $modelAutoRipper->password;
-			}		
+				$name = $modelAutoRipper->name;
 		}		
 		
-		return $response;
+		return $name;
 	}
 	
 }
