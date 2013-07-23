@@ -57,7 +57,7 @@
 	<div class="clear"></div>
 
 	<div id="footer">
-		Copyright &copy; <?php echo date('Y'); ?> by SmartLiving.<br/>
+		Copyright &copy; <?php echo date('Y'); ?> by Grupo Smartliving.<br/>
 		All Rights Reserved.<br/>
 		Powered by WestIdeas
 	</div><!-- footer -->
