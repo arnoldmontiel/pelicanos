@@ -100,6 +100,9 @@ class AutoRipperController extends Controller
 							$modelNzb = new Nzb();
 							$modelNzb->Id_resource_type = 1; //bluray
 						}
+						$fileName = $model->name . '.nzb';
+						$modelNzb->file_name =  $fileName;
+						$modelNzb->url = '/nzb/'.$fileName;
 						
 						$modelNzb->Id_my_movie_disc_nzb = $idMyMovieDiscNzb;
 						
