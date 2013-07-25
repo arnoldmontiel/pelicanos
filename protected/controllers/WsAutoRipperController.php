@@ -124,8 +124,7 @@ class WsAutoRipperController extends Controller
 	
 		if(isset($modelAutoRipper))
 		{
-			$response = new GetNameAndPwdResponse();
-			
+						
 			if(empty($modelAutoRipper->name))
 			{
 				$modelAutoRipper->name = uniqid();
