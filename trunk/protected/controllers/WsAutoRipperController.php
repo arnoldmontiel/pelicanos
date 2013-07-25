@@ -8,9 +8,7 @@ class WsAutoRipperController extends Controller
 		return array(
 		            'wsdl'=>array(
 		                'class'=>'CWebServiceAction',
-					'classMap'=>array(
-			                    'GetNameAndPwdResponse'=>'GetNameAndPwdResponse',
-		),
+					
 		),
 		);
 	}
