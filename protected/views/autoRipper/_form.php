@@ -185,7 +185,7 @@ echo CHtml::hiddenField("hiddenDiscName",'',array('id'=>'hiddenDiscName'));
 					}',
 			'selectionChanged'=>'js:function(){
 						var titleId = $.fn.yiiGridView.getSelection("search-result-grid")
-						var discName = $("#disc_name_"+titleId);
+						var discName = $("#disc_name_"+titleId).val();						
 						if(titleId!=""){
 							$("#hiddenTitleId").val(titleId);
 							$("#hiddenDiscName").val(discName);
