@@ -16,6 +16,18 @@ $('.btn-admin-state').click(function(){
 	'id'=>'auto-ripper-grid',
 	'dataProvider'=>$model->search(),
 	'filter'=>$model,
+	'afterAjaxUpdate'=>'js:function(){
+				$("#auto-ripper-grid").find(".btn-admin-state").each(
+						function(index, item){
+							$(item).click(function(){
+								var id = $(this).attr("id");
+								window.location = "'.AutoRipperController::createUrl('adminState').'" + "&id="+id;
+								return false;								
+															
+							});
+						});
+
+		}',
 	'columns'=>array(		
 		'Id_disc',
 		array(
