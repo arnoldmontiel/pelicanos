@@ -122,7 +122,7 @@ class AutoRipper extends CActiveRecord
 							'*',
 		);
 		
-		$criteria->order = 'Id DESC';
+		$criteria->order = 't.Id DESC';
 		return new CActiveDataProvider($this, array(
 						'criteria'=>$criteria,
 						'sort'=>$sort,
