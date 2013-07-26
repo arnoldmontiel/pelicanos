@@ -92,6 +92,17 @@ class AutoRipperController extends Controller
 					//guardo los datos de mymovies
 					$idMyMovieDiscNzb = MyMovieHelper::saveMyMovieData($idTitle, $model->Id_disc);
 
+					if(isset($_POST['hiddenTitleId']))
+					{
+						$modelMyMovieDiscNzb = MyMovieDiscNzb::model()->findByPk($idMyMovieDiscNzb);
+						if(isset($modelMyMovieDiscNzb))
+						{
+							$modelMyMovieDiscNzb->name = $_POST['hiddenDiscName'];
+							$modelMyMovieDiscNzb->save();
+						}
+					}
+					
+					
 					if(isset($idMyMovieDiscNzb))
 					{
 						$modelNzb = Nzb::model()->findByPk($model->Id_nzb);

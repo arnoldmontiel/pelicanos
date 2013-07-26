@@ -57,6 +57,7 @@ $('.lnkMoreInfo').click(function(){
 )); 
 
 echo CHtml::hiddenField("hiddenTitleId",'',array('id'=>'hiddenTitleId'));
+echo CHtml::hiddenField("hiddenDiscName",'',array('id'=>'hiddenDiscName'));
 ?>
 
 	<?php 
@@ -146,8 +147,7 @@ echo CHtml::hiddenField("hiddenTitleId",'',array('id'=>'hiddenTitleId'));
 		$this->widget('ext.processingDialog.processingDialog', array(
 					'buttons'=>array('none'),
 					'idDialog'=>'wating',
-		));
-		
+		));				
 		$this->widget('zii.widgets.grid.CGridView', array(
 		    'dataProvider' => $arrayDataProvider,
 		    'id'=>'search-result-grid',
@@ -185,13 +185,16 @@ echo CHtml::hiddenField("hiddenTitleId",'',array('id'=>'hiddenTitleId'));
 					}',
 			'selectionChanged'=>'js:function(){
 						var titleId = $.fn.yiiGridView.getSelection("search-result-grid")
+						var discName = $("#disc_name_"+titleId);
 						if(titleId!=""){
 							$("#hiddenTitleId").val(titleId);
+							$("#hiddenDiscName").val(discName);
 							$("#saveButton").removeAttr("disabled");
 						}
 						else
 						{
 							$("#hiddenTitleId").val("");
+							$("#hiddenDiscName").val("");
 							$("#saveButton").attr("disabled","disabled");
 						}
 					}',
@@ -219,7 +222,7 @@ echo CHtml::hiddenField("hiddenTitleId",'',array('id'=>'hiddenTitleId'));
 				array(
 		            'name' => 'disc name',
 		            'type' => 'raw',
-		            'value' => '$data->discname'
+		            'value' => 'CHtml::hiddenField($data->id,$data->discname,array("id"=>"disc_name_".$data->id)).$data->discname'
 				),
 				array(
 		            'name' => 'type',

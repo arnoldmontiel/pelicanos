@@ -120,6 +120,10 @@ $('#publishButton').click(function(){
 		<?php echo CHtml::encode($model->myMovieDiscNzb->myMovieNzb->original_title); ?>
 		<br />
 	
+		<b><?php echo CHtml::encode($model->getAttributeLabel('disc_name')); ?>:</b>
+		<?php echo CHtml::encode($model->myMovieDiscNzb->name); ?>
+		<br />
+		
 		<b><?php echo CHtml::encode($model->getAttributeLabel('production_year')); ?>:</b>
 		<?php echo CHtml::encode($model->myMovieDiscNzb->myMovieNzb->production_year); ?>
 		<br />
