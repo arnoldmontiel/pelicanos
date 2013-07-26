@@ -102,6 +102,7 @@ class AutoRipperController extends Controller
 						}
 						$fileName = $model->name . '.nzb';
 						$modelNzb->file_name =  $fileName;
+						$modelNzb->file_original_name =  $fileName;
 						$modelNzb->url = '/nzb/'.$fileName;
 						
 						$modelNzb->Id_my_movie_disc_nzb = $idMyMovieDiscNzb;
