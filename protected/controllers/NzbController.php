@@ -1114,6 +1114,9 @@ class NzbController extends Controller
 	
 	public function actionSelectEpisode($id, $idSeason, $fromSeason = false)
 	{
+		if(empty($idSeason))
+			$this->redirect(array('selectSeason','id'=>$id));
+		
 		$model = Nzb::model()->findByPk($id);
 		
 		$modelDiscEpisodes = new MyMovieDiscNzbMyMovieEpisode('search');
