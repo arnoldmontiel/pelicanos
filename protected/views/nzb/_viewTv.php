@@ -28,6 +28,10 @@
 		<?php echo CHtml::link($data->file_original_name, NzbController::createUrl('AjaxDownloadFile',array('fileName'=>$data->file_name, 'root'=>'nzb'))); ?>
 		<br />
 		
+		<b><?php echo CHtml::encode($data->getAttributeLabel('disc_name')); ?>:</b>
+		<?php echo CHtml::encode($data->myMovieDiscNzb->name); ?>
+		<br />
+		
 		<b><?php echo CHtml::encode($data->getAttributeLabel('production_year')); ?>:</b>
 		<?php echo CHtml::encode($data->myMovieDiscNzb->myMovieNzb->production_year); ?>
 		<br />

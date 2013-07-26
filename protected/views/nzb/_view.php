@@ -15,6 +15,10 @@
 		<?php echo (isset($data->file_name))?CHtml::link($data->file_original_name, NzbController::createUrl('AjaxDownloadFile',array('fileName'=>$data->file_name, 'root'=>'nzb'))):''; ?>
 		<br />
 		
+		<b><?php echo CHtml::encode($data->getAttributeLabel('disc_name')); ?>:</b>
+		<?php echo CHtml::encode($data->myMovieDiscNzb->name); ?>
+		<br />
+		
 		<b><?php echo CHtml::encode($data->getAttributeLabel('original_title')); ?>:</b>
 		<?php echo CHtml::encode($data->myMovieDiscNzb->myMovieNzb->original_title); ?>
 		<br />
