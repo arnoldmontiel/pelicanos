@@ -224,6 +224,12 @@ class MyMovieHelper
 		$modelMyMovieNzb = self::getMyMovieData($idTitle);
 		if(isset($modelMyMovieNzb))
 		{
+			//check idSerie
+			if(isset($modelMyMovieNzb->Id_my_movie_serie_header))
+			{
+				self::getSerieHeader($modelMyMovieNzb->Id_my_movie_serie_header);
+			}
+			
 			$modelMyMovieNzb->save();
 			
 			//salvo audioTrack y subtitlos
@@ -243,12 +249,157 @@ class MyMovieHelper
 			$modelMyMovieDiscNzb->Id_my_movie_nzb = $idTitle;
 			$modelMyMovieDiscNzb->save();
 			
+			if(isset($modelMyMovieNzb->Id_my_movie_serie_header))
+				self::createSerieTree($newDiscId, $modelMyMovieNzb->Id_my_movie_serie_header, $idTitle);
+			
 			return $modelMyMovieDiscNzb->Id; 
 		}
 		
 		return null;
 	}
 	
+	private function createSerieTree($idDisc, $idSerie, $idTitle)
+	{
+		
+		$myMoviesAPI = new MyMoviesAPI();
+			
+		$response = $myMoviesAPI->LoadDiscTitleById($idTitle);
+		if(!empty($response) && (string)$response['status'] == 'ok')
+		{
+			if(!empty($response->Title))
+				$xml = $response->Title;
+			else
+				return null;
+		}
+		
+		foreach($xml->Discs->children() as $item)
+		{
+			if((string)$item->DiscIdSideA == $idDisc)
+			{
+				if(isset($item->TitlesSideA))
+				{
+					foreach($item->TitlesSideA->children() as $title)
+					{
+						if((string)$title['ContainsEpisode'] == "True")
+						{
+								
+							$idSeason = self::getSeason($idSerie, (string)$title['TVSeason']);
+							if(isset($idSeason))
+							{
+								$idEpisode = self::getEpisode($idSerie, $idSeason, (string)$title['TVSeason'], (string)$title['TVEpisode']);
+								if(isset($idEpisode))
+								{
+									$myMovieDiscNzbMyMovieEpisodeDB = MyMovieDiscNzbMyMovieEpisode::model()->findByAttributes(array(
+																		'Id_my_movie_disc_nzb'=>$idDisc,
+																		'Id_my_movie_episode'=>$idEpisode));
+									if(!isset($myMovieDiscNzbMyMovieEpisodeDB))
+									{
+										$modelDiscEpisode = new MyMovieDiscNzbMyMovieEpisode();
+										$modelDiscEpisode->Id_my_movie_disc_nzb = $idDisc;
+										$modelDiscEpisode->Id_my_movie_episode = $idEpisode;
+										$modelDiscEpisode->save();
+									}
+								}
+							}
+	
+						}
+					}
+				}
+			}
+		}
+	
+	}
+	
+	/*
+	* Primero se fija si ya existe en la BD, caso contrario, consume
+	* la API de MyMovies para traer info del Episodio
+	* @param string $idSerie es el Id de serie de MyMovie
+	* @param integer $idSeason es el Id de season
+	* @param integer $seasonNumber es el numero de season
+	* @param integer $episodeNumber es el numero de episodio
+	*/
+	private function getEpisode($idSerie, $idSeason, $seasonNumber, $episodeNumber)
+	{
+		$modelEpisodeDB = MyMovieEpisode::model()->findByAttributes(array(
+												'Id_my_movie_season'=>$idSeason,
+												'episode_number'=>$episodeNumber,
+		));
+	
+		if(!isset($modelEpisodeDB))
+		{
+			$myMoviesAPI = new MyMoviesAPI();
+			$response = $myMoviesAPI->LoadEpisodeBySeriesID($idSerie, $seasonNumber, $episodeNumber);
+				
+			if(!empty($response) && (string)$response['status'] == 'ok')
+			{
+				if(!empty($response->Episode))
+					$data = $response->Episode;
+				else
+					return null;
+	
+				$description = (string)$data['Description'];
+				$name = (string)$data['EpisodeName'];
+	
+				$modelMyMovieEpisode = new MyMovieEpisode;
+				$modelMyMovieEpisode->description = (!empty($description)) ? $description :(string)$data->EnglishPart['Description'];
+				$modelMyMovieEpisode->name = (!empty($name)) ? $name : (string)$data->EnglishPart['Name'];
+				$modelMyMovieEpisode->episode_number = (string)$data['EpisodeNumber'];
+				$modelMyMovieEpisode->Id_my_movie_season = $idSeason;
+	
+				if($modelMyMovieEpisode->save())
+					return $modelMyMovieEpisode->Id;
+			}
+		}
+		else
+		$modelEpisodeDB->Id;
+	
+		return null;
+	}
+	
+	/*
+	* A partir de un idSerie y seasonNumber, primero se fija si ya existe en la BD, caso contrario, consume
+	* la API de MyMovies para traer info de la Season
+	* @param string $idSerie es el Id de serie de MyMovie
+	* @param integer $seasonNumber es el numero de season
+	*/
+	private function getSeason($idSerie, $seasonNumber)
+	{
+		$modelSeasonDB = MyMovieSeason::model()->findByAttributes(array(
+											'Id_my_movie_serie_header'=>$idSerie,
+											'season_number'=>$seasonNumber,
+		));
+	
+		if(!isset($modelSeasonDB))
+		{
+			$myMoviesAPI = new MyMoviesAPI();
+			$response = $myMoviesAPI->LoadSeasonBanners($idSerie, $seasonNumber);
+				
+			if(!empty($response) && (string)$response['status'] == 'ok')
+			{
+				foreach($response->Banners->children() as $item)
+				{
+					if((string)$item['Number'] == "1")
+					{
+						$modelMyMovieSeason = new MyMovieSeason;
+						$modelMyMovieSeason->Id_my_movie_serie_header =  $idSerie;
+						$modelMyMovieSeason->season_number = (string)$item['SeasonNumber'];
+	
+						//banner
+						$modelMyMovieSeason->banner_original = (string)$item['File'];
+						$newFileName = $idSerie .'_'.$seasonNumber;
+						$modelMyMovieSeason->banner = self::getImage($modelMyMovieSeason->banner_original, $newFileName);
+	
+						if($modelMyMovieSeason->save())
+							return $modelMyMovieSeason->Id;
+					}
+				}
+			}
+		}
+		else
+		return $modelSeasonDB->Id;
+	
+		return null;
+	}
 	
 	static function getMyMovieData($idTitle, $saveImage=true)
 	{	
@@ -271,7 +422,9 @@ class MyMovieHelper
 							return null;
 						
 						$modelMyMovieNzb = new MyMovieNzb();
-							
+
+						$idSerie = !empty($data->TVSeriesID)?(string)$data->TVSeriesID:'';
+						
 						$modelMyMovieNzb->Id = $idTitle;
 						$modelMyMovieNzb->type = (string)$data->Type;
 						$modelMyMovieNzb->media_type = (string)$data->MediaType;
@@ -321,6 +474,13 @@ class MyMovieHelper
 							$modelMyMovieNzb->backdrop = self::getImage($modelMyMovieNzb->backdrop_original, $modelMyMovieNzb->Id . '_bd');
 						}
 						
+						//check idSerie
+						if(!empty($idSerie))
+						{
+							$modelMyMovieNzb->is_serie = 1;
+							$modelMyMovieNzb->Id_my_movie_serie_header = $idSerie;
+						}
+						
 						return $modelMyMovieNzb;
 					}
 					
@@ -334,6 +494,52 @@ class MyMovieHelper
 			
 	}
 
+	/*
+	* A partir de un idSerie, primero se fija si ya existe en la BD, caso contrario, consume
+	* la API de MyMovies para traer info de la Serie
+	* @param string $idSerie es el Id de serie de MyMovie
+	*/
+	private function getSerieHeader($idSerie)
+	{
+		$modelMyMovieSerieHeaderDB = MyMovieSerieHeader::model()->findByPk($idSerie);
+	
+		if(!isset($modelMyMovieSerieHeaderDB))
+		{
+			$myMoviesAPI = new MyMoviesAPI();
+			$response = $myMoviesAPI->LoadSeries($idSerie);
+				
+			if(!empty($response) && (string)$response['status'] == 'ok')
+			{
+				if(!empty($response->Serie))
+					$data = $response->Serie;
+				else
+					return null;
+	
+				$description = (string)$data['Description'];
+				$name = (string)$data['EpisodeName'];
+	
+				$modelMyMovieSerieHeader = new MyMovieSerieHeader();
+				$modelMyMovieSerieHeader->Id = (string)$data['Id'];
+				$modelMyMovieSerieHeader->original_network = (string)$data['OriginalNetwork'];
+				$modelMyMovieSerieHeader->original_status = (string)$data['OriginalStatus'];
+				$modelMyMovieSerieHeader->rating = (string)$data['Rating'];
+				$modelMyMovieSerieHeader->description = (!empty($description)) ? $description :(string)$data->EnglishPart['Description'];
+				$modelMyMovieSerieHeader->name = (!empty($name)) ? $name : (string)$data->EnglishPart['Name'];
+				$modelMyMovieSerieHeader->sort_name = (string)$data->EnglishPart['SortName'];
+				$modelMyMovieSerieHeader->genre = self::getSerieGenre($data);
+	
+				//Poster
+				$modelMyMovieSerieHeader->poster_original = self::getPoster($data);
+				$modelMyMovieSerieHeader->poster = self::getImage($modelMyMovieSerieHeader->poster_original, $modelMyMovieSerieHeader->Id);
+	
+				if(!$modelMyMovieSerieHeader->save())
+					return null;
+			}
+		}
+	
+		return $idSerie;
+	}
+	
 	private function getSerie($idSerie, $country)
 	{
 		$myMoviesAPI = new MyMoviesAPI();
