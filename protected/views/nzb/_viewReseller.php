@@ -9,7 +9,7 @@
 	<div class="right-movie-view" >
 	
 		<b><?php echo CHtml::encode($data->getAttributeLabel('Id Imdb')); ?>:</b>
-		<?php echo CHtml::link(CHtml::encode($data->myMovieDiscNzb->myMovieNzb->imdb), array('view', 'id'=>$data->Id)); ?>
+		<?php echo CHtml::link(CHtml::encode($data->myMovieDiscNzb->myMovieNzb->imdb), array('viewReseller', 'id'=>$data->Id)); ?>
 		<br />
 		
 		<b><?php echo CHtml::encode($data->getAttributeLabel('original_title')); ?>:</b>
