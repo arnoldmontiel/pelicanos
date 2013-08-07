@@ -33,7 +33,7 @@ Yii::app()->clientScript->registerScript('viewNZB', "
 
 $('#uploadButton').click(function(){
 
-	if (confirm('¿Seguro que ha terminado se subir el contenido?')) 
+	if (confirm('¿Seguro que ha terminado de subir el contenido?')) 
 	{
 		$.post('".NzbController::createUrl('AjaxChangeCreationState')."',
 		{
