@@ -1538,7 +1538,7 @@ class NzbController extends Controller
 				{										
 					
 					$fileOriginalName = str_replace('.nzb','',$model->file_original_name);
-					$fileName = $fileOriginalName . '{{'. $model->file_password . '}}.nzb'; 
+					$fileName = $fileOriginalName. '.nzb'; 
 					
 					$model->url = '/nzb/'.$fileName;
 					$model->file_name = $fileName;
