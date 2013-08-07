@@ -41,21 +41,26 @@ $('#Nzb_points').keyup(function(){
 	echo CHtml::hiddenField("hiddenTitleId",'',array('id'=>'hiddenTitleId'));
 ?>
 
-	<div id="resourceType" style="margin-bottom: 5px">
+	<div class="row">
+		<div id="resourceType" style="margin-bottom: 5px">
 		<?php	$rsrcType = CHtml::listData($ddlRsrcType, 'Id', 'description');?>
 		<?php echo CHtml::activeLabelEx($model,'Id_resource_type'); ?>
 		<?php echo CHtml::activeDropDownList($model, 'Id_resource_type', $rsrcType);?>
 		<?php echo CHtml::error($model,'Id_resource_type'); ?>
 	</div>	
-
+	</div>	
+	
+	<div class="row">
 	<div id="points" style="margin-bottom: 5px">
 		<?php echo CHtml::activeLabelEx($model,'points'); ?>
 		<?php echo CHtml::activeTextField($model, 'points',array('size'=>5));?>
 		<?php echo CHtml::error($model,'points'); ?>
 	</div>
-
+	</div>	
 	
-<div id="search-movie-data">
+	<div class="row">
+	
+<div id="search-movie-data" class="search-movie-data">
 	<div class="search-movie-data-fields">	
 		<div style="width:40%;display: inline-block;">
 			<?php
@@ -195,22 +200,16 @@ $('#Nzb_points').keyup(function(){
 		?>
 	</div>
 </div>
-
-<div class="left" style="display: inline-block;">
-	
-</div>
+</div>	
 
 	
-	<div class="left">
 		<div class="row buttons">
-			<?php 			
-									
+			<?php 												
 				echo CHtml::submitButton($model->isNewRecord ? 'Next' : 'Save', array('id'=>'saveButton','disabled'=>'disabled'));
 				echo CHtml::submitButton('Create manually', array('id'=>'manualButton'));
-				echo CHtml::submitButton('Cancel', array('id'=>'cancelButton'));
+				echo CHtml::submitButton('Cancel', array('id'=>'cancelButton','style'=>'float:right'));
 			?>		
 		</div>
-	</div>
 <?php echo CHtml::endForm()?>
 
 </div><!-- form -->
