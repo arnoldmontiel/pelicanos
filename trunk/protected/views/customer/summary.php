@@ -7,7 +7,7 @@
 	'columns'=>array(
 		array(
 				'name'=>'reseller_desc',
-				'value'=>'$data->reseller->description',
+				'value'=>'(isset($data->reseller))?$data->reseller->description:""',
 		),
 		'name',
 		'last_name',
