@@ -155,7 +155,13 @@ class MyMovieSOAP
 	 * @soap
 	 */
 	public $poster_original;
-
+	
+	/**
+	 * @var string big_poster_original
+	 * @soap
+	 */
+	public $big_poster_original;
+	
 	/**
 	 * @var string backdrop_original
 	 * @soap
