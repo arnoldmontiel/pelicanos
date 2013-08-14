@@ -464,13 +464,19 @@ class MyMovieHelper
 							$modelMyMovieNzb->poster_original = self::getCovers($data);
 								
 						}
-						
+						//BigPoster
+						$modelMyMovieNzb->big_poster_original = self::getBigPoster($data->MovieData);
+						if($modelMyMovieNzb->big_poster_original=="")
+						{
+							$modelMyMovieNzb->big_poster_original = self::getCovers($data);						
+						}						
 						//Backdrop
 						$modelMyMovieNzb->backdrop_original = self::getBackdrop($data->MovieData);
 						
 						if($saveImage)
 						{
 							$modelMyMovieNzb->poster = self::getImage($modelMyMovieNzb->poster_original, $modelMyMovieNzb->Id);
+							$modelMyMovieNzb->big_poster = self::getImage($modelMyMovieNzb->big_poster_original, $modelMyMovieNzb->Id);
 							$modelMyMovieNzb->backdrop = self::getImage($modelMyMovieNzb->backdrop_original, $modelMyMovieNzb->Id . '_bd');
 						}
 						
@@ -531,7 +537,9 @@ class MyMovieHelper
 				//Poster
 				$modelMyMovieSerieHeader->poster_original = self::getPoster($data);
 				$modelMyMovieSerieHeader->poster = self::getImage($modelMyMovieSerieHeader->poster_original, $modelMyMovieSerieHeader->Id);
-	
+				$modelMyMovieSerieHeader->big_poster_original = self::getBigPoster($data);
+				$modelMyMovieSerieHeader->big_poster = self::getImage($modelMyMovieSerieHeader->big_poster_original, $modelMyMovieSerieHeader->Id);
+				
 				if(!$modelMyMovieSerieHeader->save())
 					return null;
 			}
@@ -634,6 +642,18 @@ class MyMovieHelper
 			foreach($xml->Posters->children() as $item)
 			{
 				return (string)$item['FileThumb'];
+			}
+	
+		}
+		return "";
+	}
+	private function getBigPoster($xml)
+	{
+		if(!empty($xml->Posters))
+		{
+			foreach($xml->Posters->children() as $item)
+			{
+				return (string)$item['File'];
 			}
 	
 		}
