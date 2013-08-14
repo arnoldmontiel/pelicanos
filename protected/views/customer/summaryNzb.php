@@ -24,7 +24,7 @@ $this->menu=array(
 				),
 				array(
 	 				    'name'=>'genre',
-					    'value'=>'$data->nzb->myMovieDiscNzb->name',
+					    'value'=>'$data->nzb->myMovieDiscNzb->myMovieNzb->genre',
 
 				),
 				array(
