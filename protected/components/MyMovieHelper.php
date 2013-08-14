@@ -19,6 +19,7 @@ class MyMovieHelper
 		{
 			$model->Id = uniqid();
 			$model->poster = self::getImage($model->poster_original, $model->Id);
+			$model->big_poster = self::getImage($model->big_poster_original, $model->Id. '_big');
 			$model->backdrop = self::getImage($model->backdrop_original, $model->Id . '_bd');
 			$model->save();
 			$modelMyMovieDiscNzb = new MyMovieDiscNzb();
@@ -476,7 +477,7 @@ class MyMovieHelper
 						if($saveImage)
 						{
 							$modelMyMovieNzb->poster = self::getImage($modelMyMovieNzb->poster_original, $modelMyMovieNzb->Id);
-							$modelMyMovieNzb->big_poster = self::getImage($modelMyMovieNzb->big_poster_original, $modelMyMovieNzb->Id);
+							$modelMyMovieNzb->big_poster = self::getImage($modelMyMovieNzb->big_poster_original, $modelMyMovieNzb->Id. '_big');
 							$modelMyMovieNzb->backdrop = self::getImage($modelMyMovieNzb->backdrop_original, $modelMyMovieNzb->Id . '_bd');
 						}
 						
@@ -538,7 +539,7 @@ class MyMovieHelper
 				$modelMyMovieSerieHeader->poster_original = self::getPoster($data);
 				$modelMyMovieSerieHeader->poster = self::getImage($modelMyMovieSerieHeader->poster_original, $modelMyMovieSerieHeader->Id);
 				$modelMyMovieSerieHeader->big_poster_original = self::getBigPoster($data);
-				$modelMyMovieSerieHeader->big_poster = self::getImage($modelMyMovieSerieHeader->big_poster_original, $modelMyMovieSerieHeader->Id);
+				$modelMyMovieSerieHeader->big_poster = self::getImage($modelMyMovieSerieHeader->big_poster_original, $modelMyMovieSerieHeader->Id."_big");
 				
 				if(!$modelMyMovieSerieHeader->save())
 					return null;
@@ -575,7 +576,8 @@ class MyMovieHelper
 		
 			//Poster
 			$modelMyMovieSerieHeader->poster_original = self::getPoster($data);
-		
+			$modelMyMovieSerieHeader->big_poster_original = self::getBigPoster($data);
+				
 			return $modelMyMovieSerieHeader;
 		}
 		

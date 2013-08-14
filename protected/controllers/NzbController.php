@@ -216,6 +216,7 @@ class NzbController extends Controller
 						$modelMyMovieSerieHeader = new MyMovieSerieHeader();
 						$modelMyMovieSerieHeader->setAttributesByArray($item->myMovie->myMovieSerieHeader);
 						$modelMyMovieSerieHeader->poster = MyMovieHelper::getImage($modelMyMovieSerieHeader->poster_original, $modelMyMovieSerieHeader->Id);
+						$modelMyMovieSerieHeader->big_poster = MyMovieHelper::getImage($modelMyMovieSerieHeader->big_poster_original, $modelMyMovieSerieHeader->Id."_big");
 						$modelMyMovieSerieHeader->save();
 					}
 					
@@ -247,6 +248,7 @@ class NzbController extends Controller
 					$modelMyMovie = new MyMovie();
 					$modelMyMovie->setAttributesByArray($item->myMovie);
 					$modelMyMovie->poster = MyMovieHelper::getImage($modelMyMovie->poster_original, $modelMyMovie->Id);
+					$modelMyMovie->big_poster = MyMovieHelper::getImage($modelMyMovie->big_poster_original, $modelMyMovie->Id."_big");
 					$modelMyMovie->backdrop = MyMovieHelper::getImage($modelMyMovie->backdrop_original, $modelMyMovie->Id . '_bd');
 					$modelMyMovie->save();
 				}
@@ -1196,6 +1198,7 @@ class NzbController extends Controller
 			{
 				$model->Id = uniqid();
 				$model->poster = MyMovieHelper::getImage($model->poster_original, $model->Id);
+				$model->big_poster = MyMovieHelper::getImage($model->big_poster_original, $model->Id."_big");
 				$model->backdrop = MyMovieHelper::getImage($model->backdrop_original, $model->Id . '_bd');
 				$model->is_serie = 1;
 				$model->save();
@@ -1325,6 +1328,7 @@ class NzbController extends Controller
 			if(!isset($modelMyMovieSerieDB))
 			{
 				$model->poster = MyMovieHelper::getImage($model->poster_original, $model->Id);
+				$model->big_poster = MyMovieHelper::getImage($model->big_poster_original, $model->Id."_big");
 				$model->save();
 			}
 		}
@@ -2056,8 +2060,10 @@ class NzbController extends Controller
 			
 			$model->attributes = $_POST['MyMovieNzb'];
 				
-			if($getPoster)
+			if($getPoster){
 				$model->poster = MyMovieHelper::getImage($model->poster_original, $model->Id);
+				$model->big_poster = MyMovieHelper::getImage($model->big_poster_original, $model->Id."_big");
+			}
 			
 			if($getBackdrop)
 				$model->backdrop = MyMovieHelper::getImage($model->backdrop_original, $model->Id.'_bd');
@@ -2091,8 +2097,10 @@ class NzbController extends Controller
 			
 			$model->attributes = $_POST['MyMovieSerieHeader'];
 			
-			if($getPoster)
+			if($getPoster){
 				$model->poster = MyMovieHelper::getImage($model->poster_original, $model->Id);
+				$model->big_poster = MyMovieHelper::getImage($model->big_poster_original, $model->Id."_big");
+			}
 			
 			if($model->save())
 				$this->redirect(array('adminSerie'));
