@@ -27,6 +27,8 @@
  * @property string $studio
  * @property string $poster_original
  * @property string $poster
+ * @property string $big_poster_original
+ * @property string $big_poster
  * @property string $backdrop_original
  * @property string $backdrop
  * @property integer $adult
@@ -85,13 +87,13 @@ class MyMovie extends CActiveRecord
 			array('Id, Id_my_movie_serie_header', 'length', 'max'=>200),
 			array('type, bar_code, country, aspect_ratio, video_standard, production_year, release_date, running_time, imdb', 'length', 'max'=>45),
 			array('local_title, original_title, sort_title, data_changed, covers_changed', 'length', 'max'=>100),
-			array('parental_rating_desc, genre, poster_original, poster, backdrop_original, backdrop', 'length', 'max'=>255),
+			array('parental_rating_desc, genre, poster_original, poster, big_poster_original, big_poster, backdrop_original, backdrop', 'length', 'max'=>255),
 			array('studio', 'length', 'max'=>512),
 			array('rating', 'length', 'max'=>10),
 			array('description, extra_features', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id, type, bar_code, country, local_title, original_title, sort_title, aspect_ratio, video_standard, production_year, release_date, running_time, description, extra_features, parental_rating_desc, imdb, rating, data_changed, covers_changed, genre, studio, poster_original, poster, backdrop_original, backdrop, adult, Id_parental_control, Id_my_movie_serie_header, is_serie', 'safe', 'on'=>'search'),
+			array('Id, type, bar_code, country, local_title, original_title, sort_title, aspect_ratio, video_standard, production_year, release_date, running_time, description, extra_features, parental_rating_desc, imdb, rating, data_changed, covers_changed, genre, studio, poster_original, poster, big_poster_original, big_poster, backdrop_original, backdrop, adult, Id_parental_control, Id_my_movie_serie_header, is_serie', 'safe', 'on'=>'search'),
 		);
 	}
 
