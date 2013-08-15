@@ -6,6 +6,12 @@ $('#cancelButton').click(function(){
 	return false;
 });
 
+$('#saveButton').click(function(){
+	$('#wating').dialog('open');
+});
+
+
+
 $('#btnSearch').click(function()
 {
 	$('#div-searchResult').animate({opacity: 'hide'},240);
