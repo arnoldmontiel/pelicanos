@@ -2,9 +2,9 @@ CREATE DATABASE  IF NOT EXISTS `pelicanos` /*!40100 DEFAULT CHARACTER SET latin1
 USE `pelicanos`;
 -- MySQL dump 10.13  Distrib 5.5.16, for Win32 (x86)
 --
--- Host: dhcppc2    Database: pelicanos
+-- Host: 127.0.0.1    Database: pelicanos
 -- ------------------------------------------------------
--- Server version	5.5.24-0ubuntu0.12.04.1
+-- Server version	5.1.33-community
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -285,8 +285,8 @@ CREATE TABLE `customer_device` (
   PRIMARY KEY (`Id_device`,`Id_customer`),
   KEY `fk_device_has_customer_customer1` (`Id_customer`),
   KEY `fk_device_has_customer_device1` (`Id_device`),
-  CONSTRAINT `fk_device_has_customer_customer1` FOREIGN KEY (`Id_customer`) REFERENCES `customer` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_device_has_customer_device1` FOREIGN KEY (`Id_device`) REFERENCES `device` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_device_has_customer_device1` FOREIGN KEY (`Id_device`) REFERENCES `device` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_device_has_customer_customer1` FOREIGN KEY (`Id_customer`) REFERENCES `customer` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -642,11 +642,13 @@ CREATE TABLE `my_movie` (
   `Id_parental_control` int(11) NOT NULL,
   `Id_my_movie_serie_header` varchar(200) DEFAULT NULL,
   `is_serie` tinyint(4) DEFAULT '0',
+  `big_poster` varchar(255) DEFAULT NULL,
+  `big_poster_original` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`Id`),
   KEY `fk_my_movie_parental_control1` (`Id_parental_control`),
   KEY `fk_my_movie_my_movie_serie_header1` (`Id_my_movie_serie_header`),
-  CONSTRAINT `fk_my_movie_my_movie_serie_header1` FOREIGN KEY (`Id_my_movie_serie_header`) REFERENCES `my_movie_serie_header` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_my_movie_parental_control1` FOREIGN KEY (`Id_parental_control`) REFERENCES `parental_control` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_my_movie_parental_control1` FOREIGN KEY (`Id_parental_control`) REFERENCES `parental_control` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_my_movie_my_movie_serie_header1` FOREIGN KEY (`Id_my_movie_serie_header`) REFERENCES `my_movie_serie_header` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -858,11 +860,13 @@ CREATE TABLE `my_movie_nzb` (
   `covers_changed` varchar(45) DEFAULT NULL,
   `Id_my_movie_serie_header` varchar(200) DEFAULT NULL,
   `is_serie` tinyint(4) DEFAULT '0',
+  `big_poster` varchar(255) DEFAULT NULL,
+  `big_poster_original` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`Id`),
   KEY `fk_my_movie_parental_control1` (`Id_parental_control`),
   KEY `fk_my_movie_nzb_my_movie_serie_header1` (`Id_my_movie_serie_header`),
-  CONSTRAINT `fk_my_movie_nzb_my_movie_serie_header1` FOREIGN KEY (`Id_my_movie_serie_header`) REFERENCES `my_movie_serie_header` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_my_movie_parental_control10` FOREIGN KEY (`Id_parental_control`) REFERENCES `parental_control` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_my_movie_parental_control10` FOREIGN KEY (`Id_parental_control`) REFERENCES `parental_control` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_my_movie_nzb_my_movie_serie_header1` FOREIGN KEY (`Id_my_movie_serie_header`) REFERENCES `my_movie_serie_header` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1029,6 +1033,8 @@ CREATE TABLE `my_movie_serie_header` (
   `rating` varchar(10) DEFAULT NULL,
   `original_network` varchar(255) DEFAULT NULL,
   `original_status` varchar(100) DEFAULT NULL,
+  `big_poster` varchar(255) DEFAULT NULL,
+  `big_poster_original` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1159,9 +1165,9 @@ CREATE TABLE `nzb_device` (
   KEY `fk_nzb_has_device_device1` (`Id_device`),
   KEY `fk_nzb_has_device_nzb1` (`Id_nzb`),
   KEY `fk_nzb_device_nzb_state1` (`Id_nzb_state`),
-  CONSTRAINT `fk_nzb_device_nzb_state1` FOREIGN KEY (`Id_nzb_state`) REFERENCES `nzb_state` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_nzb_has_device_nzb1` FOREIGN KEY (`Id_nzb`) REFERENCES `nzb` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_nzb_has_device_device1` FOREIGN KEY (`Id_device`) REFERENCES `device` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_nzb_has_device_nzb1` FOREIGN KEY (`Id_nzb`) REFERENCES `nzb` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fk_nzb_device_nzb_state1` FOREIGN KEY (`Id_nzb_state`) REFERENCES `nzb_state` (`Id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1535,4 +1541,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-08-15 10:41:48
+-- Dump completed on 2013-08-15 15:04:20
