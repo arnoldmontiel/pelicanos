@@ -123,8 +123,17 @@ class AutoRipperController extends Controller
 					}					
 					
 					if($model->save()){
+						
+						//marco que ya esta el NZB
 						$nzbCreationState = new NzbCreationState();
 						$nzbCreationState->Id_creation_state = 2;
+						$nzbCreationState->Id_nzb = $model->Id_nzb;
+						$nzbCreationState->user_username = Yii::app()->user->name;
+						$nzbCreationState->save();
+						
+						//marco que ya esta subido a usenet
+						$nzbCreationState = new NzbCreationState();
+						$nzbCreationState->Id_creation_state = 3;
 						$nzbCreationState->Id_nzb = $model->Id_nzb;
 						$nzbCreationState->user_username = Yii::app()->user->name;
 						$nzbCreationState->save();
