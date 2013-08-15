@@ -27,6 +27,14 @@ $this->widget('ext.processingDialog.processingDialog', array(
 	'dataProvider'=>$model->search(),
 	'filter'=>$model,
 	'afterAjaxUpdate'=>'js:function(){
+				$("#auto-ripper-grid").find(".update").each(
+						function(index, item){
+							$(item).click(function(){
+								$("#wating").dialog("open");								
+															
+							});
+						});
+				
 				$("#auto-ripper-grid").find(".btn-admin-state").each(
 						function(index, item){
 							$(item).click(function(){
