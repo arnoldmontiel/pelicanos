@@ -39,7 +39,7 @@ $this->menu=array(
 				),
 				array(
 	 				    'name'=>'nzb_status',
-					    'value'=>'$data->nzbState->description',
+					    'value'=>'(isset($data->nzbState))?$data->nzbState->description:""',
 	
 				),
 				'date_sent',
