@@ -125,7 +125,7 @@ class AutoRipperController extends Controller
 					if($model->save()){
 						$nzbCreationState = new NzbCreationState();
 						$nzbCreationState->Id_creation_state = 2;
-						$nzbCreationState->Id_nzb = $model->Id;
+						$nzbCreationState->Id_nzb = $model->Id_nzb;
 						$nzbCreationState->user_username = Yii::app()->user->name;
 						$nzbCreationState->save();
 						
