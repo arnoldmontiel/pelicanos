@@ -8,11 +8,21 @@ $('.btn-admin-state').click(function(){
 	window.location = '".AutoRipperController::createUrl('adminState')."' + '&id='+id;
 	return false;
 });
+
+$('.update').click(function(){
+	$('#wating').dialog('open');
+});
 ");
 
 ?>
 
-<?php $this->widget('zii.widgets.grid.CGridView', array(
+<?php
+$this->widget('ext.processingDialog.processingDialog', array(
+					'buttons'=>array('none'),
+					'idDialog'=>'wating',
+));
+ 
+ $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'auto-ripper-grid',
 	'dataProvider'=>$model->search(),
 	'filter'=>$model,
