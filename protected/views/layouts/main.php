@@ -39,6 +39,7 @@
 				array('label'=>'User', 'url'=>array('/user/index'), 'visible'=>Yii::app()->user->checkAccess('Operator')),
 				array('label'=>'User', 'url'=>array('/user/summary'), 'visible'=>Yii::app()->user->checkAccess('Administrator')),
 				array('label'=>'Reseller', 'url'=>array('/reseller/index'), 'visible'=>Yii::app()->user->checkAccess('Administrator')),
+				array('label'=>'Auto Ripper', 'url'=>array('/autoRipper/admin'), 'visible'=>Yii::app()->user->checkAccess('Administrator')),
 				array('label'=>'Devices Settings', 'url'=>array('/clientSettings/index'), 'visible'=>Yii::app()->user->checkAccess('Administrator')),
 				array('label'=>'Devices', 'url'=>array('/device/index'), 'visible'=>Yii::app()->user->checkAccess('Administrator')),
 				array('label'=>'AnyDVD', 'url'=>array('/anydvdhdVersion/index'), 'visible'=>Yii::app()->user->checkAccess('Administrator')),
