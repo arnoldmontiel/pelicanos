@@ -170,9 +170,10 @@ class Nzb extends CActiveRecord
 	
 		$criteria=new CDbCriteria;
 		
-		$criteria->join =	"LEFT OUTER JOIN my_movie_disc_nzb dn ON dn.Id = t.Id_my_movie_disc_nzb
+		$criteria->join =	" LEFT OUTER JOIN my_movie_disc_nzb dn ON dn.Id = t.Id_my_movie_disc_nzb
+							  LEFT OUTER JOIN auto_ripper ar ON ar.Id_nzb = t.Id
 										LEFT OUTER JOIN my_movie_nzb n ON n.Id = dn.Id_my_movie_nzb";
-		
+				
 		$criteria->addSearchCondition("n.original_title",$this->title);
 		$criteria->addSearchCondition("n.production_year",$this->year);
 		$criteria->addSearchCondition("n.imdb",$this->idImdb);
@@ -182,6 +183,7 @@ class Nzb extends CActiveRecord
 		$criteria->addSearchCondition("resourceType.description",$this->resourceTypeDesc);
 		
 		$criteria->compare('n.is_serie',0);
+		$criteria->compare('ar.Id_auto_ripper_state',12);
 		
 		// Create a custom sort
 		$sort=new CSort;
