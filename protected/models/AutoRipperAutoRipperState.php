@@ -92,7 +92,8 @@ class AutoRipperAutoRipperState extends CActiveRecord
 		$criteria->addSearchCondition("autoRipperState.description",$this->auto_ripper_state_description);
 		
 		// Create a custom sort
-		$sort=new CSort;
+		$sort=new CSort;		
+		$sort->defaultOrder = 't.change_date DESC';
 		$sort->attributes=array(
 		// For each relational attribute, create a 'virtual attribute' using the public variable name
 									'change_date',
