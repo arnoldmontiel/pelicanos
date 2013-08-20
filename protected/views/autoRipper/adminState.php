@@ -23,7 +23,6 @@ $this->menu=array(
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'auto-ripper-states-grid',
 	'dataProvider'=>$model->search(),
-	'defaultOrder'=>'change_date desc',
 	'filter'=>$model,
 	'columns'=>array(		
 		array(
