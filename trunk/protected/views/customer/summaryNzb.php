@@ -31,12 +31,7 @@ $this->menu=array(
 	 				    'name'=>'year',
 					    'value'=>'$data->nzb->myMovieDiscNzb->myMovieNzb->production_year',
 	
-				),
-				array(
-	 				    'name'=>'genre',
-					    'value'=>'$data->nzb->myMovieDiscNzb->myMovieNzb->genre',
-	
-				),
+				),				
 				array(
 	 				    'name'=>'nzb_status',
 					    'value'=>'(isset($data->nzbState))?$data->nzbState->description:""',
