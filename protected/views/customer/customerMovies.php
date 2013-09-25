@@ -87,9 +87,9 @@ $('#Customer_Id').change(function(){
 					    'value'=>'$data->nzbState->description',
 	
 				),
-				date_sent,
-				date_downloading,
-				date_downloaded
+				'date_sent',
+				'date_downloading',
+				'date_downloaded',
 			),
 		));		
 		?>
