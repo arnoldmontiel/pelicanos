@@ -85,7 +85,7 @@ $('#Customer_Id').change(function(){
 					    'value'=>'$data->points',
 					    'htmlOptions' => array('style' => 'width: 50px;'),
 				),
-				description,
+				'description',
 			),
 		));		
 		?>
