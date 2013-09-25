@@ -455,11 +455,11 @@ class CustomerController extends Controller
 		$model = Customer::model();
 			
 	
-		$modelRelation=new NzbCustomer('search');
+		$modelRelation=new NzbDevice('search');
 		$modelRelation->unsetAttributes();
 		
-		if(isset($_GET['NzbCustomer']))
-			$modelRelation->attributes = $_GET['NzbCustomer']; 
+		if(isset($_GET['NzbDevice']))
+			$modelRelation->attributes = $_GET['NzbDevice']; 
 		
 		if(isset($_GET['Customer']))
 			$modelRelation->Id_customer = $_GET['Customer']['Id'];
