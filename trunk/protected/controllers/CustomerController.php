@@ -130,7 +130,7 @@ class CustomerController extends Controller
 	
 		$this->render('viewRipped',array(
 				'model'=>$model,
-				'idCustomer'=>$modelRippedCustomer->Id_customer,
+				'idCustomer'=>$modelCustomerDevice->Id_customer,
 		));
 	}
 	
