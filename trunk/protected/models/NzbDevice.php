@@ -198,11 +198,12 @@ class NzbDevice extends CActiveRecord
 		$criteria->addSearchCondition("nzbState.description",$this->nzb_status);
 	
 		$criteria->join =	"LEFT OUTER JOIN nzb n ON n.Id=t.Id_nzb
-											 LEFT OUTER JOIN my_movie_movie i ON n.Id_my_movie_movie=i.Id";
-		$criteria->addSearchCondition("i.original_title",$this->title);
-		$criteria->addSearchCondition("i.production_year",$this->year);
-		$criteria->addSearchCondition("i.genre",$this->genre);
-		$criteria->addSearchCondition("i.imdb",$this->id_imdb);
+											 LEFT OUTER JOIN my_movie_disc_nzb mmd ON n.Id_my_movie_disc_nzb = mmd.Id
+											LEFT OUTER JOIN my_movie_nzb mm ON mmd.Id_my_movie_nzb=mm.Id";
+		$criteria->addSearchCondition("mm.original_title",$this->title);
+		$criteria->addSearchCondition("mm.production_year",$this->year);
+		$criteria->addSearchCondition("mm.genre",$this->genre);
+		$criteria->addSearchCondition("mm.imdb",$this->id_imdb);
 	
 		// Create a custom sort
 		$sort=new CSort;
@@ -212,20 +213,20 @@ class NzbDevice extends CActiveRecord
 							        'desc' => 'nzbState.description DESC',
 		),
 					'title'=> array(
-								'asc'=>'i.original_title',
-								'desc'=>'i.original_title DESC'
+								'asc'=>'mm.original_title',
+								'desc'=>'mm.original_title DESC'
 		),
 					'year'=> array(
-								'asc'=>'i.production_year',
-								'desc'=>'i.production_year DESC'
+								'asc'=>'mm.production_year',
+								'desc'=>'mm.production_year DESC'
 		),
 					'genre'=> array(
-								'asc'=>'i.genre',
-								'desc'=>'i.genre DESC'
+								'asc'=>'mm.genre',
+								'desc'=>'mm.genre DESC'
 		),
 					'id_imdb'=> array(
-								'asc'=>'i.imdb',
-								'desc'=>'i.imdb DESC'
+								'asc'=>'mm.imdb',
+								'desc'=>'mm.imdb DESC'
 		),
 	
 					'*',
