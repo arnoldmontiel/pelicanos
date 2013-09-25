@@ -123,14 +123,17 @@ class CustomerController extends Controller
 		
 		$criteria=new CDbCriteria;
 	
-		$criteria->join =	"LEFT OUTER JOIN ripped_customer rc ON rc.Id_device=t.Id_device";
-		$criteria->addCondition('rc.Id_my_movie_disc = "'. $id.'"');
+		$criteria->join =	"LEFT OUTER JOIN ripped_customer rc ON rc.Id_device=t.Id_device
+								LEFT OUTER JOIN my_movie_disc md on md.Id = rc.Id_my_movie_disc";
+		$criteria->addCondition('md.Id_my_movie = "'. $id.'"');
 		
 		$modelCustomerDevice = CustomerDevice::model()->find($criteria);
+		
+		$idCustomer = (isset($modelCustomerDevice))?$modelCustomerDevice->Id_customer:0;
 	
 		$this->render('viewRipped',array(
 				'model'=>$model,
-				'idCustomer'=>$modelCustomerDevice->Id_customer,
+				'idCustomer'=>$idCustomer,
 		));
 	}
 	
