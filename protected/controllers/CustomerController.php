@@ -145,7 +145,7 @@ class CustomerController extends Controller
 		$criteria=new CDbCriteria;
 	
 		$criteria->join =	"LEFT OUTER JOIN ripped_customer rc ON rc.Id_device=t.Id_device";
-		$criteria->addCondition('md.Id_my_movie_disc = "'. $id.'"');
+		$criteria->addCondition('rc.Id_my_movie_disc = "'. $id.'"');
 		
 		$modelCustomerDevice = CustomerDevice::model()->find($criteria);
 		
