@@ -83,8 +83,8 @@ $('#Customer_Id').change(function(){
 	
 				),
 				array(
-	 				    'name'=>'movie_status',
-					    'value'=>'$data->movieState->description',
+	 				    'name'=>'nzb_status',
+					    'value'=>'$data->nzbState->description',
 	
 				),
 				date_sent,
