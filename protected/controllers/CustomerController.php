@@ -146,10 +146,12 @@ class CustomerController extends Controller
 		$criteria->addCondition('md.Id_my_movie = "'. $id.'"');
 		
 		$modelCustomerDevice = CustomerDevice::model()->find($criteria);
-	
+		
+		$idCustomer = (isset($modelCustomerDevice))?$modelCustomerDevice->Id_customer:0;
+		
 		$this->render('viewSummaryRipped',array(
 					'model'=>$model,
-					'idCustomer'=>$modelCustomerDevice->Id_customer,
+					'idCustomer'=>$idCustomer,
 		));
 	}
 	
