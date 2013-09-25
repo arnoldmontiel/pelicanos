@@ -178,4 +178,65 @@ class NzbDevice extends CActiveRecord
 													'sort'=>$sort,
 		));
 	}
+	
+	public function searchRelationMovies()
+	{
+		// Warning: Please modify the following code to remove attributes that
+		// should not be searched.
+	
+		$criteria=new CDbCriteria;
+	
+		$criteria->compare('Id_nzb',$this->Id_nzb);
+		$criteria->compare('Id_device',$this->Id_device);
+		$criteria->compare('need_update',$this->need_update);
+		$criteria->compare('Id_movie_state',$this->Id_movie_state);
+		$criteria->compare('date_sent',$this->date_sent);
+		$criteria->compare('date_downloaded',$this->date_downloaded);
+		$criteria->compare('date_downloading',$this->date_downloading);
+	
+		$criteria->with[]='movieState';
+		$criteria->addSearchCondition("movieState.description",$this->movie_status);
+	
+		$criteria->join =	"LEFT OUTER JOIN nzb n ON n.Id=t.Id_nzb
+											 LEFT OUTER JOIN my_movie_movie i ON n.Id_my_movie_movie=i.Id";
+		$criteria->addSearchCondition("i.original_title",$this->title);
+		$criteria->addSearchCondition("i.production_year",$this->year);
+		$criteria->addSearchCondition("i.genre",$this->genre);
+		$criteria->addSearchCondition("i.imdb",$this->id_imdb);
+	
+		// Create a custom sort
+		$sort=new CSort;
+		$sort->attributes=array(
+					'movie_status' => array(
+						        'asc' => 'movieState.description',
+						        'desc' => 'movieState.description DESC',
+		),
+					'title'=> array(
+								'asc'=>'i.original_title',
+								'desc'=>'i.original_title DESC'
+		),
+					'year'=> array(
+								'asc'=>'i.production_year',
+								'desc'=>'i.production_year DESC'
+		),
+					'genre'=> array(
+								'asc'=>'i.genre',
+								'desc'=>'i.genre DESC'
+		),
+					'id_imdb'=> array(
+								'asc'=>'i.imdb',
+								'desc'=>'i.imdb DESC'
+		),
+	
+					'*',
+		);
+	
+		$sort->defaultOrder =
+					'Id_movie_state DESC, date_downloaded DESC, date_downloading DESC, date_sent DESC';
+	
+		return new CActiveDataProvider($this, array(
+												'criteria'=>$criteria,
+												'sort'=>$sort,
+		));
+	}
 }
