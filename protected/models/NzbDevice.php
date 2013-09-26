@@ -240,4 +240,82 @@ class NzbDevice extends CActiveRecord
 												'sort'=>$sort,
 		));
 	}
+	
+	public function searchRelationSeries()
+	{
+		// Warning: Please modify the following code to remove attributes that
+		// should not be searched.
+	
+		$criteria=new CDbCriteria;
+	
+		$criteria->compare('Id_nzb',$this->Id_nzb);
+		$criteria->compare('Id_device',$this->Id_device);
+		$criteria->compare('need_update',$this->need_update);
+		$criteria->compare('Id_nzb_state',$this->Id_nzb_state);
+		$criteria->compare('date_sent',$this->date_sent);
+		$criteria->compare('date_downloaded',$this->date_downloaded);
+		$criteria->compare('date_downloading',$this->date_downloading);
+	
+		$criteria->with[]='nzbState';
+		$criteria->addSearchCondition("nzbState.description",$this->nzb_status);
+	
+		$criteria->join =	"LEFT OUTER JOIN nzb n ON n.Id=t.Id_nzb
+											 LEFT OUTER JOIN my_movie_disc_nzb mmd ON n.Id_my_movie_disc_nzb = mmd.Id
+											LEFT OUTER JOIN my_movie_nzb mm ON mmd.Id_my_movie_nzb=mm.Id
+											LEFT OUTER JOIN my_movie_serie_header h ON mm.Id_my_movie_serie_header=h.Id";
+		$criteria->addSearchCondition("mm.original_title",$this->title);
+		$criteria->addSearchCondition("mm.production_year",$this->year);
+		$criteria->addSearchCondition("mm.genre",$this->genre);
+		$criteria->addSearchCondition("mm.imdb",$this->id_imdb);
+		$criteria->addSearchCondition("h.name",$this->serie_title);
+		$criteria->addCondition('mm.Id_my_movie_serie_header is not null');
+	
+	
+		// Create a custom sort
+		$sort=new CSort;
+		$sort->attributes=array(
+				'nzb_status' => array(
+					        'asc' => 'nzbState.description',
+					        'desc' => 'nzbState.description DESC',
+		),
+			'title'=> array(
+								'asc'=>'mm.original_title',
+								'desc'=>'mm.original_title DESC'
+		),
+					'year'=> array(
+								'asc'=>'mm.production_year',
+								'desc'=>'mm.production_year DESC'
+		),
+					'genre'=> array(
+								'asc'=>'mm.genre',
+								'desc'=>'mm.genre DESC'
+		),
+					'id_imdb'=> array(
+								'asc'=>'mm.imdb',
+								'desc'=>'mm.imdb DESC'
+		),
+				'serie_title'=> array(
+							'asc'=>'h.name',
+							'desc'=>'h.name DESC'
+		),
+// 				'episode'=> array(
+// 							'asc'=>'i.Episode',
+// 							'desc'=>'i.Episode DESC'
+// 		),
+// 				'season'=> array(
+// 							'asc'=>'i.Season',
+// 							'desc'=>'i.Season DESC'
+// 		),
+	
+				'*',
+		);
+	
+		$sort->defaultOrder =
+				'Id_movie_state DESC, date_downloaded DESC, date_downloading DESC, date_sent DESC';
+	
+		return new CActiveDataProvider($this, array(
+											'criteria'=>$criteria,
+											'sort'=>$sort,
+		));
+	}
 }

@@ -65,47 +65,47 @@ $('#Customer_Id').change(function(){
 		'columns'=>array(	
 				array(
 	 				    'name'=>'id_imdb',
-					    'value'=>'$data->nzb->imdbDataTv->ID',
+						'value'=>'$data->nzb->myMovieDiscNzb->myMovieNzb->imdb',
 	
 				),
 				array(
 	 				    'name'=>'title',
-					    'value'=>'$data->nzb->imdbDataTv->Title',
+					    'value'=>'$data->nzb->myMovieDiscNzb->myMovieNzb->original_title',
 	
 				),
 				array(
 	 				    'name'=>'year',
-					    'value'=>'$data->nzb->imdbDataTv->Year',
+					    'value'=>'$data->nzb->myMovieDiscNzb->myMovieNzb->production_year',
 	
 				),
 				array(
 	 				    'name'=>'genre',
-					    'value'=>'$data->nzb->imdbDataTv->Genre',
+					    'value'=>'$data->nzb->myMovieDiscNzb->myMovieNzb->genre',
 	
 				),
 				array(
 	 				    'name'=>'serie_title',
-					    'value'=>'$data->nzb->imdbDataTv->idParent->Title',
+					    'value'=>'$data->nzb->myMovieDiscNzb->myMovieNzb->myMovieSerieHeader->name',
 	
 				),	
 				array(
 	 				    'name'=>'season',
-					    'value'=>'$data->nzb->imdbDataTv->Season',
+					    'value'=>'$data->nzb->myMovieDiscNzb->getSeasonNumber()',
 	
 				),
 				array(
 	 				    'name'=>'episode',
-					    'value'=>'$data->nzb->imdbDataTv->Episode',
+					    'value'=>'$data->nzb->myMovieDiscNzb->getEpisodes()',
 	
 				),
 				array(
-	 				    'name'=>'movie_status',
-					    'value'=>'$data->movieState->description',
+	 				    'name'=>'nzb_status',
+					    'value'=>'$data->nzbState->description',
 	
 				),
-				date_sent,
-				date_downloading,
-				date_downloaded
+				'date_sent',
+				'date_downloading',
+				'date_downloaded',
 			),
 		));		
 		?>
