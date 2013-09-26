@@ -311,7 +311,7 @@ class NzbDevice extends CActiveRecord
 		);
 	
 		$sort->defaultOrder =
-				'Id_movie_state DESC, date_downloaded DESC, date_downloading DESC, date_sent DESC';
+				'Id_nzb_state DESC, date_downloaded DESC, date_downloading DESC, date_sent DESC';
 	
 		return new CActiveDataProvider($this, array(
 											'criteria'=>$criteria,
