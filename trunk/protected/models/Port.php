@@ -5,7 +5,7 @@
  *
  * The followings are the available columns in table 'port':
  * @property integer $Id
- * @property integer $port
+ * @property integer $port_number
  * @property string $description
  *
  * The followings are the available model relations:
@@ -29,11 +29,11 @@ class Port extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('port', 'numerical', 'integerOnly'=>true),
+			array('port_number', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>100),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('Id, port, description', 'safe', 'on'=>'search'),
+			array('Id, port_number, description', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -56,7 +56,7 @@ class Port extends CActiveRecord
 	{
 		return array(
 			'Id' => 'ID',
-			'port' => 'Port',
+			'port_number' => 'Port Number',
 			'description' => 'Description',
 		);
 	}
@@ -80,7 +80,7 @@ class Port extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('Id',$this->Id);
-		$criteria->compare('port',$this->port);
+		$criteria->compare('port_number',$this->port_number);
 		$criteria->compare('description',$this->description,true);
 
 		return new CActiveDataProvider($this, array(
