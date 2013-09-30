@@ -7,7 +7,7 @@
  * @property integer $Id
  * @property string $Id_device
  * @property integer $Id_port
- * @property integer $internal_port
+ * @property integer $external_port
  * @property integer $is_open
  * @property integer $is_validated
  *
@@ -34,11 +34,11 @@ class DeviceTunneling extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('Id_device, Id_port', 'required'),
-			array('Id_port, internal_port, is_open, is_validated', 'numerical', 'integerOnly'=>true),
+			array('Id_port, external_port, is_open, is_validated', 'numerical', 'integerOnly'=>true),
 			array('Id_device', 'length', 'max'=>45),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('Id, Id_device, Id_port, internal_port, is_open, is_validated', 'safe', 'on'=>'search'),
+			array('Id, Id_device, Id_port, external_port, is_open, is_validated', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -64,7 +64,7 @@ class DeviceTunneling extends CActiveRecord
 			'Id' => 'ID',
 			'Id_device' => 'Id Device',
 			'Id_port' => 'Id Port',
-			'internal_port' => 'Internal Port',
+			'external_port' => 'External Port',
 			'is_open' => 'Is Open',
 			'is_validated' => 'Is Validated',
 		);
@@ -91,7 +91,7 @@ class DeviceTunneling extends CActiveRecord
 		$criteria->compare('Id',$this->Id);
 		$criteria->compare('Id_device',$this->Id_device,true);
 		$criteria->compare('Id_port',$this->Id_port);
-		$criteria->compare('internal_port',$this->internal_port);
+		$criteria->compare('external_port',$this->external_port);
 		$criteria->compare('is_open',$this->is_open);
 		$criteria->compare('is_validated',$this->is_validated);
 

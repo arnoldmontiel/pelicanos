@@ -227,8 +227,8 @@ class WSSettingsController extends Controller
 		foreach($modelDeviceTunnelings as $item)
 		{
 			$tunnelingPorts = new TunnelingPorts();
-			$tunnelingPorts->port = $item->port->port;
-			$tunnelingPorts->port_mapped = $item->internal_port;
+			$tunnelingPorts->internal_port = $item->port->port_number;
+			$tunnelingPorts->external_port = $item->external_port;
 			$arrayResponse[] = $tunnelingPorts; 
 		}
 		
@@ -252,8 +252,9 @@ class WSSettingsController extends Controller
 				$criteria = new CDbCriteria();
 				$criteria->join = 'INNER JOIN port p on (t.Id_port = p.Id)';
 				$criteria->addCondition('t.Id_device = '.$idDevice);
-				$criteria->addCondition('p.port = '.$item->port);
-				$criteria->addCondition('p.internal_port = '.$item->mapped_port);
+				$criteria->addCondition('t.is_validated = 0');
+				$criteria->addCondition('p.port_number = '.$item->internal_port);
+				$criteria->addCondition('t.external_port = '.$item->external_port);
 				
 				$modelDeviceTunneling = DeviceTunneling::model()->find($criteria);
 				

@@ -3,15 +3,15 @@
 class TunnelingPorts
 {
 	/**
-	* @var integer port
+	* @var integer internal_port
 	* @soap
 	*/
-	public $port;
+	public $internal_port;
 	
 	/**
-	* @var integer port_mapped
+	* @var integer external_port
 	* @soap
 	*/
-	public $port_mapped;
+	public $external_port;
 	
 }
