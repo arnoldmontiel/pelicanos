@@ -11,6 +11,7 @@ class WSSettingsController extends Controller
 					'classMap'=>array(
 			                    'ClientSettingsRequest'=>'ClientSettingsRequest',
 			                    'CustomerSettingsResponse'=>'CustomerSettingsResponse',
+			                    'TunnelingPorts'=>'TunnelingPorts',
 		),
 		),
 		);
@@ -211,4 +212,62 @@ class WSSettingsController extends Controller
 		return false;
 	}
 	
+	/**
+	*
+	* Returns array of ports to tunnel by device
+	* @param string idDevice
+	* @return TunnelingPorts[]
+	* @soap
+	*/
+	public function getDeviceTunnelPort($idDevice)
+	{
+		$arrayResponse = array();
+		$modelDeviceTunnelings = DeviceTunneling::model()->findAllByAttributes(array('Id_device'=>$idDevice, 'is_open'=>1, 'is_validated'=>0));
+
+		foreach($modelDeviceTunnelings as $item)
+		{
+			$tunnelingPorts = new TunnelingPorts();
+			$tunnelingPorts->port = $item->port->port;
+			$tunnelingPorts->port_mapped = $item->internal_port;
+			$arrayResponse[] = $tunnelingPorts; 
+		}
+		
+		return $arrayResponse;
+	}
+	
+	/**
+	*
+	* Set "getDeviceTunnelPort" acknowledge
+	* @param string idDevice
+	* @param TunnelingPorts[] ports
+	* @return boolean response
+	* @soap
+	*/
+	public function ackDeviceTunnelPort($idDevice, $ports)
+	{
+		try {
+	
+			foreach($ports as $item)
+			{
+				$criteria = new CDbCriteria();
+				$criteria->join = 'INNER JOIN port p on (t.Id_port = p.Id)';
+				$criteria->addCondition('t.Id_device = '.$idDevice);
+				$criteria->addCondition('p.port = '.$item->port);
+				$criteria->addCondition('p.internal_port = '.$item->mapped_port);
+				
+				$modelDeviceTunneling = DeviceTunneling::model()->find($criteria);
+				
+				if(isset($modelDeviceTunneling))
+				{
+					$modelDeviceTunneling->is_validated = 1;
+					$modelDeviceTunneling->save();
+				}
+			}
+			
+			return true;
+		} catch (Exception $e) {
+			return false;
+		}
+		return false;
+	}
 }
