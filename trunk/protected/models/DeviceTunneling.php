@@ -17,6 +17,7 @@
  */
 class DeviceTunneling extends CActiveRecord
 {
+	public $interal_port;
 	/**
 	 * @return string the associated database table name
 	 */
@@ -38,7 +39,7 @@ class DeviceTunneling extends CActiveRecord
 			array('Id_device', 'length', 'max'=>45),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('Id, Id_device, Id_port, external_port, is_open, is_validated', 'safe', 'on'=>'search'),
+			array('Id, Id_device, Id_port, external_port, is_open, is_validated, interal_port', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -95,9 +96,28 @@ class DeviceTunneling extends CActiveRecord
 		$criteria->compare('is_open',$this->is_open);
 		$criteria->compare('is_validated',$this->is_validated);
 
+		$criteria->with[]='port';
+		$criteria->addSearchCondition("port.description",$this->interal_port);
+		
+		// Create a custom sort
+		$sort=new CSort;
+		$sort->attributes=array(
+		// For each relational attribute, create a 'virtual attribute' using the public variable name
+									'external_port',
+									'is_open',
+									'is_validated',
+									'interal_port' => array(
+										        'asc' => 'port.description',
+										        'desc' => 'port.description DESC',
+		),
+									'*',
+		);
+		
 		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
+								'criteria'=>$criteria,
+								'sort'=>$sort,
 		));
+		
 	}
 
 	/**
