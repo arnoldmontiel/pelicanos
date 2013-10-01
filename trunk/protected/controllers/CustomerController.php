@@ -95,6 +95,23 @@ class CustomerController extends Controller
 		}catch (Exception $e) {
 			$transaction->rollback();
 		}
+	}	
+	
+	public function actionAjaxRemoveDeviceTunnel()
+	{
+		$idDevice = $_GET['idDevice'];
+		$idPort = $_GET['idPort'];
+	
+		if(isset($idDevice) && isset($idPort))
+		{
+			$model = DeviceTunneling::model()->findByAttributes(array(
+													'Id_port'=>$idPort,
+													'Id_device'=>$idDevice,
+			));
+			if(isset($model))
+				$model->delete();
+			
+		}
 	}
 	
 	public function actionAjaxRemoveCustomerDevice()
@@ -493,6 +510,39 @@ class CustomerController extends Controller
 								'modelRelation'=>$modelRelation,
 		));
 	
+	}
+	
+	public function actionDeviceTunnel($idDevice, $idCustomer)
+	{
+		$modelDeviceTunnel = new DeviceTunneling();
+		$modelDeviceTunnel->Id_device = $idDevice;				
+		
+		if(isset($_POST['DeviceTunneling']))
+		{
+			$modelDeviceTunnel->attributes = $_POST['DeviceTunneling'];
+			$modelDeviceTunnel->is_open = 1;
+			$modelDeviceTunnel->save();
+		}
+		
+		$modelDeviceTunelGrid = new DeviceTunneling('search');
+		$modelDeviceTunelGrid->unsetAttributes();  // clear any default values
+		$modelDeviceTunelGrid->Id_device = $idDevice;
+		
+		if(isset($_GET['DeviceTunneling']))
+			$modelDeviceTunelGrid->attributes=$_GET['DeviceTunneling'];
+		
+		$criteria = new CDbCriteria();
+		$criteria->addCondition('t.Id NOT IN (select Id_port from device_tunneling dt
+										where Id_device = "'.$idDevice.'")');
+		
+		$ddlPort = CHtml::listData(Port::model()->findAll($criteria), 'Id', 'description' );
+		
+		$this->render('deviceTunnel',array(
+										'modelDeviceTunnel'=>$modelDeviceTunnel,
+										'ddlPort'=>$ddlPort,
+										'idCustomer'=>$idCustomer,
+										'modelDeviceTunelGrid'=>$modelDeviceTunelGrid,
+		));
 	}
 	
 	/**
