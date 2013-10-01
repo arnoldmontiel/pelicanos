@@ -97,7 +97,7 @@ class CustomerController extends Controller
 		}
 	}	
 	
-	public function actionAjaxRemoveDeviceTunnel()
+	public function actionAjaxCloseDeviceTunnel()
 	{
 		$idDevice = $_GET['idDevice'];
 		$idPort = $_GET['idPort'];
@@ -108,10 +108,39 @@ class CustomerController extends Controller
 													'Id_port'=>$idPort,
 													'Id_device'=>$idDevice,
 			));
+			
 			if(isset($model))
-				$model->delete();
+			{
+				$model->is_open = 0;
+				$model->is_validated = 0;
+				$model->save();
+			}
 			
 		}
+		$this->redirect(array('deviceTunnel', 'idDevice'=>$idDevice, 'idCustomer'=>1));
+	}
+	
+	public function actionAjaxOpenDeviceTunnel()
+	{
+		$idDevice = $_GET['idDevice'];
+		$idPort = $_GET['idPort'];
+	
+		if(isset($idDevice) && isset($idPort))
+		{
+			$model = DeviceTunneling::model()->findByAttributes(array(
+														'Id_port'=>$idPort,
+														'Id_device'=>$idDevice,
+			));
+			
+			if(isset($model))
+			{
+				$model->is_open = 1;
+				$model->is_validated = 0;
+				$model->save();
+			}
+				
+		}
+		$this->redirect(array('deviceTunnel', 'idDevice'=>$idDevice, 'idCustomer'=>1));		
 	}
 	
 	public function actionAjaxRemoveCustomerDevice()

@@ -64,11 +64,17 @@ $this->widget('zii.widgets.grid.CGridView', array(
 		),		
 		array(
 			'class'=>'CButtonColumn',
-			'template'=>'{delete}',
+			//'template'=>'($data->is_open == 1)?{a}:{b}',
+			'template'=>'{close}{open}',
 			'buttons'=>array(
-					'delete' => array(
-							'url'=>'Yii::app()->createUrl("customer/AjaxRemoveDeviceTunnel", array("idDevice"=>$data->Id_device,"idPort"=>$data->Id_port))',
-				),
+					'close' => array(
+							'url'=>'Yii::app()->createUrl("customer/AjaxCloseDeviceTunnel", array("idDevice"=>$data->Id_device,"idPort"=>$data->Id_port))',
+							'visible'=>'($data->is_open == 1)?true:false'
+							),
+					'open' => array(
+							'url'=>'Yii::app()->createUrl("customer/AjaxOpenDeviceTunnel", array("idDevice"=>$data->Id_device,"idPort"=>$data->Id_port))',
+							'visible'=>'($data->is_open == 0)?true:false'
+							),
 			),
 		),
 	),
