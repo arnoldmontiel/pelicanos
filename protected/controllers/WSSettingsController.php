@@ -251,7 +251,7 @@ class WSSettingsController extends Controller
 			{
 				$criteria = new CDbCriteria();
 				$criteria->join = 'INNER JOIN port p on (t.Id_port = p.Id)';
-				$criteria->addCondition('t.Id_device = '.$idDevice);
+				$criteria->addCondition('t.Id_device = "'.$idDevice.'"');
 				$criteria->addCondition('t.is_validated = 0');
 				$criteria->addCondition('p.port_number = '.$item->internal_port);
 				$criteria->addCondition('t.external_port = '.$item->external_port);
