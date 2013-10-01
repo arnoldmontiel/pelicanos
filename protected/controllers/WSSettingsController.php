@@ -222,13 +222,14 @@ class WSSettingsController extends Controller
 	public function getDeviceTunnelPort($idDevice)
 	{
 		$arrayResponse = array();
-		$modelDeviceTunnelings = DeviceTunneling::model()->findAllByAttributes(array('Id_device'=>$idDevice, 'is_open'=>1, 'is_validated'=>0));
+		$modelDeviceTunnelings = DeviceTunneling::model()->findAllByAttributes(array('Id_device'=>$idDevice, 'is_validated'=>0));
 
 		foreach($modelDeviceTunnelings as $item)
 		{
 			$tunnelingPorts = new TunnelingPorts();
 			$tunnelingPorts->internal_port = $item->port->port_number;
 			$tunnelingPorts->external_port = $item->external_port;
+			$tunnelingPorts->open = $item->is_open;
 			$arrayResponse[] = $tunnelingPorts; 
 		}
 		
