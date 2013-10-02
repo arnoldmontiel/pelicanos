@@ -79,38 +79,41 @@ class WsAutoRipperController extends Controller
 	{
 		$nextStep = 0;
 		
-		$criteria = new CDbCriteria();
-		$criteria->addCondition('t.Id_auto_ripper_state <> 12');
-		$criteria->addCondition('t.Id_auto_ripper_process = "'.$idProcess.'"');
-		$modelAutoRipper = AutoRipper::model()->find($criteria);
-		
-		if(isset($modelAutoRipper))
+		if(isset(AutoRipperProcess::model()->findByPk($idProcess)))
 		{
-			switch($modelAutoRipper->Id_auto_ripper_state)
-			{				
-				case '1';
-					$nextStep = 2;//create 7zip
-					break;
-				case '3';
-					$nextStep = 4;//create RAR
-					break;
-				case '5';
-					$nextStep = 6;//create PAR2
-					break;
-				case '7';
-					$nextStep = 8;//upload usenet
-					break;
-				case '9';
-					$nextStep = 10;//delete files
-					break;
-				case '11';
-					$nextStep = 12;//this is the end, my only friend
-					break;				
+			$criteria = new CDbCriteria();
+			$criteria->addCondition('t.Id_auto_ripper_state <> 12');
+			$criteria->addCondition('t.Id_auto_ripper_process = "'.$idProcess.'"');
+			$modelAutoRipper = AutoRipper::model()->find($criteria);
+			
+			if(isset($modelAutoRipper))
+			{
+				switch($modelAutoRipper->Id_auto_ripper_state)
+				{				
+					case '1';
+						$nextStep = 2;//create 7zip
+						break;
+					case '3';
+						$nextStep = 4;//create RAR
+						break;
+					case '5';
+						$nextStep = 6;//create PAR2
+						break;
+					case '7';
+						$nextStep = 8;//upload usenet
+						break;
+					case '9';
+						$nextStep = 10;//delete files
+						break;
+					case '11';
+						$nextStep = 12;//this is the end, my only friend
+						break;				
+				}
 			}
-		}
-		else
-		{
-			$nextStep = 1; //init
+			else
+			{
+				$nextStep = 1; //init
+			}
 		}
 		
 		return $nextStep;
