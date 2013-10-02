@@ -8,6 +8,9 @@ class WsAutoRipperController extends Controller
 		return array(
 		            'wsdl'=>array(
 		                'class'=>'CWebServiceAction',
+						'classMap'=>array(
+					                    'NextStepResponse'=>'NextStepResponse',
+						),
 					
 		),
 		);
@@ -72,51 +75,70 @@ class WsAutoRipperController extends Controller
 	/**
 	* Get Next Step by idProcess
 	* @param string idProcess
-	* @return integer idNextStep
+	* @return NextStepResponse response
 	* @soap
 	*/
 	public function getNextStep($idProcess)
 	{
 		$nextStep = 0;
+		$response = new NextStepResponse();
+		$model = AutoRipperProcess::model()->findByPk($idProcess);
 		
-		if(isset(AutoRipperProcess::model()->findByPk($idProcess)))
+		if(isset($model))
 		{
 			$criteria = new CDbCriteria();
-			$criteria->addCondition('t.Id_auto_ripper_state <> 12');
+			$criteria->addCondition('t.Id_auto_ripper_state <> 11');
 			$criteria->addCondition('t.Id_auto_ripper_process = "'.$idProcess.'"');
 			$modelAutoRipper = AutoRipper::model()->find($criteria);
 			
 			if(isset($modelAutoRipper))
 			{
+				$response->file_name = $modelAutoRipper->name;
+				$response->id_auto_ripper = $modelAutoRipper->Id;
+				
 				switch($modelAutoRipper->Id_auto_ripper_state)
 				{				
-					case '1';
+					case '1':	//iniciado
 						$nextStep = 2;//create 7zip
 						break;
-					case '3';
-						$nextStep = 4;//create RAR
+					case '2':	//creando 7zip
+						$nextStep = 1;//init
 						break;
-					case '5';
-						$nextStep = 6;//create PAR2
+					case '3':	//creado 7zip
+						$nextStep = 3;//create RAR
 						break;
-					case '7';
-						$nextStep = 8;//upload usenet
+					case '4':	//creando RAR
+						$nextStep = 3;//create RAR
 						break;
-					case '9';
-						$nextStep = 10;//delete files
+					case '5':	//creado RAR
+						$nextStep = 4;//create PAR2
 						break;
-					case '11';
-						$nextStep = 12;//this is the end, my only friend
-						break;				
+					case '6':	//creando PAR2
+						$nextStep = 4;//create PAR2
+						break;
+					case '7':	//creado PAR2
+						$nextStep = 5;//subir usenet
+						break;
+					case '8':	//subiendo usenet
+						$nextStep = 5;//subir usenet
+						break;
+					case '9':	//subido usenet
+						$nextStep = 6;//delete files
+						break;											
+					case '10':	//borrando archivos
+						$nextStep = 6;//delete files
+						break;
 				}
 			}
 			else
 			{
 				$nextStep = 1; //init
 			}
-		}
+		}		
 		
-		return $nextStep;
+		$response->next_step = $nextStep;
+		
+		return $response;
 	}
 	
 	/**
@@ -137,6 +159,7 @@ class WsAutoRipperController extends Controller
 			$modelAutoRipper->Id_disc = $idDisc;
 			$modelAutoRipper->Id_auto_ripper_process = $idProcess;
 			$modelAutoRipper->Id_auto_ripper_state = 1; //Iniciando
+			$modelAutoRipper->name = uniqid();
 			$modelAutoRipper->save();
 			
 			$autoRipperId = $modelAutoRipper->Id;
@@ -177,36 +200,6 @@ class WsAutoRipperController extends Controller
 		}
 		return false;
 	
-	}
-
-	/**
-	* Get name by id
-	* @param integer id
-	* @return string name
-	* @soap
-	*/
-	public function getName($id)
-	{
-		$name = null;
-		
-		$modelAutoRipper = AutoRipper::model()->findByPk($id);
-	
-		if(isset($modelAutoRipper))
-		{
-						
-			if(empty($modelAutoRipper->name))
-			{
-				$modelAutoRipper->name = uniqid();
-				
-				if($modelAutoRipper->save())
-					$name = $modelAutoRipper->name;
-				
-			}	
-			else
-				$name = $modelAutoRipper->name;
-		}		
-		
-		return $name;
 	}
 	
 }
