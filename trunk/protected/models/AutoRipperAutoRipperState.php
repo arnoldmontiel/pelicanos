@@ -4,10 +4,15 @@
  * This is the model class for table "auto_ripper_auto_ripper_state".
  *
  * The followings are the available columns in table 'auto_ripper_auto_ripper_state':
+ * @property integer $Id
  * @property integer $Id_auto_ripper
  * @property integer $Id_auto_ripper_state
  * @property string $change_date
  * @property string $description
+ *
+ * The followings are the available model relations:
+ * @property AutoRipper $idAutoRipper
+ * @property AutoRipperState $idAutoRipperState
  */
 class AutoRipperAutoRipperState extends CActiveRecord
 {
@@ -35,7 +40,7 @@ class AutoRipperAutoRipperState extends CActiveRecord
 			array('change_date', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('Id_auto_ripper, Id_auto_ripper_state, change_date, description, auto_ripper_state_description', 'safe', 'on'=>'search'),
+			array('Id, Id_auto_ripper, Id_auto_ripper_state, change_date, description, auto_ripper_state_description', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -82,7 +87,8 @@ class AutoRipperAutoRipperState extends CActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-
+		
+		$criteria->compare('Id',$this->Id);
 		$criteria->compare('Id_auto_ripper',$this->Id_auto_ripper);
 		$criteria->compare('Id_auto_ripper_state',$this->Id_auto_ripper_state);
 		$criteria->compare('change_date',$this->change_date,true);
