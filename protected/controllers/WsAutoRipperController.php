@@ -36,15 +36,9 @@ class WsAutoRipperController extends Controller
 				$modelAutoRipper->Id_auto_ripper_state = $idState;
 				$modelAutoRipper->save();
 				
-				$autoRipperState = AutoRipperAutoRipperState::model()->findByAttributes(array(
-												'Id_auto_ripper'=>$id,
-												'Id_auto_ripper_state'=>$idState));
-				if(!isset($autoRipperState))
-				{
-					$autoRipperState = new AutoRipperAutoRipperState();
-					$autoRipperState->Id_auto_ripper = $id;
-					$autoRipperState->Id_auto_ripper_state = $idState;
-				}
+				$autoRipperState = new AutoRipperAutoRipperState();
+				$autoRipperState->Id_auto_ripper = $id;
+				$autoRipperState->Id_auto_ripper_state = $idState;				
 				$autoRipperState->description = $description;
 				$autoRipperState->save();
 				
@@ -84,10 +78,20 @@ class WsAutoRipperController extends Controller
 		$response = new NextStepResponse();
 		$model = AutoRipperProcess::model()->findByPk($idProcess);
 		
+		$steps = array('init'=>1,
+						'create_7zip'=>2,
+						'create_rar'=>3,
+						'create_par2'=>4,
+						'upload_usenet'=>5,
+						'upload_nzb'=>6,
+						'delete_files'=>7,
+						'eject_disc'=>8
+						);
+		
 		if(isset($model))
 		{
 			$criteria = new CDbCriteria();
-			$criteria->addCondition('t.Id_auto_ripper_state <> 11');
+			$criteria->addCondition('t.Id_auto_ripper_state <> 18');			
 			$criteria->addCondition('t.Id_auto_ripper_process = "'.$idProcess.'"');
 			$modelAutoRipper = AutoRipper::model()->find($criteria);
 			
@@ -98,47 +102,85 @@ class WsAutoRipperController extends Controller
 				
 				switch($modelAutoRipper->Id_auto_ripper_state)
 				{				
-					case '1':	//iniciado
-						$nextStep = 2;//create 7zip
+					case '1':
+						$nextStep = $steps['create_7zip'];
+						break;					
+					case '4':case '2':	//creando y error 7zip
+						$nextStep = $steps['init'];
+						$modelAutoRipper->Id_auto_ripper_state = 18;
+						$modelAutoRipper->save();
 						break;
-					case '2':	//creando 7zip
-						$nextStep = 1;//init
+					case '3':
+						$nextStep = $steps['create_rar'];
 						break;
-					case '3':	//creado 7zip
-						$nextStep = 3;//create RAR
+					case '5':case '7':	//creando y error rar
+						$nextStep = self::getStepOnError($modelAutoRipper->Id, $modelAutoRipper->Id_auto_ripper_state);
+						if($nextStep == 0)
+							$nextStep = $steps['create_rar'];						
 						break;
-					case '4':	//creando RAR
-						$nextStep = 3;//create RAR
+					case '6':
+						$nextStep = $steps['create_par2'];
 						break;
-					case '5':	//creado RAR
-						$nextStep = 4;//create PAR2
+					case '8':case '10':	 //creando y error par2
+						$nextStep = self::getStepOnError($modelAutoRipper->Id, $modelAutoRipper->Id_auto_ripper_state);
+						if($nextStep == 0)
+							$nextStep = $steps['create_par2'];
 						break;
-					case '6':	//creando PAR2
-						$nextStep = 4;//create PAR2
+					case '9':case '20':
+					case '22':	
+						$nextStep = $steps['eject_disc'];
 						break;
-					case '7':	//creado PAR2
-						$nextStep = 5;//subir usenet
+					case '21':case '11':
+					case '13':
+						$nextStep = $steps['upload_usenet'];
 						break;
-					case '8':	//subiendo usenet
-						$nextStep = 5;//subir usenet
-						break;
-					case '9':	//subido usenet
-						$nextStep = 6;//delete files
-						break;											
-					case '10':	//borrando archivos
-						$nextStep = 6;//delete files
-						break;
+					case '12':case '14':
+					case '16':
+						$nextStep = $steps['upload_nzb'];
+						break;					
+					case '15':case '17':
+					case '19':
+						$nextStep = $steps['delete_files'];
+						break;					
 				}
 			}
 			else
 			{
-				$nextStep = 1; //init
+				$nextStep = $steps['init'];
 			}
 		}		
 		
 		$response->next_step = $nextStep;
 		
 		return $response;
+	}
+	
+	private function getStepOnError($idAutoRipper, $idAutoRipperState)
+	{		
+		$step = 0;
+		$steps = array('delete_files'=>7,
+						'eject_disc'=>8
+		);
+		
+		$criteria = new CDbCriteria();
+		$criteria->addCondition('Id_auto_ripper = '. $idAutoRipper);
+		$criteria->addCondition('Id_auto_ripper_state = '. $idAutoRipperState);
+		
+		$countError = AutoRipperAutoRipperState::model()->count($criteria);
+		
+		if($countError == 3)
+		{
+			$criteria = new CDbCriteria();
+			$criteria->addCondition('Id_auto_ripper = '. $idAutoRipper);
+			$criteria->addCondition('Id_auto_ripper_state = 21'); //expulsado
+			$model = AutoRipperAutoRipperState::model()->find($criteria);
+			if(isset($model))
+				$step = $steps['delete_files'];
+			else
+				$step = $steps['eject_disc'];			
+		}
+		
+		return $step;
 	}
 	
 	/**
