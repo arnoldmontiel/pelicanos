@@ -12,6 +12,7 @@
  * @property string $password
  * @property integer $Id_nzb
  * @property integer $percentage
+ * @property integer $has_error
  *
  * The followings are the available model relations:
  * @property AutoRipperProcess $idAutoRipperProcess
@@ -39,12 +40,12 @@ class AutoRipper extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('Id_auto_ripper_state, Id_auto_ripper_process', 'required'),
-			array('Id_auto_ripper_state, Id_nzb, percentage', 'numerical', 'integerOnly'=>true),
+			array('Id_auto_ripper_state, Id_nzb, percentage, has_error', 'numerical', 'integerOnly'=>true),
 			array('Id_disc, Id_auto_ripper_process', 'length', 'max'=>200),
 			array('name, password', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('Id, Id_disc, Id_auto_ripper_state, name, password, Id_nzb, percentage, auto_ripper_state_description, Id_auto_ripper_process', 'safe', 'on'=>'search'),
+			array('Id, Id_disc, Id_auto_ripper_state, name, password, Id_nzb, percentage, auto_ripper_state_description, Id_auto_ripper_process, has_error', 'safe', 'on'=>'search'),
 		);
 	}
 
