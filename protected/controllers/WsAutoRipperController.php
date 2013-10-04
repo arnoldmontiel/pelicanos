@@ -85,7 +85,8 @@ class WsAutoRipperController extends Controller
 						'upload_usenet'=>5,
 						'upload_nzb'=>6,
 						'delete_files'=>7,
-						'eject_disc'=>8
+						'eject_disc'=>8,
+						'retry_upload'=>9
 						);
 				
 		if(isset($model))
@@ -147,7 +148,7 @@ class WsAutoRipperController extends Controller
 							$nextStep = $steps['delete_files'];
 						break;
 					case '11':case '13':
-						$nextStep = $steps['upload_usenet'];
+						$nextStep = $steps['retry_upload'];
 						break;
 					case '12':	
 						$nextStep = $steps['upload_nzb'];
