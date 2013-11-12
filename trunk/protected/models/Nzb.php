@@ -183,7 +183,7 @@ class Nzb extends CActiveRecord
 		$criteria->addSearchCondition("resourceType.description",$this->resourceTypeDesc);
 		
 		$criteria->compare('n.is_serie',0);
-		$criteria->compare('ar.Id_auto_ripper_state',12); // estado finalizado
+		$criteria->compare('ar.Id_auto_ripper_state',18); // estado finalizado
 		
 		// Create a custom sort
 		$sort=new CSort;
