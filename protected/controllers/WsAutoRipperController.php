@@ -234,19 +234,26 @@ class WsAutoRipperController extends Controller
 		$modelAutoRipperProcess = AutoRipperProcess::model()->findByPk($idProcess);
 		if(isset($modelAutoRipperProcess) && !empty($idDisc))
 		{
-			$modelAutoRipper = new AutoRipper();
-			$modelAutoRipper->Id_disc = $idDisc;
-			$modelAutoRipper->Id_auto_ripper_process = $idProcess;
-			$modelAutoRipper->Id_auto_ripper_state = 1; //Iniciando
-			$modelAutoRipper->name = uniqid();
-			$modelAutoRipper->save();
-			
-			$autoRipperId = $modelAutoRipper->Id;
-			
-			$autoRipperState = new AutoRipperAutoRipperState();
-			$autoRipperState->Id_auto_ripper = $autoRipperId;
-			$autoRipperState->Id_auto_ripper_state = 1;			
-			$autoRipperState->save();
+			$modelAutoRipperDB = AutoRipper::model()->findByAttributes(array('Id_disc'=>$idDisc, 
+																			'Id_auto_ripper_state'=>18, 
+																			'has_error'=>0, 
+																			'Id_auto_ripper_process'=>$idProcess));
+			if(!isset($modelAutoRipperDB))
+			{
+				$modelAutoRipper = new AutoRipper();
+				$modelAutoRipper->Id_disc = $idDisc;
+				$modelAutoRipper->Id_auto_ripper_process = $idProcess;
+				$modelAutoRipper->Id_auto_ripper_state = 1; //Iniciando
+				$modelAutoRipper->name = uniqid();
+				$modelAutoRipper->save();
+				
+				$autoRipperId = $modelAutoRipper->Id;
+				
+				$autoRipperState = new AutoRipperAutoRipperState();
+				$autoRipperState->Id_auto_ripper = $autoRipperId;
+				$autoRipperState->Id_auto_ripper_state = 1;			
+				$autoRipperState->save();
+			}
 			
 		}
 		
