@@ -1,6 +1,6 @@
 <?php 
 if(Yii::app()->user->checkAccess('Administrator'))
-	$this->redirect(NzbController::createUrl('nzb/index') );
+	$this->redirect(SiteController::createUrl('nzb/index') );
 else
-	$this->redirect(NzbController::createUrl('nzb/indexReseller') );
+	$this->redirect(SiteController::createUrl('nzb/indexReseller') );
 ?>
