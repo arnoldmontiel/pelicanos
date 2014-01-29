@@ -67,6 +67,44 @@ class WsAutoRipperController extends Controller
 	}
 	
 	/**
+	 * Get New Name by idProcess
+	 * @param string idProcess
+	 * @param string label
+	 * @return string name
+	 * @soap
+	 */
+	public function getNewName($idProcess, $label)
+	{
+		$name = '';
+		
+		$criteria = new CDbCriteria();
+		$criteria->addCondition('t.Id_auto_ripper_state <> 18');
+		$criteria->addCondition('t.Id_auto_ripper_process = "'.$idProcess.'"');
+		$modelAutoRipper = AutoRipper::model()->find($criteria);
+			
+		if(isset($modelAutoRipper))
+		{
+			$criteria = new CDbCriteria();
+			$criteria->addCondition('t.label like "'.$label.'"');
+			$criteria->addCondition('t.Id_auto_ripper = "'.$modelAutoRipper->Id.'"');
+			$modelAutoRipperLote = AutoRipperLote::model()->find($criteria);
+			
+			if(!isset($modelAutoRipperLote))
+			{
+				$modelAutoRipperLote = new AutoRipperLote();
+				$modelAutoRipperLote->Id_auto_ripper = $modelAutoRipper->Id;
+				$modelAutoRipperLote->label = $label;
+				$modelAutoRipperLote->name = uniqid();
+				$modelAutoRipperLote->save();
+			}
+			
+			$name = $modelAutoRipperLote->name;
+			
+		}
+		return $name;
+	}
+	
+	/**
 	* Get Next Step by idProcess
 	* @param string idProcess
 	* @return NextStepResponse response
@@ -86,7 +124,8 @@ class WsAutoRipperController extends Controller
 						'upload_nzb'=>6,
 						'delete_files'=>7,
 						'eject_disc'=>8,
-						'retry_upload'=>9
+						'retry_upload'=>9,
+						'create_mkv'=>10
 						);
 				
 		if(isset($model))
@@ -103,9 +142,30 @@ class WsAutoRipperController extends Controller
 				
 				switch($modelAutoRipper->Id_auto_ripper_state)
 				{				
+// 					case '1':
+// 						$nextStep = $steps['create_7zip'];
+// 						break;
 					case '1':
+						$nextStep = $steps['create_mkv'];
+						break;				
+					case '23':case '25':	 //creando y error mkv
+						$nextStep = self::getStepOnError($modelAutoRipper->Id, $modelAutoRipper->Id_auto_ripper_state, $steps['init']);
+						if($nextStep == 0)
+						{
+							$nextStep = $steps['create_mkv'];
+						}
+						else 
+						{	
+							if($nextStep == $steps['init'])
+							{
+								$modelAutoRipper->Id_auto_ripper_state = 18;
+								$modelAutoRipper->save();
+							}
+						}
+						break;
+					case '24':
 						$nextStep = $steps['create_7zip'];
-						break;					
+						break;
 					case '4':case '2':	//creando y error 7zip
 						$nextStep = self::getStepOnError($modelAutoRipper->Id, $modelAutoRipper->Id_auto_ripper_state, $steps['init']);
 						if($nextStep == 0)
