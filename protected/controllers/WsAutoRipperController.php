@@ -10,12 +10,103 @@ class WsAutoRipperController extends Controller
 		                'class'=>'CWebServiceAction',
 						'classMap'=>array(
 					                    'NextStepResponse'=>'NextStepResponse',
+										'FileSubtitleRequest'=>'FileSubtitleRequest',
+										'FileAudioRequest'=>'FileAudioRequest',
 						),
 					
 		),
 		);
 	}
 	
+	/**
+	 * Set file subtitles
+	 * @param integer id (auto_ripper Id)
+	 * @param string name
+	 * @param FileAudioRequest[]
+	 * @return bool success
+	 * @soap
+	 */
+	public function setFileAudio($id, $name, $fileAudioRequest)
+	{
+		$modelAutoRipperFile = AutoRipperFile::model()->findByAttributes(array('Id_auto_ripper'=>$id, 'name'=>$name));
+		if(isset($modelAutoRipperFile))	
+		{
+			foreach($fileAudioRequest as $item)
+			{
+				$modelAudioTrack = AudioTrack::model()->findByAttributes(array('language'=>$item->language,
+															'short_language'=>$item->short_language,
+															'type'=>$item->type,
+															'short_type'=>$item->short_type,
+															'type_extra'=>$item->type_extra,));
+				if(!isset($modelAudioTrack))
+				{
+					$modelAudioTrack = new AudioTrack();
+					$modelAudioTrack->language = $item->language;
+					$modelAudioTrack->short_language = $item->short_language;
+					$modelAudioTrack->type = $item->type;
+					$modelAudioTrack->short_type = $item->short_type;
+					$modelAudioTrack->type_extra = $item->type_extra;
+					$modelAudioTrack->save();
+				}
+				$modelFileAudio = AutoRipperFileAudioTrack::model()->findByAttributes(array('Id_audio_track'=>$modelAudioTrack->Id,
+																							'Id_auto_ripper_file'=>$modelAutoRipperFile->Id));
+				
+				if(!isset($modelFileAudio))	
+				{
+					$modelFileAudio = new AutoRipperFileAudioTrack();
+					$modelFileAudio->Id_audio_track = $modelAudioTrack->Id;
+					$modelFileAudio->Id_auto_ripper_file = $modelAutoRipperFile->Id;
+					$modelFileAudio->save();
+				}
+				
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Set file subtitles	 
+	 * @param integer id (auto_ripper Id)
+	 * @param string label
+	 * @param FileSubtitleRequest[]
+	 * @return bool success
+	 * @soap
+	 */
+	public function setFileSubtitle($id, $label, $fileSubtitleRequest)
+	{
+		$modelAutoRipperFile = AutoRipperFile::model()->findByAttributes(array('Id_auto_ripper'=>$id, 'name'=>$name));
+		if(isset($modelAutoRipperFile))	
+		{
+			foreach($fileSubtitleRequest as $item)
+			{
+				$modelSubtitle = Subtitle::model()->findByAttributes(array('language'=>$item->language,
+																				'short_language'=>$item->short_language,
+																				'type'=>$item->type,
+																				'description'=>$item->description,));
+				if(!isset($modelSubtitle))
+				{
+					$modelSubtitle = new AudioTrack();
+					$modelSubtitle->language = $item->language;
+					$modelSubtitle->short_language = $item->short_language;
+					$modelSubtitle->type = $item->type;
+					$modelSubtitle->description = $item->description;
+					$modelSubtitle->save();
+				}
+				$modelFileSubtitle = AutoRipperFileSubtitle::model()->findByAttributes(array('Id_subtitle'=>$modelSubtitle->Id,
+																						'Id_auto_ripper_file'=>$modelAutoRipperFile->Id));
+					
+				if(!isset($modelFileSubtitle))
+				{
+					$modelFileSubtitle = new AutoRipperFileSubtitle();
+					$modelFileSubtitle->Id_subtitle = $modelSubtitle->Id;
+					$modelFileSubtitle->Id_auto_ripper_file = $modelAutoRipperFile->Id;
+					$modelFileSubtitle->save();
+				}
+					
+			}
+		}
+		return false;
+	}
 	
 	/**
 	* Set current ripper state
