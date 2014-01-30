@@ -88,7 +88,7 @@ button {
 .align-center{ text-align:center !important;}
 .align-right{ text-align:right !important;}
 
-.bold{ font-weight:600;}
+.bold{ font-family:'GudeaBold' !important; font-weight:bold;}
 .list-group{ margin-left:0px; margin-bottom:0px;}
 
 .list-group .label{ font-size:14px; line-height:26px;}
@@ -196,6 +196,7 @@ line-height:48px;
 
 #Menu .navbar-collapse{ padding-right:0px;}
 #Menu .navbar-nav>li>a{padding: 2px 15px;line-height: 45px;}
+#Menu .navbar-nav>li.active>a{background-color:rgba(255,255,255,0.6);}
 
 .popover{width:300px; max-width:300px;}
 .popoverButtons{ border-top:1px dotted #ccc; margin-top:10px; padding-top:10px;}
@@ -321,15 +322,20 @@ input.searchOverTab:-moz-placeholder::before  { font-family: FontAwesome; conten
 .movieItem table{width:100%;}
 .movieItem table td.tdImage{width:100px;}
 .movieImage{ vertical-align:top; margin-right:10px; margin-bottom:10px; width:100px; height:150px;}
-.movieName{ font-weight:bold; font-size:18px; margin-bottom:5px;}
+.movieName{ font-weight:bold; font-size:18px; margin-bottom:5px; position:relative; padding-right:25px;}
+.movieName .editFiles{ position:absolute; right:5px; top:0px; cursor:pointer;}
 .movieYear{ margin-bottom:5px;}
 .movieGenre{ margin-bottom:5px;}
 .movieStatus{ margin-bottom:5px; border-top:1px dotted #ccc; border-bottom:1px dotted #ccc; text-align:center; padding:5px 0px;}
 .movieButton{ text-align:center;}
-.movieButton button{ margin:auto; margin-top:5px;}
+.movieButton button{ margin:auto; margin-top:5px; margin-right:5px;}
+.movieButton a{ margin:auto; margin-top:5px; margin-right:5px;}
+.movieButton button:last-child{ margin:auto; margin-top:5px; margin-right:0px;}
+.movieButton a:last-child{ margin:auto; margin-top:5px; margin-right:0px;}
 
 .tablaNombre{ font-size:15px; font-weight:bold; font-family:'GudeaBold';}
 .tablaGenero{ font-size:15px;}
+.modalDetail .table.tablaArchivos tbody>tr>td{padding:5px; line-height:34px;}
 
 /* ------ END MOVIE LIST------- */
 
@@ -492,6 +498,9 @@ padding: 6px 8px;
 .modal .nav-tabs li a{ color:#333;}
 
 .modal .nav-tabs>li.active>a { background-color:#ccc; color:#fff !important;}
+
+#myModalViewDownloads .modal-dialog{width:1000px;}
+#myModalDescargas .modal-dialog{width:1000px;}
 
 /* ------ END MODALS ------- */
 
