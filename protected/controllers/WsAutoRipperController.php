@@ -87,18 +87,18 @@ class WsAutoRipperController extends Controller
 			$criteria = new CDbCriteria();
 			$criteria->addCondition('t.label like "'.$label.'"');
 			$criteria->addCondition('t.Id_auto_ripper = "'.$modelAutoRipper->Id.'"');
-			$modelAutoRipperLote = AutoRipperLote::model()->find($criteria);
+			$modelAutoRipperFile = AutoRipperFile::model()->find($criteria);
 			
-			if(!isset($modelAutoRipperLote))
+			if(!isset($modelAutoRipperFile))
 			{
-				$modelAutoRipperLote = new AutoRipperLote();
-				$modelAutoRipperLote->Id_auto_ripper = $modelAutoRipper->Id;
-				$modelAutoRipperLote->label = $label;
-				$modelAutoRipperLote->name = uniqid();
-				$modelAutoRipperLote->save();
+				$modelAutoRipperFile = new AutoRipperFile();
+				$modelAutoRipperFile->Id_auto_ripper = $modelAutoRipper->Id;
+				$modelAutoRipperFile->label = $label;
+				$modelAutoRipperFile->name = uniqid();
+				$modelAutoRipperFile->save();
 			}
 			
-			$name = $modelAutoRipperLote->name;
+			$name = $modelAutoRipperFile->name;
 			
 		}
 		return $name;

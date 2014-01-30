@@ -1,28 +1,23 @@
 <?php
 
 /**
- * This is the model class for table "subtitle".
+ * This is the model class for table "auto_ripper_file_audio_track".
  *
- * The followings are the available columns in table 'subtitle':
- * @property integer $Id
- * @property string $language
- * @property string $short_language
- * @property string $description
- * @property string $type
+ * The followings are the available columns in table 'auto_ripper_file_audio_track':
+ * @property integer $Id_audio_track
+ * @property integer $Id_auto_ripper_file
  *
  * The followings are the available model relations:
- * @property AutoRipperFile[] $autoRipperFiles
- * @property MyMovieNzb[] $myMovieNzbs
- * @property MyMovie[] $myMovies
+ * @property AudioTrack $idAudioTrack
  */
-class Subtitle extends CActiveRecord
+class AutoRipperFileAudioTrack extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'subtitle';
+		return 'auto_ripper_file_audio_track';
 	}
 
 	/**
@@ -33,12 +28,11 @@ class Subtitle extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('language, type', 'length', 'max'=>45),
-			array('short_language', 'length', 'max'=>4),
-			array('description', 'length', 'max'=>100),
+			array('Id_audio_track, Id_auto_ripper_file', 'required'),
+			array('Id_audio_track, Id_auto_ripper_file', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('Id, language, short_language, description, type', 'safe', 'on'=>'search'),
+			array('Id_audio_track, Id_auto_ripper_file', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -50,9 +44,7 @@ class Subtitle extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'autoRipperFiles' => array(self::MANY_MANY, 'AutoRipperFile', 'auto_ripper_file_subtitle(Id_subtitle, Id_auto_ripper_file)'),
-			'myMovieNzbs' => array(self::MANY_MANY, 'MyMovieNzb', 'my_movie_nzb_subtitle(Id_subtitle, Id_my_movie_nzb)'),
-			'myMovies' => array(self::MANY_MANY, 'MyMovie', 'my_movie_subtitle(Id_subtitle, Id_my_movie)'),
+			'idAudioTrack' => array(self::BELONGS_TO, 'AudioTrack', 'Id_audio_track'),
 		);
 	}
 
@@ -62,11 +54,8 @@ class Subtitle extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'Id' => 'ID',
-			'language' => 'Language',
-			'short_language' => 'Short Language',
-			'description' => 'Description',
-			'type' => 'Type',
+			'Id_audio_track' => 'Id Audio Track',
+			'Id_auto_ripper_file' => 'Id Auto Ripper File',
 		);
 	}
 
@@ -88,11 +77,8 @@ class Subtitle extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('Id',$this->Id);
-		$criteria->compare('language',$this->language,true);
-		$criteria->compare('short_language',$this->short_language,true);
-		$criteria->compare('description',$this->description,true);
-		$criteria->compare('type',$this->type,true);
+		$criteria->compare('Id_audio_track',$this->Id_audio_track);
+		$criteria->compare('Id_auto_ripper_file',$this->Id_auto_ripper_file);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -103,7 +89,7 @@ class Subtitle extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return Subtitle the static model class
+	 * @return AutoRipperFileAudioTrack the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
