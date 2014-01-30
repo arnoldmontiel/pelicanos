@@ -105,7 +105,6 @@ body{
 	line-height:inherit;
 	color:#34495E;	
 	padding-top:85px;
-	
 	background: #ECF0F1;}
 
 
@@ -141,8 +140,8 @@ border-color: #E67E22;}
 
 .btn-primary.disabled, .btn-primary[disabled], fieldset[disabled] .btn-primary, .btn-primary.disabled:hover, .btn-primary[disabled]:hover, fieldset[disabled] .btn-primary:hover, .btn-primary.disabled:focus, .btn-primary[disabled]:focus, fieldset[disabled] .btn-primary:focus, .btn-primary.disabled:active, .btn-primary[disabled]:active, fieldset[disabled] .btn-primary:active, .btn-primary.disabled.active, .btn-primary[disabled].active, fieldset[disabled] .btn-primary.active {
 color:#eee;
-background-color: #96d896;
-border-color: #7fc47f;
+background-color: #fdac9e;
+border-color: #fdac9e;
 }
   .btn-default{
   color: #ffffff;
@@ -164,9 +163,9 @@ border-color: #ddd;
 
 
 .btn-default.disabled, .btn-default[disabled], fieldset[disabled] .btn-default, .btn-default.disabled:hover, .btn-default[disabled]:hover, fieldset[disabled] .btn-default:hover, .btn-default.disabled:focus, .btn-default[disabled]:focus, fieldset[disabled] .btn-default:focus, .btn-default.disabled:active, .btn-default[disabled]:active, fieldset[disabled] .btn-default:active, .btn-default.disabled.active, .btn-default[disabled].active, fieldset[disabled] .btn-default.active {
-background-color:#ebebeb;
-border-color: #ccc;
-color:#888;
+background-color:#949ca6;
+border-color: #949ca6;
+color:#fff;
 }
 
 body.modal-open {
@@ -297,7 +296,7 @@ padding:2px;
 
 .nav-tabs>li>a .badge{background-color:#fff; color:#7F8C8D;}
 
-.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus{  background-color:#7F8C8D; color:white !important; cursor:default;}
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus{  background-color:#7F8C8D; color:white !important; cursor:default; border:1px solid #7F8C8D;}
 
 .nav-tabs>li.active>a{ background-color:#7F8C8D;color:#fff !important;}
 .nav-tabs>li>a:hover{ color:#666 !important; background-color:white;}
@@ -318,7 +317,7 @@ input.searchOverTab:-moz-placeholder::before  { font-family: FontAwesome; conten
 
 /* ------ MOVIE LISTS------- */
 
-.movieItem{ float:left; color:#333; margin:10px; margin-left:0px; margin-bottom:0px;padding:10px; border-bottom:1px dotted #ECF0F1; width:395px; height:175px;  background-color:rgba(255,255,255,0.9);}
+.movieItem{ float:left; color:#333; margin:10px; margin-left:0px; margin-bottom:0px;padding:10px; border-bottom:1px dotted #ECF0F1; width:401px; height:175px;  background-color:rgba(255,255,255,0.9);}
 .movieItem table{width:100%;}
 .movieItem table td.tdImage{width:100px;}
 .movieImage{ vertical-align:top; margin-right:10px; margin-bottom:10px; width:100px; height:150px;}
