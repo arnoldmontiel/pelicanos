@@ -1,6 +1,6 @@
 <?php
 
-class WSSettingsController extends Controller
+class WsAutoRipperController extends Controller
 {
 
 	public function actions()
@@ -8,268 +8,284 @@ class WSSettingsController extends Controller
 		return array(
 		            'wsdl'=>array(
 		                'class'=>'CWebServiceAction',
-					'classMap'=>array(
-			                    'ClientSettingsRequest'=>'ClientSettingsRequest',
-			                    'CustomerSettingsResponse'=>'CustomerSettingsResponse',
-			                    'TunnelingPorts'=>'TunnelingPorts',
-		),
+						'classMap'=>array(
+					                    'NextStepResponse'=>'NextStepResponse',
+						),
+					
 		),
 		);
 	}
 	
-	/**
-	* Set remote client settings
-	* @param ClientSettingsRequest settings
-	* @return bool success
-	* @soap
-	*/
-	public function setClientSettings($settings)
-	{
-		$model = ClientSettings::model()->findByAttributes(array('Id_device'=>$settings->Id_device));
-		if(isset($model))
-		{
-			try {
-				$model->ip_v4 = $settings->ip_v4;
-				$model->ip_v6 = $settings->ip_v6;
-				$model->port_v4 = $settings->port_v4;
-				$model->port_v6 = $settings->port_v6;
-				$model->save();
-			}
-			catch (Exception $e) 
-			{
-				return false;
-			}
-			return true;
-		}
-		return false;
-	}
-	/**
-	* Set wich version has been downloaded
-	* @param string idDevice
-	* @param string version
-	* @return bool success
-	* @soap
-	*/
 	
-	public function setAnydvdVersionDownloaded($idDevice,$version)
-	{
-		$model = ClientSettings::model()->findByAttributes(array('Id_device'=>$idDevice));
-		if(isset($model))
-		{
-			try {
-				$model->anydvd_version_downloaded = $version;
-				$model->need_update = 0;
-				$model->save();
-			}
-			catch (Exception $e)
-			{
-				return false;
-			}
-			return true;
-		}
-		return false;
-	}
 	/**
-	* Set wich version has been installed
-	* @param string idDevice
-	* @param string version
+	* Set current ripper state
+	* @param integer id (auto_ripper Id)
+	* @param integer idState
+	* @param string description
 	* @return bool success
 	* @soap
 	*/
-	
-	public function setAnydvdVersionInstalled($idDevice,$version)
+	public function setState($id, $idState, $description)
 	{
-		$model = ClientSettings::model()->findByAttributes(array('Id_device'=>$idDevice));
-		if(isset($model))
-		{
-			try {
-				$model->anydvd_version_installed = $version;
-				$model->save();
-			}
-			catch (Exception $e)
-			{
-				return false;
-			}
-			return true;
-		}
-		return false;
+		$modelAutoRipper = AutoRipper::model()->findByPk($id);
 		
-	}
-	/**
-	* check for a now version of anydvd
-	* @param string idDevice
-	* @return ServerAnydvdUpdateResponse response
-	* @soap
-	*/
-	
-	public function checkForUpdate($idDevice)
-	{
-		$response = new ServerAnydvdUpdateResponse;
-		$response->version = "";
-		$model = ClientSettings::model()->findByAttributes(array('Id_device'=>$idDevice));
-		if(isset($model))
+		if(isset($modelAutoRipper))
 		{
-			if($model->need_update)			
-			{
-				$criteria = new CDbCriteria();
-				$criteria->order = 'Id DESC';
-				$anydvdVersion = AnydvdhdVersion::model()->find($criteria);
-				if(isset($anydvdVersion))
-				{
-					$settings = Setting::getInstance();
-						
-					$response->download_link = $settings->path_anydvd_download.$anydvdVersion->file_name;
-					$response->file_name = $anydvdVersion->file_name;
-					$response->version = $anydvdVersion->version;						
-				}				
+			try {
+							
+				$modelAutoRipper->Id_auto_ripper_state = $idState;
+				$modelAutoRipper->save();
+				
+				$autoRipperState = new AutoRipperAutoRipperState();
+				$autoRipperState->Id_auto_ripper = $id;
+				$autoRipperState->Id_auto_ripper_state = $idState;				
+				$autoRipperState->description = $description;
+				$autoRipperState->save();
+				
+				return true;
+			} catch (Exception $e) {
+				return false;
 			}
 		}
+		return false;
+	}
+	
+	/**
+	* Create the Auto Ripper process and return the name
+	* @return string name
+	* @soap
+	*/
+	public function getProcessName()
+	{
+		$name = '';
+		$model = new AutoRipperProcess();
+		$model->Id = uniqid();
+		if($model->save())
+			$name = $model->Id;
+			
+		return $name;
+	}
+	
+	/**
+	* Get Next Step by idProcess
+	* @param string idProcess
+	* @return NextStepResponse response
+	* @soap
+	*/
+	public function getNextStep($idProcess)
+	{
+		$nextStep = 0;
+		$response = new NextStepResponse();
+		$model = AutoRipperProcess::model()->findByPk($idProcess);
+		
+		$steps = array('init'=>1,
+						'create_7zip'=>2,
+						'create_rar'=>3,
+						'create_par2'=>4,
+						'upload_usenet'=>5,
+						'upload_nzb'=>6,
+						'delete_files'=>7,
+						'eject_disc'=>8,
+						'retry_upload'=>9
+						);
+				
+		if(isset($model))
+		{
+			$criteria = new CDbCriteria();
+			$criteria->addCondition('t.Id_auto_ripper_state <> 18');			
+			$criteria->addCondition('t.Id_auto_ripper_process = "'.$idProcess.'"');
+			$modelAutoRipper = AutoRipper::model()->find($criteria);
+			
+			if(isset($modelAutoRipper))
+			{
+				$response->file_name = $modelAutoRipper->name;
+				$response->id_auto_ripper = $modelAutoRipper->Id;
+				
+				switch($modelAutoRipper->Id_auto_ripper_state)
+				{				
+					case '1':
+						$nextStep = $steps['create_7zip'];
+						break;					
+					case '4':case '2':	//creando y error 7zip
+						$nextStep = self::getStepOnError($modelAutoRipper->Id, $modelAutoRipper->Id_auto_ripper_state, $steps['init']);
+						if($nextStep == 0)
+						{
+							$nextStep = $steps['create_7zip'];
+						}
+						else 
+						{	
+							if($nextStep == $steps['init'])
+							{
+								$modelAutoRipper->Id_auto_ripper_state = 18;
+								$modelAutoRipper->save();
+							}
+						}
+						break;
+					case '3':
+						$nextStep = $steps['create_rar'];
+						break;
+					case '5':case '7':	//creando y error rar						
+						$nextStep = self::getStepOnError($modelAutoRipper->Id, $modelAutoRipper->Id_auto_ripper_state, $steps['delete_files']);
+						if($nextStep == 0)
+							$nextStep = $steps['create_rar'];												
+						break;
+					case '6':
+						$nextStep = $steps['create_par2'];
+						break;
+					case '8':case '10':	 //creando y error par2
+						$nextStep = self::getStepOnError($modelAutoRipper->Id, $modelAutoRipper->Id_auto_ripper_state, $steps['delete_files']);
+						if($nextStep == 0)
+							$nextStep = $steps['create_par2'];
+						break;
+					case '9':case '20':
+					case '22':	
+						$nextStep = $steps['eject_disc'];
+						break;
+					case '21':
+						if($modelAutoRipper->has_error == 0)
+							$nextStep = $steps['upload_usenet'];
+						else
+							$nextStep = $steps['delete_files'];
+						break;
+					case '11':case '13':
+						$nextStep = $steps['retry_upload'];
+						break;
+					case '12':	
+						$nextStep = $steps['upload_nzb'];
+						break;
+					case '14':case '16':	//subiendo y error nzb
+						$nextStep = self::getStepOnError($modelAutoRipper->Id, $modelAutoRipper->Id_auto_ripper_state, $steps['delete_files']);
+						if($nextStep == 0)
+							$nextStep = $steps['upload_nzb'];
+					case '15':
+						$nextStep = $steps['delete_files'];
+						break;
+					case '17':case '19':  //borrando y error archivos
+						$nextStep = self::getStepOnError($modelAutoRipper->Id, $modelAutoRipper->Id_auto_ripper_state, $steps['init']);
+						if($nextStep == 0){
+							$nextStep = $steps['delete_files'];
+						}
+						else 
+						{								
+							if($nextStep == $steps['init'])
+							{
+								$modelAutoRipper->Id_auto_ripper_state = 18;
+								$modelAutoRipper->save();
+							}
+						}
+						break;
+				}
+			}
+			else
+			{
+				$nextStep = $steps['init'];
+			}
+		}		
+		
+		$response->next_step = $nextStep;
+		
 		return $response;
 	}
-	/**
-	* Returns the device configuration
-	* @param string idDevice
-	* @return ServerSettingsRipperResponse response
-	* @soap
-	*/
 	
-	public function getRipperSettings($idDevice)
-	{
-		$response = new ServerSettingsRipperResponse;
-		$model = SettingsRipper::model()->findByAttributes(array('Id_device'=>$idDevice));
-		if(isset($model))
+	private function getStepOnError($idAutoRipper, $idAutoRipperState, $stepOnError)
+	{		
+		$step = 0;		
+		
+		$criteria = new CDbCriteria();
+		$criteria->addCondition('Id_auto_ripper = '. $idAutoRipper);
+		$criteria->addCondition('Id_auto_ripper_state = '. $idAutoRipperState);
+		
+		$countError = AutoRipperAutoRipperState::model()->count($criteria);
+		
+		if($countError >= 3)
 		{
-			$response->drive_letter = $model->drive_letter;
-			$response->final_folder_ripping = $model->final_folder_ripping;
-			$response->mymovies_password = $model->mymovies_password;
-			$response->mymovies_username = $model->mymovies_username;
-			$response->temp_folder_ripping = $model->temp_folder_ripping;
-			$response->time_from_reboot = $model->time_from_reboot;
-			$response->time_to_reboot = $model->time_to_reboot;
-		}
-		return $response;
-	}
-	
-	/**
-	*
-	* Returns the customer configuration
-	* @param string idDevice
-	* @return CustomerSettingsResponse
-	* @soap
-	*/
-	public function getCustomerSettings($idDevice)
-	{
-		try {
-				
-			$modelRel = CustomerDevice::model()->findByAttributes(array('Id_device'=>$idDevice, 'need_update'=>1));
-				
-			if(isset($modelRel))
-			{	
-				$modelResponse = new CustomerSettingsResponse();
-				$modelResponse->Id_device = $idDevice;
-				$modelResponse->Id_customer = $modelRel->Id_customer;
-				$modelResponse->setAttributes($modelRel->customer);
-
-				$users = CustomerUsers::model()->findAllByAttributes(array('Id_customer'=>$modelRel->Id_customer));
-				
-				foreach($users as $user)
-				{
-					$modelUser = new UserSOAP();
-					$modelUser->setAttributes($user);
-					$modelResponse->Users[] = $modelUser;
-				}
-				
-				return $modelResponse;
-			}
-		} catch (Exception $e) {
-			return null;
-		}
-	}
-	
-	/**
-	*
-	* Set "getCustomerSettings" acknowledge
-	* @param string idDevice
-	* @return boolean response
-	* @soap
-	*/
-	public function ackCustomerSettings($idDevice)
-	{
-		try {
-	
-			$modelRel = CustomerDevice::model()->findByAttributes(array('Id_device'=>$idDevice, 'need_update'=>1));
-	
-			if(isset($modelRel))
+			$modelAutoRipper = AutoRipper::model()->findByPk($idAutoRipper);
+			
+			if(isset($modelAutoRipper))
 			{
-				$modelRel->need_update = 0;
-				$modelRel->last_read_date = new CDbExpression('NOW()');
-				if($modelRel->save())	
-					return true;
+				$modelAutoRipper->has_error = 1;
+				$modelAutoRipper->save();
+				
+				$criteria = new CDbCriteria();
+				$criteria->addCondition('Id_auto_ripper = '. $idAutoRipper);
+				$criteria->addCondition('Id_auto_ripper_state = 21'); //expulsado
+				$model = AutoRipperAutoRipperState::model()->find($criteria);
+				if(isset($model))
+					$step = $stepOnError;
+				else
+					$step = 8; //eject_disc;			
 			}
-		} catch (Exception $e) {
-			return false;
-		}
-		return false;
-	}
-	
-	/**
-	*
-	* Returns array of ports to tunnel by device
-	* @param string idDevice
-	* @return TunnelingPorts[]
-	* @soap
-	*/
-	public function getDeviceTunnelPort($idDevice)
-	{
-		$arrayResponse = array();
-		$modelDeviceTunnelings = DeviceTunneling::model()->findAllByAttributes(array('Id_device'=>$idDevice, 'is_validated'=>0));
-
-		foreach($modelDeviceTunnelings as $item)
-		{
-			$tunnelingPorts = new TunnelingPorts();
-			$tunnelingPorts->internal_port = $item->port->port_number;
-			$tunnelingPorts->external_port = $item->external_port;
-			$tunnelingPorts->open = $item->is_open;
-			$arrayResponse[] = $tunnelingPorts; 
 		}
 		
-		return $arrayResponse;
+		return $step;
 	}
 	
 	/**
-	*
-	* Set "getDeviceTunnelPort" acknowledge
-	* @param string idDevice
-	* @param TunnelingPorts[] ports
-	* @return boolean response
+	* Start ripper process
+	* @param string idDisc
+	* @param string idProcess	
+	* @return integer id (auto_ripper table autogenerated Id)
 	* @soap
 	*/
-	public function ackDeviceTunnelPort($idDevice, $ports)
+	public function ripperStart($idDisc, $idProcess)
 	{
-		try {
-	
-			foreach($ports as $item)
+		
+		$autoRipperId = 0;
+		$modelAutoRipperProcess = AutoRipperProcess::model()->findByPk($idProcess);
+		if(isset($modelAutoRipperProcess) && !empty($idDisc))
+		{
+			$modelAutoRipperDB = AutoRipper::model()->findByAttributes(array('Id_disc'=>$idDisc, 
+																			'Id_auto_ripper_state'=>18, 
+																			'has_error'=>0, 
+																			'Id_auto_ripper_process'=>$idProcess));
+			if(!isset($modelAutoRipperDB))
 			{
-				$criteria = new CDbCriteria();
-				$criteria->join = 'INNER JOIN port p on (t.Id_port = p.Id)';
-				$criteria->addCondition('t.Id_device = "'.$idDevice.'"');
-				$criteria->addCondition('t.is_validated = 0');
-				$criteria->addCondition('p.port_number = '.$item->internal_port);
-				$criteria->addCondition('t.external_port = '.$item->external_port);
+				$modelAutoRipper = new AutoRipper();
+				$modelAutoRipper->Id_disc = $idDisc;
+				$modelAutoRipper->Id_auto_ripper_process = $idProcess;
+				$modelAutoRipper->Id_auto_ripper_state = 1; //Iniciando
+				$modelAutoRipper->name = uniqid();
+				$modelAutoRipper->save();
 				
-				$modelDeviceTunneling = DeviceTunneling::model()->find($criteria);
+				$autoRipperId = $modelAutoRipper->Id;
 				
-				if(isset($modelDeviceTunneling))
-				{
-					$modelDeviceTunneling->is_validated = 1;
-					$modelDeviceTunneling->save();
-				}
+				$autoRipperState = new AutoRipperAutoRipperState();
+				$autoRipperState->Id_auto_ripper = $autoRipperId;
+				$autoRipperState->Id_auto_ripper_state = 1;			
+				$autoRipperState->save();
 			}
 			
-			return true;
-		} catch (Exception $e) {
-			return false;
+		}
+		
+		return $autoRipperId;
+	
+	}
+	
+	/**
+	* Set percentage
+	* @param integer id
+	* @param integer percentage
+	* @return bool success
+	* @soap
+	*/
+	public function setPercentage($id, $percentage)
+	{
+		$modelAutoRipper = AutoRipper::model()->findByPk($id);
+		
+		if(isset($modelAutoRipper))
+		{
+			try {
+
+				$modelAutoRipper->percentage = $percentage;
+				$modelAutoRipper->save();
+				
+				return true;
+			} catch (Exception $e) {
+				return false;
+			}
 		}
 		return false;
+	
 	}
+	
 }
