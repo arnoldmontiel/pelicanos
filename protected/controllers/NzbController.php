@@ -444,7 +444,11 @@ class NzbController extends Controller
 		// 		Yii::trace('idState param: '. $idState, 'webService');
 		
 		try {
-
+			$log = new Log();
+			$log->username = 'admin';
+			$log->Id_customer = 26;
+			$log->description = 'DENTRO setNzbState';
+			$log->save();
 			foreach($nzbStateRequest as $item)
 			{
 				$log = new Log();
