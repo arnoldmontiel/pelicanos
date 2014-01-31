@@ -452,18 +452,18 @@ class NzbController extends Controller
 				if(isset($model))
 				{
 					$model->Id_nzb_state = $item->Id_state;
-					switch ($item->Id_state) {
-						case 1:
-							$model->date_sent = date("Y-m-d H:i:s",$item->change_state_date);
-							break;
-						case 2:
-							$model->date_downloading = date("Y-m-d H:i:s",$item->change_state_date);
-							//$this->doTransaction($item->Id_nzb, $item->Id_device);
-							break;
-						case 3:
-							$model->date_downloaded = date("Y-m-d H:i:s",$item->change_state_date);
-							break;
-					}
+// 					switch ($item->Id_state) {
+// 						case 1:
+// 							$model->date_sent = date("Y-m-d H:i:s",$item->change_state_date);
+// 							break;
+// 						case 2:
+// 							$model->date_downloading = date("Y-m-d H:i:s",$item->change_state_date);
+// 							//$this->doTransaction($item->Id_nzb, $item->Id_device);
+// 							break;
+// 						case 3:
+// 							$model->date_downloaded = date("Y-m-d H:i:s",$item->change_state_date);
+// 							break;
+// 					}
 					$model->need_update = 0;
 					$model->save();
 				}
