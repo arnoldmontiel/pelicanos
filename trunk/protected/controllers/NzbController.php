@@ -447,6 +447,11 @@ class NzbController extends Controller
 
 			foreach($nzbStateRequest as $item)
 			{
+				$log = new Log();
+				$log->username = 'admin';
+				$log->Id_customer = 26;
+				$log->description = 'Item: '. $item->Id_nzb;
+				$log->save();
 				$model = NzbDevice::model()->findByAttributes(array('Id_device'=>$item->Id_device, 'Id_nzb'=>$item->Id_nzb));
 			
 				if(isset($model))
