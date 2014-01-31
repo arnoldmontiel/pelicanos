@@ -4,7 +4,7 @@ class NzbStateRequest
 {
 	
 	/**
-	* @var integer device id
+	* @var string device id
 	* @soap
 	*/
 	public $Id_device;
