@@ -15,10 +15,4 @@ class NextStepResponse
 	*/
 	public $next_step;
 	
-	/**
-	* @var string file_name
-	* @soap
-	*/
-	public $file_name;
-	
 }
