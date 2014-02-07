@@ -317,12 +317,19 @@ input.searchOverTab:-moz-placeholder::before  { font-family: FontAwesome; conten
 
 /* ------ MOVIE LISTS------- */
 
-.movieItem{ float:left; color:#333; margin:10px; margin-left:0px; margin-bottom:0px;padding:10px; border-bottom:1px dotted #ECF0F1; width:401px; height:175px;  background-color:rgba(255,255,255,0.9);}
+.movieItem{ float:left; color:#333; margin:10px; margin-left:0px; margin-bottom:0px;padding:10px; border-bottom:1px dotted #ECF0F1; width:401px;height:200px; background-color:rgba(255,255,255,0.9);}
 .movieItem table{width:100%;}
-.movieItem table td.tdImage{width:100px;}
-.movieImage{ vertical-align:top; margin-right:10px; margin-bottom:10px; width:100px; height:150px;}
+.movieItem table td.tdImage{width:120px;}
+.movieItem table td.tdImage:hover{opacity:0.5;}
+.tdImage a {position:relative; display:inline-block; cursor:pointer;}
+.tdImage a .iconOverlay{display:none; text-shadow:0 1px 6px #000;}
+.tdImage a:hover .iconOverlay{display:inline-block;position:absolute; font-size:40px; color:white; top:50%; left:50%; margin-top:-20px; margin-left:-20px;}
+.movieImage{ vertical-align:top; margin-right:10px; margin-bottom:10px;width:120px; height:180px;}
 .movieName{ font-weight:bold; font-size:18px; margin-bottom:5px; position:relative; padding-right:25px;}
 .movieName .editFiles{ position:absolute; right:5px; top:0px; cursor:pointer;}
+.editFiles .dropdown-menu{right:0px; left:auto;}
+.editFiles:hover .dropdown-toggle{text-decoration:none; ;}
+.editFiles.open .dropdown-toggle{text-decoration:none; color:#666;}
 .movieYear{ margin-bottom:5px;}
 .movieGenre{ margin-bottom:5px;}
 .movieStatus{ margin-bottom:5px; border-top:1px dotted #ccc; border-bottom:1px dotted #ccc; text-align:center; padding:5px 0px;}
