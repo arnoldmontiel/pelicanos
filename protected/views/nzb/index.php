@@ -44,7 +44,7 @@ function viewStateHistory(id)
 					<?php echo $this->renderPartial('_tabUploading',array('modelAutoRipper'=>$modelAutoRipper)); ?>
 				</div><!-- /.tab1 --> 
 			    <div class="tab-pane active" id="tabDraft">
-			    	<?php echo $this->renderPartial('_tabDraft',array('modelAutoRipperDraft'=>$modelAutoRipperDraft)); ?>
+			    	<?php echo $this->renderPartial('_tabDraft',array('modelNzbDraft'=>$modelNzbDraft)); ?>
 			    </div><!-- /.tab2 --> 
 			    <div class="tab-pane" id="tabApproved">
 			    	<?php echo $this->renderPartial('_tabUploading',array('modelAutoRipper'=>$modelAutoRipper)); ?>

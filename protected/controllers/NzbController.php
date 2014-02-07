@@ -1935,11 +1935,11 @@ class NzbController extends Controller
 			$modelNzb->attributes=$_GET['Nzb'];
 		
 		$criteria = new CDbCriteria();
-		$criteria->join = 'LEFT OUTER join nzb n on (t.Id_nzb = n.Id AND n.Id_creation_state = 1)';
-		$criteria->addCondition('t.Id_auto_ripper_state = 18');
-		$criteria->addCondition('t.has_error = 0');
-		
-		$modelAutoRipperDraft = AutoRipper::model()->findAll($criteria);
+		$criteria->join = 'INNER JOIN auto_ripper ar ON (ar.Id_nzb = t.Id)';
+		$criteria->addCondition('t.Id_creation_state = 1');
+		$criteria->addCondition('t.is_draft = 1');
+		$criteria->addCondition('t.Id_nzb is null');
+		$modelNzbDraft = Nzb::model()->findAll($criteria);
 		
 		$modelNzbApproved = Nzb::model()->findAllByAttributes(array('Id_creation_state'=>2, 'is_draft'=>1));
 		
@@ -1949,14 +1949,14 @@ class NzbController extends Controller
 		$criteria->addCondition('Id_auto_ripper_state <> 18');
 		
 		$uploadingQty = AutoRipper::model()->count($criteria);
-		$draftQty = count($modelAutoRipperDraft);
+		$draftQty = count($modelNzbDraft);
 		$approvedQty = count($modelNzbApproved);
 		$cancelledQty = Nzb::model()->countByAttributes(array('Id_creation_state'=>3));
 		
 		$this->render('index',array(
 			'modelAutoRipper'=>$modelAutoRipper,
 			'modelNzb'=>$modelNzb,
-			'modelAutoRipperDraft'=>$modelAutoRipperDraft,
+			'modelNzbDraft'=>$modelNzbDraft,
 			'modelNzbApproved'=>$modelNzbApproved,
 			'uploadingQty'=>$uploadingQty,
 			'draftQty'=>$draftQty,
