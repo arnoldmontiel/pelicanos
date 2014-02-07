@@ -1924,14 +1924,70 @@ class NzbController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$model = new Nzb();
-		$dataProvider= $model->searchMovie();
+		$modelAutoRipper = new AutoRipper('search');
+		$modelAutoRipper->unsetAttributes();
+		if(isset($_GET['AutoRipper']))
+			$modelAutoRipper->attributes=$_GET['AutoRipper'];
+
+		$modelNzb = new Nzb('search');
+		$modelNzb->unsetAttributes();
+		if(isset($_GET['Nzb']))
+			$modelNzb->attributes=$_GET['Nzb'];
+		
+		$criteria = new CDbCriteria();
+		$criteria->join = 'LEFT OUTER join nzb n on (t.Id_nzb = n.Id AND n.Id_creation_state = 1)';
+		$criteria->addCondition('t.Id_auto_ripper_state = 18');
+		$criteria->addCondition('t.has_error = 0');
+		
+		$modelAutoRipperDraft = AutoRipper::model()->findAll($criteria);
+		
+		$modelNzbApproved = Nzb::model()->findAllByAttributes(array('Id_creation_state'=>2, 'is_draft'=>1));
+		
+		//$modelNzbPublished = Nzb::model()->findAllByAttributes(array('Id_creation_state'=>2, 'is_draft'=>0));
+		
+		$criteria = new CDbCriteria();
+		$criteria->addCondition('Id_auto_ripper_state <> 18');
+		
+		$uploadingQty = AutoRipper::model()->count($criteria);
+		$draftQty = count($modelAutoRipperDraft);
+		$approvedQty = count($modelNzbApproved);
+		$cancelledQty = Nzb::model()->countByAttributes(array('Id_creation_state'=>3));
 		
 		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
+			'modelAutoRipper'=>$modelAutoRipper,
+			'modelNzb'=>$modelNzb,
+			'modelAutoRipperDraft'=>$modelAutoRipperDraft,
+			'modelNzbApproved'=>$modelNzbApproved,
+			'uploadingQty'=>$uploadingQty,
+			'draftQty'=>$draftQty,
+			'approvedQty'=>$approvedQty,
+			'cancelledQty'=>$cancelledQty,
 		));
 	}
 
+	public function actionAjaxOpenEditVideoData()
+	{
+		$idAutoRipper = (isset($_POST['idAutoripper']))?$_POST['idAutoripper']:null;
+		
+		if(isset($idAutoRipper))
+		{
+			$modalAutoRipper = AutoRipper::model()->findByPk($idAutoRipper);						
+			$this->renderPartial('_modalEditVideoData',array('modalAutoRipper'=>$modalAutoRipper));
+		}
+	}
+	
+	public function actionAjaxViewStateHistory()
+	{
+		$idAutoRipper = (isset($_POST['idAutoripper']))?$_POST['idAutoripper']:null;
+	
+		if(isset($idAutoRipper))
+		{
+			$modalAutoRipperStates = AutoRipperAutoRipperState::model()->findAllByAttributes(array('Id_auto_ripper'=>$idAutoRipper));
+			$modalAutoRipper = AutoRipper::model()->findByPk($idAutoRipper);
+			$this->renderPartial('_modalAutoRipperStates',array('modalAutoRipperStates'=>$modalAutoRipperStates, 'name'=>$modalAutoRipper->name));
+		}
+	}	
+	
 	public function actionIndexTv()
 	{
 		$model = new Nzb();

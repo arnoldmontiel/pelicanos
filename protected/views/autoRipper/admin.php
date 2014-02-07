@@ -51,8 +51,7 @@ $this->widget('ext.processingDialog.processingDialog', array(
 		array(
 		    'name'=>'auto_ripper_state_description',
 		    'value'=>'(isset($data->autoRipperState))?$data->autoRipperState->description:""',		    
-		),
-		'name',		
+		),		
 		'Id_nzb',
 		'percentage',
 		array(				
