@@ -135,38 +135,8 @@ class WsAutoRipperController extends Controller
 				
 				if($idState == 18) //SOLO SI ES 18 creo el NZB y sus dependencias
 				{
-					$autoRipperFiles = AutoRipperFile::model()->findAllByAttributes(array('Id_auto_ripper'=>$id));
-					$isFirst = true;
-					$idNzbParent = null;
-					foreach($autoRipperFiles as $autoRipperFile)
-					{
-						$fileName = $autoRipperFile->name . '.nzb';
-						
-						$modelNzb = new Nzb();
-						
-						$modelNzb->Id_resource_type = 1; //por defecto es BLURAY						
-						$modelNzb->Id_nzb_type = 1; //por defecto todos son MAIN
-						$modelNzb->Id_creation_state = 1; //por defecto va a BORRADOR
-						
-						$modelNzb->file_name =  $fileName;
-						$modelNzb->file_original_name =  $fileName;
-						$modelNzb->url = '/nzb/'.$fileName;
-						
-						if($isFirst)
-						{
-							$isFirst = false;
-							$modelNzb->save();
-							$idNzbParent = $modelNzb->Id;
-						}
-						else 
-						{
-							$modelNzb->Id_nzb = $idNzbParent;
-							$modelNzb->save();
-						}
-					}					
-					
-					$modelAutoRipper->Id_nzb = $idNzbParent;
-					$modelAutoRipper->save();
+					AutoRipperHelper::generateNzbs($id);
+					AutoRipperHelper::findVideoInfo($id);
 				}
 				
 				return true;
