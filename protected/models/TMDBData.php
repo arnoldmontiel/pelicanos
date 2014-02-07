@@ -31,7 +31,6 @@ class TMDBData extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('Id', 'required'),
 			array('Id, TMDB_id', 'numerical', 'integerOnly'=>true),
 			array('poster, big_poster, backdrop', 'length', 'max'=>255),
 			// The following rule is used by search().
