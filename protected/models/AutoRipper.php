@@ -8,11 +8,10 @@
  * @property string $Id_auto_ripper_process
  * @property string $Id_disc
  * @property integer $Id_auto_ripper_state
- * @property string $name
- * @property string $password
  * @property integer $Id_nzb
  * @property integer $percentage
  * @property integer $has_error
+ * @property string $name
  *
  * The followings are the available model relations:
  * @property AutoRipperProcess $idAutoRipperProcess
@@ -41,11 +40,10 @@ class AutoRipper extends CActiveRecord
 		return array(
 			array('Id_auto_ripper_state, Id_auto_ripper_process', 'required'),
 			array('Id_auto_ripper_state, Id_nzb, percentage, has_error', 'numerical', 'integerOnly'=>true),
-			array('Id_disc, Id_auto_ripper_process', 'length', 'max'=>200),
-			array('name, password', 'length', 'max'=>255),
+			array('Id_disc, Id_auto_ripper_process, name', 'length', 'max'=>200),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('Id, Id_disc, Id_auto_ripper_state, name, password, Id_nzb, percentage, auto_ripper_state_description, Id_auto_ripper_process, has_error', 'safe', 'on'=>'search'),
+			array('Id, Id_disc, Id_auto_ripper_state, Id_nzb, percentage, auto_ripper_state_description, Id_auto_ripper_process, has_error, name', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -73,11 +71,10 @@ class AutoRipper extends CActiveRecord
 			'Id' => 'ID',
 			'Id_disc' => 'Id Disc',
 			'Id_auto_ripper_state' => 'Id Auto Ripper State',
-			'name' => 'Name',
-			'password' => 'Password',
 			'Id_nzb' => 'Id Nzb',
-			'percentage' => 'Percentage',
-			'auto_ripper_state_description'=> 'State',
+			'percentage' => 'Porcentaje',
+			'auto_ripper_state_description'=> 'Estado',
+			'name'=>'Disco',
 		);
 	}
 
@@ -96,20 +93,55 @@ class AutoRipper extends CActiveRecord
 	public function search()
 	{
 		// @todo Please modify the following code to remove attributes that should not be searched.
+	
+		$criteria=new CDbCriteria;
+	
+		$criteria->compare('Id',$this->Id);
+		$criteria->compare('Id_disc',$this->Id_disc,true);
+		$criteria->compare('Id_auto_ripper_process',$this->Id_auto_ripper_process,true);
+		$criteria->compare('Id_auto_ripper_state',$this->Id_auto_ripper_state);
+		$criteria->compare('Id_nzb',$this->Id_nzb);
+		$criteria->compare('percentage',$this->percentage);
+	
+		$criteria->with[]='autoRipperState';
+		$criteria->addSearchCondition("autoRipperState.description",$this->auto_ripper_state_description);
+	
+		// Create a custom sort
+		$sort=new CSort;
+		$sort->attributes=array(
+				// For each relational attribute, create a 'virtual attribute' using the public variable name
+				'Id',
+				'Id_disc',
+				'percentage',
+				'auto_ripper_state_description' => array(
+						'asc' => 'autoRipperState.description',
+						'desc' => 'autoRipperState.description DESC',
+				),
+				'*',
+		);
+	
+		$criteria->order = 't.Id DESC';
+		return new CActiveDataProvider($this, array(
+				'criteria'=>$criteria,
+				'sort'=>$sort,
+		));
+	}
+	
+	public function searchUploading()
+	{
+		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('Id',$this->Id);
 		$criteria->compare('Id_disc',$this->Id_disc,true);
-		$criteria->compare('Id_auto_ripper_process',$this->Id_auto_ripper_process,true);
-		$criteria->compare('Id_auto_ripper_state',$this->Id_auto_ripper_state);
-		$criteria->compare('name',$this->name,true);
-		$criteria->compare('password',$this->password,true);
+		$criteria->compare('Id_auto_ripper_process',$this->Id_auto_ripper_process,true);		
 		$criteria->compare('Id_nzb',$this->Id_nzb);
 		$criteria->compare('percentage',$this->percentage);
 		
 		$criteria->with[]='autoRipperState';
 		$criteria->addSearchCondition("autoRipperState.description",$this->auto_ripper_state_description);
+		$criteria->addCondition('Id_auto_ripper_state <> 18');
 		
 		// Create a custom sort
 		$sort=new CSort;
@@ -117,8 +149,6 @@ class AutoRipper extends CActiveRecord
 		// For each relational attribute, create a 'virtual attribute' using the public variable name
 							'Id',
 							'Id_disc',
-							'name',
-							'password',
 							'percentage',
 							'auto_ripper_state_description' => array(
 								        'asc' => 'autoRipperState.description',
