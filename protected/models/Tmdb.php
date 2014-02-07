@@ -5,7 +5,7 @@
  *
  * The followings are the available columns in table 'tmdb':
  * @property integer $Id
- * @property string $apy_key
+ * @property string $api_key
  * @property string $lang
  */
 class Tmdb extends CActiveRecord
@@ -28,11 +28,11 @@ class Tmdb extends CActiveRecord
 		return array(
 			array('Id', 'required'),
 			array('Id', 'numerical', 'integerOnly'=>true),
-			array('apy_key', 'length', 'max'=>255),
+			array('api_key', 'length', 'max'=>255),
 			array('lang', 'length', 'max'=>45),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('Id, apy_key, lang', 'safe', 'on'=>'search'),
+			array('Id, api_key, lang', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -54,7 +54,7 @@ class Tmdb extends CActiveRecord
 	{
 		return array(
 			'Id' => 'ID',
-			'apy_key' => 'Apy Key',
+			'api_key' => 'Api Key',
 			'lang' => 'Lang',
 		);
 	}
@@ -78,7 +78,7 @@ class Tmdb extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('Id',$this->Id);
-		$criteria->compare('apy_key',$this->apy_key,true);
+		$criteria->compare('api_key',$this->api_key,true);
 		$criteria->compare('lang',$this->lang,true);
 
 		return new CActiveDataProvider($this, array(
