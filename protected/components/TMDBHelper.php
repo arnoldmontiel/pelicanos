@@ -6,7 +6,10 @@ class TMDBHelper
 		try {
 			
 			$modelNzb = Nzb::model()->findByPk($idNzb);
-			$modelTMDBData = new TMDBData();
+			
+			$modelTMDBData = $modelNzb->TMDBData;
+			if(!isset($modelTMDBData))
+				$modelTMDBData = new TMDBData();
 			
 			if($poster!="")
 				$modelTMDBData->poster = self::getImage($poster, $TMDBId,true);

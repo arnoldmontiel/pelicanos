@@ -66,8 +66,8 @@ Yii::app()->clientScript->registerScript('update-video-info', "
 	   				
 		$.ajax({
 	   		type: 'POST',
-	   		url: '". SiteController::createUrl('ajaxFillMoviePosterSelector') . "',
-	   		data: {id:'".$modelMyMovieNzb->Id."',sourceType:1,idResource:1},
+	   		url: '". NzbController::createUrl('AjaxFillMoviePosterSelector') . "',
+	   		data: {idNzb:'".$modelNzb->Id."'},
 	 	}).success(function(data)
 	 	{	
 			$('#myModalCambiarAfiche').html(data);
@@ -93,8 +93,8 @@ Yii::app()->clientScript->registerScript('update-video-info', "
 	   				
 		$.ajax({
 	   		type: 'POST',
-	   		url: '". SiteController::createUrl('ajaxFillMovieBackdropSelector') . "',
-	   		data: {id:'".$modelMyMovieNzb->Id."',sourceType:1,idResource:1},
+	   		url: '". NzbController::createUrl('AjaxFillVideoBackdropSelector') . "',
+	   		data: {idNzb:'".$modelNzb->Id."'},
 	 	}).success(function(data)
 	 	{	
 			$('#myModalCambiarBackdrop').html(data);
