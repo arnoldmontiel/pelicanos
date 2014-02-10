@@ -1,3 +1,13 @@
+function ChangeBG(path,image)
+{
+	if(image!="")
+	{
+		if (document.body) {
+			$("body").css("background-image",'url('+path+image+')');
+			$("body").addClass("backdrop-on");
+		}
+	}
+}	
 function unselectRow(id)
 {
 	$("#"+id+" > table > tbody > tr").each(function(i)
