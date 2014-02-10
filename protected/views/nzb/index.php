@@ -1,5 +1,5 @@
 <script type="text/javascript">
-function editVideoData(id)
+function viewVideoData(id)
 {
 	$.post("<?php echo NzbController::createUrl('AjaxOpenEditVideoData'); ?>",
 			{
@@ -26,6 +26,14 @@ function viewStateHistory(id)
 			});
 	return false;
 }
+
+function editVideoInfo(id)
+{
+	var params = '&idNzb=' + id;
+	window.location = <?php echo '"'. NzbController::createUrl('editVideoInfo') . '"'; ?> + params; 
+	return false;
+}
+	
 </script>
 
 <div class="container" id="screenInicio">

@@ -30,7 +30,7 @@
 					if(strlen($title)>15)
 						$title = str_pad(substr($title,0,15),18,".",STR_PAD_RIGHT);
 						
-					echo '<td valign="top" class="tdImage"><a onclick="editVideoData('.$item->Id.');" data-toggle="modal" ><img class="movieImage" src="images/'.$poster.'" width="120"/><i class="fa fa-info-circle iconOverlay"></i></a></td>';
+					echo '<td valign="top" class="tdImage"><a onclick="viewVideoData('.$item->Id.');" data-toggle="modal" ><img class="movieImage" src="images/'.$poster.'" width="120"/><i class="fa fa-info-circle iconOverlay"></i></a></td>';
 					echo '<td>';
 					echo '<div class="movieName">'.$title.'
 						<div class="dropdown editFiles">
@@ -38,9 +38,9 @@
 						  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
 						    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Configurar Archivos</a></li>
 						    <li role="presentation" class="divider"></li>
-						    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Editar Informaci&oacute;n</a></li>
+						    <li role="presentation"><a onclick="editVideoInfo('.$item->Id.');" role="menuitem" tabindex="-1" href="#">Editar Informaci&oacute;n</a></li>
 						    <li role="presentation" class="divider"></li>
-						    <li role="presentation"><a onclick="editVideoData('.$item->Id.');" data-toggle="modal" role="menuitem" tabindex="-1" href="#">Ver Informaci&oacute;n</a></li>
+						    <li role="presentation"><a onclick="viewVideoData('.$item->Id.');" data-toggle="modal" role="menuitem" tabindex="-1" href="#">Ver Informaci&oacute;n</a></li>
 						  </ul>
 						</div></div>';
 						echo '<div class="movieYear">'.$item->myMovieDiscNzb->myMovieNzb->production_year.'</div>';
@@ -52,7 +52,7 @@
 				}
 				else 
 				{
-					echo '<td valign="top" class="tdImage"><a onclick="editVideoData('.$item->Id.');" data-toggle="modal" ><img class="movieImage" src="images/noImage.jpg" width="120"/><i class="fa fa-info-circle iconOverlay"></i></a></td>';
+					echo '<td valign="top" class="tdImage"><a onclick="viewVideoData('.$item->Id.');" data-toggle="modal" ><img class="movieImage" src="images/noImage.jpg" width="120"/><i class="fa fa-info-circle iconOverlay"></i></a></td>';
 					echo '<td>';
 					echo '<div class="movieName">No Identificado
 						<div class="dropdown editFiles">
@@ -60,9 +60,9 @@
 						  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
 						    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Configurar Archivos</a></li>
 						    <li role="presentation" class="divider"></li>
-						    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Editar Informaci&oacute;n</a></li>
+						    <li role="presentation"><a onclick="editVideoInfo('.$item->Id.');" role="menuitem" tabindex="-1" href="#">Editar Informaci&oacute;n</a></li>
 						    <li role="presentation" class="divider"></li>
-						    <li role="presentation"><a onclick="editVideoData('.$item->Id.');" data-toggle="modal" role="menuitem" tabindex="-1" href="#">Ver Informaci&oacute;n</a></li>
+						    <li role="presentation"><a onclick="viewVideoData('.$item->Id.');" data-toggle="modal" role="menuitem" tabindex="-1" href="#">Ver Informaci&oacute;n</a></li>
 						  </ul>
 						</div></div>';
 					echo '<div class="movieYear">Archivo: '.$fileName.'</div>';
