@@ -6,10 +6,14 @@
 		<!-- Bootstrap -->
 		<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
 		<link rel="stylesheet" href="css/font-awesome.min.css">
+		<link href="js/select2-3.4.4/select2.css" rel="stylesheet" />		
 		<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0" />
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<?php include('estilos.php');?>
-		<script src="js/jquery.js"></script>
+		
+		<script src="js/jquery.js"></script>		
+		<script src="js/tools.js"></script>
+		<script src="js/select2-3.4.4/select2.js"></script>
 	</head>
 	<body>
 		<?php 
@@ -22,7 +26,9 @@
 		</div>
 		<div id="myModalAutoRipperStates" class="modal fade" style="display: none;" aria-hidden="true">
 		</div>
-		
+		<div id="myModalEditarAsoc" class="modal fade in" tabindex="-1"
+			role="dialog" aria-labelledby="myModalLabel" aria-hidden="false"
+		style="display: hidden;"></div>
 		<!-- Le javascript
 		    ================================================== --> 
 		<!-- Placed at the end of the document so the pages load faster --> 
