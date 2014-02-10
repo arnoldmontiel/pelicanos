@@ -2220,6 +2220,160 @@ class NzbController extends Controller
 		}
 	}
 	
+	public function actionAjaxFillMoviePosterSelector()
+	{
+		$idNzb = $_POST['idNzb'];		
+		
+		$modelNzb = Nzb::model()->findByPk($idNzb);
+		$myMovie = $modelNzb->myMovieDiscNzb->myMovieNzb;
+	
+		$images=array();
+		
+		$db = TMDBApi::getInstance();
+		$db->adult = true;  // return adult content
+		$db->paged = false; // merges all paged results into a single result automatically
+			
+		$results = $db->search('movie', array('query'=>$myMovie->original_title, 'year'=>$myMovie->production_year));
+		$movie = reset($results);
+		if(isset($movie)&&$movie!==false){
+			$images = $movie->posters('342',"");
+		}
+		else
+		{
+			$tmdb = $modelNzb->TMDBData;
+			$movie = new stdClass;
+			if(isset($tmdb))
+			{
+				$movie->id = $tmdb->TMDB_id;
+			}
+			else
+			{
+				$movie->id=date('U');
+				$tmdb = new TMDBData();
+				$tmdb->TMDB_id = $movie->id;
+				$tmdb->save();
+				$modelNzb->Id_TMDB_data =$tmdb->Id;
+				$modelNzb->save();
+			}
+		}
+	
+		$this->renderPartial('_videoPosterSelector',array('model'=>$myMovie,'idNzb'=>$idNzb,'posters'=>$images,'movie'=>$movie));
+	}
+	
+	public function actionAjaxSaveSelectedPoster()
+	{
+		if(isset($_POST['poster'])&&isset($_POST['idNzb'])&&isset($_POST['TMDB_id']))
+		{
+			$idNzb = $_POST['idNzb'];
+			$TMDBId =$_POST['TMDB_id'];
+			$modelNzb = Nzb::model()->findByPk($idNzb);
+			$myMovie = $modelNzb->myMovieDiscNzb->myMovieNzb;
+			$poster = $_POST['poster'];
+			$bigPoster = $_POST['poster'];
+			$bigPoster = str_replace ( "w342" , "w500" , $bigPoster );
+
+			$modelResource = TMDBHelper::downloadAndLinkImages($TMDBId,$idNzb,$poster,$bigPoster,"");
+			echo json_encode($modelResource->TMDBData->attributes);
+		}
+	}
+	
+	public function actionAjaxFillVideoBackdropSelector()
+	{
+		$idNzb = $_POST['idNzb'];
+		
+		$modelNzb = Nzb::model()->findByPk($idNzb);
+		$myMovie = $modelNzb->myMovieDiscNzb->myMovieNzb;
+	
+		$images=array();
+		
+		$db = TMDBApi::getInstance();
+		$db->adult = true;  // return adult content
+		$db->paged = false; // merges all paged results into a single result automatically
+
+		$results = $db->search('movie', array('query'=>$myMovie->original_title, 'year'=>$myMovie->production_year));
+		$movie = reset($results);
+		if(isset($movie)&&$movie!==false){
+			$images = $movie->backdrops('300',"");
+		}
+		else
+		{
+			$tmdb = $modelNzb->TMDBData;
+			$movie = new stdClass;
+			if(isset($tmdb))
+			{
+				$movie->id = $tmdb->TMDB_id;
+			}
+			else
+			{
+				$movie->id=date('U');
+				$tmdb = new TMDBData();
+				$tmdb->TMDB_id = $movie->id;
+				$tmdb->save();
+				$modelNzb->Id_TMDB_data =$tmdb->Id;
+				$modelNzb->save();
+			}
+		}
+	
+		$this->renderPartial('_videoBackdropSelector',array('model'=>$myMovie,'idNzb'=>$idNzb,'backdrops'=>$images,'movie'=>$movie));
+	}
+	
+	public function actionAjaxSaveSelectedBackdrop()
+	{
+		if(isset($_POST['backdrop'])&&isset($_POST['idNzb'])&&isset($_POST['TMDB_id']))
+		{
+			$idNzb = $_POST['idNzb'];
+			$TMDBId =$_POST['TMDB_id'];
+			
+			$modelNzb = Nzb::model()->findByPk($idNzb);
+			$myMovie = $modelNzb->myMovieDiscNzb->myMovieNzb;
+			
+			$backdrop = isset($_POST['backdrop'])?$_POST['backdrop']:"";
+			$backdrop = str_replace ( "w300" , "original" , $backdrop );
+			$modelResource = TMDBHelper::downloadAndLinkImages($TMDBId,$idNzb,"","",$backdrop);
+			echo json_encode($modelResource->TMDBData->attributes);
+		}
+	}
+	
+	public function actionAjaxUploadImage()
+	{
+		$urls = array();
+	
+		if (isset($_POST['liteUploader_id']) && $_POST['liteUploader_id'] == 'fileUpload1')
+		{
+			foreach ($_FILES['fileUpload1']['error'] as $key => $error)
+			{
+				if ($error == UPLOAD_ERR_OK)
+				{
+					$uploadedUrl = 'images/' . $_FILES['fileUpload1']['name'][$key];
+					if(isset($_POST['id_tmdbdata']))
+					{
+						$extension = explode(".",$_FILES['fileUpload1']['name'][$key]);
+						if(count($extension)>1){
+							$uploadedUrl = 'images/' . $_POST['id_tmdbdata']."_temp.".$extension[1];
+						}
+					}
+						
+					move_uploaded_file( $_FILES['fileUpload1']['tmp_name'][$key], $uploadedUrl);
+					$urls[] = $uploadedUrl;
+				}
+			}
+	
+			$message = 'Successfully Uploaded File(s) From First Upload Input';
+		}
+		$originalUrls = array();
+		if(isset($_POST['urls']))
+		{
+			if(!empty($_POST['urls']))
+				$originalUrls = explode(',',$_POST['urls']);
+		}
+		echo json_encode(
+				array(
+						'message' => $message,
+						'urls' => array_merge($urls,$originalUrls)
+				)
+		);
+	}
+	
 	public function actionAjaxOpenEditVideoData()
 	{
 		$idAutoRipper = (isset($_POST['idAutoripper']))?$_POST['idAutoripper']:null;
