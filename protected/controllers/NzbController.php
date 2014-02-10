@@ -1965,6 +1965,261 @@ class NzbController extends Controller
 		));
 	}
 
+	public function actionEditVideoInfo($idNzb)
+	{
+		$modelNzb = Nzb::model()->findByPk($idNzb);
+		$modelMyMovieNzb = $modelNzb->myMovieDiscNzb->myMovieNzb;
+			
+		$this->render('editVideoInfo',array('modelMyMovieNzb'=>$modelMyMovieNzb,'modelNzb'=>$modelNzb));
+		
+	}
+	
+	public function actionAjaxGetGenres()
+	{
+		$id = $_POST['idMyMovieNzb'];
+		
+		$myMovie = MyMovieNzb::model()->findByPk($id);
+		
+		echo json_encode (explode(',',$myMovie->genre));
+	}
+	
+	public function actionAjaxGetPersons()
+	{
+		$type = $_POST['type'];
+		$id = $_POST['idMyMovieNzb'];
+		
+		$myMovie = MyMovieNzb::model()->findByPk($id);
+				
+		$actor = array();
+		$names = array();
+		foreach ($myMovie->persons as $person){
+			if($person->type!=$type) continue;
+			$actor['id']=$person->Id;
+			$actor['text']=$person->name;
+			$names[] =	$actor;
+		}
+		echo json_encode ($names);
+	}
+	
+	public function actionAjaxFillVideoList()
+	{
+		if(isset($_POST['idMyMovieNzb']) && isset($_POST['idNzb']))
+		{			
+			$id = $_POST['idMyMovieNzb'];
+			
+			$myMovie = MyMovieNzb::model()->findByPk($id);
+						
+			$db = TMDBApi::getInstance();
+			$db->adult = true;  // return adult content
+			$db->paged = false; // merges all paged results into a single result automatically
+			$results = $db->search('movie', array('query'=>$myMovie->original_title));
+			$this->renderPartial('_videoSelector',array('idNzb'=>$_POST['idNzb'],'myMovie'=>$myMovie,'movies'=>$results));
+		}
+	
+	}
+	
+	public function actionAjaxSearchMovieTMDB()
+	{
+		if(isset($_POST['title']))
+		{
+			$title = $_POST['title'];
+			$db = TMDBApi::getInstance();
+			$db->adult = true;  // return adult content
+			$db->paged = false; // merges all paged results into a single result automatically
+			//$db->debug = true;
+			if(isset($_POST['year'])&&$_POST['year']!="")
+			{
+				$results = $db->search('movie', array('query'=>$title,'year'=>$_POST['year']));
+			}
+			else
+			{
+				$results = $db->search('movie', array('query'=>$title));
+			}
+			$this->renderPartial('_searchVideosResult',array('movies'=>$results));
+		}
+	}
+	
+	public function actionAjaxSaveSelectedVideo()
+	{
+		if(isset($_POST['Id_movie']))
+		{
+			$transaction=Yii::app()->db->beginTransaction();
+			try
+			{
+				$idNzb = $_POST['idNzb'];
+				$modelNzb = Nzb::model()->findByPk($idNzb);
+				$myMovie = $modelNzb->myMovieDiscNzb->myMovieNzb;
+				
+				$db = TMDBApi::getInstance();
+				$db->adult = true;  // return adult content
+				$db->paged = false; // merges all paged results into a single result automatically
+	
+				$movie = new TMDBMovie($_POST['Id_movie']);
+				$persons = $movie->casts();
+				$poster = $movie->poster('342');
+				$bigPoster = $movie->poster('500');
+				$backdrop = $movie->backdrop('original');
+	
+				var_dump(TMDBHelper::downloadAndLinkImages($movie->id,$idNzb,$poster,$bigPoster,$backdrop));
+				
+				$myMovie->original_title = $movie->original_title;
+				$myMovie->adult = $movie->adult?1:0;
+				$myMovie->release_date = $movie->release_date;
+				$date =date_parse($movie->release_date);
+				$myMovie->production_year = $date['year'];
+				$myMovie->running_time = $movie->runtime;
+				$myMovie->description = $movie->overview;
+				$myMovie->local_title = $movie->title;
+				$myMovie->sort_title= $movie->title;
+				$myMovie->imdb= $movie->imdb_id;
+				$myMovie->rating= (int)$movie->vote_average;
+				$genres = $movie->genres;
+				$myMovie->genre="";
+				$first = true;
+				foreach($genres as $genre)
+				{
+					if($first)
+					{
+						$first = false;
+						$myMovie->genre = $genre->name;
+					}
+					else
+					{
+						$myMovie->genre = $myMovie->genre.", ".$genre->name;
+					}
+				}
+	
+				$companies = $movie->production_companies;
+				$myMovie->studio = "";
+				$first = true;
+				foreach($companies as $companie)
+				{
+					if($first)
+					{
+						$first = false;
+						$myMovie->studio = $companie->name;
+					}
+					else
+					{
+						$myMovie->studio = $myMovie->studio.", ".$companie->name;
+					}
+				}
+				if($myMovie->save())
+				{
+					$casts =isset($persons['cast'])?$persons['cast']:array();
+	
+					$relations = MyMovieNzbPerson::model()->findAllByAttributes(array('Id_my_movie_nzb'=>$myMovie->Id));
+					$personsToDelete = array();
+					foreach ($relations as $relation)
+					{
+						$personsToDelete[] = $relation->person;
+					}
+					MyMovieNzbPerson::model()->deleteAllByAttributes(array('Id_my_movie_nzb'=>$myMovie->Id));
+					foreach ($personsToDelete as $toDelete)
+					{
+						$toDelete->delete();
+					}
+					foreach($casts as $cast)
+					{
+						$person = new Person();
+						$person->name= $cast->name;
+						$person->type = "Actor";
+						$person->role = $cast->character;
+						$person->photo_original = $cast->profile();
+						if($person->save())
+						{
+							$myMoviePerson =  new MyMovieNzbPerson();
+							$myMoviePerson->Id_my_movie_nzb = $myMovie->Id;
+							$myMoviePerson->Id_person =$person->Id;
+							$myMoviePerson->save();
+						}
+					}
+					$crews =isset($persons['crew'])?$persons['crew']:array();
+					foreach($crews as $crew)
+					{
+						$person = new Person();
+						$person->name= $crew->name;
+						$person->type = $crew->job;
+						$person->photo_original = $crew->profile();
+						if($person->save())
+						{
+							$myMoviePerson =  new MyMovieNzbPerson();
+							$myMoviePerson->Id_my_movie_nzb = $myMovie->Id;
+							$myMoviePerson->Id_person =$person->Id;
+							$myMoviePerson->save();
+						}
+					}
+					
+					$transaction->commit();
+					
+				}
+			}
+			catch (Exception $e) {
+				$transaction->rollBack();
+				var_dump($e);
+			}
+		}
+	}
+	
+	public function actionAjaxUnlinkVideo()
+	{
+		if(isset($_POST['idNzb']))
+		{
+			$idNzb = $_POST['idNzb'];
+	
+			$modelNzb = Nzb::model()->findByPk($idNzb);
+			$myMovie = $modelNzb->myMovieDiscNzb->myMovieNzb;
+			
+			$transaction = Yii::app()->db->beginTransaction();
+			try {
+				$myMovie->genre= "";
+				$myMovie->poster="noImage.jpg";
+				$myMovie->big_poster="noImage.jpg";
+				$myMovie->backdrop="";
+				$myMovie->bar_code="";
+				$myMovie->country="";
+				$myMovie->local_title="";
+				$myMovie->original_title="";
+				$myMovie->sort_title="";
+				$myMovie->aspect_ratio="";
+				$myMovie->video_standard="";
+				$myMovie->production_year="";
+				$myMovie->release_date="";
+				$myMovie->running_time="";
+				$myMovie->description="";
+				$myMovie->extra_features="";
+				$myMovie->parental_rating_desc="";
+				$myMovie->imdb="";
+				$myMovie->rating="0";
+				$myMovie->data_changed="";
+				$myMovie->covers_changed="";
+				$myMovie->studio="";
+				$myMovie->media_type="";
+				$myMovie->Id_parental_control=1;
+	
+				$myMovie->save();
+				$tmdb = $modelNzb->TMDBData;
+				$modelNzb->Id_TMDB_data = null;
+				$modelNzb->save();
+				if(isset($tmdb))
+				{
+					$tmdb->delete();
+				}
+					
+				$persons = $myMovie->persons;
+				foreach ($persons as $person){
+					MyMovieNzbPerson::model()->deleteByPk(array('Id_my_movie_nzb'=>$myMovie->Id,'Id_person'=>$person->Id));
+					if(empty($person->myMovieNzbs)&&empty($person->myMovies))
+						$person->delete();
+				}
+				$transaction->commit();
+			} catch (Exception $e) {
+				$transaction->rollback();
+				var_dump($e);
+			}
+		}
+	}
+	
 	public function actionAjaxOpenEditVideoData()
 	{
 		$idAutoRipper = (isset($_POST['idAutoripper']))?$_POST['idAutoripper']:null;
