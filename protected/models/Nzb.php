@@ -23,6 +23,7 @@
  * @property string $rejected_description
  * @property integer $Id_creation_state
  * @property integer $Id_TMDB_data
+ * @property integer $Id_auto_ripper_file
  *
  * The followings are the available model relations:
  * @property CustomerTransaction[] $customerTransactions
@@ -89,14 +90,14 @@ class Nzb extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('Id_resource_type, Id_nzb_type, Id_creation_state', 'required'),
-			array('Id_resource_type, deleted, points, is_draft, Id_nzb_type, Id_nzb, Id_creation_state, Id_TMDB_data', 'numerical', 'integerOnly'=>true),
+			array('Id_resource_type, Id_nzb_type, Id_creation_state, Id_auto_ripper_file', 'required'),
+			array('Id_resource_type, deleted, points, is_draft, Id_nzb_type, Id_nzb, Id_creation_state, Id_TMDB_data, Id_auto_ripper_file', 'numerical', 'integerOnly'=>true),
 			array('url, file_name, subt_url, subt_file_name, subt_original_name, file_original_name,final_content_path, file_password', 'length', 'max'=>255),
 			array('Id_my_movie_disc_nzb', 'length', 'max'=>200),
 			array('rejected_description', 'length', 'max'=>500),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id, Id_resource_type, url, file_name, subt_url, subt_file_name, subt_original_name, deleted, points, file_original_name,final_content_path, is_draft, Id_my_movie_disc_nzb, year, idImdb, genre, title, resourceTypeDesc, disc_name, file_password, Id_nzb_type, Id_nzb, rejected_description, Id_creation_state, Id_TMDB_data', 'safe', 'on'=>'search'),
+			array('Id, Id_resource_type, url, file_name, subt_url, subt_file_name, subt_original_name, deleted, points, file_original_name,final_content_path, is_draft, Id_my_movie_disc_nzb, year, idImdb, genre, title, resourceTypeDesc, disc_name, file_password, Id_nzb_type, Id_nzb, rejected_description, Id_creation_state, Id_TMDB_data, Id_auto_ripper_file', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -117,6 +118,7 @@ class Nzb extends CActiveRecord
 			'nzb' => array(self::BELONGS_TO, 'Nzb', 'Id_nzb'),
 			'creationState' => array(self::BELONGS_TO, 'CreationState', 'Id_creation_state'),
 			'TMDBData' => array(self::BELONGS_TO, 'TMDBData', 'Id_TMDB_data'),
+			'autoRipperFile' => array(self::BELONGS_TO, 'AutoRipperFile', 'Id_auto_ripper_file'),
 		);
 	}
 
