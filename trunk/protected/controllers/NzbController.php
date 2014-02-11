@@ -1967,10 +1967,157 @@ class NzbController extends Controller
 
 	public function actionEditVideoInfo($idNzb)
 	{
+		if(isset($_POST['MyMovieNzb']) && isset($_POST['idNzb']))
+		{
+			$actors = explode(',',$_POST['input_actors']);
+			$directors = explode(',',$_POST['input_directors']);
+			$genres = explode(',',$_POST['input_genres']);
+			
+			$modelNzb = Nzb::model()->findByPk($_POST['idNzb']);
+			$myMovie = $modelNzb->myMovieDiscNzb->myMovieNzb;
+			
+			$transaction = Yii::app()->db->beginTransaction();
+			try {
+				$myMovie->attributes = $_POST['MyMovieNzb'];
+				$myMovie->genre= "";
+				$first = true;
+				foreach($genres as $genre)
+				{
+					if($first)
+					{
+						$first = false;
+						$myMovie->genre = $genre;
+					}
+					else
+					{
+						$myMovie->genre = $myMovie->genre.", ".$genre;
+					}
+				}
+		
+				$myMovie->save();
+		
+				if(isset($persons))
+				{
+					foreach ($persons as $person){
+						$relationDB = new MyMovieNzbPerson;
+						$relationDB->Id_person = $person->Id;
+						$relationDB->Id_my_movie_nzb =$myMovie->Id;
+						$relationDB->save();
+					}
+				}
+				$persons = $myMovie->persons;
+				foreach ($persons as $person){
+					if($person->type!='Actor' && $person->type!='Director') continue;
+					//$selectedActors[]=$person->Id;
+					if(!in_array($person->Id,$actors)&&!in_array($person->Id,$directors))
+					{
+						MyMovieNzbPerson::model()->deleteByPk(array('Id_my_movie_nzb'=>$myMovie->Id,'Id_person'=>$person->Id));
+						$person->delete();
+					}
+				}
+				foreach ($actors as $actor){
+					if($actor=="") continue;
+					$actorInDB = Person::model()->findByPk($actor);
+					if(!isset($actorInDB))
+					{
+						$actorInDB = new Person();
+						$actorInDB->name = $actor;
+						$actorInDB->type = "Actor";
+						$actorInDB->save();
+						$newRelation = new MyMovieNzbPerson;
+						$newRelation->Id_person = $actorInDB->Id;
+						$newRelation->Id_my_movie_nzb = $myMovie->Id;
+						$newRelation->save();
+					}
+					$relationDB = MyMovieNzbPerson::model()->findByPk(array('Id_my_movie_nzb'=>$myMovie->Id,'Id_person'=>$actorInDB->Id));
+					if(!isset($relationDB))
+					{
+						$relationDB = new MyMovieNzbPerson;
+						$relationDB->Id_person = $actorInDB->Id;
+						$relationDB->Id_my_movie_nzb =$myMovie->Id;
+						$relationDB->save();
+					}
+				}
+				foreach ($directors as $director){
+					if($director=="") continue;
+					$directorInDB = Person::model()->findByPk($director);
+					if(!isset($directorInDB))
+					{
+						$directorInDB = new Person();
+						$directorInDB->name = $director;
+						$directorInDB->type = "Director";
+						$directorInDB->save();
+						$newRelation = new MyMovieNzbPerson;
+						$newRelation->Id_person = $directorInDB->Id;
+						$newRelation->Id_my_movie_nzb = $myMovie->Id;
+						$newRelation->save();
+					}
+					$relationDB = MyMovieNzbPerson::model()->findByPk(array('Id_my_movie_nzb'=>$myMovie->Id,'Id_person'=>$directorInDB->Id));
+					if(!isset($relationDB))
+					{
+						$relationDB = new MyMovieNzbPerson;
+						$relationDB->Id_person = $directorInDB->Id;
+						$relationDB->Id_my_movie_nzb =$myMovie->Id;
+						$relationDB->save();
+					}
+				}
+				$transaction->commit();
+				$this->redirect(Yii::app()->homeUrl);
+			} catch (Exception $e) {
+				$transaction->rollback();
+			}
+		}
+	
 		$modelNzb = Nzb::model()->findByPk($idNzb);
+		
+		if(!isset($modelNzb->myMovieDiscNzb))
+		{
+			$myMovie = new MyMovieNzb();
+			$myMovie->Id = uniqid ("cust_");
+			$myMovie->genre= "";
+			$myMovie->poster="noImage.jpg";
+			$myMovie->big_poster="noImage.jpg";
+			$myMovie->backdrop="";
+			$myMovie->bar_code="";
+			$myMovie->country="";
+			$myMovie->local_title="";
+			$myMovie->original_title="";
+			$myMovie->sort_title="";
+			$myMovie->aspect_ratio="";
+			$myMovie->video_standard="";
+			$myMovie->production_year="";
+			$myMovie->release_date="";
+			$myMovie->running_time="";
+			$myMovie->description="";
+			$myMovie->extra_features="";
+			$myMovie->parental_rating_desc="";
+			$myMovie->imdb="";
+			$myMovie->rating="0";
+			$myMovie->data_changed="";
+			$myMovie->covers_changed="";
+			$myMovie->studio="";
+			$myMovie->media_type="";
+			$myMovie->Id_parental_control=1;
+			
+			$myMovie->save();
+			
+			$myMovieDiscNzb = new MyMovieDiscNzb();
+			$myMovieDiscNzb->Id = uniqid ("cust_");
+			$myMovieDiscNzb->name = "";
+			$myMovieDiscNzb->Id_my_movie_nzb = $myMovie->Id;
+			
+			$myMovieDiscNzb->save();
+			
+			$modelNzb->Id_my_movie_disc_nzb = $myMovieDiscNzb->Id;
+			$modelNzb->save();
+			$modelNzb->refresh();
+		}
+		
+		
 		$modelMyMovieNzb = $modelNzb->myMovieDiscNzb->myMovieNzb;
 			
 		$this->render('editVideoInfo',array('modelMyMovieNzb'=>$modelMyMovieNzb,'modelNzb'=>$modelNzb));
+
 		
 	}
 	
@@ -2374,14 +2521,14 @@ class NzbController extends Controller
 		);
 	}
 	
-	public function actionAjaxOpenEditVideoData()
+	public function actionAjaxOpenViewVideoInfo()
 	{
 		$idAutoRipper = (isset($_POST['idAutoripper']))?$_POST['idAutoripper']:null;
 		
 		if(isset($idAutoRipper))
 		{
 			$modalAutoRipper = AutoRipper::model()->findByPk($idAutoRipper);						
-			$this->renderPartial('_modalEditVideoData',array('modalAutoRipper'=>$modalAutoRipper));
+			$this->renderPartial('_modalViewVideoInfo',array('modalAutoRipper'=>$modalAutoRipper));
 		}
 	}
 	
