@@ -23,6 +23,30 @@ class MyMovieNzbPerson extends CActiveRecord
 		return parent::model($className);
 	}
 
+	public function getCasting($type)
+	{
+		$criteria = new CDbCriteria();
+		$criteria->join = 'INNER JOIN my_movie_nzb_person p on (p.Id_person = t.Id)';
+		$criteria->addCondition('p.Id_my_movie_nzb = "'.$this->Id_my_movie_nzb.'"');
+		$criteria->order = 't.Id ASC';
+		
+		$persons = Person::model()->findAll($criteria);
+		
+		$casting = "";
+		$castCount = 0;
+		foreach($persons as $person)
+		{
+			if($person->type == $type && $castCount < 6)
+			{
+				$casting = $casting . $person->name . ' / ';
+				$castCount++;
+			}
+		}
+		
+		$casting = rtrim($casting, " / ");
+		return $casting;
+	}
+	
 	/**
 	 * @return string the associated database table name
 	 */

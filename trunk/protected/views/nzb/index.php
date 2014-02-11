@@ -12,11 +12,12 @@ function changeNzbType(idNzb, obj)
 	return false;	
 }
 
-function viewVideoInfo(id)
+function viewVideoInfo(id, tab = 1)
 {
 	$.post("<?php echo NzbController::createUrl('AjaxOpenViewVideoInfo'); ?>",
 			{
-				idAutoripper:id
+				idAutoripper:id,
+				activeTab:tab
 			}
 		).success(
 			function(data){
