@@ -1,6 +1,6 @@
 <div class="searchOverTab"><input type="text" class="form-control" placeholder=" Buscar Pel&iacute;cula"></div>
 	<?php 
-		foreach($modelNzbDraft as $item)
+		foreach($modelNzbApproved as $item)
 		{
 			
 			$modelAutoRipper = AutoRipper::model()->findByAttributes(array('Id_nzb'=>$item->Id));
@@ -11,7 +11,7 @@
 				if(strlen($fileName) > 25)
 					$fileName = str_pad(substr($fileName,0,25),28,".",STR_PAD_RIGHT);
 				
-				echo '<div id="movieItem_'.$item->Id.'" class="movieItem">';
+				echo '<div class="movieItem">';
 					echo '<table cellspacing="5">';
 						echo '<tr>';
 				if(isset($item->Id_my_movie_disc_nzb))
@@ -51,7 +51,7 @@
 						echo '<div class="movieGenre">'. $genre.'</div>';
 						echo '<div class="movieYear">Archivo: '.$fileName.'</div>';
 						echo '<div class="movieStatus"><span class="bold">Estado: Borrador</span></div>';
-						echo '<div class="movieButton"><a onclick="approveConfirm('.$modelAutoRipper->Id.');" data-toggle="modal" class="btn btn-default"><i class="fa fa-check-square-o fa-fw"></i> Aprobar</a><a  href="#myModalConfirmRechazar" data-toggle="modal" class="btn btn-primary"><i class="fa fa-ban fa-fw"></i> Rechazar</a></div>';
+						echo '<div class="movieButton"><a  href="#myModalConfirmAprobar" data-toggle="modal" class="btn btn-default"><i class="fa fa-check-square-o fa-fw"></i> Aprobar</a><a  href="#myModalConfirmRechazar" data-toggle="modal" class="btn btn-primary"><i class="fa fa-ban fa-fw"></i> Rechazar</a></div>';
 					echo '</td>';
 				}
 				else 
@@ -73,7 +73,7 @@
 						echo '<div class="movieGenre">&nbsp;</div>';
 						echo '<div class="movieYear">&nbsp;</div>';
 						echo ' <div class="movieStatus"><span class="bold">Estado: Borrador</span></div>';
-						echo ' <div class="movieButton"><a data-toggle="modal" class="btn btn-default disabled"><i class="fa fa-check-square-o fa-fw"></i> Aprobar</a><a  href="#myModalConfirmRechazar" data-toggle="modal" class="btn btn-primary disabled"><i class="fa fa-ban fa-fw"></i> Rechazar</a></div>';
+						echo ' <div class="movieButton"><a  href="#myModalConfirmAprobar" data-toggle="modal" class="btn btn-default disabled"><i class="fa fa-check-square-o fa-fw"></i> Aprobar</a><a  href="#myModalConfirmRechazar" data-toggle="modal" class="btn btn-primary disabled"><i class="fa fa-ban fa-fw"></i> Rechazar</a></div>';
 					echo ' </td>';
 				}
 						echo '</tr>';
