@@ -1,14 +1,14 @@
 <script type="text/javascript">
-function viewVideoData(id)
+function viewVideoInfo(id)
 {
-	$.post("<?php echo NzbController::createUrl('AjaxOpenEditVideoData'); ?>",
+	$.post("<?php echo NzbController::createUrl('AjaxOpenViewVideoInfo'); ?>",
 			{
 				idAutoripper:id
 			}
 		).success(
 			function(data){
-				$('#myModalEditVideoData').html(data);
-		   		$('#myModalEditVideoData').modal('show');	  
+				$('#myModalViewVideoInfo').html(data);
+		   		$('#myModalViewVideoInfo').modal('show');	  
 			});
 	return false;
 }

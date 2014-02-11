@@ -25,7 +25,7 @@
 		?>
 		<?php echo $content; ?>
 		
-		<div id="myModalEditVideoData" class="modal fade" style="display: none;" aria-hidden="true">
+		<div id="myModalViewVideoInfo" class="modal fade" style="display: none;" aria-hidden="true">
 		</div>
 		<div id="myModalAutoRipperStates" class="modal fade" style="display: none;" aria-hidden="true">
 		</div>
