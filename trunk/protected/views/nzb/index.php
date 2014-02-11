@@ -1,4 +1,17 @@
 <script type="text/javascript">
+function changeNzbType(idNzb, obj)
+{
+	$.post("<?php echo NzbController::createUrl('AjaxChangeNzbType'); ?>",
+			{
+				idNzb:idNzb,
+				idNzbType:obj.value
+			}
+		).success(
+			function(data){
+			});
+	return false;	
+}
+
 function viewVideoInfo(id)
 {
 	$.post("<?php echo NzbController::createUrl('AjaxOpenViewVideoInfo'); ?>",

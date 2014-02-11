@@ -2527,9 +2527,31 @@ class NzbController extends Controller
 		
 		if(isset($idAutoRipper))
 		{
-			$modalAutoRipper = AutoRipper::model()->findByPk($idAutoRipper);						
-			$this->renderPartial('_modalViewVideoInfo',array('modalAutoRipper'=>$modalAutoRipper));
+			$modalAutoRipper = AutoRipper::model()->findByPk($idAutoRipper);
+			
+			$criteria = new CDbCriteria();
+			$criteria->join = 'inner join auto_ripper ar on (ar.Id_nzb = t.Id or ar.Id_nzb = t.Id_nzb)
+								inner join auto_ripper_file f on (f.Id = t.Id_auto_ripper_file)';
+			$criteria->addCondition('ar.Id = '.$idAutoRipper);
+			
+			$modelNzbs = Nzb::model()->findAll($criteria);
+			
+			$this->renderPartial('_modalViewVideoInfo',array('modalAutoRipper'=>$modalAutoRipper, 'modelNzbs'=>$modelNzbs));
 		}
+	}
+	
+	public function actionAjaxChangeNzbType()
+	{
+		$idNzb = (isset($_POST['idNzb']))?$_POST['idNzb']:null;
+		$idNzbType = (isset($_POST['idNzbType']))?$_POST['idNzbType']:null;
+		
+		if(isset($idNzb) && isset($idNzbType))
+		{
+			$modelNzb = Nzb::model()->findByPk($idNzb);
+			$modelNzb->Id_nzb_type = $idNzbType;
+			$modelNzb->save();
+		}
+		
 	}
 	
 	public function actionAjaxViewStateHistory()

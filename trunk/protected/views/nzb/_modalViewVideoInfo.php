@@ -77,7 +77,29 @@
 						    	</div><!--/.col-md-3 -->
 						    	<div class="col-md-9 col-sm-9 align-left detailSecond">
 						    		<div class="ratingStars">
-						    			<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>	
+										<?php
+											if ($rating == 1  ){
+											echo '<i class="fa fa-star-half-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>';
+											}	else if ($rating == 2  ){
+											echo '<i class="fa fa-star"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>';
+											}	else if ($rating == 3  ){
+											echo '<i class="fa fa-star"></i><i class="fa fa-star-half-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>';
+											}	else if ($rating == 4  ){
+											echo '<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>';
+											}	else if ($rating == 5  ){
+											echo '<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>';
+											}	else if ($rating == 6  ){
+											echo '<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>';
+											}	else if ($rating == 7  ){
+											echo '<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i><i class="fa fa-star-o"></i>';
+											}	else if ($rating == 8  ){
+											echo '<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i>';
+											}	else if ($rating == 9  ){
+											echo '<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i>';
+											}	else if ($rating == 10  ){
+											echo '<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>';
+											}	
+										?>	
 						    		</div>	
 						    	</div><!--/.col-md-9 -->
 						    </div><!--/.row -->
@@ -132,41 +154,20 @@
 										<th>Tipo</th>
 									</tr>
 								</thead>
-	    						<tr>
-	    							<td>spidermanMain.mkv</td>
-								    <td>100mb</td>
-								    <td>
-									    <select class="form-control">
-											<option>Main</option>
-										  	<option>Extras</option>
-										  	<option>Deleted Scenes</option>
-										  	<option>Otro</option>
-										</select>
-								    </td>
-								</tr>
-								<tr>
-									<td>spiderman.mkv</td>
-								    <td>100mb</td>
-								    <td>
-									    <select class="form-control">
-										  	<option>Main</option>
-										  	<option>Extras</option>
-										  	<option>Deleted Scenes</option>
-										  	<option>Otro</option>
-										</select>
-								    </td>
-								<tr>
-									<td>spidermanother.mkv</td>
-								    <td>100mb</td>
-								    <td>
-									    <select class="form-control">
-									  		<option>Main</option>
-									  		<option>Extras</option>
-									  		<option>Deleted Scenes</option>
-									  		<option>Otro</option>
-										</select>
-								    </td>
-								</tr>
+								<?php
+									$list = CHtml::listData(NzbType::model()->findAll() ,'Id', 'description');									
+									foreach($modelNzbs as $nzb)
+									{
+										echo '<tr>';
+											echo '<td>'.$nzb->autoRipperFile->label.'</td>';
+											echo '<td>'.PelicanoHelper::format_bytes($nzb->autoRipperFile->size).'</td>';
+											echo '<td>';
+												echo CHtml::dropDownList("nzbType", $nzb->Id_nzb_type, $list, array('class' => 'form-control',
+																											'onchange'=>'changeNzbType('.$nzb->Id.', this)'));
+											echo '</td>';
+										echo '</tr>';
+									} 
+								?>	    						
 	    				</table>    	    
 					</div><!--/.tab-pane3 -->
   				</div><!--/.modal-content -->
