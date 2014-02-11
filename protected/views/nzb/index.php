@@ -12,6 +12,41 @@ function changeNzbType(idNzb, obj)
 	return false;	
 }
 
+function approveNzb(id)
+{
+	$.post("<?php echo NzbController::createUrl('AjaxApproveNzb'); ?>",
+			{
+				idNzb:id
+			}
+		).success(
+			function(data){
+				$("#movieItem_" + id).hide();
+				$('#myModalApproveConfirm').trigger('click');	  
+				var obj = jQuery.parseJSON(data);				
+				if(obj != null)
+				{
+					$('#a-tab-uploading').children().text(obj.uploadingQty);
+					$('#a-tab-draft').children().text(obj.draftQty);
+					$('#a-tab-approved').children().text(obj.approvedQty);
+					$('#a-tab-cancelled').children().text(obj.cancelledQty);
+				}
+			});
+}
+
+function approveConfirm(id)
+{
+	$.post("<?php echo NzbController::createUrl('AjaxOpenApproveConfirm'); ?>",
+			{
+				idAutoripper:id
+			}
+		).success(
+			function(data){
+				$('#myModalApproveConfirm').html(data);
+		   		$('#myModalApproveConfirm').modal('show');	  
+			});
+	return false;
+}
+
 function viewVideoInfo(id, tab = 1)
 {
 	$.post("<?php echo NzbController::createUrl('AjaxOpenViewVideoInfo'); ?>",
@@ -47,7 +82,7 @@ function editVideoInfo(id)
 	window.location = <?php echo '"'. NzbController::createUrl('editVideoInfo') . '"'; ?> + params; 
 	return false;
 }
-	
+
 </script>
 
 <div class="container" id="screenInicio">
@@ -69,7 +104,7 @@ function editVideoInfo(id)
 			    	<?php echo $this->renderPartial('_tabDraft',array('modelNzbDraft'=>$modelNzbDraft)); ?>
 			    </div><!-- /.tab2 --> 
 			    <div class="tab-pane" id="tabApproved">
-			    	<?php echo $this->renderPartial('_tabUploading',array('modelAutoRipper'=>$modelAutoRipper)); ?>
+			    	<?php echo $this->renderPartial('_tabApproved',array('modelNzbApproved'=>$modelNzbApproved)); ?>
 			    </div><!-- /.tab3 -->      	
 			    <div class="tab-pane" id="tabPublished">
 			    	<?php echo $this->renderPartial('_tabUploading',array('modelAutoRipper'=>$modelAutoRipper)); ?>
