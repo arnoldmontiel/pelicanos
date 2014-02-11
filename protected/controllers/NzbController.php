@@ -2524,6 +2524,7 @@ class NzbController extends Controller
 	public function actionAjaxOpenViewVideoInfo()
 	{
 		$idAutoRipper = (isset($_POST['idAutoripper']))?$_POST['idAutoripper']:null;
+		$activeTab = (isset($_POST['activeTab']))?$_POST['activeTab']:1;
 		
 		if(isset($idAutoRipper))
 		{
@@ -2536,7 +2537,7 @@ class NzbController extends Controller
 			
 			$modelNzbs = Nzb::model()->findAll($criteria);
 			
-			$this->renderPartial('_modalViewVideoInfo',array('modalAutoRipper'=>$modalAutoRipper, 'modelNzbs'=>$modelNzbs));
+			$this->renderPartial('_modalViewVideoInfo',array('modalAutoRipper'=>$modalAutoRipper, 'modelNzbs'=>$modelNzbs, 'activeTab'=>$activeTab));
 		}
 	}
 	

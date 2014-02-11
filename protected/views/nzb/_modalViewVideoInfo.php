@@ -19,9 +19,7 @@
 			$genre = $modeMyMovieNzb->genre;
 			$parental = $modeMyMovieNzb->parentalControl->description;
 			$rating = $modeMyMovieNzb->rating;
-			$year = $modeMyMovieNzb->production_year;
-			$directors = "&nbsp;";
-			$actor = "&nbsp;";
+			$year = $modeMyMovieNzb->production_year;			
 			$time = $modeMyMovieNzb->running_time;
 			$description = $modeMyMovieNzb->description;
 			$img = "noImage.jpg";
@@ -33,6 +31,15 @@
 			{
 				$img = $modeMyMovieNzb->poster;
 			}
+			
+			$modelPerson = MyMovieNzbPerson::model()->findByAttributes(array('Id_my_movie_nzb'=>$modeMyMovieNzb->Id));
+			
+			if(isset($modelPerson))
+			{
+				$directors = $modelPerson->getCasting('Director');
+				$actor = $modelPerson->getCasting('Actor');
+			}
+			
 		}
 	}
 ?>
@@ -49,12 +56,12 @@
     			</div><!--/.col-md-3PRINCIPAL -->        
     			<div class="col-md-9 col-sm-9">
     				<ul class="nav nav-tabs">
-                		<li class="active"><a href="#tab21" data-toggle="tab">Informaci�n</a></li>
-              			<li class=""><a href="#tab23" data-toggle="tab">Archivos</a></li>
+                		<li class="<?php echo ($activeTab==1)?'active':'';?>"><a href="#tab21" data-toggle="tab">Informaci�n</a></li>
+              			<li class="<?php echo ($activeTab==2)?'active':'';?>"><a href="#tab23" data-toggle="tab">Archivos</a></li>
               			<li class="pull-right"><button id="btn-edit" onclick="editVideoInfo(<?php echo $modalAutoRipper->Id_nzb;?>);" type="button" class="btn btn-default"><i class="fa fa-pencil"></i> Editar Informaci�n</button></li>
     				</ul>
 					<div class="tab-content tableInfo">
-    					<div class="tab-pane active" id="tab21">
+    					<div class="tab-pane <?php echo ($activeTab==1)?'active':'';?>" id="tab21">
     						<div class="row detailSecondGroup">
     							<div class="col-md-3 col-sm-3 align-left detailSecond detailSecondFirst">
 							    	GENERO
@@ -116,7 +123,7 @@
 						    		DIRECTOR
 						    	</div><!--/.col-md-3 -->
 						    	<div class="col-md-9 col-sm-9 align-left detailSecond">
-						    		&nbsp;Ridley Scott    
+						    		&nbsp;<?php echo $directors;?>    
 						    	</div><!--/.col-md-9 -->
 						    </div><!--/.row -->
 						    <div class="row detailSecondGroup">
@@ -124,7 +131,7 @@
 						    		ACTORES
 						    	</div><!--/.col-md-3 -->
 						    	<div class="col-md-9 col-sm-9 align-left detailSecond">
-						    		&nbsp;Russell Crowe / Denzel Washington / Chiwetel Ejiofor / Josh Brolin / Lymari Nadal / Ted Levine    
+						    		&nbsp;&nbsp;<?php echo $actor;?>
 						    	</div><!--/.col-md-9 -->
 						    </div><!--/.row -->
 						    <div class="row detailSecondGroup">
@@ -132,7 +139,7 @@
 						    		DURACI�N
 						    	</div><!--/.col-md-3 -->
 						    	<div class="col-md-9 col-sm-9 align-left detailSecond">
-						    		<?php echo $time;?>mm
+						    		<?php echo $time;?>&nbsp;mm
 						    	</div><!--/.col-md-9 -->
 						    </div><!--/.row -->
 						    <div class="row detailSecondGroup">
@@ -145,7 +152,7 @@
 						    </div><!--/.row -->
     					</div><!--/.tab-pane#1 -->
     					    
-	    				<div class="tab-pane" id="tab23"><!--/.bookmarks -->
+	    				<div class="tab-pane <?php echo ($activeTab==2)?'active':'';?>" id="tab23"><!--/.bookmarks -->
 	    					<table class="table tablaArchivos">
 							    <thead>
 									<tr>
