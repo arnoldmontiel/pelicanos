@@ -230,9 +230,9 @@ Yii::app()->clientScript->registerScript('update-video-info', "
 </div>
     <!-- /col-md-3 -->
     <div class="col-md-9">
-    <form class="form-horizontal" id="my-movie-form" role="form" method="post" action=<?php echo NzbController::createUrl('editVideoInfo',array('idNzb'=>$modelNzb->Id));?> >
+    <form class="form-horizontal" id="my-movie-form" role="form" method="post" >
     <?php    
-	echo CHtml::hiddenField('id_my_movie',$modelMyMovieNzb->Id);	
+	echo CHtml::hiddenField('idNzb',$modelNzb->Id);	
 	echo CHtml::hiddenField('input_actors');
 	echo CHtml::hiddenField('input_genres');	
 	echo CHtml::hiddenField('input_directors');	
@@ -353,7 +353,7 @@ Yii::app()->clientScript->registerScript('update-video-info', "
  <div class="row">
         <div class="col-md-12">
  	<div class="buttonGroup">
- 		<button onclick="goBack();" class="btn btn-default btn-lg"><i class="fa fa-arrow-left "></i> Volver</button>
+ 		<button type="button" onclick="goBack();" class="btn btn-default btn-lg"><i class="fa fa-arrow-left "></i> Volver</button>
  		<button type="submit" class="btn btn-primary btn-lg noMargin"><i class="fa fa-save "></i> Guardar</button></div>
     </div><!-- /col-md-12 -->
     </div><!-- /row -->    
@@ -365,7 +365,7 @@ Yii::app()->clientScript->registerScript('update-video-info', "
 <script>
 function unlink()
 {
-	$.post("<?php echo SiteController::createUrl('AjaxUnlinkVideo'); ?>",
+	$.post("<?php echo NzbController::createUrl('AjaxUnlinkVideo'); ?>",
 			{
 				idNzb:<?php echo $modelNzb->Id; ?>
 			 }
@@ -380,7 +380,7 @@ function unlink()
 
 function goBack()
 {	
-	window.location = <?php echo '"'. NzbController::createUrl('index') . '"'; ?>; 
+	window.location = "<?php echo NzbController::createUrl("index")?>"; 
 	return false;
 }
 
