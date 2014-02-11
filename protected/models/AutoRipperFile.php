@@ -8,9 +8,11 @@
  * @property integer $Id_auto_ripper
  * @property string $name
  * @property string $label
+ * @property string $size
  *
  * The followings are the available model relations:
  * @property AutoRipper $idAutoRipper
+ * @property Subtitle[] $subtitles
  */
 class AutoRipperFile extends CActiveRecord
 {
@@ -33,9 +35,10 @@ class AutoRipperFile extends CActiveRecord
 			array('Id_auto_ripper', 'required'),
 			array('Id_auto_ripper', 'numerical', 'integerOnly'=>true),
 			array('name, label', 'length', 'max'=>255),
+			array('size', 'length', 'max'=>20),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('Id, Id_auto_ripper, name, label', 'safe', 'on'=>'search'),
+			array('Id, Id_auto_ripper, name, label, size', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -48,6 +51,7 @@ class AutoRipperFile extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'idAutoRipper' => array(self::BELONGS_TO, 'AutoRipper', 'Id_auto_ripper'),
+			'subtitles' => array(self::MANY_MANY, 'Subtitle', 'auto_ripper_file_subtitle(Id_auto_ripper_file, Id_subtitle)'),
 		);
 	}
 
@@ -61,6 +65,7 @@ class AutoRipperFile extends CActiveRecord
 			'Id_auto_ripper' => 'Id Auto Ripper',
 			'name' => 'Name',
 			'label' => 'Label',
+			'size' => 'Size',
 		);
 	}
 
@@ -86,6 +91,7 @@ class AutoRipperFile extends CActiveRecord
 		$criteria->compare('Id_auto_ripper',$this->Id_auto_ripper);
 		$criteria->compare('name',$this->name,true);
 		$criteria->compare('label',$this->label,true);
+		$criteria->compare('size',$this->size,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
