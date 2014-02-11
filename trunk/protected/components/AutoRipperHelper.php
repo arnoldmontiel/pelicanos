@@ -18,6 +18,7 @@ class AutoRipperHelper
 				$modelNzb->Id_resource_type = 1; //por defecto es BLURAY						
 				$modelNzb->Id_nzb_type = 1; //por defecto todos son MAIN
 				$modelNzb->Id_creation_state = 1; //por defecto va a BORRADOR
+				$modelNzb->Id_auto_ripper_file = $autoRipperFile->Id;
 				
 				$modelNzb->file_name =  $fileName;
 				$modelNzb->file_original_name =  $fileName;
