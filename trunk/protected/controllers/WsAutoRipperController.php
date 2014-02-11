@@ -167,10 +167,11 @@ class WsAutoRipperController extends Controller
 	 * Get New Name by idProcess
 	 * @param string idProcess
 	 * @param string label
+	 * @param integer size
 	 * @return string name
 	 * @soap
 	 */
-	public function getNewName($idProcess, $label)
+	public function getNewName($idProcess, $label, $size)
 	{
 		$name = '';
 		
@@ -191,6 +192,7 @@ class WsAutoRipperController extends Controller
 				$modelAutoRipperFile = new AutoRipperFile();
 				$modelAutoRipperFile->Id_auto_ripper = $modelAutoRipper->Id;
 				$modelAutoRipperFile->label = $label;
+				$modelAutoRipperFile->size = $size;
 				$modelAutoRipperFile->name = uniqid();
 				$modelAutoRipperFile->save();
 			}
