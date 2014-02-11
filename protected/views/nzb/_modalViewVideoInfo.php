@@ -75,7 +75,7 @@
 						    		PUBLICO
 						    	</div><!--/.col-md-3 -->
 						    	<div class="col-md-9 col-sm-9 align-left detailSecond">
-						    		<?php echo $parental;?>    
+						    		&nbsp;<?php echo $parental;?>    
 						    	</div><!--/.col-md-9 -->
 						    </div><!--/.row -->
 						    <div class="row detailSecondGroup">
@@ -131,7 +131,7 @@
 						    		ACTORES
 						    	</div><!--/.col-md-3 -->
 						    	<div class="col-md-9 col-sm-9 align-left detailSecond">
-						    		&nbsp;&nbsp;<?php echo $actor;?>
+						    		&nbsp;<?php echo $actor;?>
 						    	</div><!--/.col-md-9 -->
 						    </div><!--/.row -->
 						    <div class="row detailSecondGroup">
@@ -139,7 +139,7 @@
 						    		DURACI�N
 						    	</div><!--/.col-md-3 -->
 						    	<div class="col-md-9 col-sm-9 align-left detailSecond">
-						    		<?php echo $time;?>&nbsp;mm
+						    		&nbsp;<?php echo $time;?>&nbsp;mm
 						    	</div><!--/.col-md-9 -->
 						    </div><!--/.row -->
 						    <div class="row detailSecondGroup">
