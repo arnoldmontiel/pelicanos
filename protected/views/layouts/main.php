@@ -25,11 +25,7 @@
 		?>
 		<?php echo $content; ?>
 		
-		<div id="myModalViewVideoInfo" class="modal fade" style="display: none;" aria-hidden="true">
-		</div>
-		<div id="myModalApproveConfirm" class="modal fade" style="display: none;" aria-hidden="true">
-		</div>
-		<div id="myModalAutoRipperStates" class="modal fade" style="display: none;" aria-hidden="true">
+		<div id="myModalGeneric" class="modal fade" style="display: none;" aria-hidden="true">
 		</div>
 		<div id="myModalEditarAsoc" class="modal fade in" tabindex="-1"
 			role="dialog" aria-labelledby="myModalLabel" aria-hidden="false"

@@ -1,3 +1,58 @@
+<?php
+Yii::app()->clientScript->registerScript(__CLASS__.'index-nzb', "
+	   				
+$('#a-tab-uploading').click(function(){
+	$.ajax({
+	   		type: 'POST',
+	   		url: '". NzbController::createUrl('AjaxOpenTabUploading') . "',
+	 	}).success(function(data)
+	 	{	
+	   		$('#tabUploading').html(data);
+		});
+});
+
+$('#a-tab-draft').click(function(){
+	$.ajax({
+	   		type: 'POST',
+	   		url: '". NzbController::createUrl('AjaxOpenTabByAll') . "',
+	 	}).success(function(data)
+	 	{	
+	   		$('#tabTodos').html(data);
+		});
+});
+	   				
+	   				tabApproved
+$('#a-tab-approved').click(function(){
+	$.ajax({
+	   		type: 'POST',
+	   		url: '". NzbController::createUrl('AjaxOpenTabPublished') . "',
+	 	}).success(function(data)
+	 	{	
+	   		$('#tabPublished').html(data);
+		});
+});
+
+$('#a-tab-approved').click(function(){
+	$.ajax({
+	   		type: 'POST',
+	   		url: '". NzbController::createUrl('AjaxOpenTabRejected') . "',
+	 	}).success(function(data)
+	 	{	
+	   		$('#tabRejected').html(data);
+		});
+});
+
+$('#a-tab-approved').click(function(){
+	$.ajax({
+	   		type: 'POST',
+	   		url: '". NzbController::createUrl('AjaxOpenTabRejected') . "',
+	 	}).success(function(data)
+	 	{	
+	   		$('#tabRejected').html(data);
+		});
+});
+");
+?>
 <script type="text/javascript">
 function changeNzbType(idNzb, obj)
 {
@@ -21,14 +76,14 @@ function approveNzb(id)
 		).success(
 			function(data){
 				$("#movieItem_" + id).hide();
-				$('#myModalApproveConfirm').trigger('click');	  
+				$('#myModalGeneric').trigger('click');	  
 				var obj = jQuery.parseJSON(data);				
 				if(obj != null)
 				{
 					$('#a-tab-uploading').children().text(obj.uploadingQty);
 					$('#a-tab-draft').children().text(obj.draftQty);
 					$('#a-tab-approved').children().text(obj.approvedQty);
-					$('#a-tab-cancelled').children().text(obj.cancelledQty);
+					$('#a-tab-rejected').children().text(obj.cancelledQty);
 				}
 			});
 }
@@ -41,10 +96,45 @@ function approveConfirm(id)
 			}
 		).success(
 			function(data){
-				$('#myModalApproveConfirm').html(data);
-		   		$('#myModalApproveConfirm').modal('show');	  
+				$('#myModalGeneric').html(data);
+		   		$('#myModalGeneric').modal('show');	  
 			});
 	return false;
+}
+
+function rejectConfirm(id)
+{	
+	$.post("<?php echo NzbController::createUrl('AjaxOpenRejectConfirm'); ?>",
+			{
+				idAutoripper:id
+			}
+		).success(
+			function(data){
+				$('#myModalGeneric').html(data);
+		   		$('#myModalGeneric').modal('show');	  
+			});
+	return false;
+}
+
+function rejectNzb(id, obj)
+{
+	$.post("<?php echo NzbController::createUrl('AjaxRejectNzb'); ?>",
+			{
+				idNzb:id
+			}
+		).success(
+			function(data){
+				$("#movieItem_" + id).hide();
+				$('#myModalGeneric').trigger('click');	  
+				var obj = jQuery.parseJSON(data);				
+				if(obj != null)
+				{
+					$('#a-tab-uploading').children().text(obj.uploadingQty);
+					$('#a-tab-draft').children().text(obj.draftQty);
+					$('#a-tab-approved').children().text(obj.approvedQty);
+					$('#a-tab-rejected').children().text(obj.cancelledQty);
+				}
+			});
 }
 
 function viewVideoInfo(id, tab = 1)
@@ -56,8 +146,8 @@ function viewVideoInfo(id, tab = 1)
 			}
 		).success(
 			function(data){
-				$('#myModalViewVideoInfo').html(data);
-		   		$('#myModalViewVideoInfo').modal('show');	  
+				$('#myModalGeneric').html(data);
+		   		$('#myModalGeneric').modal('show');	  
 			});
 	return false;
 }
@@ -70,8 +160,8 @@ function viewStateHistory(id)
 			}
 		).success(
 			function(data){
-				$('#myModalAutoRipperStates').html(data);
-		   		$('#myModalAutoRipperStates').modal('show');	  
+				$('#myModalGeneric').html(data);
+		   		$('#myModalGeneric').modal('show');	  
 			});
 	return false;
 }
@@ -94,7 +184,7 @@ function editVideoInfo(id)
 		        <li class="active"><a id="a-tab-draft" href="#tabDraft" data-toggle="tab">Borradores <span class="badge"><?php echo $draftQty; ?></span></a></li>
 		        <li><a id="a-tab-approved" href="#tabApproved" data-toggle="tab">Aprobadas <span class="badge"><?php echo $approvedQty; ?></span></a></li>
 		        <li><a href="#tabPublished" data-toggle="tab">Publicadas</a></li>
-		        <li><a id="a-tab-cancelled" href="#tabRechazadas" data-toggle="tab">Rechazadas <span class="badge"><?php echo $cancelledQty; ?></span></a></li>
+		        <li><a id="a-tab-rejected" href="#tabRejected" data-toggle="tab">Rechazadas <span class="badge"><?php echo $cancelledQty; ?></span></a></li>
 	      	</ul>
 			<div class="tab-content">
 				<div class="tab-pane" id="tabUploading">
@@ -109,7 +199,7 @@ function editVideoInfo(id)
 			    <div class="tab-pane" id="tabPublished">
 			    	<?php echo $this->renderPartial('_tabUploading',array('modelAutoRipper'=>$modelAutoRipper)); ?>
 			    </div><!-- /.tab4 -->
-			    <div class="tab-pane" id="tabRechazadas">
+			    <div class="tab-pane" id="tabRejected">
 			    	<?php echo $this->renderPartial('_tabRejected',array('modelNzb'=>$modelNzb)); ?>
 			    </div><!-- /.tab5 -->
 			</div><!-- /.tab-content -->

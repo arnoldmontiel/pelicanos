@@ -10,7 +10,7 @@
 			$title = $modeMyMovieNzb->original_title;
 			$year = $modeMyMovieNzb->production_year;
 			if(!empty($year))
-				$title = ' ('.$year.')';
+				$title = $title. ' ('.$year.')';
 			
 			if(isset($modelNzb->Id_TMDB_data))
 			{
