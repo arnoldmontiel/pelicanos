@@ -1,10 +1,11 @@
 <?php
 $modelTMDB =  $modelNzb->TMDBData;
+$moviePoster = 'noImage.jpg';
 if(isset($modelTMDB)&&$modelTMDB->big_poster!="")
 {
 	$moviePoster = $modelTMDB->big_poster;
 }
-else
+elseif(isset($modelMyMovieNzb->big_poster))
 {
 	$moviePoster = $modelMyMovieNzb->big_poster;
 }

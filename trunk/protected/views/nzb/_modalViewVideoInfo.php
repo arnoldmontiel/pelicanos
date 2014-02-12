@@ -25,7 +25,8 @@
 			$img = "noImage.jpg";
 			if(isset($modelNzb->Id_TMDB_data))
 			{
-				$img = $modelNzb->TMDBData->poster;
+				if(isset($modelNzb->TMDBData->poster))
+					$img = $modelNzb->TMDBData->poster;
 			}
 			elseif (isset($modeMyMovieNzb->poster))
 			{

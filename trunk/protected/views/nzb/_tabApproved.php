@@ -19,7 +19,8 @@
 					$poster = 'noImage.jpg';
 					if(isset($item->Id_TMDB_data))
 					{
-						$poster = $item->TMDBData->poster;
+						if(isset($item->TMDBData->poster))
+							$poster = $item->TMDBData->poster;
 					}
 					elseif (isset($item->myMovieDiscNzb->myMovieNzb->poster))
 					{

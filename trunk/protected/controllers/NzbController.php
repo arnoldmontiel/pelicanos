@@ -2009,6 +2009,16 @@ class NzbController extends Controller
 	
 		echo $this->renderPartial('_tabApproved',array('modelNzbApproved'=>$modelNzbApproved));
 	}
+		
+	public function actionAjaxOpenTabPublished()
+	{
+		$modelNzb = new Nzb('search');
+		$modelNzb->unsetAttributes();
+		if(isset($_GET['Nzb']))
+			$modelNzb->attributes=$_GET['Nzb'];
+	
+		echo $this->renderPartial('_tabPublished',array('modelNzb'=>$modelNzb));
+	}
 	
 	public function actionAjaxOpenTabRejected()
 	{
@@ -2389,11 +2399,20 @@ class NzbController extends Controller
 			$id = $_POST['idMyMovieNzb'];
 			
 			$myMovie = MyMovieNzb::model()->findByPk($id);
-						
+
+			$modelAutoRipper = AutoRipper::model()->findByAttributes(array('Id_nzb'=>$_POST['idNzb']));
+			
+			$query = $myMovie->original_title;
+			if(empty($query) && isset($modelAutoRipper))
+				$query = $modelAutoRipper->name;
+			
 			$db = TMDBApi::getInstance();
 			$db->adult = true;  // return adult content
 			$db->paged = false; // merges all paged results into a single result automatically
-			$results = $db->search('movie', array('query'=>$myMovie->original_title));
+			$results = array();
+			if(!empty($query) && strlen($query) > 3)
+				$results = $db->search('movie', array('query'=>$query));
+			
 			$this->renderPartial('_videoSelector',array('idNzb'=>$_POST['idNzb'],'myMovie'=>$myMovie,'movies'=>$results));
 		}
 	
