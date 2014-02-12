@@ -1951,12 +1951,18 @@ class NzbController extends Controller
 		//$modelNzbPublished = Nzb::model()->findAllByAttributes(array('Id_creation_state'=>2, 'is_draft'=>0));
 		
 		$criteria = new CDbCriteria();
+		$criteria->join = 'INNER JOIN auto_ripper ar ON (ar.Id_nzb = t.Id)';
+		$criteria->addCondition('t.Id_creation_state = 3');
+		$criteria->addCondition('t.is_draft = 1');
+		$criteria->addCondition('t.Id_nzb is null');
+		$cancelledQty = Nzb::model()->count($criteria);
+		
+		$criteria = new CDbCriteria();
 		$criteria->addCondition('Id_auto_ripper_state <> 18');
 		
 		$uploadingQty = AutoRipper::model()->count($criteria);
 		$draftQty = count($modelNzbDraft);
 		$approvedQty = count($modelNzbApproved);
-		$cancelledQty = Nzb::model()->countByAttributes(array('Id_creation_state'=>3));
 		
 		$this->render('index',array(
 			'modelAutoRipper'=>$modelAutoRipper,
@@ -1978,6 +1984,111 @@ class NzbController extends Controller
 			$modelAutoRipper->attributes=$_GET['AutoRipper'];
 		
 		echo $this->renderPartial('_tabUploading',array('modelAutoRipper'=>$modelAutoRipper));
+	}
+	
+	public function actionAjaxOpenTabDraft()
+	{
+		$criteria = new CDbCriteria();
+		$criteria->join = 'INNER JOIN auto_ripper ar ON (ar.Id_nzb = t.Id)';
+		$criteria->addCondition('t.Id_creation_state = 1');
+		$criteria->addCondition('t.is_draft = 1');
+		$criteria->addCondition('t.Id_nzb is null');
+		$modelNzbDraft = Nzb::model()->findAll($criteria);
+	
+		echo $this->renderPartial('_tabDraft',array('modelNzbDraft'=>$modelNzbDraft));
+	}
+	
+	public function actionAjaxOpenTabApproved()
+	{
+		$criteria = new CDbCriteria();
+		$criteria->join = 'INNER JOIN auto_ripper ar ON (ar.Id_nzb = t.Id)';
+		$criteria->addCondition('t.Id_creation_state = 2');
+		$criteria->addCondition('t.is_draft = 1');
+		$criteria->addCondition('t.Id_nzb is null');
+		$modelNzbApproved = Nzb::model()->findAll($criteria);
+	
+		echo $this->renderPartial('_tabApproved',array('modelNzbApproved'=>$modelNzbApproved));
+	}
+	
+	public function actionAjaxOpenTabRejected()
+	{
+		$modelNzb = new Nzb('search');
+		$modelNzb->unsetAttributes();
+		if(isset($_GET['Nzb']))
+			$modelNzb->attributes=$_GET['Nzb'];
+		
+		echo $this->renderPartial('_tabRejected',array('modelNzb'=>$modelNzb));
+	}
+	
+	public function actionAjaxSaveRejectConfirm()
+	{
+		if( isset($_POST['Nzb']))
+		{
+			$idNzb = $_POST['Nzb']['Id'];
+			$rejectNote = $_POST['Nzb']['reject_note'];
+			$modelNzb = Nzb::model()->findByPk($idNzb);
+			
+			if(isset($modelNzb))
+			{
+				$transaction = $modelNzb->dbConnection->beginTransaction();
+				try {
+					$modelNzb->reject_note = $rejectNote;
+					$modelNzb->Id_creation_state = 3;
+					$modelNzb->save();
+				
+					$nzbCreationState = new NzbCreationState();
+					$nzbCreationState->Id_creation_state = 3;
+					$nzbCreationState->Id_nzb = $modelNzb->Id;
+					$nzbCreationState->user_username = Yii::app()->user->name;
+					$nzbCreationState->save();
+				
+					$modelNzbs = Nzb::model()->findAllByAttributes(array('Id_nzb'=>$idNzb));
+				
+					foreach($modelNzbs as $nzb)
+					{
+						$nzb->Id_creation_state = 3;
+						$nzb->save();
+							
+						$nzbCreationState = new NzbCreationState();
+						$nzbCreationState->Id_creation_state = 3;
+						$nzbCreationState->Id_nzb = $nzb->Id;
+						$nzbCreationState->user_username = Yii::app()->user->name;
+						$nzbCreationState->save();
+					}
+				
+					$transaction->commit();
+				} catch (Exception $e) {
+					$transaction->rollback();
+				}
+			}
+		}
+		
+		$criteria = new CDbCriteria();
+		$criteria->addCondition('Id_auto_ripper_state <> 18');
+		$uploadingQty = AutoRipper::model()->count($criteria);
+		
+		$criteria = new CDbCriteria();
+		$criteria->join = 'INNER JOIN auto_ripper ar ON (ar.Id_nzb = t.Id)';
+		$criteria->addCondition('t.Id_creation_state = 1');
+		$criteria->addCondition('t.is_draft = 1');
+		$criteria->addCondition('t.Id_nzb is null');
+		$draftQty = Nzb::model()->count($criteria);
+		
+		$criteria = new CDbCriteria();
+		$criteria->join = 'INNER JOIN auto_ripper ar ON (ar.Id_nzb = t.Id)';
+		$criteria->addCondition('t.Id_creation_state = 2');
+		$criteria->addCondition('t.is_draft = 1');
+		$criteria->addCondition('t.Id_nzb is null');
+		$approvedQty = Nzb::model()->count($criteria);
+		
+		$criteria = new CDbCriteria();
+		$criteria->join = 'INNER JOIN auto_ripper ar ON (ar.Id_nzb = t.Id)';
+		$criteria->addCondition('t.Id_creation_state = 3');
+		$criteria->addCondition('t.is_draft = 1');
+		$criteria->addCondition('t.Id_nzb is null');
+		$cancelledQty = Nzb::model()->count($criteria);		
+		
+		echo json_encode(array("uploadingQty"=>$uploadingQty, "draftQty" => $draftQty, "approvedQty" => $approvedQty, "cancelledQty"=>$cancelledQty));
 	}
 	
 	public function actionEditVideoInfo($idNzb)
@@ -2261,7 +2372,12 @@ class NzbController extends Controller
 		$criteria->addCondition('t.Id_nzb is null');
 		$approvedQty = Nzb::model()->count($criteria);		
 		
-		$cancelledQty = Nzb::model()->countByAttributes(array('Id_creation_state'=>3));
+		$criteria = new CDbCriteria();
+		$criteria->join = 'INNER JOIN auto_ripper ar ON (ar.Id_nzb = t.Id)';
+		$criteria->addCondition('t.Id_creation_state = 3');
+		$criteria->addCondition('t.is_draft = 1');
+		$criteria->addCondition('t.Id_nzb is null');
+		$cancelledQty = Nzb::model()->count($criteria);
 		
 		echo json_encode(array("uploadingQty"=>$uploadingQty, "draftQty" => $draftQty, "approvedQty" => $approvedQty, "cancelledQty"=>$cancelledQty));
 	}
