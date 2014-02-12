@@ -1970,6 +1970,16 @@ class NzbController extends Controller
 		));
 	}
 
+	public function actionAjaxOpenTabUploading()
+	{
+		$modelAutoRipper = new AutoRipper('search');
+		$modelAutoRipper->unsetAttributes();
+		if(isset($_GET['AutoRipper']))
+			$modelAutoRipper->attributes=$_GET['AutoRipper'];
+		
+		echo $this->renderPartial('_tabUploading',array('modelAutoRipper'=>$modelAutoRipper));
+	}
+	
 	public function actionEditVideoInfo($idNzb)
 	{
 		if(isset($_POST['MyMovieNzb']) && isset($_POST['idNzb']))
@@ -2171,6 +2181,26 @@ class NzbController extends Controller
 			$this->renderPartial('_modalApproveConfirm', array('modalAutoRipper'=>$modalAutoRipper,
 																'modelNzbs'=>$modelNzbs));
 		}		
+	}
+	
+	public function actionAjaxOpenRejectConfirm()
+	{
+		$idAutoRipper = (isset($_POST['idAutoripper']))?$_POST['idAutoripper']:null;
+	
+		if(isset($idAutoRipper))
+		{
+			$modalAutoRipper = AutoRipper::model()->findByPk($idAutoRipper);
+				
+			$criteria = new CDbCriteria();
+			$criteria->join = 'inner join auto_ripper ar on (ar.Id_nzb = t.Id or ar.Id_nzb = t.Id_nzb)
+								inner join auto_ripper_file f on (f.Id = t.Id_auto_ripper_file)';
+			$criteria->addCondition('ar.Id = '.$idAutoRipper);
+	
+			$modelNzbs = Nzb::model()->findAll($criteria);
+				
+			$this->renderPartial('_modalRejectConfirm', array('modalAutoRipper'=>$modalAutoRipper,
+					'modelNzbs'=>$modelNzbs));
+		}
 	}
 	
 	public function actionAjaxApproveNzb()

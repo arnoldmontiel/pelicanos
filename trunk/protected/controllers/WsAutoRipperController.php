@@ -403,7 +403,7 @@ class WsAutoRipperController extends Controller
 				$modelAutoRipper->Id_disc = $idDisc;
 				$modelAutoRipper->Id_auto_ripper_process = $idProcess;
 				$modelAutoRipper->Id_auto_ripper_state = 1; //Iniciando
-				$modelAutoRipper->name = $discLabel;
+				$modelAutoRipper->name = str_replace('_', ' ', $discLabel);
 				$modelAutoRipper->save();
 				
 				$autoRipperId = $modelAutoRipper->Id;
