@@ -196,7 +196,7 @@ function editVideoInfo(id)
 			    	<?php echo $this->renderPartial('_tabApproved',array('modelNzbApproved'=>$modelNzbApproved)); ?>
 			    </div><!-- /.tab3 -->      	
 			    <div class="tab-pane" id="tabPublished">
-			    	<?php echo $this->renderPartial('_tabUploading',array('modelAutoRipper'=>$modelAutoRipper)); ?>
+			    	<?php echo $this->renderPartial('_tabPublished',array('modelNzb'=>$modelNzb)); ?>
 			    </div><!-- /.tab4 -->
 			    <div class="tab-pane" id="tabRejected">
 			    	<?php echo $this->renderPartial('_tabRejected',array('modelNzb'=>$modelNzb)); ?>

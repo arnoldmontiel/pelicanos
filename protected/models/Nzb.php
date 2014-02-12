@@ -225,6 +225,24 @@ class Nzb extends CActiveRecord
 				'criteria'=>$criteria,
 		));
 	}
+	
+	public function searchPublished()
+	{
+		// Warning: Please modify the following code to remove attributes that
+		// should not be searched.
+	
+		$criteria=new CDbCriteria;
+	
+		$criteria->compare('Id',$this->Id);
+		$criteria->addCondition('Id_nzb is null');
+		$criteria->compare('Id_creation_state',4); // publicada
+		$criteria->compare('is_draft',0);
+	
+		return new CActiveDataProvider($this, array(
+				'criteria'=>$criteria,
+		));
+	}
+	
 	public function searchMovie()
 	{
 		// Warning: Please modify the following code to remove attributes that
