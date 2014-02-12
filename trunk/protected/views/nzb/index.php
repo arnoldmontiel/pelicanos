@@ -14,15 +14,24 @@ $('#a-tab-uploading').click(function(){
 $('#a-tab-draft').click(function(){
 	$.ajax({
 	   		type: 'POST',
-	   		url: '". NzbController::createUrl('AjaxOpenTabByAll') . "',
+	   		url: '". NzbController::createUrl('AjaxOpenTabDraft') . "',
 	 	}).success(function(data)
 	 	{	
-	   		$('#tabTodos').html(data);
+	   		$('#tabDraft').html(data);
 		});
 });
 	   				
-	   				tabApproved
 $('#a-tab-approved').click(function(){
+	$.ajax({
+	   		type: 'POST',
+	   		url: '". NzbController::createUrl('AjaxOpenTabApproved') . "',
+	 	}).success(function(data)
+	 	{	
+	   		$('#tabApproved').html(data);
+		});
+});
+
+$('#a-tab-published').click(function(){
 	$.ajax({
 	   		type: 'POST',
 	   		url: '". NzbController::createUrl('AjaxOpenTabPublished') . "',
@@ -32,17 +41,7 @@ $('#a-tab-approved').click(function(){
 		});
 });
 
-$('#a-tab-approved').click(function(){
-	$.ajax({
-	   		type: 'POST',
-	   		url: '". NzbController::createUrl('AjaxOpenTabRejected') . "',
-	 	}).success(function(data)
-	 	{	
-	   		$('#tabRejected').html(data);
-		});
-});
-
-$('#a-tab-approved').click(function(){
+$('#a-tab-rejected').click(function(){
 	$.ajax({
 	   		type: 'POST',
 	   		url: '". NzbController::createUrl('AjaxOpenTabRejected') . "',
@@ -183,7 +182,7 @@ function editVideoInfo(id)
 				<li><a id="a-tab-uploading" href="#tabUploading" data-toggle="tab">Uploading <span class="badge"><?php echo $uploadingQty; ?></span></a></li>
 		        <li class="active"><a id="a-tab-draft" href="#tabDraft" data-toggle="tab">Borradores <span class="badge"><?php echo $draftQty; ?></span></a></li>
 		        <li><a id="a-tab-approved" href="#tabApproved" data-toggle="tab">Aprobadas <span class="badge"><?php echo $approvedQty; ?></span></a></li>
-		        <li><a href="#tabPublished" data-toggle="tab">Publicadas</a></li>
+		        <li><a id="a-tab-published" href="#tabPublished" data-toggle="tab">Publicadas</a></li>
 		        <li><a id="a-tab-rejected" href="#tabRejected" data-toggle="tab">Rechazadas <span class="badge"><?php echo $cancelledQty; ?></span></a></li>
 	      	</ul>
 			<div class="tab-content">
