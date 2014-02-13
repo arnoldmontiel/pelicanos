@@ -11,7 +11,7 @@
 				if(strlen($fileName) > 20)
 					$fileName = str_pad(substr($fileName,0,20),23,".",STR_PAD_RIGHT);
 				
-				echo '<div id="movieItem_'.$item->Id.'" class="movieItem">';
+				echo '<div id="movieItem_draft_'.$item->Id.'" class="movieItem">';
 					echo '<table cellspacing="5">';
 						echo '<tr>';
 				if(isset($item->Id_my_movie_disc_nzb))

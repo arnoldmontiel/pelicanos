@@ -2760,6 +2760,19 @@ class NzbController extends Controller
 		}
 	}
 	
+	public function actionAjaxOpenViewDownload()
+	{
+		$idNzb = (isset($_POST['idNzb']))?$_POST['idNzb']:null;
+	
+		if(isset($idNzb))
+		{
+			//el 3 es por las que estan descargadas
+			$modalNzbDevices = NzbDevice::model()->findAllByAttributes(array('Id_nzb'=>$idNzb, 'Id_nzb_state'=>3));
+				
+			$this->renderPartial('_modalViewDownload',array('modalNzbDevices'=>$modalNzbDevices, 'idNzb'=>$idNzb));
+		}
+	}	
+	
 	public function actionAjaxChangeNzbType()
 	{
 		$idNzb = (isset($_POST['idNzb']))?$_POST['idNzb']:null;
