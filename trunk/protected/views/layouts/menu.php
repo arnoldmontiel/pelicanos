@@ -9,7 +9,7 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse navbar-ex5-collapse">
           <ul class="nav navbar-nav">
-          <li <?php if ($active=="inicio"){ echo 'class="active"';}?> ><a href="index.php"><i class="fa fa-film fa-fw"></i> Pel&iacute;culas</a></li>
+          <li <?php if ($active=="nzb"){ echo 'class="active"';}?> ><a href="<?php echo Yii::app()->createUrl("nzb/index")?>"><i class="fa fa-film fa-fw"></i> Pel&iacute;culas</a></li>
           <li <?php if ($active=="usuarios"){ echo 'class="active"';}?> ><a href="usuarios.php"><i class="fa fa-user fa-fw"></i> Usuarios</a></li>
           <li <?php if ($active=="resellers"){ echo 'class="active"';}?> ><a href="resellers.php"><i class="fa fa-group fa-fw"></i> Resellers</a></li>
           <li <?php if ($active=="clientes"){ echo 'class="active"';}?> ><a href="clientes.php"><i class="fa fa-smile-o fa-fw"></i> Clientes</a></li>
