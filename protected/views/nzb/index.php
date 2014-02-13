@@ -74,7 +74,7 @@ function approveNzb(id)
 			}
 		).success(
 			function(data){
-				$("#movieItem_" + id).hide();
+				$("#movieItem_draft_" + id).hide();
 				$('#myModalGeneric').trigger('click');	  
 				var obj = jQuery.parseJSON(data);				
 				if(obj != null)
@@ -109,7 +109,7 @@ function publishNzb(id)
 			}
 		).success(
 			function(data){
-				$("#movieItem_" + id).hide();
+				$("#movieItem_approved_" + id).hide();
 				$('#myModalGeneric').trigger('click');	  
 				var obj = jQuery.parseJSON(data);				
 				if(obj != null)
@@ -158,7 +158,7 @@ function rejectNzb(id, obj)
 			}
 		).success(
 			function(data){
-				$("#movieItem_" + id).hide();
+				$("#movieItem_draft_" + id).hide();
 				$('#myModalGeneric').trigger('click');	  
 				var obj = jQuery.parseJSON(data);				
 				if(obj != null)
@@ -177,6 +177,20 @@ function viewVideoInfo(id, tab = 1)
 			{
 				idAutoripper:id,
 				activeTab:tab
+			}
+		).success(
+			function(data){
+				$('#myModalGeneric').html(data);
+		   		$('#myModalGeneric').modal('show');	  
+			});
+	return false;
+}
+
+function viewDownloads(id)
+{
+	$.post("<?php echo NzbController::createUrl('AjaxOpenViewDownload'); ?>",
+			{
+				idNzb:id
 			}
 		).success(
 			function(data){

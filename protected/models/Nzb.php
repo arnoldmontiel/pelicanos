@@ -106,6 +106,41 @@ class Nzb extends CActiveRecord
 		return $date;
 	}
 	
+	public function getPublishedDate()
+	{
+		$date = '';
+		$criteria = new CDbCriteria();
+		$criteria->addCondition('t.Id_nzb = ' . $this->Id);
+		$criteria->addCondition('t.Id_creation_state = ' . $this->Id_creation_state);
+	
+		$modelNzbCreationState = NzbCreationState::model()->find($criteria);
+		
+		if(isset($modelNzbCreationState))
+			$date = $modelNzbCreationState->date;//isset($modelNzbCreationState->date)?Yii::app()->dateFormatter->formatDateTime($modelNzbCreationState->date,'small',null):'';;
+	
+		return $date;
+	}
+	
+	public function getAutoRipperId()
+	{
+		$idAutoRipper = null;
+		
+		$modelAutoRipper = AutoRipper::model()->findByAttributes(array('Id_nzb'=>$this->Id));
+		
+		if(isset($modelAutoRipper))
+			$idAutoRipper = $modelAutoRipper->Id;
+	
+		return $idAutoRipper;
+	}
+	
+	public function getDownloadsQty()
+	{
+		$criteria = new CDbCriteria();
+		$criteria->addCondition('t.Id_nzb = ' . $this->Id);
+		$criteria->addCondition('t.Id_nzb_state = 3'); // Downloaded
+		return NzbDevice::model()->count($criteria);
+	}
+	
 	/**
 	 * @return string the associated database table name
 	 */

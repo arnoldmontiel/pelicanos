@@ -1,4 +1,4 @@
-<?php		
+<?php			
 	$this->widget('zii.widgets.grid.CGridView', array(
 		'id'=>'nzb-grid_rejected',
 		'dataProvider'=>$modelNzb->searchPublished(),
@@ -19,10 +19,10 @@
 						{
 							$poster = $data->myMovieDiscNzb->myMovieNzb->poster;
 						}	
-						return '<img class="tableMovieImage" src="images/'.$poster.'" width="50">';
+						return '<a onclick="viewVideoInfo('.$data->autoRipperId.');" data-toggle="modal" ><img class="tableMovieImage" src="images/'.$poster.'" width="50"></a>';
 					},
 					'type'=>'raw',
-					'htmlOptions'=>array("width"=>"50;"),
+					'htmlOptions'=>array("width"=>"50;", "class"=>"tdImage", "valign"=>"top"),
 				),
 				array(
 						'header'=>'Película',
@@ -54,6 +54,7 @@
 						},
 						'type'=>'raw',
 						'htmlOptions'=>array("class"=>"align-right"),
+						'headerHtmlOptions'=>array("class"=>"align-right"),
 				),
 				array(
 						'header'=>'Rating',
@@ -66,20 +67,36 @@
 						},
 						'type'=>'raw',
 						'htmlOptions'=>array("class"=>"align-right"),
+						'headerHtmlOptions'=>array("class"=>"align-right"),
 				),
 				array(
-						'header'=>'Fecha',
+						'header'=>'Fecha de Creacion',
 						'value'=>function($data){
-							return $data->rejectedDate;
+							return $data->publishedDate;
 						},
 						'type'=>'raw',
+						'headerHtmlOptions'=>array("width"=>"140"),
+				),				
+				array(
+						'header'=>'Descargas',
+						'value'=>function($data){
+							return $data->downloadsQty;
+						},
+						'type'=>'raw',
+						'htmlOptions'=>array("class"=>"align-right"),
+						'headerHtmlOptions'=>array("class"=>"align-right"),
 				),
 				array(
-						'header'=>'Usuario',
+						'header'=>'Acciones',
 						'value'=>function($data){
-							return $data->rejectedUser;
+							return '<div style="width:250px;">
+										<a onclick="viewVideoInfo('.$data->autoRipperId.');" data-toggle="modal" class="btn btn-default btn-sm"><i class="fa fa-pencil"></i> Editar</a>
+										<a onclick="viewDownloads('.$data->Id.');" data-toggle="modal" class="btn btn-default btn-sm"><i class="fa fa-clock-o"></i> Ver Descargas</a>
+									</div>';
 						},
 						'type'=>'raw',
+						'htmlOptions'=>array("class"=>"align-right"),
+						'headerHtmlOptions'=>array("class"=>"align-right"),
 				),
 			),
 		));		
