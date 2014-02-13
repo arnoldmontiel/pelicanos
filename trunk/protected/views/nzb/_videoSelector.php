@@ -12,7 +12,7 @@
         <div class="form-group col-sm-6">
     <label for="fieldSearchName" class="col-sm-3 control-label">Buscar</label>
     <div class="col-sm-9">	
-                            <input id="fieldSearchName" type="text" class="form-control" placeholder="Título de la película">
+                            <input id="fieldSearchName" type="text" class="form-control" placeholder="<?php echo (!empty($query))?$query:'Título de la película';?>">
                             </div>
                   </div>
         <div class="form-group col-sm-5">

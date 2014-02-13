@@ -653,24 +653,6 @@ class NzbController extends Controller
 		
 		$this->render('create');
 	}
-
-
-	public function actionAjaxPublishNzb()
-	{
-		$id = $_POST['nzbId'];
-		if($id)
-		{
-			$model=$this->loadModel($id);
-			$model->is_draft = 0;
-			$model->save();
-			$nzbCreationState = new NzbCreationState();
-			$nzbCreationState->Id_creation_state = 5;
-			$nzbCreationState->Id_nzb = $id;
-			$nzbCreationState->user_username = Yii::app()->user->name;
-			$nzbCreationState->save();
-				
-		}
-	}
 	
 	public function actionAjaxFillSeason()
 	{
@@ -2036,69 +2018,12 @@ class NzbController extends Controller
 		{
 			$idNzb = $_POST['Nzb']['Id'];
 			$rejectNote = $_POST['Nzb']['reject_note'];
-			$modelNzb = Nzb::model()->findByPk($idNzb);
 			
-			if(isset($modelNzb))
-			{
-				$transaction = $modelNzb->dbConnection->beginTransaction();
-				try {
-					$modelNzb->reject_note = $rejectNote;
-					$modelNzb->Id_creation_state = 3;
-					$modelNzb->save();
-				
-					$nzbCreationState = new NzbCreationState();
-					$nzbCreationState->Id_creation_state = 3;
-					$nzbCreationState->Id_nzb = $modelNzb->Id;
-					$nzbCreationState->user_username = Yii::app()->user->name;
-					$nzbCreationState->save();
-				
-					$modelNzbs = Nzb::model()->findAllByAttributes(array('Id_nzb'=>$idNzb));
-				
-					foreach($modelNzbs as $nzb)
-					{
-						$nzb->Id_creation_state = 3;
-						$nzb->save();
-							
-						$nzbCreationState = new NzbCreationState();
-						$nzbCreationState->Id_creation_state = 3;
-						$nzbCreationState->Id_nzb = $nzb->Id;
-						$nzbCreationState->user_username = Yii::app()->user->name;
-						$nzbCreationState->save();
-					}
-				
-					$transaction->commit();
-				} catch (Exception $e) {
-					$transaction->rollback();
-				}
-			}
+ 			if(isset($idNzb))
+ 				$this->changeNzbState($idNzb, 3, $rejectNote);
 		}
 		
-		$criteria = new CDbCriteria();
-		$criteria->addCondition('Id_auto_ripper_state <> 18');
-		$uploadingQty = AutoRipper::model()->count($criteria);
-		
-		$criteria = new CDbCriteria();
-		$criteria->join = 'INNER JOIN auto_ripper ar ON (ar.Id_nzb = t.Id)';
-		$criteria->addCondition('t.Id_creation_state = 1');
-		$criteria->addCondition('t.is_draft = 1');
-		$criteria->addCondition('t.Id_nzb is null');
-		$draftQty = Nzb::model()->count($criteria);
-		
-		$criteria = new CDbCriteria();
-		$criteria->join = 'INNER JOIN auto_ripper ar ON (ar.Id_nzb = t.Id)';
-		$criteria->addCondition('t.Id_creation_state = 2');
-		$criteria->addCondition('t.is_draft = 1');
-		$criteria->addCondition('t.Id_nzb is null');
-		$approvedQty = Nzb::model()->count($criteria);
-		
-		$criteria = new CDbCriteria();
-		$criteria->join = 'INNER JOIN auto_ripper ar ON (ar.Id_nzb = t.Id)';
-		$criteria->addCondition('t.Id_creation_state = 3');
-		$criteria->addCondition('t.is_draft = 1');
-		$criteria->addCondition('t.Id_nzb is null');
-		$cancelledQty = Nzb::model()->count($criteria);		
-		
-		echo json_encode(array("uploadingQty"=>$uploadingQty, "draftQty" => $draftQty, "approvedQty" => $approvedQty, "cancelledQty"=>$cancelledQty));
+		echo json_encode($this->getQtys());
 	}
 	
 	public function actionEditVideoInfo($idNzb)
@@ -2198,7 +2123,7 @@ class NzbController extends Controller
 					}
 				}
 				$transaction->commit();
-				$this->redirect(Yii::app()->homeUrl);
+				$this->redirect( NzbController::createUrl('index'));
 			} catch (Exception $e) {
 				$transaction->rollback();
 			}
@@ -2299,10 +2224,30 @@ class NzbController extends Controller
 				
 			$modelNzbs = Nzb::model()->findAll($criteria);
 			
-			$this->renderPartial('_modalApproveConfirm', array('modalAutoRipper'=>$modalAutoRipper,
-																'modelNzbs'=>$modelNzbs));
+			$this->renderPartial('_modalConfirm', array('modalAutoRipper'=>$modalAutoRipper,
+																'modelNzbs'=>$modelNzbs, 'confirmType'=>1)); //confirmType = 1 ----> aprobar
 		}		
 	}
+	
+	public function actionAjaxOpenPublishConfirm()
+	{
+		$idAutoRipper = (isset($_POST['idAutoripper']))?$_POST['idAutoripper']:null;
+	
+		if(isset($idAutoRipper))
+		{
+			$modalAutoRipper = AutoRipper::model()->findByPk($idAutoRipper);
+				
+			$criteria = new CDbCriteria();
+			$criteria->join = 'inner join auto_ripper ar on (ar.Id_nzb = t.Id or ar.Id_nzb = t.Id_nzb)
+								inner join auto_ripper_file f on (f.Id = t.Id_auto_ripper_file)';
+			$criteria->addCondition('ar.Id = '.$idAutoRipper);
+	
+			$modelNzbs = Nzb::model()->findAll($criteria);
+				
+			$this->renderPartial('_modalConfirm', array('modalAutoRipper'=>$modalAutoRipper,
+					'modelNzbs'=>$modelNzbs, 'confirmType'=>2)); //confirmType = 2 ----> publicar
+		}
+	}	
 	
 	public function actionAjaxOpenRejectConfirm()
 	{
@@ -2324,46 +2269,57 @@ class NzbController extends Controller
 		}
 	}
 	
-	public function actionAjaxApproveNzb()
+	public function actionAjaxPublishNzb()
 	{
 		$idNzb = (isset($_POST['idNzb']))?$_POST['idNzb']:null;
 	
-		if(isset($idNzb))
-		{
-			$modelNzb = Nzb::model()->findByPk($idNzb);
+ 		if(isset($idNzb))
+ 			$this->changeNzbState($idNzb, 4);
+	
+		echo json_encode($this->getQtys());
+	}
+	
+	private function changeNzbState($idNzb, $idState, $rejectNote = '')
+	{
+		$modelNzb = Nzb::model()->findByPk($idNzb);
 			
-			$transaction = $modelNzb->dbConnection->beginTransaction();
-			try {
-				$modelNzb->Id_creation_state = 2;
-				$modelNzb->save();
-				
+		$transaction = $modelNzb->dbConnection->beginTransaction();
+		try {
+			if($idState == 4)
+				$modelNzb->is_draft = 0;
+			$modelNzb->reject_note = $rejectNote;
+			$modelNzb->Id_creation_state = $idState;
+			$modelNzb->save();
+
+			$nzbCreationState = new NzbCreationState();
+			$nzbCreationState->Id_creation_state = $idState;
+			$nzbCreationState->Id_nzb = $modelNzb->Id;
+			$nzbCreationState->user_username = Yii::app()->user->name;
+			$nzbCreationState->save();
+
+			$modelNzbs = Nzb::model()->findAllByAttributes(array('Id_nzb'=>$idNzb));
+
+			foreach($modelNzbs as $nzb)
+			{
+				$nzb->Id_creation_state = $idState;
+				$nzb->save();
+					
 				$nzbCreationState = new NzbCreationState();
-				$nzbCreationState->Id_creation_state = 2;
-				$nzbCreationState->Id_nzb = $modelNzb->Id;
+				$nzbCreationState->Id_creation_state = $idState;
+				$nzbCreationState->Id_nzb = $nzb->Id;
 				$nzbCreationState->user_username = Yii::app()->user->name;
 				$nzbCreationState->save();
-				
-				$modelNzbs = Nzb::model()->findAllByAttributes(array('Id_nzb'=>$idNzb));
-				
-				foreach($modelNzbs as $nzb)
-				{
-					$nzb->Id_creation_state = 2;
-					$nzb->save();
-					
-					$nzbCreationState = new NzbCreationState();
-					$nzbCreationState->Id_creation_state = 2;
-					$nzbCreationState->Id_nzb = $nzb->Id;
-					$nzbCreationState->user_username = Yii::app()->user->name;
-					$nzbCreationState->save();
-				}
-				
-				$transaction->commit();
-			} catch (Exception $e) {
-				$transaction->rollback();
 			}
-			
+
+			$transaction->commit();
+		} catch (Exception $e) {
+			$transaction->rollback();
 		}
 		
+	}
+	
+	private function getQtys()
+	{
 		$criteria = new CDbCriteria();
 		$criteria->addCondition('Id_auto_ripper_state <> 18');
 		$uploadingQty = AutoRipper::model()->count($criteria);
@@ -2380,7 +2336,7 @@ class NzbController extends Controller
 		$criteria->addCondition('t.Id_creation_state = 2');
 		$criteria->addCondition('t.is_draft = 1');
 		$criteria->addCondition('t.Id_nzb is null');
-		$approvedQty = Nzb::model()->count($criteria);		
+		$approvedQty = Nzb::model()->count($criteria);
 		
 		$criteria = new CDbCriteria();
 		$criteria->join = 'INNER JOIN auto_ripper ar ON (ar.Id_nzb = t.Id)';
@@ -2389,7 +2345,17 @@ class NzbController extends Controller
 		$criteria->addCondition('t.Id_nzb is null');
 		$cancelledQty = Nzb::model()->count($criteria);
 		
-		echo json_encode(array("uploadingQty"=>$uploadingQty, "draftQty" => $draftQty, "approvedQty" => $approvedQty, "cancelledQty"=>$cancelledQty));
+		return array("uploadingQty"=>$uploadingQty, "draftQty" => $draftQty, "approvedQty" => $approvedQty, "cancelledQty"=>$cancelledQty);
+	}
+	
+	public function actionAjaxApproveNzb()
+	{
+		$idNzb = (isset($_POST['idNzb']))?$_POST['idNzb']:null;
+	
+ 		if(isset($idNzb))
+ 			$this->changeNzbState($idNzb, 2);
+		
+		echo json_encode($this->getQtys());
 	}
 	
 	public function actionAjaxFillVideoList()
@@ -2413,7 +2379,7 @@ class NzbController extends Controller
 			if(!empty($query) && strlen($query) > 3)
 				$results = $db->search('movie', array('query'=>$query));
 			
-			$this->renderPartial('_videoSelector',array('idNzb'=>$_POST['idNzb'],'myMovie'=>$myMovie,'movies'=>$results));
+			$this->renderPartial('_videoSelector',array('idNzb'=>$_POST['idNzb'],'myMovie'=>$myMovie,'movies'=>$results, 'query'=>$query));
 		}
 	
 	}
