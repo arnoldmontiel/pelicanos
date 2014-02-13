@@ -101,6 +101,41 @@ function approveConfirm(id)
 	return false;
 }
 
+function publishNzb(id)
+{
+	$.post("<?php echo NzbController::createUrl('AjaxPublishNzb'); ?>",
+			{
+				idNzb:id
+			}
+		).success(
+			function(data){
+				$("#movieItem_" + id).hide();
+				$('#myModalGeneric').trigger('click');	  
+				var obj = jQuery.parseJSON(data);				
+				if(obj != null)
+				{
+					$('#a-tab-uploading').children().text(obj.uploadingQty);
+					$('#a-tab-draft').children().text(obj.draftQty);
+					$('#a-tab-approved').children().text(obj.approvedQty);
+					$('#a-tab-rejected').children().text(obj.cancelledQty);
+				}
+			});
+}
+
+function publishConfirm(id)
+{
+	$.post("<?php echo NzbController::createUrl('AjaxOpenPublishConfirm'); ?>",
+			{
+				idAutoripper:id
+			}
+		).success(
+			function(data){
+				$('#myModalGeneric').html(data);
+		   		$('#myModalGeneric').modal('show');	  
+			});
+	return false;
+}
+
 function rejectConfirm(id)
 {	
 	$.post("<?php echo NzbController::createUrl('AjaxOpenRejectConfirm'); ?>",

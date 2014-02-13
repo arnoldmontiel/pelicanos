@@ -70,7 +70,11 @@
       		</div>
       		<div class="modal-footer">
         		<button type="button" class="btn btn-default btn-lg" data-dismiss="modal">Cancelar</button>
-        		<button onclick="approveNzb(<?php echo $modalAutoRipper->Id_nzb;?>);" type="button" class="btn btn-primary btn-lg"><i class="fa fa-check-square-o"></i> Aprobar</button>
+        		<?php if($confirmType == 1):?>
+        			<button onclick="approveNzb(<?php echo $modalAutoRipper->Id_nzb;?>);" type="button" class="btn btn-primary btn-lg"><i class="fa fa-check-square-o"></i> Aprobar</button>
+        		<?php else:?>
+        			<button onclick="publishNzb(<?php echo $modalAutoRipper->Id_nzb;?>);" type="button" class="btn btn-primary btn-lg"><i class="fa fa-check-square-o"></i> Aprobar</button>
+        		<?php endif;?>
       		</div>
     	</div><!-- /.modal-content -->
   	</div><!-- /.modal-dialog -->
