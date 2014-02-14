@@ -2122,6 +2122,9 @@ class NzbController extends Controller
 						$relationDB->save();
 					}
 				}
+				if($modelNzb->is_draft == 0)
+					$this->updateRelation($modelNzb->Id);
+				
 				$transaction->commit();
 				$this->redirect( NzbController::createUrl('index'));
 			} catch (Exception $e) {
@@ -2301,6 +2304,8 @@ class NzbController extends Controller
 
 			foreach($modelNzbs as $nzb)
 			{
+				if($idState == 4)
+					$nzb->is_draft = 0;
 				$nzb->Id_creation_state = $idState;
 				$nzb->save();
 					
@@ -2783,6 +2788,14 @@ class NzbController extends Controller
 			$modelNzb = Nzb::model()->findByPk($idNzb);
 			$modelNzb->Id_nzb_type = $idNzbType;
 			$modelNzb->save();
+				
+			if($modelNzb->is_draft == 0)
+			{
+				if(isset($modelNzb->Id_nzb))
+					$this->updateRelation($modelNzb->Id_nzb);
+				else 
+					$this->updateRelation($idNzb);
+			}
 		}
 		
 	}
