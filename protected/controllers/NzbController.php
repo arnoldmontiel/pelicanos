@@ -73,37 +73,43 @@ class NzbController extends Controller
 		foreach ($arrayNbz as $modelNbz)
 		{
 			$nzbResponse = new NzbResponse();
-			$nzbResponse->nzb->setAttributes($modelNbz);
-			$nzbResponse->myMovieDisc->setAttributes($modelNbz->myMovieDiscNzb);
-			$nzbResponse->myMovie->setAttributes($modelNbz->myMovieDiscNzb->myMovieNzb);
-			$nzbResponse->myMovie->myMovieSerieHeader = self::getSerie($modelNbz->myMovieDiscNzb);
-
-			//set audio track
-			$relAudioTracks = MyMovieNzbAudioTrack::model()->findAllByAttributes(array('Id_my_movie_nzb'=>$modelNbz->myMovieDiscNzb->Id_my_movie_nzb));
-			foreach($relAudioTracks as $relAudioTrack)
-			{
-				$audioTrackSOAP = new MyMovieAudioTrackSOAP();
-				$audioTrackSOAP->setAttributes($relAudioTrack->audioTrack);
-				$nzbResponse->myMovie->AudioTrack[] = $audioTrackSOAP;
-			}
+			$nzbResponse->nzb->setAttributes($modelNbz);			
 			
-			//set subtitle
-			$relSubtitles = MyMovieNzbSubtitle::model()->findAllByAttributes(array('Id_my_movie_nzb'=>$modelNbz->myMovieDiscNzb->Id_my_movie_nzb));
-			foreach($relSubtitles as $relSubtitle)
+			if(isset($modelNbz->myMovieDiscNzb))
 			{
-				$subtitleSOAP = new MyMovieSubtitleSOAP();
-				$subtitleSOAP->setAttributes($relSubtitle->subtitle);
-				$nzbResponse->myMovie->Subtitle[] = $subtitleSOAP;
+				$nzbResponse->myMovieDisc->setAttributes($modelNbz->myMovieDiscNzb);
+				$nzbResponse->myMovie->setAttributes($modelNbz->myMovieDiscNzb->myMovieNzb);
+				$nzbResponse->myMovie->myMovieSerieHeader = self::getSerie($modelNbz->myMovieDiscNzb);
+	
+				//set audio track
+				$relAudioTracks = MyMovieNzbAudioTrack::model()->findAllByAttributes(array('Id_my_movie_nzb'=>$modelNbz->myMovieDiscNzb->Id_my_movie_nzb));
+				foreach($relAudioTracks as $relAudioTrack)
+				{
+					$audioTrackSOAP = new MyMovieAudioTrackSOAP();
+					$audioTrackSOAP->setAttributes($relAudioTrack->audioTrack);
+					$nzbResponse->myMovie->AudioTrack[] = $audioTrackSOAP;
+				}
+				
+				//set subtitle
+				$relSubtitles = MyMovieNzbSubtitle::model()->findAllByAttributes(array('Id_my_movie_nzb'=>$modelNbz->myMovieDiscNzb->Id_my_movie_nzb));
+				foreach($relSubtitles as $relSubtitle)
+				{
+					$subtitleSOAP = new MyMovieSubtitleSOAP();
+					$subtitleSOAP->setAttributes($relSubtitle->subtitle);
+					$nzbResponse->myMovie->Subtitle[] = $subtitleSOAP;
+				}
+				
+				//set subtitle
+				$relPersons = MyMovieNzbPerson::model()->findAllByAttributes(array('Id_my_movie_nzb'=>$modelNbz->myMovieDiscNzb->Id_my_movie_nzb));
+				foreach($relPersons as $relPerson)
+				{
+					$personSOAP = new MyMoviePersonSOAP();
+					$personSOAP->setAttributes($relPerson->person);
+					$nzbResponse->myMovie->Person[] = $personSOAP;
+				}
 			}
-			
-			//set subtitle
-			$relPersons = MyMovieNzbPerson::model()->findAllByAttributes(array('Id_my_movie_nzb'=>$modelNbz->myMovieDiscNzb->Id_my_movie_nzb));
-			foreach($relPersons as $relPerson)
-			{
-				$personSOAP = new MyMoviePersonSOAP();
-				$personSOAP->setAttributes($relPerson->person);
-				$nzbResponse->myMovie->Person[] = $personSOAP;
-			}
+				
+			$arrayNbz = Nzb::model()->findAll($criteria);
 			
 			$arrayResponse[]=$nzbResponse;
 				

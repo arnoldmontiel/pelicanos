@@ -84,4 +84,10 @@ class NzbSOAP
 	*/
 	public $final_content_path;
 	
+	/**
+	 * @var integer id nzb
+	 * @soap
+	 */
+	public $Id_nzb;
+	
 }
