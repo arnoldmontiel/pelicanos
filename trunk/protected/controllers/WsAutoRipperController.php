@@ -133,7 +133,7 @@ class WsAutoRipperController extends Controller
 				$autoRipperState->description = $description;
 				$autoRipperState->save();
 				
-				if($idState == 18) //SOLO SI ES 18 creo el NZB y sus dependencias
+				if($idState == 18 && $modelAutoRipper->has_error == 0) //SOLO SI ES 18 y no hubo errores creo el NZB y sus dependencias
 				{
 					AutoRipperHelper::generateNzbs($id);
 					AutoRipperHelper::findVideoInfo($id);
