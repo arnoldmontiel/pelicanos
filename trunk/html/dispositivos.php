@@ -26,7 +26,7 @@ include('menu.php');?>
       <table class="table table-striped table-bordered tablaIndividual">
         <thead>
           <tr>
-            <th>Resller</th>
+            <th>Reseller</th>
             <th>Cliente</th>
             <th>Fecha Pedido</th>
             <th class="align-right">Acciones</th>
@@ -60,6 +60,8 @@ include('menu.php');?>
           <tr>
             <th>Resller</th>
             <th>Cliente</th>
+            <th>Nombre</th>
+            <th>Id</th>
             <th>Fecha Creaci&oacute;n</th>
             <th>Descargas</th>
             <th class="align-right">Acciones</th>
@@ -68,34 +70,45 @@ include('menu.php');?>
         <tbody>
           <tr>
             <td>Venezuela</td>
-            <td>Juan Perez</td>
+            <td>Arnold Montiel</td>
+            <td>Castelar Norte</td>
+            <td>00989127</td>
             <td>10/10/2013</td>
             <td>200</td>
-            <td class="align-right"><button type="button" class="btn btn-default btn-sm"  data-toggle="modal" data-target="#myModalViewDownloads" ><i class="fa fa-clock-o"></i> Ver Descargas</button>
+            <td class="align-right"><button data-toggle="modal" data-target="#myModalConfigPuertos" type="button" class="btn btn-default btn-sm" ><i class="fa fa-cog"></i> Configurar Puertos</button> <button type="button" class="btn btn-default btn-sm"  data-toggle="modal" data-target="#myModalViewDownloads" ><i class="fa fa-clock-o"></i> Ver Descargas</button>
               </td>
           </tr>
           <tr>
             <td>Venezuela</td>
             <td>Arnold Montiel</td>
+            <td>Castelar Sur</td>
+            <td>00989127</td>
+ 
             <td>10/10/2013</td>
             <td>10</td>
-            <td class="align-right"><button type="button" class="btn btn-default btn-sm"  data-toggle="modal" data-target="#myModalViewDownloads" ><i class="fa fa-clock-o"></i> Ver Descargas</button>
+            <td class="align-right"><button data-toggle="modal" data-target="#myModalConfigPuertos" type="button" class="btn btn-default btn-sm" ><i class="fa fa-cog"></i> Configurar Puertos</button> <button type="button" class="btn btn-default btn-sm"  data-toggle="modal" data-target="#myModalViewDownloads" ><i class="fa fa-clock-o"></i> Ver Descargas</button>
               </td>
           </tr>
           <tr>
             <td>Venezuela</td>
             <td>Pedro Pablo</td>
+            <td>Dormitorio</td>
+            <td>00989127</td>
+ 
             <td>10/10/2013</td>
             <td>14</td>
-            <td class="align-right"><button type="button" class="btn btn-default btn-sm"  data-toggle="modal" data-target="#myModalViewDownloads" ><i class="fa fa-clock-o"></i> Ver Descargas</button>
+            <td class="align-right"><button data-toggle="modal" data-target="#myModalConfigPuertos" type="button" class="btn btn-default btn-sm" ><i class="fa fa-cog"></i> Configurar Puertos</button> <button type="button" class="btn btn-default btn-sm"  data-toggle="modal" data-target="#myModalViewDownloads" ><i class="fa fa-clock-o"></i> Ver Descargas</button>
               </td>
           </tr>
           <tr>
             <td>Venezuela</td>
             <td>Simon Cowell</td>
+            <td>Living</td>
+            <td>00989127</td>
+ 
             <td>10/10/2013</td>
             <td>87</td>
-            <td class="align-right"><button type="button" class="btn btn-default btn-sm"  data-toggle="modal" data-target="#myModalViewDownloads" ><i class="fa fa-clock-o"></i> Ver Descargas</button>
+            <td class="align-right"><button data-toggle="modal" data-target="#myModalConfigPuertos" type="button" class="btn btn-default btn-sm" ><i class="fa fa-cog"></i> Configurar Puertos</button> <button type="button" class="btn btn-default btn-sm"  data-toggle="modal" data-target="#myModalViewDownloads" ><i class="fa fa-clock-o"></i> Ver Descargas</button>
               </td>
           </tr>
         </tbody>
@@ -219,6 +232,81 @@ include('menu.php');?>
                       <td>2013-12-28 14:00:23</td>
                     </tr>
                   </tbody>
+                </table>
+              </div>
+              </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal"> Cerrar</button>
+        </div>
+      </div>
+      <!-- /.modal-content --> 
+      
+    </div>
+    <!-- /.modal-dialog --></div>
+</div>
+
+
+<div id="myModalConfigPuertos" class="modal fade in" style="display: hidden;" aria-hidden="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4 class="modal-title">Configurar Puertos </h4>
+        </div>
+        <div class="modal-body">
+         <ul class="nav nav-tabs">
+        <li class="active"><a>Castelar Norte (ID: 30909fdjf)</a></li>
+      </ul>
+         <form class="form-inline formAddPort" role="form">
+  <div class="form-group">
+    <label  for="internalPortID">Internal Port</label>
+    <input type="email" class="form-control" id="internalPortID" placeholder="nnnn">
+  </div>
+  <div class="form-group">
+    <label for="externalPortID">Puertos Disponibles</label>
+<select class="form-control" id="externalPortID">
+  <option>HTTP</option>
+  <option>SSH</option>
+  <option>MySQL</option>
+</select>  </div>
+  <button type="submit" class="btn btn-default"><i class="fa fa-plus"></i> Agregar</button>
+</form>
+              <div id="product-grid-add" class="grid-view">
+                <table class="table table-striped table-bordered tablaIndividual">
+                  <thead>
+                    <tr>
+<tr>
+<th>Puerto Interno</th>
+<th>Puerto Externo</th>
+<th>Estado</th>
+<th>Validaci&oacute;n</th>
+<th class="align-right">Acciones</th>
+                    </tr>
+                  </thead>
+                  
+<tbody>
+<tr>
+<td>SSH</td>
+<td>5555</td>
+<td><span class="label label-success">Abierto</span></td>
+<td>Esperando...</td>
+<td class="align-right"><button type="button" class="btn btn-default btn-sm"><i class="fa fa-circle fa-fw"></i> Cerrar</button></td>
+</tr>
+<tr>
+<td>HTTP</td>
+<td>5556</td>
+<td><span class="label label-success">Abierto</span></td>
+<td><span class="label label-primary">Validado</span></td>
+<td class="align-right"><button type="button" class="btn btn-default btn-sm"><i class="fa fa-circle fa-fw"></i> Cerrar</button></td>
+</tr>
+<tr>
+<td>MySQL</td>
+<td>5557</td>
+<td><span class="label label-danger">Cerrado</span></td>
+<td>Esperando...</td>
+<td class="align-right"><button type="button" class="btn btn-default btn-sm"><i class="fa fa-circle-o fa-fw"></i> Abrir</button></td>
+</tr>
+</tbody>
                 </table>
               </div>
               </div>
