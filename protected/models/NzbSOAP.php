@@ -90,4 +90,10 @@ class NzbSOAP
 	 */
 	public $Id_nzb;
 	
+	/**
+	 * @var integer id nzb type
+	 * @soap
+	 */
+	public $Id_nzb_type;
+	
 }
