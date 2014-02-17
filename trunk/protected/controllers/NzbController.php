@@ -1930,8 +1930,6 @@ class NzbController extends Controller
 		$criteria->addCondition('t.Id_nzb is null');
 		$modelNzbApproved = Nzb::model()->findAll($criteria);
 		
-		//$modelNzbPublished = Nzb::model()->findAllByAttributes(array('Id_creation_state'=>2, 'is_draft'=>0));
-		
 		$criteria = new CDbCriteria();
 		$criteria->join = 'INNER JOIN auto_ripper ar ON (ar.Id_nzb = t.Id)';
 		$criteria->addCondition('t.Id_creation_state = 3');
@@ -1941,8 +1939,8 @@ class NzbController extends Controller
 		
 		$criteria = new CDbCriteria();
 		$criteria->addCondition('Id_auto_ripper_state <> 18');
-		
 		$uploadingQty = AutoRipper::model()->count($criteria);
+		
 		$draftQty = count($modelNzbDraft);
 		$approvedQty = count($modelNzbApproved);
 		
