@@ -347,7 +347,8 @@ input.searchOverTab:-moz-placeholder::before  { font-family: FontAwesome; conten
 
 /* ---------- PORT ADMIN ------- */
 
-.formAddPort{margin-bottom:20px;}
+.formAddPort{margin-bottom:20px;padding: 20px 10px;
+background-color: #F9f9f9;}
 .formAddPort button{vertical-align:bottom;}
 
 /* ------ PAGINADOR------- */
@@ -505,12 +506,13 @@ padding: 6px 8px;
 .modal-footer {padding: 9px 15px;}
 .modal-body{ overflow:hidden;}
 .modal-backdrop{z-index:1060;}
-.modal .nav-tabs li a{ color:#333;}
+.modal .nav-tabs li a{ color:#333;border:0px none;}
 
 .modal .nav-tabs>li.active>a { background-color:#ccc; color:#fff !important;}
 
 #myModalViewDownloads .modal-dialog{width:1000px;}
 #myModalDescargas .modal-dialog{width:1000px;}
+#myModalConfigPuertos .modal-dialog{width:1000px;}
 
 /* ------ END MODALS ------- */
 
