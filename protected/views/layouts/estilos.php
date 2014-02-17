@@ -345,6 +345,10 @@ input.searchOverTab:-moz-placeholder::before  { font-family: FontAwesome; conten
 
 /* ------ END MOVIE LIST------- */
 
+/* ---------- PORT ADMIN ------- */
+
+.formAddPort{margin-bottom:20px;}
+.formAddPort button{vertical-align:bottom;}
 
 /* ------ PAGINADOR------- */
 ul.yiiPager .page a {
