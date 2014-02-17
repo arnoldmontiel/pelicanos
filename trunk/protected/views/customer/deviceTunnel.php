@@ -1,3 +1,58 @@
+<div class="container" id="screenInicio">
+	<h1 class="pageTitle">Administrar Puertos</h1>
+	<div class="row">
+	    <div class="col-sm-12">
+	   <form class="form-inline formAddPort" role="form">
+  <div class="form-group">
+    <label  for="internalPortID">Internal Port</label>
+    <input type="email" class="form-control" id="internalPortID" placeholder="nnnn">
+  </div>
+  <div class="form-group">
+    <label for="externalPortID">Puertos Disponibles</label>
+<select class="form-control" id="externalPortID">
+  <option>HTTP</option>
+  <option>SSH</option>
+  <option>MySQL</option>
+</select>  </div>
+  <button type="submit" class="btn btn-default"><i class="fa fa-plus"></i> Agregar</button>
+</form>
+<table class="table table-striped table-bordered tablaIndividual">
+<thead>
+<tr>
+<th>Puerto Interno</th>
+<th>Puerto Externo</th>
+<th>Estado</th>
+<th>Validaci&oacute;n</th>
+<th class="align-right">Acciones</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SSH</td>
+<td>5555</td>
+<td><span class="label label-success">Abierto</span></td>
+<td>Esperando...</td>
+<td class="align-right"><button type="button" class="btn btn-default btn-sm"><i class="fa fa-circle fa-fw"></i> Cerrar</button></td>
+</tr>
+<tr>
+<td>HTTP</td>
+<td>5556</td>
+<td><span class="label label-success">Abierto</span></td>
+<td><span class="label label-primary">Validado</span></td>
+<td class="align-right"><button type="button" class="btn btn-default btn-sm"><i class="fa fa-circle fa-fw"></i> Cerrar</button></td>
+</tr>
+<tr>
+<td>MySQL</td>
+<td>5557</td>
+<td><span class="label label-danger">Cerrado</span></td>
+<td>Esperando...</td>
+<td class="align-right"><button type="button" class="btn btn-default btn-sm"><i class="fa fa-circle-o fa-fw"></i> Abrir</button></td>
+</tr>
+</tbody>
+</table>
+	    
+<div class="estoesloviejo" style="margin-top:120px;">
+ACA EMPIEZA LO VIEJO
 <div class="form">
 
 <?php $form=$this->beginWidget('CActiveForm', array(
@@ -24,12 +79,13 @@
 
 </div><!-- form -->
 
-
+</div>
 <?php 
 $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'device-grid',
 	'dataProvider'=>$modelDeviceTunelGrid->search(),
 	'filter'=>$modelDeviceTunelGrid,
+	'itemsCssClass' => 'table table-striped table-bordered tablaIndividual',
 	'summaryText'=>'',
 	
 	'columns'=>array(
@@ -79,3 +135,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 		),
 	),
 )); ?>
+
+	   </div><!-- /.col-sm-12 --> 
+	</div><!-- /.row --> 
+</div><!-- /container --> 
