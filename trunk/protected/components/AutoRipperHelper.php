@@ -168,8 +168,12 @@ class AutoRipperHelper
 								}
 							}
 							
-							$myMovieDiscNzb = new MyMovieDiscNzb();
-							$myMovieDiscNzb->Id = uniqid ("cust_");
+							$myMovieDiscNzb = MyMovieDiscNzb::model()->findByPk($modelAutoRipper->Id_disc);
+							if(!isset($myMovieDiscNzb))
+							{
+								$myMovieDiscNzb = new MyMovieDiscNzb();
+								$myMovieDiscNzb->Id = $modelAutoRipper->Id_disc;
+							}
 							$myMovieDiscNzb->name = $modelAutoRipper->name;
 							$myMovieDiscNzb->Id_my_movie_nzb = $myMovieNzb->Id;
 						
