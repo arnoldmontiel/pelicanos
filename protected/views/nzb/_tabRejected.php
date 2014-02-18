@@ -3,7 +3,8 @@
 		'id'=>'nzb-grid_rejected',
 		'dataProvider'=>$modelNzb->searchRejected(),
 		'selectableRows' => 0,
-		'summaryText'=>'',	
+		'summaryText'=>'',
+		'filter'=>$modelNzb,
 		'itemsCssClass' => 'table table-striped table-bordered tablaIndividual',
 		'columns'=>array(
 				array(
@@ -25,7 +26,7 @@
 					'htmlOptions'=>array("width"=>"50;"),
 				),
 				array(
-						'header'=>'Película',
+						'name'=>'title',
 						'value'=>function($data){
 							$title = 'No Identificado';
 							if(isset($data->myMovieDiscNzb->myMovieNzb))

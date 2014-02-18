@@ -41,6 +41,7 @@ class Nzb extends CActiveRecord
 	public $title;
 	public $resourceTypeDesc;
 	public $disc_name;
+	public $rating;
 	
 	/**
 	 * Returns the static model of the specified AR class.
@@ -103,7 +104,7 @@ class Nzb extends CActiveRecord
 		if(isset($modelNzbCreationState))
 			$date = $modelNzbCreationState->date;
 				
-		return $date;
+		return isset($date)?Yii::app()->dateFormatter->format("dd/MM/yyyy", $date):'';
 	}
 	
 	public function getPublishedDate()
@@ -118,7 +119,7 @@ class Nzb extends CActiveRecord
 		if(isset($modelNzbCreationState))
 			$date = $modelNzbCreationState->date;//isset($modelNzbCreationState->date)?Yii::app()->dateFormatter->formatDateTime($modelNzbCreationState->date,'small',null):'';;
 	
-		return $date;
+		return isset($date)?Yii::app()->dateFormatter->format("dd/MM/yyyy", $date):'';
 	}
 	
 	public function getAutoRipperId()
@@ -164,7 +165,7 @@ class Nzb extends CActiveRecord
 			array('rejected_description', 'length', 'max'=>500),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id, Id_resource_type, url, file_name, subt_url, subt_file_name, subt_original_name, deleted, points, file_original_name,final_content_path, is_draft, Id_my_movie_disc_nzb, year, idImdb, genre, title, resourceTypeDesc, disc_name, file_password, Id_nzb_type, Id_nzb, rejected_description, Id_creation_state, Id_TMDB_data, Id_auto_ripper_file, reject_note', 'safe', 'on'=>'search'),
+			array('Id, Id_resource_type, url, file_name, subt_url, subt_file_name, subt_original_name, deleted, points, file_original_name,final_content_path, is_draft, Id_my_movie_disc_nzb, year, idImdb, genre, title, resourceTypeDesc, disc_name, file_password, Id_nzb_type, Id_nzb, rejected_description, Id_creation_state, Id_TMDB_data, Id_auto_ripper_file, reject_note, rating', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -211,6 +212,9 @@ class Nzb extends CActiveRecord
 			'final_content_path'=>'Path content',
 			'file_password'=> 'File Password',
 			'reject_note'=>'Razon',
+			'title'=>'Película',
+			'year'=>'Año',
+			'rating'=>'Rating',
 		);
 	}
 
@@ -251,13 +255,30 @@ class Nzb extends CActiveRecord
 	
 		$criteria=new CDbCriteria;
 	
-		$criteria->compare('Id',$this->Id);
-		$criteria->addCondition('Id_nzb is null');
-		$criteria->compare('Id_creation_state',3); // rechazada
-		$criteria->compare('is_draft',1);
+		$criteria->join =	" LEFT OUTER JOIN my_movie_disc_nzb dn ON dn.Id = t.Id_my_movie_disc_nzb
+							  LEFT OUTER JOIN auto_ripper ar ON ar.Id_nzb = t.Id
+										LEFT OUTER JOIN my_movie_nzb n ON n.Id = dn.Id_my_movie_nzb";
+		
+		$criteria->compare("n.original_title",$this->title, true);
+		$criteria->addCondition('t.Id_nzb is null');
+		$criteria->compare('t.Id_creation_state',3); // rechazada
+		$criteria->compare('t.is_draft',1);
+		
+		// Create a custom sort
+		$sort=new CSort;
+		$sort->attributes=array(
+				// For each relational attribute, create a 'virtual attribute' using the public variable name
+				'title' => array(
+						'asc' => 'n.original_title',
+						'desc' => 'n.original_title DESC',
+				),
+				'*',
+		);
+		$sort->defaultOrder = 't.Id DESC';
 		
 		return new CActiveDataProvider($this, array(
 				'criteria'=>$criteria,
+				'sort'=>$sort,
 		));
 	}
 	
@@ -268,14 +289,42 @@ class Nzb extends CActiveRecord
 	
 		$criteria=new CDbCriteria;
 	
-		$criteria->compare('Id',$this->Id);
-		$criteria->addCondition('Id_nzb is null');
-		$criteria->compare('Id_creation_state',4); // publicada
-		$criteria->compare('is_draft',0);
+		$criteria->join =	" LEFT OUTER JOIN my_movie_disc_nzb dn ON dn.Id = t.Id_my_movie_disc_nzb
+							  LEFT OUTER JOIN auto_ripper ar ON ar.Id_nzb = t.Id
+										LEFT OUTER JOIN my_movie_nzb n ON n.Id = dn.Id_my_movie_nzb";
+		
+		$criteria->compare("n.original_title",$this->title, true);
+		$criteria->addSearchCondition("n.production_year",$this->year);
+		$criteria->addSearchCondition("n.rating",$this->rating);
+		$criteria->addCondition('t.Id_nzb is null');
+		$criteria->compare('t.Id_creation_state',4); // publicada
+		$criteria->compare('t.is_draft',0);
 	
+		// Create a custom sort
+		$sort=new CSort;
+		$sort->attributes=array(
+				// For each relational attribute, create a 'virtual attribute' using the public variable name
+				'title' => array(
+						'asc' => 'n.original_title',
+						'desc' => 'n.original_title DESC',
+				),
+				'year' => array(
+						'asc' => 'n.production_year',
+						'desc' => 'n.production_year DESC',
+				),
+				'rating' => array(
+						'asc' => 'n.rating',
+						'desc' => 'n.rating DESC',
+				),
+				'*',
+		);
+		$sort->defaultOrder = 't.Id DESC';
+		
 		return new CActiveDataProvider($this, array(
 				'criteria'=>$criteria,
+				'sort'=>$sort,
 		));
+		
 	}
 	
 	public function searchMovie()
