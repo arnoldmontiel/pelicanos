@@ -4,6 +4,7 @@
 		'dataProvider'=>$modelNzb->searchPublished(),
 		'selectableRows' => 0,
 		'summaryText'=>'',	
+		'filter'=>$modelNzb,
 		'itemsCssClass' => 'table table-striped table-bordered tablaIndividual',
 		'columns'=>array(
 				array(
@@ -25,7 +26,7 @@
 					'htmlOptions'=>array("width"=>"50;", "class"=>"tdImage", "valign"=>"top"),
 				),
 				array(
-						'header'=>'Película',
+						'name'=>'title',
 						'value'=>function($data){
 							$title = 'No Identificado';
 							$genre = '';
@@ -44,7 +45,7 @@
 						'type'=>'raw',
 				),
 				array(
-						'header'=>'Año',
+						'name'=>'year',
 						'value'=>function($data){
 							$year = '';
 							if(isset($data->myMovieDiscNzb->myMovieNzb))
@@ -57,7 +58,7 @@
 						'headerHtmlOptions'=>array("class"=>"align-right"),
 				),
 				array(
-						'header'=>'Rating',
+						'name'=>'rating',
 						'value'=>function($data){
 							$rating = '';
 							if(isset($data->myMovieDiscNzb->myMovieNzb))
