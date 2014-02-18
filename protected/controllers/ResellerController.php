@@ -147,7 +147,59 @@ class ResellerController extends Controller
 			'modelUser'=>$modelUser,
 		));
 	}
-
+	
+	public function actionAjaxOpenForm()
+	{
+		$idReseller = isset($_POST['idReseller'])?$_POST['idReseller']:null;
+		
+		if(isset($idReseller))
+		{
+			if($idReseller == 0)
+			{
+				$modelReseller = new Reseller();
+				$modelUser = new User();
+			}
+			else
+			{
+				$modelReseller = Reseller::model()->findByPk($idReseller);
+				$modelUser = User::model()->findByAttributes(array('Id_reseller'=>$idReseller));
+			}
+			 
+		}
+	
+		echo $this->renderPartial('_modalForm', array('modelReseller'=>$modelReseller, 'modelUser'=>$modelUser));
+	}
+	
+	public function actionAjaxSaveReseller()
+	{
+		$modelReseller = new Reseller();
+		$modelUser = new User();
+		
+		if(isset($_POST['Reseller']) && isset($_POST['User']))
+		{
+			$transaction = $modelReseller->dbConnection->beginTransaction();
+			try {
+				if(isset($_POST['Reseller']['Id']))
+				{
+					$modelReseller = Reseller::model()->findByPk($_POST['Reseller']['Id']);
+					$modelUser = User::model()->findByAttributes(array('Id_reseller'=>$_POST['Reseller']['Id']));
+				}
+				
+				$modelReseller->attributes = $_POST['Reseller'];
+				$modelReseller->save();
+				$modelReseller->refresh();
+				
+				$modelUser->attributes = $_POST['User'];
+				$modelUser->Id_reseller = $modelReseller->Id;
+				$modelUser->save();
+				
+				$transaction->commit();
+			} catch (Exception $e) {
+				$transaction->rollback();
+			}
+		}	
+	}
+	
 	/**
 	 * Manages all models.
 	 */
