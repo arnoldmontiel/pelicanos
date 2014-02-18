@@ -1,4 +1,8 @@
 <form id="reseller-form" method="post">
+	<?php
+		if(!$modelReseller->isNewRecord)
+			echo CHtml::activeHiddenField($modelReseller, 'Id');
+	?>
 	<div class="modal-dialog">
     	<div class="modal-content">
       		<div class="modal-header">
@@ -8,25 +12,57 @@
       		<div class="modal-body">
   				<div class="form-group">
 					<label for="campoNombre">Descripci&oacute;n</label>
-			  			<input class="form-control" name="campoNombre" type="text">
+			  			<?php echo CHtml::activeTextField($modelReseller, 'description', array('class'=>'form-control')); ?>
 			  		</div>
 			  		<div class="form-group">
 			  			<label for="campoNombre">Usuario</label>
-			  			<input class="form-control" name="campoNombre" type="text">
+			  			<?php echo CHtml::activeTextField($modelUser, 'username', array('class'=>'form-control', 'disabled'=>(!$modelReseller->isNewRecord)?'disabled':'')); ?>
 			  		</div>
 			  		<div class="form-group">
 			  			<label for="campoNombre">Password</label>
-			  			<input class="form-control" name="campoNombre" type="password">
+			  			<?php echo CHtml::activeTextField($modelUser, 'password', array('class'=>'form-control')); ?>
 			  		</div>
 			  		<div class="form-group">
 			  			<label for="campoNombre">E-mail</label>
-			  			<input class="form-control" name="campoNombre" type="text">
+			  			<?php echo CHtml::activeTextField($modelUser, 'email', array('class'=>'form-control')); ?>
 			  		</div>
       		</div>
       		<div class="modal-footer">
         		<button type="button" class="btn btn-default btn-lg" data-dismiss="modal">Cancelar</button>
-        		<button type="button" class="btn btn-primary btn-lg"><i class="fa fa-save"></i> Guardar</button>
+        		<button onclick="saveReseller();" type="button" class="btn btn-primary btn-lg"><i class="fa fa-save"></i> Guardar</button>
       		</div>
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal-dialog -->
 </form>
+<script type="text/javascript">
+
+		$("#reseller-form").submit(function(e)
+		{
+			var formURL = "<?php echo ResellerController::createUrl("AjaxSaveReseller"); ?>";
+			var formData = new FormData(this);
+			
+		    $.ajax({
+		        url: formURL,
+		    type: 'POST',
+		        data:  formData,
+		    mimeType:"multipart/form-data",
+		    contentType: false,
+		        cache: false,
+		        processData:false,
+		    success: function(data, textStatus, jqXHR)
+		    {
+		    	$.fn.yiiGridView.update("reseller-grid");
+		    	$('#myModalGeneric').trigger('click');
+		    },
+		     error: function(jqXHR, textStatus, errorThrown)
+		     {
+		     }         
+		    });
+		    e.preventDefault(); //Prevent Default action.
+		});
+	
+	function saveReseller()
+	{				
+		$('#reseller-form').submit();
+	}
+</script>

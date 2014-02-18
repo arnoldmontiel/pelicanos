@@ -51,8 +51,7 @@ class User extends CActiveRecord
 			array('username, password, email', 'required', 'message'=>'{attribute} '.'cannot be blank.'),
 			array('Id_reseller', 'numerical', 'integerOnly'=>true),
 			array('username, password, email', 'length', 'max'=>128),
-			array('email', 'email', 'message'=> '{attribute} '. 'is not a valid email address.'),
-			array('username, email', 'unique', 'message'=>'{attribute} "{value}" '.'has already been taken.'),		
+			array('username', 'unique', 'message'=>'{attribute} "{value}" '.'has already been taken.'),		
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('username, password, email, Id_reseller, reseller_desc', 'safe', 'on'=>'search'),

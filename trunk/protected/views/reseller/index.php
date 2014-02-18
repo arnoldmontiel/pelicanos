@@ -1,13 +1,14 @@
 <script type="text/javascript">
-function openCreateReseller()
+function openForm(id)
 {
-	$.post("<?php echo ResellerController::createUrl('AjaxSearchTabApproved'); ?>",
+	$.post("<?php echo ResellerController::createUrl('AjaxOpenForm'); ?>",
 			{
-				value:value
+				idReseller:id
 			}
 		).success(
 			function(data){
-				$('#tabApproved').html(data);
+				$('#myModalGeneric').html(data);
+				$('#myModalGeneric').modal('show');
 			});
 	return false;
 }
@@ -18,14 +19,14 @@ function openCreateReseller()
   			<h1 class="pageTitle">Resellers</h1>
   		</div>
   		<div class="col-sm-6 align-right">
-  			<a onclick="openCreateReseller();" class="btn btn-primary superBoton" data-toggle="modal" data-target="#myModalCrearReseller"><i class="fa fa-plus"></i> Agregar Reseller</a>
+  			<a onclick="openForm(0);" class="btn btn-primary superBoton" data-toggle="modal" data-target="#myModalCrearReseller"><i class="fa fa-plus"></i> Agregar Reseller</a>
   		</div>
   	</div>
   	<div class="row">
     	<div class="col-sm-12">
 		    <?php		
 			$this->widget('zii.widgets.grid.CGridView', array(
-				'id'=>'user-grid-admin',
+				'id'=>'reseller-grid',
 				'dataProvider'=>$modelUser->searchReseller(),
 				'selectableRows' => 0,
 				'filter'=>$modelUser,
@@ -42,7 +43,7 @@ function openCreateReseller()
 						array(
 								'header'=>'Acciones',
 								'value'=>function($data){
-									return '<button type="button" class="btn btn-default btn-sm" ><i class="fa fa-pencil"></i> Editar</button>
+									return '<button onclick="openForm('.$data->Id_reseller.')" type="button" class="btn btn-default btn-sm" ><i class="fa fa-pencil"></i> Editar</button>
 			              					<button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i> Borrar</button>';
 								},
 								'type'=>'raw',
