@@ -1,6 +1,6 @@
 <?php			
 	$this->widget('zii.widgets.grid.CGridView', array(
-		'id'=>'nzb-grid_rejected',
+		'id'=>'nzb-grid_published',
 		'dataProvider'=>$modelNzb->searchPublished(),
 		'selectableRows' => 0,
 		'summaryText'=>'',	
