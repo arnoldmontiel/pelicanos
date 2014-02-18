@@ -96,4 +96,10 @@ class NzbSOAP
 	 */
 	public $Id_nzb_type;
 	
+	/**
+	 * @var string mkv file name
+	 * @soap
+	 */
+	public $mkv_file_name;
+	
 }
