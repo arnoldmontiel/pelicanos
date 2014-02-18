@@ -53,6 +53,32 @@ $('#a-tab-rejected').click(function(){
 ");
 ?>
 <script type="text/javascript">
+function searchTabApproved(value)
+{
+	$.post("<?php echo NzbController::createUrl('AjaxSearchTabApproved'); ?>",
+			{
+				value:value
+			}
+		).success(
+			function(data){
+				$('#tabApproved').html(data);
+			});
+	return false;
+}
+
+function searchTabDraft(value)
+{
+	$.post("<?php echo NzbController::createUrl('AjaxSearchTabDraft'); ?>",
+			{
+				value:value
+			}
+		).success(
+			function(data){
+				$('#tabDraft').html(data);
+			});
+	return false;
+}
+
 function changeNzbType(idNzb, obj)
 {
 	$.post("<?php echo NzbController::createUrl('AjaxChangeNzbType'); ?>",
@@ -239,10 +265,10 @@ function editVideoInfo(id)
 					<?php echo $this->renderPartial('_tabUploading',array('modelAutoRipper'=>$modelAutoRipper)); ?>
 				</div><!-- /.tab1 --> 
 			    <div class="tab-pane active" id="tabDraft">
-			    	<?php echo $this->renderPartial('_tabDraft',array('modelNzbDraft'=>$modelNzbDraft)); ?>
+			    	<?php echo $this->renderPartial('_tabDraft',array('modelNzbDraft'=>$modelNzbDraft, 'filter'=>'')); ?>
 			    </div><!-- /.tab2 --> 
 			    <div class="tab-pane" id="tabApproved">
-			    	<?php echo $this->renderPartial('_tabApproved',array('modelNzbApproved'=>$modelNzbApproved)); ?>
+			    	<?php echo $this->renderPartial('_tabApproved',array('modelNzbApproved'=>$modelNzbApproved, 'filter'=>'')); ?>
 			    </div><!-- /.tab3 -->      	
 			    <div class="tab-pane" id="tabPublished">
 			    	<?php echo $this->renderPartial('_tabPublished',array('modelNzb'=>$modelNzb)); ?>

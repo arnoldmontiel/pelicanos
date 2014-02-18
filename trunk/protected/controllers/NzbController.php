@@ -1981,7 +1981,7 @@ class NzbController extends Controller
 		$criteria->addCondition('t.Id_nzb is null');
 		$modelNzbDraft = Nzb::model()->findAll($criteria);
 	
-		echo $this->renderPartial('_tabDraft',array('modelNzbDraft'=>$modelNzbDraft));
+		echo $this->renderPartial('_tabDraft',array('modelNzbDraft'=>$modelNzbDraft, 'filter'=>''));
 	}
 	
 	public function actionAjaxOpenTabApproved()
@@ -1993,7 +1993,7 @@ class NzbController extends Controller
 		$criteria->addCondition('t.Id_nzb is null');
 		$modelNzbApproved = Nzb::model()->findAll($criteria);
 	
-		echo $this->renderPartial('_tabApproved',array('modelNzbApproved'=>$modelNzbApproved));
+		echo $this->renderPartial('_tabApproved',array('modelNzbApproved'=>$modelNzbApproved, 'filter'=>''));
 	}
 		
 	public function actionAjaxOpenTabPublished()
@@ -2030,6 +2030,38 @@ class NzbController extends Controller
 		echo json_encode($this->getQtys());
 	}
 	
+	public function actionAjaxSearchTabDraft()
+	{
+		$filter = isset($_POST['value'])?$_POST['value']:'';
+		$criteria = new CDbCriteria();
+		$criteria->join = 'INNER JOIN auto_ripper ar ON (ar.Id_nzb = t.Id)
+							INNER JOIN my_movie_disc_nzb d ON (t.Id_my_movie_disc_nzb = d.Id)
+							INNER JOIN my_movie_nzb m ON (d.Id_my_movie_nzb = m.Id)';
+		$criteria->compare('m.original_title',$filter,true);
+		$criteria->addCondition('t.Id_creation_state = 1');
+		$criteria->addCondition('t.is_draft = 1');
+		$criteria->addCondition('t.Id_nzb is null');
+		$modelNzbDraft = Nzb::model()->findAll($criteria);
+	
+		echo $this->renderPartial('_tabDraft',array('modelNzbDraft'=>$modelNzbDraft, 'filter'=>$filter));
+	}
+		
+	public function actionAjaxSearchTabApproved()
+	{
+		$filter = isset($_POST['value'])?$_POST['value']:'';
+		$criteria = new CDbCriteria();
+		$criteria->join = 'INNER JOIN auto_ripper ar ON (ar.Id_nzb = t.Id)
+								INNER JOIN my_movie_disc_nzb d ON (t.Id_my_movie_disc_nzb = d.Id)
+								INNER JOIN my_movie_nzb m ON (d.Id_my_movie_nzb = m.Id)';
+		$criteria->compare('m.original_title',$filter,true);
+		$criteria->addCondition('t.Id_creation_state = 2');
+		$criteria->addCondition('t.is_draft = 1');
+		$criteria->addCondition('t.Id_nzb is null');
+
+		$modelNzbApproved = Nzb::model()->findAll($criteria);
+		
+		echo $this->renderPartial('_tabApproved',array('modelNzbApproved'=>$modelNzbApproved, 'filter'=>$filter));
+	}
 	public function actionEditVideoInfo($idNzb)
 	{
 		if(isset($_POST['MyMovieNzb']) && isset($_POST['idNzb']))
