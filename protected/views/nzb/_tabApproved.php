@@ -1,4 +1,4 @@
-<div class="searchOverTab"><input type="text" class="form-control" placeholder=" Buscar Pel&iacute;cula"></div>
+<div class="searchOverTab"><input onchange="searchTabApproved(this.value);" type="text" value="<?php echo $filter;?>" class="form-control" placeholder=" Buscar Pel&iacute;cula"></div>
 	<?php 
 		foreach($modelNzbApproved as $item)
 		{
