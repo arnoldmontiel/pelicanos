@@ -133,10 +133,7 @@ class AutoRipper extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('Id',$this->Id);
-		$criteria->compare('Id_disc',$this->Id_disc,true);
-		$criteria->compare('Id_auto_ripper_process',$this->Id_auto_ripper_process,true);		
-		$criteria->compare('Id_nzb',$this->Id_nzb);
+		$criteria->compare('name',$this->name,true);
 		$criteria->compare('percentage',$this->percentage);
 		
 		$criteria->with[]='autoRipperState';
@@ -147,8 +144,7 @@ class AutoRipper extends CActiveRecord
 		$sort=new CSort;
 		$sort->attributes=array(
 		// For each relational attribute, create a 'virtual attribute' using the public variable name
-							'Id',
-							'Id_disc',
+							'name',
 							'percentage',
 							'auto_ripper_state_description' => array(
 								        'asc' => 'autoRipperState.description',
@@ -157,7 +153,7 @@ class AutoRipper extends CActiveRecord
 							'*',
 		);
 		
-		$criteria->order = 't.Id DESC';
+		//$criteria->order = 't.Id DESC';
 		return new CActiveDataProvider($this, array(
 						'criteria'=>$criteria,
 						'sort'=>$sort,

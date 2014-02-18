@@ -12,7 +12,6 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<?php include('estilos.php');?>
 		
-		<script src="js/jquery.js"></script>		
 		<script src="js/tools.js"></script>
 		<script src="js/select2-3.4.4/select2.js"></script>
 		<script type="text/javascript" src="js/image-picker.min.js"></script>
