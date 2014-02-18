@@ -138,9 +138,13 @@ class ResellerController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Reseller');
+		$modelUser = new User('search');
+		$modelUser->unsetAttributes();  // clear any default values
+		if(isset($_GET['User']))
+			$modelUser->attributes=$_GET['User'];
+
 		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
+			'modelUser'=>$modelUser,
 		));
 	}
 

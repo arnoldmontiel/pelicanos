@@ -78,11 +78,11 @@ class User extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'username' => 'Username',
+			'username' => 'Usuario',
 			'password' => 'Password',
-			'email' => 'Email',
+			'email' => 'E-mail',
 			'Id_reseller' => 'Reseller',
-			'reseller_desc' => 'Reseller',
+			'reseller_desc' => 'Descripcion',
 		);
 	}
 
@@ -126,5 +126,96 @@ class User extends CActiveRecord
 					'sort'=>$sort,
 		));
 		
+	}
+	
+	public function searchAdmin()
+	{
+		// Warning: Please modify the following code to remove attributes that
+		// should not be searched.
+	
+		$criteria=new CDbCriteria;
+	
+		$criteria->compare('username',$this->username,true);
+		$criteria->compare('password',$this->password,true);
+		$criteria->compare('email',$this->email,true);
+		$criteria->addCondition('Id_reseller is null');
+	
+		$sort=new CSort;
+		$sort->attributes=array(
+				'username',
+				'password',
+				'email',
+				'*',
+		);
+	
+		return new CActiveDataProvider($this, array(
+				'criteria'=>$criteria,
+				'sort'=>$sort,
+		));
+	
+	}
+	
+	public function searchMovieAdmin()
+	{
+		// Warning: Please modify the following code to remove attributes that
+		// should not be searched.
+	
+		$criteria=new CDbCriteria;
+	
+		$criteria->compare('username',$this->username,true);
+		$criteria->compare('password',$this->password,true);
+		$criteria->compare('email',$this->email,true);
+		$criteria->addCondition('Id_reseller is null');
+	
+		$sort=new CSort;
+		$sort->attributes=array(
+				'username',
+				'password',
+				'email',
+				'*',
+		);
+	
+		return new CActiveDataProvider($this, array(
+				'criteria'=>$criteria,
+				'sort'=>$sort,
+		));
+	
+	}
+	
+	public function searchReseller()
+	{
+		// Warning: Please modify the following code to remove attributes that
+		// should not be searched.
+	
+		$criteria=new CDbCriteria;
+	
+		$criteria->with[]='reseller';
+		$criteria->addSearchCondition("reseller.description",$this->reseller_desc);
+		
+		$criteria->compare('username',$this->username,true);
+		$criteria->compare('password',$this->password,true);
+		$criteria->compare('email',$this->email,true);
+		$criteria->addCondition('Id_reseller is not null');
+	
+		$criteria->with[]='reseller';
+		$criteria->addSearchCondition("reseller.description",$this->reseller_desc);
+	
+		$sort=new CSort;
+		$sort->attributes=array(
+				'username',
+				'password',
+				'email',
+				'reseller_desc' => array(
+						'asc' => 'reseller.description',
+						'desc' => 'reseller.description DESC',
+				),
+				'*',
+		);
+	
+		return new CActiveDataProvider($this, array(
+				'criteria'=>$criteria,
+				'sort'=>$sort,
+		));
+	
 	}
 }
