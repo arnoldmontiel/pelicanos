@@ -134,16 +134,13 @@ class UserController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$criteria=new CDbCriteria;
+		$modelUser = new User('search');
+		$modelUser->unsetAttributes();  // clear any default values
+		if(isset($_GET['User']))
+			$modelUser->attributes=$_GET['User'];
 		
-		$IdReseller = User::getResellerId();
-		if(isset($IdReseller))
-			$criteria->condition = 't.Id_reseller = '. $IdReseller;
-		
-		$dataProvider=new CActiveDataProvider('User', array(
-									'criteria'=>$criteria));
 		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
+			'modelUser'=>$modelUser,
 		));
 	}
 
