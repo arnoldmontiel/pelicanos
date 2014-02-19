@@ -144,6 +144,64 @@ class UserController extends Controller
 		));
 	}
 
+	public function actionAjaxOpenForm()
+	{
+		$username = isset($_POST['username'])?$_POST['username']:null;
+		$idProfile = isset($_POST['idProfile'])?$_POST['idProfile']:null;
+		
+		if(isset($username))
+		{
+			if($username == '0')
+				$modelUser = new User();
+			else
+				$modelUser = User::model()->findByPk($username);
+						
+			$modelUser->Id_profile = $idProfile;
+			
+			echo $this->renderPartial('_modalForm', array('modelUser'=>$modelUser));
+		}		
+	}
+	
+	public function actionAjaxSaveUser()
+	{
+		$modelUser = new User();
+	
+		if(isset($_POST['User']))
+		{
+			if(isset($_POST['User']['username']))
+				$modelUser = User::model()->findByPk($_POST['User']['username']);
+
+			$modelUser->attributes = $_POST['User'];
+				
+			if($modelUser->validate())
+			{
+				$modelUser->save();
+			}
+			else
+			{
+				echo json_encode($modelUser->errors);
+			}
+		}
+	}
+	
+	public function actionAjaxDelete()
+	{
+		$username = isset($_POST['username'])?$_POST['username']:null;
+	
+		$modelUser = User::model()->findByPk($username);
+	
+		if(isset($modelUser))
+		{
+			$transaction = $modelUser->dbConnection->beginTransaction();
+			try {
+				$modelUser->delete();
+				$transaction->commit();
+			} catch (Exception $e) {
+				$transaction->rollback();
+			}
+		}
+	}
+	
 	/**
 	 * Manages all models.
 	 */
