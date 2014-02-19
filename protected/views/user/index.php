@@ -1,3 +1,35 @@
+<script type="text/javascript">
+function openForm(username, idProfile)
+{
+	$.post("<?php echo UserController::createUrl('AjaxOpenForm'); ?>",
+			{
+				username:username,
+				idProfile:idProfile
+			}
+		).success(
+			function(data){
+				$('#myModalGeneric').html(data);
+				$('#myModalGeneric').modal('show');
+			});
+	return false;
+}
+function deleteReseller(username, grid)
+{
+	if (confirm('¿Desea borrar este usuario?')) 
+	{
+		$.post("<?php echo UserController::createUrl('AjaxDelete'); ?>",
+			{
+				username:username
+			}
+		).success(
+			function(data){
+				$.fn.yiiGridView.update(grid);
+			});
+		return false;
+	}
+	return false;
+}
+</script>
 <div class="container" id="screenUsuarios">
   <div class="row">
     <div class="col-sm-12">

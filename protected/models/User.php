@@ -140,6 +140,7 @@ class User extends CActiveRecord
 		$criteria->compare('password',$this->password,true);
 		$criteria->compare('email',$this->email,true);
 		$criteria->addCondition('Id_reseller is null');
+		$criteria->addCondition('Id_profile = 1'); //perfil administrador
 	
 		$sort=new CSort;
 		$sort->attributes=array(
@@ -167,6 +168,7 @@ class User extends CActiveRecord
 		$criteria->compare('password',$this->password,true);
 		$criteria->compare('email',$this->email,true);
 		$criteria->addCondition('Id_reseller is null');
+		$criteria->addCondition('Id_profile = 2'); //perfil movie administrador
 	
 		$sort=new CSort;
 		$sort->attributes=array(
