@@ -8,6 +8,7 @@
  * @property string $password
  * @property string $email
  * @property integer $Id_reseller
+ * @property integer $Id_profile
  *
  * The followings are the available model relations:
  * @property OpenSubtitle[] $openSubtitles
@@ -48,13 +49,13 @@ class User extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('username, password, email', 'required', 'message'=>'{attribute} '.'cannot be blank.'),
-			array('Id_reseller', 'numerical', 'integerOnly'=>true),
+			array('username, password, email, Id_profile', 'required', 'message'=>'{attribute} '.'cannot be blank.'),
+			array('Id_reseller, Id_profile', 'numerical', 'integerOnly'=>true),
 			array('username, password, email', 'length', 'max'=>128),
 			array('username', 'unique', 'message'=>'{attribute} "{value}" '.'has already been taken.'),		
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('username, password, email, Id_reseller, reseller_desc', 'safe', 'on'=>'search'),
+			array('username, password, email, Id_reseller, reseller_desc, Id_profile', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -68,6 +69,7 @@ class User extends CActiveRecord
 		return array(
 			'openSubtitles' => array(self::HAS_MANY, 'OpenSubtitle', 'Id_user'),
 			'reseller' => array(self::BELONGS_TO, 'Reseller', 'Id_reseller'),
+			'profile' => array(self::BELONGS_TO, 'Profile', 'Id_profile'),
 		);
 	}
 
@@ -195,6 +197,7 @@ class User extends CActiveRecord
 		$criteria->compare('password',$this->password,true);
 		$criteria->compare('email',$this->email,true);
 		$criteria->addCondition('Id_reseller is not null');
+		$criteria->addCondition('Id_profile = 3'); // perfil reseller
 	
 		$criteria->with[]='reseller';
 		$criteria->addSearchCondition("reseller.description",$this->reseller_desc);
