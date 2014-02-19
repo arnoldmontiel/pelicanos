@@ -90,6 +90,11 @@ class AutoRipperHelper
 						$myMovieNzb->sort_title= $movie->title;
 						$myMovieNzb->imdb= $movie->imdb_id;
 						$myMovieNzb->rating= (int)$movie->vote_average;
+						
+						$myMovieNzb->poster_original = $poster;
+						$myMovieNzb->big_poster_original = $bigPoster;
+						$myMovieNzb->backdrop_original = $backdrop;
+						
 						$genres = $movie->genres;
 						$myMovieNzb->genre="";
 						$first = true;

@@ -145,12 +145,36 @@ class DeviceController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Device');
+		$modelCustomerDevice = new CustomerDevice('search');
+		$modelCustomerDevice->unsetAttributes();  // clear any default values
+		if(isset($_GET['CustomerDevice']))
+			$modelCustomerDevice->attributes=$_GET['CustomerDevice'];
+		
 		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
+				'modelCustomerDevice'=>$modelCustomerDevice,
 		));
 	}
 
+	public function actionAjaxOpenConfigPort()
+	{
+		$idDevice = isset($_POST['idDevice'])?$_POST['idDevice']:null;
+		
+		$modelDeviceTunelGrid = new DeviceTunneling('search');
+		$modelDeviceTunelGrid->unsetAttributes();  // clear any default values
+		$modelDeviceTunelGrid->Id_device = $idDevice;
+		
+		if(isset($_GET['DeviceTunneling']))
+			$modelDeviceTunelGrid->attributes=$_GET['DeviceTunneling'];
+		
+		$criteria = new CDbCriteria();
+		$criteria->addCondition('t.Id NOT IN (select Id_port from device_tunneling dt
+										where Id_device = "'.$idDevice.'")');
+		
+		$ddlPort = CHtml::listData(Port::model()->findAll($criteria), 'Id', 'description' );
+		
+		echo $this->renderPartial('_modalPortConfig', array('modelDeviceTunelGrid'=>$modelDeviceTunelGrid, 'ddlPort'=>$ddlPort));
+	}
+	
 	/**
 	 * Manages all models.
 	 */

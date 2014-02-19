@@ -10,6 +10,9 @@
 class CustomerDevice extends CActiveRecord
 {
 	public $device_description;
+	public $reseller_description;
+	public $customer_description;
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -41,7 +44,7 @@ class CustomerDevice extends CActiveRecord
 			array('Id_device', 'length', 'max'=>45),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id_device, Id_customer, device_description', 'safe', 'on'=>'search'),
+			array('Id_device, Id_customer, device_description, reseller_description, customer_description', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -64,8 +67,11 @@ class CustomerDevice extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'Id_device' => 'Device',
+			'Id_device' => 'Dispositivo',
 			'Id_customer' => 'Id Customer',
+			'device_description'=> 'Nombre',
+			'reseller_description'=> 'Reseller',
+			'customer_description'=>'Cliente',
 		);
 	}
 
@@ -80,14 +86,37 @@ class CustomerDevice extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('Id_device',$this->Id_device,true);
-		$criteria->compare('Id_customer',$this->Id_customer);
+		$criteria->compare('t.Id_device',$this->Id_device,true);
 
-		$criteria->with[]='device';
-		$criteria->compare('device.description',$this->device_description);
+		$criteria->join = 'INNER JOIN customer c on (c.Id = t.Id_customer)
+							INNER JOIN reseller r on (c.Id_reseller = r.Id)
+							INNER JOIN device d on (d.Id = t.Id_device)';
+		
+		$criteria->compare('d.description',$this->device_description, true);
+		$criteria->compare('r.description',$this->reseller_description, true);
+		$criteria->compare('CONCAT_WS(" ",c.name, c.last_name)',$this->customer_description, true);
+		
+		$sort=new CSort;
+		$sort->attributes=array(
+					      'Id_reseller',
+					      'device_description' => array(
+					        	'asc' => 'd.description',
+					        	'desc' => 'd.description DESC',
+					),
+					'reseller_description' => array(
+							'asc' => 'r.description',
+							'desc' => 'r.description DESC',
+					),
+					'customer_description' => array(
+							'asc' => 'CONCAT_WS(" ",c.name, c.last_name)',
+							'desc' => 'CONCAT_WS(" ",c.name, c.last_name) DESC',
+					),
+					'*',
+		);
 		
 		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
+					'criteria'=>$criteria,
+					'sort'=>$sort,
 		));
 	}
 }

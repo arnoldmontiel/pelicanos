@@ -14,7 +14,7 @@
           <li <?php if ($active=="user"){ echo 'class="active"';}?> ><a href="<?php echo Yii::app()->createUrl("user/index")?>"><i class="fa fa-user fa-fw"></i> Usuarios</a></li>
           <li <?php if ($active=="reseller"){ echo 'class="active"';}?> ><a href="<?php echo Yii::app()->createUrl("reseller/index")?>"><i class="fa fa-group fa-fw"></i> Resellers</a></li>
           <li <?php if ($active=="clientes"){ echo 'class="active"';}?> ><a href="clientes.php"><i class="fa fa-smile-o fa-fw"></i> Clientes</a></li>
-          <li <?php if ($active=="dispositivos"){ echo 'class="active"';}?> ><a href="dispositivos.php"><i class="fa fa-hdd-o fa-fw"></i> Dispositivos <span class="badge">1</span></a></li>
+          <li <?php if ($active=="device"){ echo 'class="active"';}?> ><a href="<?php echo Yii::app()->createUrl("device/index")?>"><i class="fa fa-hdd-o fa-fw"></i> Dispositivos <span class="badge">1</span></a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
       <li class="dropdown">
