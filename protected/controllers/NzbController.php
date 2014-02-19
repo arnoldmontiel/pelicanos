@@ -83,7 +83,7 @@ class NzbController extends Controller
 				$nzbResponse->myMovieDisc->setAttributes($modelNbz->myMovieDiscNzb);
 				$nzbResponse->myMovie->setAttributes($modelNbz->myMovieDiscNzb->myMovieNzb);
 				$nzbResponse->myMovie->myMovieSerieHeader = self::getSerie($modelNbz->myMovieDiscNzb);
-	
+				
 				//set audio track
 				$relAudioTracks = MyMovieNzbAudioTrack::model()->findAllByAttributes(array('Id_my_movie_nzb'=>$modelNbz->myMovieDiscNzb->Id_my_movie_nzb));
 				foreach($relAudioTracks as $relAudioTrack)
@@ -2483,6 +2483,11 @@ class NzbController extends Controller
 				$myMovie->sort_title= $movie->title;
 				$myMovie->imdb= $movie->imdb_id;
 				$myMovie->rating= (int)$movie->vote_average;
+				
+				$myMovie->poster_original = $poster;
+				$myMovie->big_poster_original = $bigPoster;
+				$myMovie->backdrop_original = $backdrop;
+				
 				$genres = $movie->genres;
 				$myMovie->genre="";
 				$first = true;
@@ -2683,6 +2688,11 @@ class NzbController extends Controller
 			$bigPoster = str_replace ( "w342" , "w500" , $bigPoster );
 
 			$modelResource = TMDBHelper::downloadAndLinkImages($TMDBId,$idNzb,$poster,$bigPoster,"");
+			
+			$myMovie->poster_original = $poster;
+			$myMovie->big_poster_original = $bigPoster;
+			$myMovie->save();
+			
 			echo json_encode($modelResource->TMDBData->attributes);
 		}
 	}
@@ -2740,6 +2750,10 @@ class NzbController extends Controller
 			$backdrop = isset($_POST['backdrop'])?$_POST['backdrop']:"";
 			$backdrop = str_replace ( "w300" , "original" , $backdrop );
 			$modelResource = TMDBHelper::downloadAndLinkImages($TMDBId,$idNzb,"","",$backdrop);
+			
+			$myMovie->backdrop_original = $backdrop;
+			$myMovie->save();
+			
 			echo json_encode($modelResource->TMDBData->attributes);
 		}
 	}
