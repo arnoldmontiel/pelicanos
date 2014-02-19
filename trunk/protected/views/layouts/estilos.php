@@ -202,6 +202,66 @@ line-height:48px;
 .popoverButtons button{  width:110px; margin-right:10px;}
 
 
+/* ----- LOGIN ------*/
+.loginBody{background:transparent; background-color:#34495E; padding:0px;}
+.loginPanel{
+background-color: #f8f8f8;
+border: 1px solid #d9d9d9;
+-moz-box-shadow: 0 0 16px -4px rgba(0, 0, 0, 0.5);
+-webkit-box-shadow: 0 0 16px -4px rgba(0, 0, 0, 0.5);
+box-shadow: 0 0 16px -4px rgba(0, 0, 0, 0.5);
+-webkit-border-radius: 3px;
+-moz-border-radius: 3px;
+border-radius: 3px;
+vertical-align:middle;
+text-align:center;
+padding:20px;
+display:inline-block;
+margin:auto;
+}
+.loginBrand{font-family: 'LatoRegular', sans-serif;
+font-size: 28px;
+text-transform: uppercase;
+letter-spacing: 1px;
+line-height: 48px;
+ text-align:center;
+color:#fff;
+margin-bottom:15px;
+}
+
+.loginWrapper{ margin-bottom:200px; margin:auto;
+margin-top:100px; text-align:center;
+}
+.loginBody .inputLogin {
+margin: 5px;
+padding: 0 10px;
+width: 300px;
+height: 34px;
+color: #404040;
+background: white;
+border: 1px solid;
+border-color: #c4c4c4 #d1d1d1 #d4d4d4;
+border-radius: 2px;
+outline: 5px solid #eff4f7;
+-moz-outline-radius: 3px;
+-webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.12);
+box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+.loginForm{display:inline-block; margin:auto;}
+
+.loginForm .rememberMe{color:#999; line-height:18px;}
+
+.loginForm .rememberMe label{margin:0px; vertical-align:middle;}
+.loginForm .rememberMe input{margin:0px; vertical-align:middle;}
+
+.loginForm .btn{margin-top:20px;}
+
+.separatorLine{border-top:1px dotted #ddd;}
+
+.loginFooter{color:white; text-align:center; margin-top:40px;}
+
+/* ----- END LOGIN ------*/
+
 /* ------ BTN INITIAL FONT SIZES ------- */
 .btn{ font-size:15px;}
 .btn-lg{ font-size:18px;}
