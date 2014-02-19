@@ -163,14 +163,16 @@ class UserController extends Controller
 	}
 	
 	public function actionAjaxSaveUser()
-	{
-		$modelUser = new User();
+	{		
 	
 		if(isset($_POST['User']))
 		{
 			if(isset($_POST['User']['username']))
 				$modelUser = User::model()->findByPk($_POST['User']['username']);
 
+			if(!isset($modelUser))
+				$modelUser = new User();
+			
 			$modelUser->attributes = $_POST['User'];
 				
 			if($modelUser->validate())
