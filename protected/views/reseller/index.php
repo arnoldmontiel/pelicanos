@@ -12,6 +12,22 @@ function openForm(id)
 			});
 	return false;
 }
+function deleteReseller(id)
+{
+	if (confirm('¿Desea borrar este reseller?')) 
+	{
+		$.post("<?php echo ResellerController::createUrl('AjaxDelete'); ?>",
+			{
+				idReseller:id
+			}
+		).success(
+			function(data){
+				$.fn.yiiGridView.update('reseller-grid');
+			});
+		return false;
+	}
+	return false;
+}
 </script>
 <div class="container" id="screenResellers">
 	<div class="row">
@@ -44,7 +60,7 @@ function openForm(id)
 								'header'=>'Acciones',
 								'value'=>function($data){
 									return '<button onclick="openForm('.$data->Id_reseller.')" type="button" class="btn btn-default btn-sm" ><i class="fa fa-pencil"></i> Editar</button>
-			              					<button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i> Borrar</button>';
+			              					<button onclick="deleteReseller('.$data->Id_reseller.')" type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i> Borrar</button>';
 								},
 								'type'=>'raw',
 								'htmlOptions'=>array("style"=>"text-align:right;"),

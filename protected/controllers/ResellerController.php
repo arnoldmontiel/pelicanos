@@ -191,6 +191,7 @@ class ResellerController extends Controller
 				
 				$modelUser->attributes = $_POST['User'];
 				$modelUser->Id_reseller = $modelReseller->Id;
+				$modelUser->Id_profile = 3; // perfil reseller
 				$modelUser->save();
 				
 				$transaction->commit();
@@ -198,6 +199,25 @@ class ResellerController extends Controller
 				$transaction->rollback();
 			}
 		}	
+	}
+	
+	public function actionAjaxDelete()
+	{
+		$idReseller = isset($_POST['idReseller'])?$_POST['idReseller']:null;
+		
+		$modelReseller = Reseller::model()->findByPk($idReseller);
+		
+		if(isset($modelReseller))
+		{
+			$transaction = $modelReseller->dbConnection->beginTransaction();
+			try {
+				User::model()->deleteAllByAttributes(array('Id_reseller'=>$modelReseller->Id));
+				$modelReseller->delete();
+				$transaction->commit();
+			} catch (Exception $e) {
+				$transaction->rollback();
+			}
+		}
 	}
 	
 	/**
