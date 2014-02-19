@@ -176,27 +176,35 @@ class ResellerController extends Controller
 		$modelUser = new User();
 		
 		if(isset($_POST['Reseller']) && isset($_POST['User']))
-		{
-			$transaction = $modelReseller->dbConnection->beginTransaction();
-			try {
-				if(isset($_POST['Reseller']['Id']))
-				{
-					$modelReseller = Reseller::model()->findByPk($_POST['Reseller']['Id']);
-					$modelUser = User::model()->findByAttributes(array('Id_reseller'=>$_POST['Reseller']['Id']));
+		{		
+			if(isset($_POST['Reseller']['Id']))
+			{
+				$modelReseller = Reseller::model()->findByPk($_POST['Reseller']['Id']);
+				$modelUser = User::model()->findByAttributes(array('Id_reseller'=>$_POST['Reseller']['Id']));
+			}
+			$modelReseller->attributes = $_POST['Reseller'];
+			$modelUser->attributes = $_POST['User'];
+			$modelUser->Id_profile = 3; // perfil reseller
+			
+			if($modelUser->validate())
+			{
+				$transaction = $modelReseller->dbConnection->beginTransaction();
+				try {				
+					
+					$modelReseller->save();
+					$modelReseller->refresh();
+									
+					$modelUser->Id_reseller = $modelReseller->Id;					
+					$modelUser->save();
+					
+					$transaction->commit();
+				} catch (Exception $e) {
+					$transaction->rollback();
 				}
-				
-				$modelReseller->attributes = $_POST['Reseller'];
-				$modelReseller->save();
-				$modelReseller->refresh();
-				
-				$modelUser->attributes = $_POST['User'];
-				$modelUser->Id_reseller = $modelReseller->Id;
-				$modelUser->Id_profile = 3; // perfil reseller
-				$modelUser->save();
-				
-				$transaction->commit();
-			} catch (Exception $e) {
-				$transaction->rollback();
+			}
+			else 
+			{
+				echo json_encode($modelUser->errors);
 			}
 		}	
 	}
