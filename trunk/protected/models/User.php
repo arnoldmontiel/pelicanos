@@ -49,10 +49,10 @@ class User extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('username, password, email, Id_profile', 'required', 'message'=>'{attribute} '.'cannot be blank.'),
+			array('username, Id_profile', 'required', 'message'=>'{attribute} '.'No puede estar vacio.'),
 			array('Id_reseller, Id_profile', 'numerical', 'integerOnly'=>true),
 			array('username, password, email', 'length', 'max'=>128),
-			array('username', 'unique', 'message'=>'{attribute} "{value}" '.'has already been taken.'),		
+			array('username', 'unique', 'message'=>'{attribute} "{value}" '.'Ya existe, elija otro.'),		
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('username, password, email, Id_reseller, reseller_desc, Id_profile', 'safe', 'on'=>'search'),

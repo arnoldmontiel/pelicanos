@@ -12,20 +12,26 @@
       		<div class="modal-body">
   				<div class="form-group">
 					<label for="campoNombre">Descripci&oacute;n</label>
-			  			<?php echo CHtml::activeTextField($modelReseller, 'description', array('class'=>'form-control')); ?>
-			  		</div>
-			  		<div class="form-group">
-			  			<label for="campoNombre">Usuario</label>
-			  			<?php echo CHtml::activeTextField($modelUser, 'username', array('class'=>'form-control', 'disabled'=>(!$modelReseller->isNewRecord)?'disabled':'')); ?>
-			  		</div>
-			  		<div class="form-group">
-			  			<label for="campoNombre">Password</label>
-			  			<?php echo CHtml::activeTextField($modelUser, 'password', array('class'=>'form-control')); ?>
-			  		</div>
-			  		<div class="form-group">
-			  			<label for="campoNombre">E-mail</label>
-			  			<?php echo CHtml::activeTextField($modelUser, 'email', array('class'=>'form-control')); ?>
-			  		</div>
+			  		<?php echo CHtml::activeTextField($modelReseller, 'description', array('class'=>'form-control')); ?>
+			  	</div>
+			  	<div class="form-group">
+			  		<label for="campoNombre">Usuario</label>
+			  		<?php echo CHtml::activeTextField($modelUser, 'username', array('class'=>'form-control', 'disabled'=>(!$modelReseller->isNewRecord)?'disabled':'')); ?>
+			 	</div>
+			  	<div class="form-group">
+			  		<label for="campoNombre">Password</label>
+			  		<?php echo CHtml::activeTextField($modelUser, 'password', array('class'=>'form-control')); ?>
+			  	</div>
+			  	<div class="form-group">
+			  		<label for="campoNombre">E-mail</label>
+			  		<?php echo CHtml::activeTextField($modelUser, 'email', array('class'=>'form-control')); ?>
+			  	</div>
+			  	<div id="status-error" style="display:none;"  class="estadoModal">
+					<label for="campoLineal">Estado</label>
+      				<div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i>
+      					<span id="errorMsg">caramba</span>
+ 					</div>
+				</div>
       		</div>
       		<div class="modal-footer">
         		<button type="button" class="btn btn-default btn-lg" data-dismiss="modal">Cancelar</button>
@@ -50,9 +56,19 @@
 		        cache: false,
 		        processData:false,
 		    success: function(data, textStatus, jqXHR)
-		    {
-		    	$.fn.yiiGridView.update("reseller-grid");
-		    	$('#myModalGeneric').trigger('click');
+		    {	
+		    	var obj = jQuery.parseJSON(data);				
+				if(obj != null)
+				{
+					$('#errorMsg').text(obj.username);
+					$('#status-error').show();
+				}
+				else
+				{
+					$.fn.yiiGridView.update("reseller-grid");
+		    		$('#myModalGeneric').trigger('click');
+				}
+		    	
 		    },
 		     error: function(jqXHR, textStatus, errorThrown)
 		     {
