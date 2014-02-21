@@ -1,0 +1,41 @@
+  <?php		
+	$this->widget('zii.widgets.grid.CGridView', array(
+		'id'=>'customer-grid',
+		'dataProvider'=>$model->search(),
+		'selectableRows' => 0,
+		'filter'=>$model,
+		'summaryText'=>'',	
+		'itemsCssClass' => 'table table-striped table-bordered tablaIndividual',
+		'columns'=>array(
+				array(
+						'name'=>'reseller_desc',
+						'value'=>function($data){
+								
+							return $data->reseller->description;
+						},
+						'type'=>'raw',
+				),
+				'name',
+				'last_name',
+				'address',
+				array(
+						'header'=>'Dispositivos',
+						'value'=>function($data){
+							$value = '';
+							$customerDevices = CustomerDevice::model()->findAllByAttributes(array('Id_customer'=>$data->Id));
+							foreach($customerDevices as $item)
+							{
+								$date = isset($item->request_date)?Yii::app()->dateFormatter->format("dd/MM/yyyy", $item->request_date):'';
+								if($item->is_pending == 1)
+									$value .= '<div>&bull; '.$item->device->description.' - '.$item->Id_device.'<span class="label label-danger">pendiente '.$date.'</span></div>';
+								else
+									$value .= '<div>&bull; '.$item->device->description.' - '.$item->Id_device.'</div>';
+							}
+							
+							return $value;
+						},
+						'type'=>'raw',
+				),
+			),
+		));		
+	?>

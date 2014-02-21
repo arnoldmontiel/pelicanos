@@ -13,14 +13,24 @@
           <li <?php if ($active=="nzb"){ echo 'class="active"';}?> ><a href="<?php echo Yii::app()->createUrl("nzb/index")?>"><i class="fa fa-film fa-fw"></i> Pel&iacute;culas</a></li>
           <li <?php if ($active=="user"){ echo 'class="active"';}?> ><a href="<?php echo Yii::app()->createUrl("user/index")?>"><i class="fa fa-user fa-fw"></i> Usuarios</a></li>
           <li <?php if ($active=="reseller"){ echo 'class="active"';}?> ><a href="<?php echo Yii::app()->createUrl("reseller/index")?>"><i class="fa fa-group fa-fw"></i> Resellers</a></li>
-          <li <?php if ($active=="clientes"){ echo 'class="active"';}?> ><a href="clientes.php"><i class="fa fa-smile-o fa-fw"></i> Clientes</a></li>
+          <?php if(Yii::app()->user->checkAccess('CustomerManageRe')):?>
+          <li <?php if ($active=="customer"){ echo 'class="active"';}?> ><a href="<?php echo Yii::app()->createUrl("customer/indexRe")?>"><i class="fa fa-smile-o fa-fw"></i> Clientes</a></li>
+          <?php endif?>
+          <?php if(Yii::app()->user->checkAccess('CustomerManage')):?>
+          <li <?php if ($active=="customer"){ echo 'class="active"';}?> ><a href="<?php echo Yii::app()->createUrl("customer/index")?>"><i class="fa fa-smile-o fa-fw"></i> Clientes</a></li>
+          <?php endif?>
+          <?php if(Yii::app()->user->checkAccess('DeviceManageRe')):?>
+          <li <?php if ($active=="device"){ echo 'class="active"';}?> ><a href="<?php echo Yii::app()->createUrl("device/indexRe")?>"><i class="fa fa-hdd-o fa-fw"></i> Dispositivos <span class="badge">1</span></a></li>
+          <?php endif?>
+          <?php if(Yii::app()->user->checkAccess('DeviceManage')):?>
           <li <?php if ($active=="device"){ echo 'class="active"';}?> ><a href="<?php echo Yii::app()->createUrl("device/index")?>"><i class="fa fa-hdd-o fa-fw"></i> Dispositivos <span class="badge">1</span></a></li>
+          <?php endif?>
           </ul>
           <ul class="nav navbar-nav navbar-right">
       <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user fa-fw"></i> admin <i class="fa fa-caret-down fa-fw"></i></a>
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user fa-fw"></i> <?php echo Yii::app()->user->name;?> <i class="fa fa-caret-down fa-fw"></i></a>
         <ul class="dropdown-menu">
-          <li><a href="#"><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>
+          <li><a href="<?php echo Yii::app()->createUrl('site/logout')?>"><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>
         </ul>
       </li>
     </ul>

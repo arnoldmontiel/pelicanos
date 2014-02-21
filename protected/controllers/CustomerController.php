@@ -31,33 +31,6 @@ class CustomerController extends Controller
 			),
 		);
 	}
-
-	/**
-	 * Displays a particular model.
-	 * @param integer $id the ID of the model to be displayed
-	 */
-	public function actionView($id)
-	{
-		$modelCustDev = new CustomerDevice('search');
-		$modelCustDev->unsetAttributes();
-		$modelCustDev->Id_customer = $id;
-		
-		$modelCustUsers = new CustomerUsers('search');
-		$modelCustUsers->unsetAttributes();
-		$modelCustUsers->Id_customer = $id;
-		
-		if(isset($_GET['CustomerUsers']))
-			$modelCustUsers->attributes=$_GET['CustomerUsers'];
-		
-		if(isset($_GET['CustomerDevice']))
-			$modelCustDev->attributes=$_GET['CustomerDevice'];
-		
-		$this->render('view',array(
-			'model'=>$this->loadModel($id),
-			'modelCustUsr'=>$modelCustUsers,
-			'modelCustDev'=>$modelCustDev,
-		));
-	}
 	
 	public function actionAjaxSaveDevice()
 	{
@@ -97,52 +70,6 @@ class CustomerController extends Controller
 		}
 	}	
 	
-	public function actionAjaxCloseDeviceTunnel()
-	{
-		$idDevice = $_GET['idDevice'];
-		$idPort = $_GET['idPort'];
-	
-		if(isset($idDevice) && isset($idPort))
-		{
-			$model = DeviceTunneling::model()->findByAttributes(array(
-													'Id_port'=>$idPort,
-													'Id_device'=>$idDevice,
-			));
-			
-			if(isset($model))
-			{
-				$model->is_open = 0;
-				$model->is_validated = 0;
-				$model->save();
-			}
-			
-		}
-		$this->redirect(array('deviceTunnel', 'idDevice'=>$idDevice, 'idCustomer'=>1));
-	}
-	
-	public function actionAjaxOpenDeviceTunnel()
-	{
-		$idDevice = $_GET['idDevice'];
-		$idPort = $_GET['idPort'];
-	
-		if(isset($idDevice) && isset($idPort))
-		{
-			$model = DeviceTunneling::model()->findByAttributes(array(
-														'Id_port'=>$idPort,
-														'Id_device'=>$idDevice,
-			));
-			
-			if(isset($model))
-			{
-				$model->is_open = 1;
-				$model->is_validated = 0;
-				$model->save();
-			}
-				
-		}
-		$this->redirect(array('deviceTunnel', 'idDevice'=>$idDevice, 'idCustomer'=>1));		
-	}
-	
 	public function actionAjaxRemoveCustomerDevice()
 	{
 		$idDevice = $_GET['idDevice'];
@@ -162,174 +89,6 @@ class CustomerController extends Controller
 		}
 	}
 	
-	public function actionViewRipped($id)
-	{
-	
-		$model = MyMovie::model()->findByPk($id);
-		
-		$criteria=new CDbCriteria;
-	
-		$criteria->join =	"LEFT OUTER JOIN ripped_customer rc ON rc.Id_device=t.Id_device
-								LEFT OUTER JOIN my_movie_disc md on md.Id = rc.Id_my_movie_disc";
-		$criteria->addCondition('md.Id_my_movie = "'. $id.'"');
-		
-		$modelCustomerDevice = CustomerDevice::model()->find($criteria);
-		
-		$idCustomer = (isset($modelCustomerDevice))?$modelCustomerDevice->Id_customer:0;
-	
-		$this->render('viewRipped',array(
-				'model'=>$model,
-				'idCustomer'=>$idCustomer,
-		));
-	}
-	
-	public function actionViewSummaryRipped($id)
-	{
-	
-		$model = MyMovieDisc::model()->findByPk($id);
-	
-		$criteria=new CDbCriteria;
-	
-		$criteria->join =	"LEFT OUTER JOIN ripped_customer rc ON rc.Id_device=t.Id_device";
-		$criteria->addCondition('rc.Id_my_movie_disc = "'. $id.'"');
-		
-		$modelCustomerDevice = CustomerDevice::model()->find($criteria);
-		
-		$idCustomer = (isset($modelCustomerDevice))?$modelCustomerDevice->Id_customer:0;
-		
-		$this->render('viewSummaryRipped',array(
-					'model'=>$model,
-					'idCustomer'=>$idCustomer,
-		));
-	}
-	
-	public function actionSummaryNzb($id)
-	{
-	 
-		$model=new NzbDevice('search');
-		$model->unsetAttributes();  // clear any default values
-		$model->Id_customer = $id;
-		if(isset($_GET['NzbDevice']))
-			$model->attributes=$_GET['NzbDevice'];
-		
-		$this->render('summaryNzb',array(
-							'model'=>$model,
-		));
-		
-	}
-	
-	public function actionIndexRipped($id)
-	{
-	
-		$criteria=new CDbCriteria;
-		$criteria->addCondition('t.Id_device IN (select Id_device from customer_device where Id_customer = '.$id.')');
-		
-		$dataProvider=new CActiveDataProvider('RippedCustomer', array(
-								'criteria'=>$criteria,
-		));
-		
-		$this->render('indexRipped',array(
-					'model'=>$this->loadModel($id),
-					'dataProvider'=>$dataProvider,
-		));
-	}
-
-	public function actionSummaryRipped($id)
-	{
-	
-		$criteria=new CDbCriteria;
-		$criteria->addCondition('t.Id_device IN (select Id_device from customer_device where Id_customer = '.$id.')');
-	
-		$dataProvider=new CActiveDataProvider('RippedCustomer', array(
-									'criteria'=>$criteria,
-		));
-	
-		$this->render('summaryRipped',array(
-						'model'=>$this->loadModel($id),
-						'dataProvider'=>$dataProvider,
-		));
-	}
-	
-	/**
-	 * Creates a new model.
-	 * If creation is successful, the browser will be redirected to the 'view' page.
-	 */
-	public function actionCreate()
-	{
-		$model=new Customer;
-
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-
-		if(isset($_POST['Customer']))
-		{
-			$model->attributes=$_POST['Customer'];
-			$model->Id_reseller = User::getResellerId();
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->Id));
-		}
-
-		$this->render('create',array(
-			'model'=>$model,
-		));
-	}
-
-	
-	/**
-	 * Updates a particular model.
-	 * If update is successful, the browser will be redirected to the 'view' page.
-	 * @param integer $id the ID of the model to be updated
-	 */
-	public function actionUpdate($id)
-	{
-		$model=$this->loadModel($id);
-
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-
-		if(isset($_POST['Customer']))
-		{
-			$model->attributes=$_POST['Customer'];
-			if($model->save())
-			{
-				$this->updateDevice($model);
-				$this->redirect(array('view','id'=>$model->Id));
-			}
-		}
-
-		$this->render('update',array(
-			'model'=>$model,
-		));
-	}
-
-	private function updateDevice($model)
-	{
-		$array = CustomerDevice::model()->findAllByAttributes(array('Id_customer'=>$model->Id));
-		foreach($array as $item)
-		{
-			$item->need_update = 1;
-			$item->save();
-		}
-	}
-	/**
-	 * Deletes a particular model.
-	 * If deletion is successful, the browser will be redirected to the 'admin' page.
-	 * @param integer $id the ID of the model to be deleted
-	 */
-	public function actionDelete($id)
-	{
-		if(Yii::app()->request->isPostRequest)
-		{
-			// we only allow deletion via POST request
-			$this->loadModel($id)->delete();
-
-			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-			if(!isset($_GET['ajax']))
-				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
-		}
-		else
-			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
-	}
 
 	/**
 	 * Lists all models.
@@ -337,35 +96,23 @@ class CustomerController extends Controller
 	public function actionIndex()
 	{
 		$model=new Customer('search');
-		//$dataProvider=new CActiveDataProvider('Customer');
-		$this->render('index',array(
-			'dataProvider'=>$model->search(),
-		));
-	}
-
-	/**
-	 * Manages all models.
-	 */
-	public function actionAdmin()
-	{
-		$model=new Customer('search');
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['Customer']))
 			$model->attributes=$_GET['Customer'];
 
-		$this->render('admin',array(
+		$this->render('index',array(
 			'model'=>$model,
 		));
 	}
 
-	public function actionSummary()
+	public function actionIndexRe()
 	{
 		$model=new Customer('search');
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['Customer']))
 			$model->attributes=$_GET['Customer'];
 	
-		$this->render('summary',array(
+		$this->render('indexRe',array(
 				'model'=>$model,
 		));
 	}
@@ -572,6 +319,41 @@ class CustomerController extends Controller
 										'idCustomer'=>$idCustomer,
 										'modelDeviceTunelGrid'=>$modelDeviceTunelGrid,
 		));
+	}
+	
+	public function actionAjaxOpenForm()
+	{
+		$idCustomer = isset($_POST['idCustomer'])?$_POST['idCustomer']:null;
+		
+		if(isset($idCustomer))
+		{
+			if($idCustomer == '0')
+				$modelCustomer = new Customer();
+			else
+				$modelCustomer = Customer::model()->findByPk($idCustomer);
+			
+			echo $this->renderPartial('_modalForm', array('modelCustomer'=>$modelCustomer));
+		}		
+	}
+	
+	public function actionAjaxSaveCustomer()
+	{
+		$modelCustomer = new Customer();
+	
+		if(isset($_POST['Customer']))
+		{
+			if(isset($_POST['Customer']['Id']))
+				$modelCustomer = Customer::model()->findByPk($_POST['Customer']['Id']);
+			
+			$modelCustomer->attributes = $_POST['Customer'];
+			
+			$modelUser = User::model()->findByAttributes(array('username'=>Yii::app()->user->name));
+			if(isset($modelUser))
+				$modelCustomer->Id_reseller = $modelUser->Id_reseller;
+			 
+			$modelCustomer->save();
+				
+		}
 	}
 	
 	/**

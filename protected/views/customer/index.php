@@ -1,18 +1,19 @@
-<?php
-
-$this->menu=array(
-	array('label'=>'Create Customer', 'url'=>array('create')),
-	array('label'=>'Manage Customer', 'url'=>array('admin')),
-	array('label'=>'Customer Movies', 'url'=>array('customerMovies')),
-	array('label'=>'Customer Series', 'url'=>array('customerSeries')),
-	array('label'=>'Customer Points', 'url'=>array('customerPoints')),
-	array('label'=>'Customer Transactions', 'url'=>array('customerTransaction')),
-);
-?>
-
-<h1>Customers</h1>
-
-<?php $this->widget('zii.widgets.CListView', array(
-	'dataProvider'=>$dataProvider,
-	'itemView'=>'_view',
-)); ?>
+<div class="container" id="screenClientes">
+<div class="row">
+<div class="col-sm-6">
+  <h1 class="pageTitle">Clientes</h1>
+  </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+    	<?php echo $this->renderPartial('_customerGrid',array('model'=>$model)); ?>
+    </div>
+    <!-- /.col-sm-12 --> 
+  </div>
+  <!-- /.row --> 
+</div>
+<!-- /container -->

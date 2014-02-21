@@ -83,7 +83,7 @@ class User extends CActiveRecord
 			'password' => 'Password',
 			'email' => 'E-mail',
 			'Id_reseller' => 'Reseller',
-			'reseller_desc' => 'Descripcion',
+			'reseller_desc' => 'Descripci&oacute;n',
 		);
 	}
 
