@@ -574,7 +574,7 @@ padding: 6px 8px;
 
 #myModalViewDownloads .modal-dialog{width:1000px;}
 #myModalDescargas .modal-dialog{width:1000px;}
-#myModalConfigPuertos .modal-dialog{width:1000px;}
+.myModalConfigPuertos.modal-dialog{width:1000px;}
 
 /* ------ END MODALS ------- */
 
@@ -1056,6 +1056,8 @@ top: 2px;}
 #wizardDispositivos button{min-width:120px;}
 
 .nav-tabs .dropdown-menu{ font-size:20px;}
+.buttonGroupDevices{width:310px;}
+
 /* ----- END DISPOSITIVOS --------*/
 
 
