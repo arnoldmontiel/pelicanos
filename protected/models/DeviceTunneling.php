@@ -64,10 +64,10 @@ class DeviceTunneling extends CActiveRecord
 		return array(
 			'Id' => 'ID',
 			'Id_device' => 'Id Device',
-			'Id_port' => 'Id Port',
-			'external_port' => 'External Port',
-			'is_open' => 'Is Open',
-			'is_validated' => 'Is Validated',
+			'interal_port' => 'Puerto Interno',
+			'external_port' => 'Puerto Externo',
+			'is_open' => 'Estado',
+			'is_validated' => 'Validacion',
 		);
 	}
 
@@ -91,7 +91,6 @@ class DeviceTunneling extends CActiveRecord
 
 		$criteria->compare('Id',$this->Id);
 		$criteria->compare('Id_device',$this->Id_device,true);
-		$criteria->compare('Id_port',$this->Id_port);
 		$criteria->compare('external_port',$this->external_port);
 		$criteria->compare('is_open',$this->is_open);
 		$criteria->compare('is_validated',$this->is_validated);

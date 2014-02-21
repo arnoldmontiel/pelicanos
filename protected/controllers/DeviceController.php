@@ -150,8 +150,18 @@ class DeviceController extends Controller
 		if(isset($_GET['CustomerDevice']))
 			$modelCustomerDevice->attributes=$_GET['CustomerDevice'];
 		
+		$modelDeviceTunelGrid = new DeviceTunneling('search');
+		$modelDeviceTunelGrid->unsetAttributes();  // clear any default values
+		
+		$idDevice = isset($_GET['idDevice'])?$_GET['idDevice']:'';
+		if(isset($_GET['DeviceTunneling']))
+			$modelDeviceTunelGrid->attributes=$_GET['DeviceTunneling'];
+		
+		$modelDeviceTunelGrid->Id_device = $idDevice;
+		
 		$this->render('index',array(
 				'modelCustomerDevice'=>$modelCustomerDevice,
+				'modelDeviceTunelGrid'=>$modelDeviceTunelGrid,
 		));
 	}
 
@@ -159,20 +169,54 @@ class DeviceController extends Controller
 	{
 		$idDevice = isset($_POST['idDevice'])?$_POST['idDevice']:null;
 		
-		$modelDeviceTunelGrid = new DeviceTunneling('search');
-		$modelDeviceTunelGrid->unsetAttributes();  // clear any default values
-		$modelDeviceTunelGrid->Id_device = $idDevice;
-		
-		if(isset($_GET['DeviceTunneling']))
-			$modelDeviceTunelGrid->attributes=$_GET['DeviceTunneling'];
+		$modelDevice = Device::model()->findByPk($idDevice);
 		
 		$criteria = new CDbCriteria();
 		$criteria->addCondition('t.Id NOT IN (select Id_port from device_tunneling dt
 										where Id_device = "'.$idDevice.'")');
 		
-		$ddlPort = CHtml::listData(Port::model()->findAll($criteria), 'Id', 'description' );
+		$modelPorts = Port::model()->findAll($criteria);
+		$ddlPorts = array();
+		foreach($modelPorts as $item)
+			$ddlPorts[] = array('Id'=>$item->Id, 'description'=>$item->description); 
 		
-		echo $this->renderPartial('_modalPortConfig', array('modelDeviceTunelGrid'=>$modelDeviceTunelGrid, 'ddlPort'=>$ddlPort));
+		echo json_encode(array('ddlPort'=>$ddlPorts, 'idDevice'=>$modelDevice->Id, 'description'=>$modelDevice->description));
+	}
+	
+	public function actionAjaxAddPort()
+	{
+		$idDevice = isset($_POST['idDevice'])?$_POST['idDevice']:null;
+		$idPort = isset($_POST['idPort'])?$_POST['idPort']:null;
+		$externalPort = isset($_POST['externalPort'])?$_POST['externalPort']:null;
+		
+		$modelDeviceTunnel = new DeviceTunneling();
+		$modelDeviceTunnel->Id_device = $idDevice;
+		$modelDeviceTunnel->is_open = 1;
+		$modelDeviceTunnel->Id_port = $idPort;
+		$modelDeviceTunnel->external_port = $externalPort;
+		$modelDeviceTunnel->save();
+	}
+	
+	public function actionAjaxDoTunnel()
+	{
+		$idDevice = $_POST['idDevice'];
+		$idPort = $_POST['idPort'];
+		$open = $_POST['open'];
+		if(isset($idDevice) && isset($idPort))
+		{
+			$model = DeviceTunneling::model()->findByAttributes(array(
+					'Id_port'=>$idPort,
+					'Id_device'=>$idDevice,
+			));
+				
+			if(isset($model))
+			{
+				$model->is_open = $open;
+				$model->is_validated = 0;
+				$model->save();
+			}
+				
+		}
 	}
 	
 	/**
