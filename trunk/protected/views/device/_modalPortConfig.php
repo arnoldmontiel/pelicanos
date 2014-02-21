@@ -1,4 +1,4 @@
-<div class="modal-dialog">
+<div class="modal-dialog myModalConfigPuertos">
 	<div class="modal-content">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
@@ -18,14 +18,15 @@
     				<label for="internalPort">Puertos Disponibles</label>		
 					<?php echo CHtml::dropDownList('internalPort', '', array(), array('Id'=>'internalPort'));?>  
 				</div>
+				
+  				<button id="btn-add-port" onclick="addPort();" type="button" class="btn btn-default"><i class="fa fa-plus"></i> Agregar</button>
+			
 				<div id="status-error" style="display:none;"  class="estadoModal">
-					<label for="campoLineal">Estado</label>
       				<div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i>
       					<span id="errorMsg">El puerto externo no puede estar vacio.</span>
  					</div>
 				</div>
-				
-  				<button id="btn-add-port" onclick="addPort();" type="button" class="btn btn-default"><i class="fa fa-plus"></i> Agregar</button>
+			
 			</form>
 			<div id="product-grid-add" class="grid-view">
 			<?php 
