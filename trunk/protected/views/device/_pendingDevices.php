@@ -1,7 +1,7 @@
   <?php		
 	$this->widget('zii.widgets.grid.CGridView', array(
-		'id'=>'customer-device-grid',
-		'dataProvider'=>$modelCustomerDevice->searchApproved(),
+		'id'=>'pending-customer-device-grid',
+		'dataProvider'=>$modelCustomerDevice->searchPending(),
 		'selectableRows' => 0,
 		'filter'=>$modelCustomerDevice,
 		'summaryText'=>'',	
@@ -24,20 +24,17 @@
 						'type'=>'raw',
 				),
 				array(
-						'name'=>'device_description',
+						'name'=>'request_date',
 						'value'=>function($data){
-				
-							return $data->device->description;
+							return isset($data->request_date)?Yii::app()->dateFormatter->format("dd/MM/yyyy", $data->request_date):'';
 						},
 						'type'=>'raw',
 				),
-				'Id_device',
 				array(
 						'header'=>'Acciones',
 						'value'=>function($data){
-							$device = "'$data->Id_device'";
-							return '<div class="buttonGroupDevices"><button onclick="portConfig('.$device.');" data-toggle="modal" data-target="#myModalConfigPuertos" type="button" class="btn btn-default btn-sm" ><i class="fa fa-cog"></i> Configurar Puertos</button> 
-									<button type="button" class="btn btn-default btn-sm"  data-toggle="modal" data-target="#myModalViewDownloads" ><i class="fa fa-clock-o"></i> Ver Descargas</button></div>';
+							$device = "'$data->Id_device'";							
+							return '<button data-toggle="modal" data-target="#myModalCrearDispositivo" type="button" class="btn btn-default btn-sm" ><i class="fa fa-plus"></i> Crear Dispositivo</button>';
 						},
 						'type'=>'raw',
 						'htmlOptions'=>array("style"=>"text-align:right;"),
