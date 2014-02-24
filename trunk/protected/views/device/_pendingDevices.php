@@ -24,6 +24,14 @@
 						'type'=>'raw',
 				),
 				array(
+						'name'=>'device_description',
+						'value'=>function($data){
+				
+							return $data->device->description;
+						},
+						'type'=>'raw',
+				),
+				array(
 						'name'=>'request_date',
 						'value'=>function($data){
 							return isset($data->request_date)?Yii::app()->dateFormatter->format("dd/MM/yyyy", $data->request_date):'';
