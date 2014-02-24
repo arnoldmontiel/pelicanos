@@ -71,9 +71,9 @@ class Customer extends CActiveRecord
 		);
 	}
 
-	public function getCustomerDesc()
+	public function getFullName()
 	{
-		return $this->last_name .' - '. $this->name;
+		return $this->name . ' ' . $this->last_name;
 	}
 	
 	/**

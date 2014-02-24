@@ -90,7 +90,7 @@ class SiteController extends Controller
 				if(Yii::app()->user->checkAccess('Administrator'))
 					$this->redirect(SiteController::createUrl('nzb/index') );
 				else
-					$this->redirect(SiteController::createUrl('nzb/indexReseller') );
+					$this->redirect(SiteController::createUrl('nzb/indexRe') );
 			}
 		}
 		// display the login form

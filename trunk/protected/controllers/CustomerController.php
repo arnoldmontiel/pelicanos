@@ -365,7 +365,7 @@ class CustomerController extends Controller
 			$modelCustomer = Customer::model()->findByPk($idCustomer);
 			
 			$modelDevice = new Device();
-			echo $this->renderPartial('_requestDevice', array('modelCustomer'=>$modelCustomer, 'modelDevice'=>$modelDevice));
+			echo $this->renderPartial('_modalRequestDevice', array('modelCustomer'=>$modelCustomer, 'modelDevice'=>$modelDevice));
 		}
 	}
 	
