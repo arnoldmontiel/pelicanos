@@ -19,7 +19,7 @@
 						'name'=>'customer_description',
 						'value'=>function($data){
 								
-							return $data->customer->name . ' ' . $data->customer->last_name;
+							return $data->customer->fullName;
 						},
 						'type'=>'raw',
 				),

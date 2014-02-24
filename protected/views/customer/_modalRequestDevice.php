@@ -13,8 +13,8 @@
   <div class="panel-body">
    Cliente
    <div class="infoPanelCliente">
-   <div class="bold">Arnold Montiel</div>
-      		<div>Lobos 1747</div>
+   <div class="bold"><?php echo $modelCustomer->fullName;?></div>
+      		<div><?php echo $modelCustomer->address;?></div>
   </div></div>
 </div>
       		

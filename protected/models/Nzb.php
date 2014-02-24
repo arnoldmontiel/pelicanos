@@ -142,6 +142,19 @@ class Nzb extends CActiveRecord
 		return NzbDevice::model()->count($criteria);
 	}
 	
+	public function getDownloadsQtyByReseller()
+	{
+		$criteria = new CDbCriteria();
+		$criteria->join = 'inner join customer_device cd on (cd.Id_device = t.Id_device)
+							inner join customer c on (c.Id = cd.Id_customer)
+							inner join user u on (c.Id_reseller = u.Id_reseller)';
+		$criteria->addCondition('t.Id_nzb_state = 3'); // Downloaded
+		$criteria->addCondition('t.Id_nzb = ' . $this->Id);
+		$criteria->addCondition('u.username = "'. Yii::app()->user->name.'"');
+
+		return NzbDevice::model()->count($criteria);
+	}
+	
 	/**
 	 * @return string the associated database table name
 	 */
@@ -212,8 +225,8 @@ class Nzb extends CActiveRecord
 			'final_content_path'=>'Path content',
 			'file_password'=> 'File Password',
 			'reject_note'=>'Razon',
-			'title'=>'Película',
-			'year'=>'Año',
+			'title'=>'Pel&iacute;cula',
+			'year'=>'A&ntilde;o',
 			'rating'=>'Rating',
 		);
 	}

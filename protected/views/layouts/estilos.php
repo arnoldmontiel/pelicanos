@@ -818,6 +818,26 @@ margin:0px ; margin-left: -15px;}
 
 #myModalAddProduct .inputSmall{padding:0px 2px; height:31px;}
 
+#myModalCambiarAfiche .modal-dialog {
+	width: 80%;
+}
+
+#myModalCambiarAfiche ul.thumbnails.image_picker_selector li {
+	width: 165px;
+	height: 240px;
+	cursor: pointer;
+}
+
+#myModalCambiarBackdrop ul.thumbnails.image_picker_selector li {
+	width: 240px;
+	height: 155px;
+	cursor: pointer;
+}
+
+#myModalCambiarBackdrop .modal-dialog {
+	width: 80%;
+}
+
 #modalPlaceHolder .formHasLabel{ width:74px;}
 #conversorMonedas .formHasLabel{width:84%;}
 

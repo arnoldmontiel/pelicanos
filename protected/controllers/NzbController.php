@@ -1965,6 +1965,19 @@ class NzbController extends Controller
 		));
 	}
 
+	public function actionIndexRe()
+	{
+		$modelNzb = new Nzb('search');
+		$modelNzb->unsetAttributes();
+		if(isset($_GET['Nzb']))
+			$modelNzb->attributes=$_GET['Nzb'];
+	
+	
+		$this->render('indexRe',array(
+				'modelNzb'=>$modelNzb,
+		));
+	}
+	
 	public function actionAjaxOpenTabUploading()
 	{
 		$modelAutoRipper = new AutoRipper('search');
@@ -2831,6 +2844,26 @@ class NzbController extends Controller
 		}
 	}	
 	
+	public function actionAjaxOpenViewDownloadByReseller()
+	{
+		$idNzb = (isset($_POST['idNzb']))?$_POST['idNzb']:null;
+	
+		if(isset($idNzb))
+		{
+			$criteria = new CDbCriteria();
+			$criteria->join = 'inner join customer_device cd on (cd.Id_device = t.Id_device)
+							inner join customer c on (c.Id = cd.Id_customer)
+							inner join user u on (c.Id_reseller = u.Id_reseller)';
+			$criteria->addCondition('t.Id_nzb_state = 3'); // Downloaded
+			$criteria->addCondition('t.Id_nzb = ' . $idNzb);
+			$criteria->addCondition('u.username = "'. Yii::app()->user->name.'"');
+			
+			$modalNzbDevices = NzbDevice::model()->findAll($criteria);
+	
+			$this->renderPartial('_modalViewDownload',array('modalNzbDevices'=>$modalNzbDevices, 'idNzb'=>$idNzb));
+		}
+	}
+	
 	public function actionAjaxChangeNzbType()
 	{
 		$idNzb = (isset($_POST['idNzb']))?$_POST['idNzb']:null;
@@ -2865,233 +2898,7 @@ class NzbController extends Controller
 		}
 	}	
 	
-	public function actionIndexTv()
-	{
-		$model = new Nzb();
-		$dataProvider= $model->searchTv();
-		
-		$this->render('indexTv',array(
-					'dataProvider'=>$dataProvider,
-		));
-	}
 	
-	
-	public function actionIndexReseller()
-	{
-		$model = new Nzb();
-		$dataProvider= $model->searchMovieReseller();
-		
-		$this->render('indexReseller',array(
-					'dataProvider'=>$dataProvider,
-		));		
-	}
-	
-	public function actionIndexTvReseller()
-	{
-		$model = new Nzb();
-		$dataProvider= $model->searchTvReseller();
-		
-		$this->render('indexTvReseller',array(
-							'dataProvider'=>$dataProvider,
-		));		
-	}
-
-	public function actionIndexEpisodeReseller()
-	{
-		$dataProvider=new CActiveDataProvider('Nzb',array('criteria'=>array('order'=>'Id DESC','condition'=>'Id_imdbdata is null')));
-		$this->render('indexEpisodeReseller',array(
-					'dataProvider'=>$dataProvider,
-		));
-	}
-	
-	/**
-	 * Manages all models.
-	 */
-	public function actionAdmin()
-	{
-		$model=new Nzb('search');
-		$model->unsetAttributes();  // clear any default values
-		
-		if(isset($_GET['Nzb']))
-			$model->attributes=$_GET['Nzb'];
-
-		$this->render('admin',array(
-			'model'=>$model,
-		));
-	}
-
-	public function actionAdminTv()
-	{
-		$model=new Nzb('search');
-		$model->unsetAttributes();  // clear any default values
-	
-		if(isset($_GET['Nzb']))
-			$model->attributes=$_GET['Nzb'];
-	
-		$this->render('adminTv',array(
-				'model'=>$model,
-		));
-	}
-	
-	public function actionAdminBox()
-	{
-		$model=new MyMovieNzb('search');
-		$model->unsetAttributes();  // clear any default values
-	
-		if(isset($_GET['MyMovieNzb']))
-			$model->attributes=$_GET['MyMovieNzb'];
-	
-		$this->render('adminBox',array(
-					'model'=>$model,
-		));
-	}
-	
-	public function actionAdminSerie()
-	{
-		$model=new MyMovieSerieHeader('search');
-		$model->unsetAttributes();  // clear any default values
-	
-		if(isset($_GET['MyMovieSerieHeader']))
-			$model->attributes=$_GET['MyMovieSerieHeader'];
-	
-		$this->render('adminSerie',array(
-				'model'=>$model,
-		));
-	}
-	
-	public function actionAdminSeason()
-	{
-		$model=new MyMovieSeason('search');
-		$model->unsetAttributes();  // clear any default values
-	
-		if(isset($_GET['MyMovieSeason']))
-			$model->attributes=$_GET['MyMovieSeason'];
-	
-		$this->render('adminSeason',array(
-				'model'=>$model,
-		));
-	}
-	
-	public function actionAdminEpisode()
-	{
-		$model=new MyMovieEpisode('search');
-		$model->unsetAttributes();  // clear any default values
-	
-		if(isset($_GET['MyMovieEpisode']))
-			$model->attributes=$_GET['MyMovieEpisode'];
-	
-		$this->render('adminEpisode',array(
-				'model'=>$model,
-		));
-	}
-	
-	public function actionUpdateBox($id)
-	{
-		$model = MyMovieNzb::model()->findByPk($id);
-		$ddlParentalControl = ParentalControl::model()->findAll();
-		$getPoster = false;
-		$getBackdrop = false;
-	
-		if(isset($_POST['MyMovieNzb']))
-		{
-			if($_POST['MyMovieNzb']['poster_original'] != $model->poster_original)
-				$getPoster = true;
-				
-			if($_POST['MyMovieNzb']['backdrop_original'] != $model->backdrop_original)
-				$getBackdrop = true;
-			
-			$model->attributes = $_POST['MyMovieNzb'];
-				
-			if($getPoster){
-				$model->poster = MyMovieHelper::getImage($model->poster_original, $model->Id);
-				$model->big_poster = MyMovieHelper::getImage($model->big_poster_original, $model->Id."_big");
-			}
-			
-			if($getBackdrop)
-				$model->backdrop = MyMovieHelper::getImage($model->backdrop_original, $model->Id.'_bd');
-			
-			if($model->save())
-			{
-				foreach($model->myMovieDiscNzbs as $discs)
-				{
-					foreach($discs->nzbs as $nzb)
-						$this->updateRelation($nzb->Id);
-				}				
-				$this->redirect(array('adminBox'));
-			}
-		}
-	
-		$this->render('updateBox',array(
-							'model'=>$model,
-							'ddlParentalControl'=>$ddlParentalControl,
-		));
-	}
-	
-	public function actionUpdateSerie($id)
-	{
-		$model = MyMovieSerieHeader::model()->findByPk($id);
-		$getPoster = false;
-		
-		if(isset($_POST['MyMovieSerieHeader']))
-		{
-			if($_POST['MyMovieSerieHeader']['poster_original'] != $model->poster_original)
-				$getPoster = true;
-			
-			$model->attributes = $_POST['MyMovieSerieHeader'];
-			
-			if($getPoster){
-				$model->poster = MyMovieHelper::getImage($model->poster_original, $model->Id);
-				$model->big_poster = MyMovieHelper::getImage($model->big_poster_original, $model->Id."_big");
-			}
-			
-			if($model->save())
-				$this->redirect(array('adminSerie'));
-		}
-		
-		$this->render('updateSerie',array(
-						'model'=>$model,
-		));
-	}
-	
-	public function actionUpdateSeason($id)
-	{
-		$model = MyMovieSeason::model()->findByPk($id);
-		$getBanner = false;
-		
-		if(isset($_POST['MyMovieSeason']))
-		{
-			if($_POST['MyMovieSeason']['banner_original'] != $model->banner_original)
-				$getBanner = true;
-			
-			$model->attributes = $_POST['MyMovieSeason'];
-			
-			if($getPoster)
-				$model->banner = MyMovieHelper::getImage($model->banner_original, $model->Id);
-			
-			if($model->save())
-				$this->redirect(array('adminSeason'));
-		}
-	
-		$this->render('updateSeason',array(
-							'model'=>$model,
-		));
-	}
-	
-	public function actionUpdateEpisode($id)
-	{
-		$model = MyMovieEpisode::model()->findByPk($id);
-	
-		if(isset($_POST['MyMovieEpisode']))
-		{
-			$model->attributes = $_POST['MyMovieEpisode'];
-			if($model->save())
-				$this->redirect(array('adminEpisode'));
-		}
-	
-		$this->render('updateEpisode',array(
-								'model'=>$model,
-		));
-	}
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
