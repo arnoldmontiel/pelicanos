@@ -12,6 +12,20 @@ function openForm(idCustomer)
 			});
 	return false;
 }
+
+function openRequestDevice(idCustomer)
+{
+	$.post("<?php echo CustomerController::createUrl('AjaxOpenRequestDevice'); ?>",
+			{
+				idCustomer:idCustomer
+			}
+		).success(
+			function(data){
+				$('#myModalGeneric').html(data);
+				$('#myModalGeneric').modal('show');
+			});
+	return false;
+}
 </script>
 <div class="container" id="screenClientes">
 <div class="row">

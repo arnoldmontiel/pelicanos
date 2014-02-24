@@ -41,7 +41,7 @@
 						'value'=>function($data){
 							
 							return '<button onclick="openForm('.$data->Id.')" type="button" class="btn btn-default btn-sm" ><i class="fa fa-pencil"></i> Editar</button><button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i> Borrar</button>
-									<button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#myModalRequest" ><i class="fa fa-hdd-o"></i> Solicitar Dispositivo</button>';
+									<button onclick="openRequestDevice('.$data->Id.');" type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#myModalRequest" ><i class="fa fa-hdd-o"></i> Solicitar Dispositivo</button>';
 						},
 						'type'=>'raw',
 						'htmlOptions'=>array("style"=>"text-align:right;"),
