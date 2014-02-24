@@ -1,4 +1,7 @@
 <form id="request-device-form" method="post">
+	<?php
+		echo CHtml::activeHiddenField($modelCustomer, 'Id');
+	?>
 	<div class="modal-dialog">
     	<div class="modal-content">
       		<div class="modal-header">

@@ -370,16 +370,18 @@ class CustomerController extends Controller
 	}
 	
 	public function actionAjaxSaveRequestDevice()
-	{
-		$idCustomer = isset($_POST['idCustomer'])?$_POST['idCustomer']:null;
+	{		
 		
-		if(isset($_POST['Device']) && isset($idCustomer))
+		if(isset($_POST['Device']) && isset($_POST['Customer']))
 		{
+			$idCustomer = isset($_POST['Customer']['Id'])?$_POST['Customer']['Id']:null;
+			
 			$modelDevice = new Device();
 			$modelDevice->attributes = $_POST['Device'];
 			
 			$transaction = $modelDevice->dbConnection->beginTransaction();
 			try {
+				$modelDevice->Id = uniqid();
 				$modelDevice->save();
 				$modelDevice->refresh();
 				
