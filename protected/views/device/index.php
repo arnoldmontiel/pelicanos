@@ -1,4 +1,9 @@
 <script type="text/javascript">
+
+setInterval(function() {
+	$.fn.yiiGridView.update('pending-customer-device-grid');
+}, 5 * 60 * 1000);
+
 function portConfig(id)
 {	
 	$.fn.yiiGridView.update('device-tunel-grid', {

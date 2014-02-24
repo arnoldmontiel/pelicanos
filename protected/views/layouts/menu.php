@@ -1,4 +1,20 @@
+<script type="text/javascript">
+<?php if(Yii::app()->user->checkAccess('DeviceManage')):?>
+setInterval(function() {
+	getPendingDevices();
+}, 5 * 60 * 1000);
 
+function getPendingDevices()
+{
+	$.post("<?php echo Yii::app()->createUrl('device/AjaxGetPendingDeviceQty'); ?>"
+		).success(
+			function(data){
+				$('#pendingDevicesQty').text(data);	  
+			});
+	return false;
+}
+<?php endif?>
+</script>
 
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation"  id="Menu">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -29,10 +45,10 @@
           <li <?php if ($active=="customer"){ echo 'class="active"';}?> ><a href="<?php echo Yii::app()->createUrl("customer/index")?>"><i class="fa fa-smile-o fa-fw"></i> Clientes</a></li>
           <?php endif?>
           <?php if(Yii::app()->user->checkAccess('DeviceManageRe')):?>
-          <li <?php if ($active=="device"){ echo 'class="active"';}?> ><a href="<?php echo Yii::app()->createUrl("device/indexRe")?>"><i class="fa fa-hdd-o fa-fw"></i> Dispositivos <span class="badge">1</span></a></li>
+          <li <?php if ($active=="device"){ echo 'class="active"';}?> ><a href="<?php echo Yii::app()->createUrl("device/indexRe")?>"><i class="fa fa-hdd-o fa-fw"></i> Dispositivos</a></li>
           <?php endif?>
           <?php if(Yii::app()->user->checkAccess('DeviceManage')):?>
-          <li <?php if ($active=="device"){ echo 'class="active"';}?> ><a href="<?php echo Yii::app()->createUrl("device/index")?>"><i class="fa fa-hdd-o fa-fw"></i> Dispositivos <span class="badge">1</span></a></li>
+          <li <?php if ($active=="device"){ echo 'class="active"';}?> ><a href="<?php echo Yii::app()->createUrl("device/index")?>"><i class="fa fa-hdd-o fa-fw"></i> Dispositivos <span id="pendingDevicesQty" class="badge"></span></a></li>
           <?php endif?>
           </ul>
           <ul class="nav navbar-nav navbar-right">

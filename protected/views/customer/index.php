@@ -1,3 +1,8 @@
+<script type="text/javascript">
+setInterval(function() {
+	$.fn.yiiGridView.update('customer-grid');
+}, 5 * 60 * 1000);
+</script>
 <div class="container" id="screenClientes">
 <div class="row">
 <div class="col-sm-6">

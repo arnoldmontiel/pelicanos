@@ -234,6 +234,15 @@ class DeviceController extends Controller
 		));
 	}
 
+	public function actionAjaxGetPendingDeviceQty()
+	{
+		$qty = '';
+		
+		$qty = CustomerDevice::model()->countByAttributes(array('is_pending'=>1));
+		
+		echo $qty;	
+	}
+	
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
