@@ -9,6 +9,15 @@
         		<h4 class="modal-title">Solicitar Dispositivo</h4>
       		</div>
       		<div class="modal-body">
+      		<div class="panel panel-default panelCliente">
+  <div class="panel-body">
+   Cliente
+   <div class="infoPanelCliente">
+   <div class="bold">Arnold Montiel</div>
+      		<div>Lobos 1747</div>
+  </div></div>
+</div>
+      		
   				<div class="form-group">
 					<label for="campoNombre">Descripci&oacute;n</label>
 			  		<?php echo CHtml::activeTextField($modelDevice, 'description', array('class'=>'form-control')); ?>
