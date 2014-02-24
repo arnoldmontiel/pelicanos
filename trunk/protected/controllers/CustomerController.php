@@ -356,6 +356,46 @@ class CustomerController extends Controller
 		}
 	}
 	
+	public function actionAjaxOpenRequestDevice()
+	{
+		$idCustomer = isset($_POST['idCustomer'])?$_POST['idCustomer']:null;
+		
+		if(isset($idCustomer))
+		{
+			$modelCustomer = Customer::model()->findByPk($idCustomer);
+			
+			$modelDevice = new Device();
+			echo $this->renderPartial('_requestDevice', array('modelCustomer'=>$modelCustomer, 'modelDevice'=>$modelDevice));
+		}
+	}
+	
+	public function actionAjaxSaveRequestDevice()
+	{
+		$idCustomer = isset($_POST['idCustomer'])?$_POST['idCustomer']:null;
+		
+		if(isset($_POST['Device']) && isset($idCustomer))
+		{
+			$modelDevice = new Device();
+			$modelDevice->attributes = $_POST['Device'];
+			
+			$transaction = $modelDevice->dbConnection->beginTransaction();
+			try {
+				$modelDevice->save();
+				$modelDevice->refresh();
+				
+				$modelCustomerDevice = new CustomerDevice();
+				$modelCustomerDevice->Id_device = $modelDevice->Id;
+				$modelCustomerDevice->Id_customer = $idCustomer;
+				$modelCustomerDevice->save();
+				
+				$transaction->commit();
+			} catch (Exception $e) {
+				$transaction->rollback();
+			}
+			 
+		}
+	}
+	
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
