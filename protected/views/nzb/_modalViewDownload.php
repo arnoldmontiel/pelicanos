@@ -33,9 +33,10 @@ if(isset($modelNzb->myMovieDiscNzb))
     					<?php
     					foreach($modalNzbDevices as $item) 
     					{
+    						$modelCustomerDevice = CustomerDevice::model()->findByAttributes(array('Id_device'=>$item->Id_device));
     						echo '<tr>';
-    						echo '<td>Venezuela</td>';
-    						echo '<td>Juan Perez</td>';
+    						echo '<td>'.$modelCustomerDevice->customer->reseller->description.'</td>';
+    						echo '<td>'.$modelCustomerDevice->customer->fullName.'</td>';
     						echo '<td>'.$item->device->description.'</td>';
     						echo '<td>'.$item->date_downloading.'</td>';
     						echo '<td>'.$item->date_downloaded.'</td>';
