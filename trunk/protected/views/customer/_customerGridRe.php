@@ -27,9 +27,9 @@
 							{
 								$date = isset($item->request_date)?Yii::app()->dateFormatter->format("dd/MM/yyyy", $item->request_date):'';
 								if($item->is_pending == 1)
-									$value .= '<div>&bull; '.$item->device->description.' - '.$item->Id_device.'<span class="label label-danger">pendiente '.$date.'</span></div>';
+									$value .= '<div class="noWrap dispClientes">&bull; '.$item->device->description.' - '.$item->Id_device.' <span class="label label-danger">pendiente '.$date.'</span></div>';
 								else
-									$value .= '<div>&bull; '.$item->device->description.' - '.$item->Id_device.'</div>';
+									$value .= '<div class="noWrap dispClientes">&bull; '.$item->device->description.' - '.$item->Id_device.'</div>';
 							}
 							
 							return $value;
@@ -40,8 +40,8 @@
 						'header'=>'Acciones',
 						'value'=>function($data){
 							
-							return '<button onclick="openForm('.$data->Id.')" type="button" class="btn btn-default btn-sm" ><i class="fa fa-pencil"></i> Editar</button><button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i> Borrar</button>
-									<button onclick="openRequestDevice('.$data->Id.');" type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#myModalRequest" ><i class="fa fa-hdd-o"></i> Solicitar Dispositivo</button>';
+							return '<div class="buttonGroupClientes"><button onclick="openForm('.$data->Id.')" type="button" class="btn btn-default btn-sm" ><i class="fa fa-pencil"></i> Editar</button><button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i> Borrar</button>
+									<button onclick="openRequestDevice('.$data->Id.');" type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#myModalRequest" ><i class="fa fa-hdd-o"></i> Solicitar Dispositivo</button></div>';
 						},
 						'type'=>'raw',
 						'htmlOptions'=>array("style"=>"text-align:right;"),

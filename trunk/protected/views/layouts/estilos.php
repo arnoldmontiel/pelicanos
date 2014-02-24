@@ -78,6 +78,7 @@ button {
 
 .noMargin{ margin:0px !important;}
 .noBorder{ border:0px none !important;}
+.noWrap{ white-space:nowrap;}
 .block{display:block !important;}
 .inline{display:inline !important;}
 .inlineBlock{display:inline-block !important;}
@@ -1060,6 +1061,17 @@ top: 2px;}
 
 /* ----- END DISPOSITIVOS --------*/
 
+/* ----- CLIENTES --------*/
+.dispClientes{
+padding-bottom:5px;  padding-top:5px; margin-bottom:-1px;border-bottom:1px dotted #ccc; border-top:1px dotted #ccc;
+}
+.buttonGroupClientes{width:346px;}
+
+
+.panelCliente{background-color:#eee; border-color:#eee;}
+.infoPanelCliente{font-size:16px;}
+.infoPanelCliente .bold{font-size:18px;}
+/* ----- END CLIENTES --------*/
 
 
 /*---------- EDIT PELICULA -------------*/
