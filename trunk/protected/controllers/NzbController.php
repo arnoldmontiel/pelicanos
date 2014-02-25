@@ -2368,6 +2368,16 @@ class NzbController extends Controller
 				$nzbCreationState->save();
 			}
 
+			if($idState == 3) //rejected
+			{
+				$modelAutoRipper = AutoRipper::model()->findByAttributes(array('Id_nzb'=>$idNzb));
+				if(isset($modelAutoRipper))
+				{
+					$modelAutoRipper->has_error = 1;
+					$modelAutoRipper->save();
+				}
+			}
+			
 			$transaction->commit();
 		} catch (Exception $e) {
 			$transaction->rollback();
