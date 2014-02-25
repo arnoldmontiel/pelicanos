@@ -71,9 +71,13 @@ class UserController extends Controller
 	
 		if(isset($_POST['User']))
 		{
+			$isUpdate = false;
 			if(isset($_POST['User']['username']))
+			{
 				$modelUser = User::model()->findByPk($_POST['User']['username']);
-
+				$isUpdate = true;
+			}
+			
 			if(!isset($modelUser))
 				$modelUser = new User();
 			
@@ -87,11 +91,14 @@ class UserController extends Controller
 				if($modelUser->Id_profile == 1)
 					$itemname = 'Administrator';
 				
-				$ass = new Assignments();
-				$ass->userid = $modelUser->username;
-				$ass->data = 's:0:"";';
-				$ass->itemname = $itemname;
-				$ass->save();
+				if(!$isUpdate)
+				{
+					$ass = new Assignments();
+					$ass->userid = $modelUser->username;
+					$ass->data = 's:0:"";';
+					$ass->itemname = $itemname;
+					$ass->save();
+				}
 			}
 			else
 			{
