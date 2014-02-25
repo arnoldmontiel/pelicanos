@@ -1,7 +1,7 @@
 <script type="text/javascript">
 function viewDownloads(id)
 {
-	$.post("<?php echo NzbController::createUrl('AjaxOpenViewDownload'); ?>",
+	$.post("<?php echo DeviceController::createUrl('AjaxOpenViewDownload'); ?>",
 			{
 				idDevice:id
 			}

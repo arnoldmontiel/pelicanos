@@ -9,7 +9,7 @@
         <li class="active"><a>Castelar Norte (ID: 30909fdjf)</a></li>
         <li id="total-qty" class="pull-right">Total Descargas <span class="label label-info">550</span></li>
       </ul>
-              <div id="product-grid-add" class="grid-view">
+              <div class="grid-view">
                 <table class="table table-striped table-bordered tablaIndividual">
                   <thead>
                     <tr>
