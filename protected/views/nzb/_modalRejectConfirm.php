@@ -52,7 +52,7 @@
 			    success: function(data, textStatus, jqXHR)
 			    {		
 			    	$('#myModalGeneric').trigger('click');
-			    	$("#movieItem_" + <?php echo $modelNzb->Id;?>).hide();
+			    	$("#movieItem_draft_" + <?php echo $modelNzb->Id;?>).hide();
 					var obj = jQuery.parseJSON(data);				
 					if(obj != null)
 					{
