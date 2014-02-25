@@ -165,6 +165,41 @@ class DeviceController extends Controller
 		));
 	}
 
+	public function actionIndexRe()
+	{
+		$modelCustomerDevice = new CustomerDevice('search');
+		$modelCustomerDevice->unsetAttributes();  // clear any default values
+		if(isset($_GET['CustomerDevice']))
+			$modelCustomerDevice->attributes=$_GET['CustomerDevice'];
+	
+		$modelDeviceTunelGrid = new DeviceTunneling('search');
+		$modelDeviceTunelGrid->unsetAttributes();  // clear any default values
+	
+		$idDevice = isset($_GET['idDevice'])?$_GET['idDevice']:'';
+		if(isset($_GET['DeviceTunneling']))
+			$modelDeviceTunelGrid->attributes=$_GET['DeviceTunneling'];
+	
+		$modelDeviceTunelGrid->Id_device = $idDevice;
+	
+		$this->render('indexRe',array(
+				'modelCustomerDevice'=>$modelCustomerDevice,
+				'modelDeviceTunelGrid'=>$modelDeviceTunelGrid,
+		));
+	}
+	
+	public function actionAjaxOpenViewDownload()
+	{
+		$idDevice = (isset($_POST['idDevice']))?$_POST['idDevice']:null;
+		
+		if(isset($idDevice))
+		{
+			//el 3 es por las que estan descargadas
+			$modalNzbDevices = NzbDevice::model()->findAllByAttributes(array('Id_device'=>$idDevice, 'Id_nzb_state'=>3));
+		
+			$this->renderPartial('_modalViewDownload',array('modalNzbDevices'=>$modalNzbDevices, 'idDevice'=>$idDevice));
+		}
+	}
+	
 	public function actionAjaxOpenConfigPort()
 	{
 		$idDevice = isset($_POST['idDevice'])?$_POST['idDevice']:null;
