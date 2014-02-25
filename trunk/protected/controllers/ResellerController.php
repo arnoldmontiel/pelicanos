@@ -75,12 +75,14 @@ class ResellerController extends Controller
 		$modelReseller = new Reseller();
 		$modelUser = new User();
 		
+		$isUpdate = false;
 		if(isset($_POST['Reseller']) && isset($_POST['User']))
 		{		
 			if(isset($_POST['Reseller']['Id']))
 			{
 				$modelReseller = Reseller::model()->findByPk($_POST['Reseller']['Id']);
 				$modelUser = User::model()->findByAttributes(array('Id_reseller'=>$_POST['Reseller']['Id']));
+				$isUpdate = true;
 			}
 			$modelReseller->attributes = $_POST['Reseller'];
 			$modelUser->attributes = $_POST['User'];
@@ -97,12 +99,14 @@ class ResellerController extends Controller
 					$modelUser->Id_reseller = $modelReseller->Id;					
 					$modelUser->save();
 					
-					$ass = new Assignments();
-					$ass->userid = $modelUser->username;
-					$ass->data = 's:0:"";';
-					$ass->itemname = 'Reseller';
-					$ass->save();
-					
+					if(!$isUpdate)
+					{
+						$ass = new Assignments();
+						$ass->userid = $modelUser->username;
+						$ass->data = 's:0:"";';
+						$ass->itemname = 'Reseller';
+						$ass->save();
+					}
 					$transaction->commit();
 				} catch (Exception $e) {
 					$transaction->rollback();
