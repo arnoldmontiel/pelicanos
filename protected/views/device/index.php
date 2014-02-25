@@ -4,6 +4,20 @@ setInterval(function() {
 	$.fn.yiiGridView.update('pending-customer-device-grid');
 }, 5 * 60 * 1000);
 
+function viewDownloads(id)
+{
+	$.post("<?php echo DeviceController::createUrl('AjaxOpenViewDownload'); ?>",
+			{
+				idDevice:id
+			}
+		).success(
+			function(data){
+				$('#myModalGeneric').html(data);
+		   		$('#myModalGeneric').modal('show');	  
+			});
+	return false;
+}
+
 function portConfig(id)
 {	
 	$.fn.yiiGridView.update('device-tunel-grid', {
