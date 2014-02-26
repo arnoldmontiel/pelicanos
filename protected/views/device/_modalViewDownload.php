@@ -6,8 +6,9 @@
         </div>
         <div class="modal-body">
          <ul class="nav nav-tabs">
-        <li class="active"><a>Castelar Norte (ID: 30909fdjf)</a></li>
-        <li id="total-qty" class="pull-right">Total Descargas <span class="label label-info">550</span></li>
+         <?php $modalDevice = Device::model()->findByPk($idDevice);?>
+        <li class="active"><a><?php echo $modalDevice->description;?> (ID: <?php echo $idDevice;?>)</a></li>
+        <li id="total-qty" class="pull-right">Total Descargas <span class="label label-info"><?php echo count($modalNzbDevices);?></span></li>
       </ul>
               <div class="grid-view">
                 <table class="table table-striped table-bordered tablaIndividual">
@@ -16,7 +17,7 @@
                       <th>ID Imdb</th>
                       <th>T&iacute;tulo</th>
                       <th>G&eacute;nero</th>
-                      <th>A�o</th>
+                      <th>A&ntilde;o</th>
                       <th>Nzb Status</th>
                       <th>Fecha Enviado</th>
                       <th>Inicio Descarga</th>
@@ -24,46 +25,33 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>tt1343092</td>
-                      <td class="bold">The Great Gatsby</td>
-                      <td>Drama, Romance</td>
-                      <td>2013</td>
-                      <td>Sent</td>
-                      <td>2013-12-28 14:00:23</td>
-                      <td>2013-12-28 14:00:23</td>
-                      <td>2013-12-28 14:00:23</td>
-                    </tr>
-                    <tr>
-                      <td>tt1343092</td>
-                      <td class="bold">Spiderman</td>
-                      <td>Drama, Romance</td>
-                      <td>2013</td>
-                      <td>Sent</td>
-                      <td>2013-12-28 14:00:23</td>
-                      <td>2013-12-28 14:00:23</td>
-                      <td>2013-12-28 14:00:23</td>
-                    </tr>
-                    <tr>
-                      <td>tt1343092</td>
-                      <td class="bold">Titanic</td>
-                      <td>Drama, Romance</td>
-                      <td>2013</td>
-                      <td>Sent</td>
-                      <td>2013-12-28 14:00:23</td>
-                      <td>2013-12-28 14:00:23</td>
-                      <td>2013-12-28 14:00:23</td>
-                    </tr>
-                    <tr>
-                      <td>tt1343092</td>
-                      <td class="bold">Rapido y Furioso</td>
-                      <td>Drama, Romance</td>
-                      <td>2013</td>
-                      <td>Sent</td>
-                      <td>2013-12-28 14:00:23</td>
-                      <td>2013-12-28 14:00:23</td>
-                      <td>2013-12-28 14:00:23</td>
-                    </tr>
+                    <?php foreach($modalNzbDevices as $item)
+                    { 
+		              	$idImdb = '';
+		              	$genre = '';
+		              	$title = '';
+						$year = '';
+		              	if(isset($item->nzb->myMovieDiscNzb->myMovieNzb))
+		              	{
+		              		$idImdb = $item->nzb->myMovieDiscNzb->myMovieNzb->imdb;
+		              		$genre = $item->nzb->myMovieDiscNzb->myMovieNzb->genre;
+		              		$title = $item->nzb->myMovieDiscNzb->myMovieNzb->original_title;
+		              		$year = $item->nzb->myMovieDiscNzb->myMovieNzb->production_year;
+		              	}
+		              	
+		              	
+		              	echo '<tr>';
+		              	echo '<td>'.$idImdb.'</td>';
+		              	echo '<td class="bold">'.$title.'</td>';
+		              	echo '<td>'.$genre.'</td>';
+		              	echo '<td>'.$year.'</td>';
+		              	echo '<td>'.$item->nzbState->description.'</td>';
+		              	echo '<td>'.$item->date_sent.'</td>';
+		              	echo '<td>'.$item->date_downloading.'</td>';
+		              	echo '<td>'.$item->date_downloaded.'</td>';
+		              	echo '</tr>';
+                    }
+		            ?>
                   </tbody>
                 </table>
               </div>
