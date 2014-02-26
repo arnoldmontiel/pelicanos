@@ -150,6 +150,11 @@ class DeviceController extends Controller
 		if(isset($_GET['CustomerDevice']))
 			$modelCustomerDevice->attributes=$_GET['CustomerDevice'];
 		
+		$modelNzbDevice = new NzbDevice('search');
+		$modelNzbDevice->unsetAttributes();  // clear any default values
+		if(isset($_GET['NzbDevice']))
+			$modelNzbDevice->attributes=$_GET['NzbDevice'];
+		
 		$modelDeviceTunelGrid = new DeviceTunneling('search');
 		$modelDeviceTunelGrid->unsetAttributes();  // clear any default values
 		
@@ -158,10 +163,12 @@ class DeviceController extends Controller
 			$modelDeviceTunelGrid->attributes=$_GET['DeviceTunneling'];
 		
 		$modelDeviceTunelGrid->Id_device = $idDevice;
+		$modelNzbDevice->Id_device = $idDevice;
 		
 		$this->render('index',array(
 				'modelCustomerDevice'=>$modelCustomerDevice,
 				'modelDeviceTunelGrid'=>$modelDeviceTunelGrid,
+				'modelNzbDevice'=>$modelNzbDevice,
 		));
 	}
 
@@ -172,6 +179,11 @@ class DeviceController extends Controller
 		if(isset($_GET['CustomerDevice']))
 			$modelCustomerDevice->attributes=$_GET['CustomerDevice'];
 	
+		$modelNzbDevice = new NzbDevice('search');
+		$modelNzbDevice->unsetAttributes();  // clear any default values
+		if(isset($_GET['NzbDevice']))
+			$modelNzbDevice->attributes=$_GET['NzbDevice'];
+		
 		$modelDeviceTunelGrid = new DeviceTunneling('search');
 		$modelDeviceTunelGrid->unsetAttributes();  // clear any default values
 	
@@ -180,10 +192,12 @@ class DeviceController extends Controller
 			$modelDeviceTunelGrid->attributes=$_GET['DeviceTunneling'];
 	
 		$modelDeviceTunelGrid->Id_device = $idDevice;
-	
+		$modelNzbDevice->Id_device = $idDevice;
+		
 		$this->render('indexRe',array(
 				'modelCustomerDevice'=>$modelCustomerDevice,
 				'modelDeviceTunelGrid'=>$modelDeviceTunelGrid,
+				'modelNzbDevice'=>$modelNzbDevice,
 		));
 	}
 	
@@ -193,9 +207,9 @@ class DeviceController extends Controller
 		
 		if(isset($idDevice))
 		{
-			$modalNzbDevices = NzbDevice::model()->findAllByAttributes(array('Id_device'=>$idDevice));
-		
-			$this->renderPartial('_modalViewDownload',array('modalNzbDevices'=>$modalNzbDevices, 'idDevice'=>$idDevice));
+			$modelDevice = Device::model()->findByPk($idDevice);
+			$downloadedQty = NzbDevice::model()->countByAttributes(array('Id_device'=>$idDevice, 'Id_nzb_state'=>3)); //cuento los descargados
+			echo json_encode(array('idDevice'=>$modelDevice->Id, 'description'=>$modelDevice->description, 'downloadedQty'=>$downloadedQty));
 		}
 	}
 	

@@ -123,7 +123,7 @@ class NzbDevice extends CActiveRecord
 		$criteria=new CDbCriteria;
 	
 		$criteria->compare('Id_nzb',$this->Id_nzb);
-		$criteria->compare('Id_device',$this->Id_device);
+		$criteria->compare('t.Id_device',$this->Id_device, true);
 		$criteria->compare('need_update',$this->need_update);
 		$criteria->compare('Id_nzb_state',$this->Id_nzb_state);
 		$criteria->compare('date_sent',$this->date_sent);
