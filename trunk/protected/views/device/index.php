@@ -6,14 +6,27 @@ setInterval(function() {
 
 function viewDownloads(id)
 {
+	$.fn.yiiGridView.update('nzb-device-grid', {
+ 		data: $(this).serialize() + '&idDevice=' + id
+ 	});
+ 	
 	$.post("<?php echo DeviceController::createUrl('AjaxOpenViewDownload'); ?>",
 			{
 				idDevice:id
 			}
 		).success(
 			function(data){
-				$('#myModalGeneric').html(data);
-		   		$('#myModalGeneric').modal('show');	  
+				var obj = jQuery.parseJSON(data);				
+				if(obj != null)
+				{
+					$("#download-device-desc").text(obj.description);
+					$("#download-device-id").text(obj.idDevice);
+					$("#downloaded-qty").text(obj.downloadedQty);
+				}		
+				$('#container-modal-addPort').hide();
+				$('#myModalGeneric').append($('#container-modal-viewDownload'));
+				$('#container-modal-viewDownload').show();
+				$('#myModalGeneric').modal('show'); 
 			});
 	return false;
 }
@@ -48,6 +61,7 @@ function portConfig(id)
 					$("#Id_device").val(obj.idDevice);
 				}
 				$('#status-error').hide();		
+				$('#container-modal-viewDownload').hide();
 				$('#myModalGeneric').append($('#container-modal-addPort'));
 				$('#container-modal-addPort').show();
 				$('#myModalGeneric').modal('show');
@@ -135,6 +149,10 @@ function addPort()
   
 	<div id="container-modal-addPort" style="display: none">
 		<?php echo $this->renderPartial('_modalPortConfig', array( 'modelDeviceTunelGrid'=>$modelDeviceTunelGrid, 'idDevice'=>''));?>
+	</div>
+	
+	<div id="container-modal-viewDownload" style="display: none">
+		<?php echo $this->renderPartial('_modalViewDownload', array( 'modelNzbDevice'=>$modelNzbDevice, 'idDevice'=>''));?>
 	</div>
   <!-- /.row --> 
 </div>

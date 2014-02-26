@@ -6,57 +6,80 @@
         </div>
         <div class="modal-body">
          <ul class="nav nav-tabs">
-         <?php $modalDevice = Device::model()->findByPk($idDevice);?>
-        <li class="active"><a><?php echo $modalDevice->description;?> (ID: <?php echo $idDevice;?>)</a></li>
-        <li id="total-qty" class="pull-right">Total Descargas <span class="label label-info"><?php echo count($modalNzbDevices);?></span></li>
+        <li class="active"><a><span id="download-device-desc"></span> (ID: <span id="download-device-id"></span>)</a></li>
+        <li id="total-qty" class="pull-right">Total Descargas <span id="downloaded-qty" class="label label-info"></span></li>
       </ul>
               <div class="grid-view">
-                <table class="table table-striped table-bordered tablaIndividual">
-                  <thead>
-                    <tr>
-                      <th>ID Imdb</th>
-                      <th>T&iacute;tulo</th>
-                      <th>G&eacute;nero</th>
-                      <th>A&ntilde;o</th>
-                      <th>Nzb Status</th>
-                      <th>Fecha Enviado</th>
-                      <th>Inicio Descarga</th>
-                      <th>Fin Descarga</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <?php foreach($modalNzbDevices as $item)
-                    { 
-		              	$idImdb = '';
-		              	$genre = '';
-		              	$title = '';
-						$year = '';
-						$state = '';
-		              	if(isset($item->nzb->myMovieDiscNzb->myMovieNzb))
-		              	{
-		              		$idImdb = $item->nzb->myMovieDiscNzb->myMovieNzb->imdb;
-		              		$genre = $item->nzb->myMovieDiscNzb->myMovieNzb->genre;
-		              		$title = $item->nzb->myMovieDiscNzb->myMovieNzb->original_title;
-		              		$year = $item->nzb->myMovieDiscNzb->myMovieNzb->production_year;
-		              	}
-		              	
-		              	if(isset($item->nzbState))
-		              		$state = $item->nzbState->description;
-		              	
-		              	echo '<tr>';
-		              	echo '<td>'.$idImdb.'</td>';
-		              	echo '<td class="bold">'.$title.'</td>';
-		              	echo '<td>'.$genre.'</td>';
-		              	echo '<td>'.$year.'</td>';
-		              	echo '<td>'.$state.'</td>';
-		              	echo '<td>'.$item->date_sent.'</td>';
-		              	echo '<td>'.$item->date_downloading.'</td>';
-		              	echo '<td>'.$item->date_downloaded.'</td>';
-		              	echo '</tr>';
-                    }
-		            ?>
-                  </tbody>
-                </table>
+              <?php 
+				$this->widget('zii.widgets.grid.CGridView', array(
+					'id'=>'nzb-device-grid',
+					'dataProvider'=>$modelNzbDevice->searchSummary(),
+					'filter'=>$modelNzbDevice,
+					'itemsCssClass' => 'table table-striped table-bordered tablaIndividual',
+					'summaryText'=>'',
+					
+					'columns'=>array(
+						array(
+								'name'=>"id_imdb",
+								'value'=>function($data){
+									$value = '';
+									if(isset($data->nzb->myMovieDiscNzb->myMovieNzb))
+										$value = $data->nzb->myMovieDiscNzb->myMovieNzb->imdb;
+								
+									return $value;
+								},
+								'type'=>'raw',
+						),
+						array(
+								'name'=>"title",
+								'value'=>function($data){
+									$value = '';
+									if(isset($data->nzb->myMovieDiscNzb->myMovieNzb))
+										$value = $data->nzb->myMovieDiscNzb->myMovieNzb->original_title;
+						
+									return $value;
+								},
+								'type'=>'raw',
+								'htmlOptions'=>array("class"=>"bold"),
+						),
+						array(
+								'name'=>"genre",
+								'value'=>function($data){
+									$value = '';
+									if(isset($data->nzb->myMovieDiscNzb->myMovieNzb))
+										$value = $data->nzb->myMovieDiscNzb->myMovieNzb->genre;
+						
+									return $value;
+								},
+								'type'=>'raw',
+						),
+						array(
+								'name'=>"year",
+								'value'=>function($data){
+									$value = '';
+									if(isset($data->nzb->myMovieDiscNzb->myMovieNzb))
+										$value = $data->nzb->myMovieDiscNzb->myMovieNzb->production_year;
+						
+									return $value;
+								},
+								'type'=>'raw',
+						),
+						array(
+								'name'=>"nzb_status",
+								'value'=>function($data){
+									$value = '';
+									if(isset($data->nzbState))
+										$value = $data->nzbState->description;
+						
+									return $value;
+								},
+								'type'=>'raw',
+						),
+						'date_sent',
+						'date_downloading',
+						'date_downloaded',
+					),
+				)); ?>
               </div>
               </div>
         <div class="modal-footer">
