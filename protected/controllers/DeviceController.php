@@ -193,8 +193,7 @@ class DeviceController extends Controller
 		
 		if(isset($idDevice))
 		{
-			//el 3 es por las que estan descargadas
-			$modalNzbDevices = NzbDevice::model()->findAllByAttributes(array('Id_device'=>$idDevice, 'Id_nzb_state'=>3));
+			$modalNzbDevices = NzbDevice::model()->findAllByAttributes(array('Id_device'=>$idDevice));
 		
 			$this->renderPartial('_modalViewDownload',array('modalNzbDevices'=>$modalNzbDevices, 'idDevice'=>$idDevice));
 		}
