@@ -31,6 +31,7 @@
 		              	$genre = '';
 		              	$title = '';
 						$year = '';
+						$state = '';
 		              	if(isset($item->nzb->myMovieDiscNzb->myMovieNzb))
 		              	{
 		              		$idImdb = $item->nzb->myMovieDiscNzb->myMovieNzb->imdb;
@@ -39,13 +40,15 @@
 		              		$year = $item->nzb->myMovieDiscNzb->myMovieNzb->production_year;
 		              	}
 		              	
+		              	if(isset($item->nzbState))
+		              		$state = $item->nzbState->description;
 		              	
 		              	echo '<tr>';
 		              	echo '<td>'.$idImdb.'</td>';
 		              	echo '<td class="bold">'.$title.'</td>';
 		              	echo '<td>'.$genre.'</td>';
 		              	echo '<td>'.$year.'</td>';
-		              	echo '<td>'.$item->nzbState->description.'</td>';
+		              	echo '<td>'.$state.'</td>';
 		              	echo '<td>'.$item->date_sent.'</td>';
 		              	echo '<td>'.$item->date_downloading.'</td>';
 		              	echo '<td>'.$item->date_downloaded.'</td>';
