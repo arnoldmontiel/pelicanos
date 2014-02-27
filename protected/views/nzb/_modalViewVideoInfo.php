@@ -57,9 +57,9 @@
     			</div><!--/.col-md-3PRINCIPAL -->        
     			<div class="col-md-9 col-sm-9">
     				<ul class="nav nav-tabs">
-                		<li class="<?php echo ($activeTab==1)?'active':'';?>"><a href="#tab21" data-toggle="tab">Informaci�n</a></li>
+                		<li class="<?php echo ($activeTab==1)?'active':'';?>"><a href="#tab21" data-toggle="tab">Informaci&oacute;n</a></li>
               			<li class="<?php echo ($activeTab==2)?'active':'';?>"><a href="#tab23" data-toggle="tab">Archivos</a></li>
-              			<li class="pull-right"><button id="btn-edit" onclick="editVideoInfo(<?php echo $modalAutoRipper->Id_nzb;?>);" type="button" class="btn btn-default"><i class="fa fa-pencil"></i> Editar Informaci�n</button></li>
+              			<li class="pull-right"><button id="btn-edit" onclick="editVideoInfo(<?php echo $modalAutoRipper->Id_nzb;?>);" type="button" class="btn btn-default"><i class="fa fa-pencil"></i> Editar Informaci&oacute;n</button></li>
     				</ul>
 					<div class="tab-content tableInfo">
     					<div class="tab-pane <?php echo ($activeTab==1)?'active':'';?>" id="tab21">
