@@ -197,8 +197,9 @@ function rejectNzb(id, obj)
 			});
 }
 
-function viewVideoInfo(id, tab = 1)
+function viewVideoInfo(id, tab)
 {
+	tab = typeof tab !== 'undefined' ? tab : 1;
 	$.post("<?php echo NzbController::createUrl('AjaxOpenViewVideoInfo'); ?>",
 			{
 				idAutoripper:id,
