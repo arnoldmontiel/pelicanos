@@ -41,11 +41,11 @@
 						<div class="dropdown editFiles">
 												<a data-toggle="dropdown" class="dropdown-toggle"><i class="fa fa-cog fa-lg"></i></a>
 						  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-						    <li role="presentation"><a onclick="viewVideoInfo('.$modelAutoRipper->Id.', 2);" role="menuitem" tabindex="-1" href="#">Configurar Archivos</a></li>
+						    <li role="presentation"><a onclick="viewVideoInfo('.$modelAutoRipper->Id.', 2);" role="menuitem" tabindex="-1">Configurar Archivos</a></li>
 						    <li role="presentation" class="divider"></li>
-						    <li role="presentation"><a onclick="editVideoInfo('.$item->Id.');" role="menuitem" tabindex="-1" href="#">Editar Informaci&oacute;n</a></li>
+						    <li role="presentation"><a onclick="editVideoInfo('.$item->Id.');" role="menuitem" tabindex="-1" >Editar Informaci&oacute;n</a></li>
 						    <li role="presentation" class="divider"></li>
-						    <li role="presentation"><a onclick="viewVideoInfo('.$modelAutoRipper->Id.');" data-toggle="modal" role="menuitem" tabindex="-1" href="#">Ver Informaci&oacute;n</a></li>
+						    <li role="presentation"><a onclick="viewVideoInfo('.$modelAutoRipper->Id.');" data-toggle="modal" role="menuitem" tabindex="-1">Ver Informaci&oacute;n</a></li>
 						  </ul>
 						</div></div>';
 						echo '<div class="movieYear">'.$item->myMovieDiscNzb->myMovieNzb->production_year.'</div>';
@@ -63,11 +63,11 @@
 						<div class="dropdown editFiles">
 												<a data-toggle="dropdown" class="dropdown-toggle"><i class="fa fa-cog fa-lg"></i></a>
 						  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-						    <li role="presentation"><a onclick="viewVideoInfo('.$modelAutoRipper->Id.', 2);" role="menuitem" tabindex="-1" href="#">Configurar Archivos</a></li>
+						    <li role="presentation"><a onclick="viewVideoInfo('.$modelAutoRipper->Id.', 2);" role="menuitem" tabindex="-1">Configurar Archivos</a></li>
 						    <li role="presentation" class="divider"></li>
-						    <li role="presentation"><a onclick="editVideoInfo('.$item->Id.');" role="menuitem" tabindex="-1" href="#">Editar Informaci&oacute;n</a></li>
+						    <li role="presentation"><a onclick="editVideoInfo('.$item->Id.');" role="menuitem" tabindex="-1">Editar Informaci&oacute;n</a></li>
 						    <li role="presentation" class="divider"></li>
-						    <li role="presentation"><a onclick="viewVideoInfo('.$modelAutoRipper->Id.');" data-toggle="modal" role="menuitem" tabindex="-1" href="#">Ver Informaci&oacute;n</a></li>
+						    <li role="presentation"><a onclick="viewVideoInfo('.$modelAutoRipper->Id.');" data-toggle="modal" role="menuitem" tabindex="-1">Ver Informaci&oacute;n</a></li>
 						  </ul>
 						</div></div>';
 					echo '<div class="movieYear">Archivo: '.$fileName.'</div>';
