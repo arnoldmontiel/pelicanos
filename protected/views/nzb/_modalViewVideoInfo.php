@@ -113,7 +113,7 @@
 						    </div><!--/.row -->
 						    <div class="row detailSecondGroup">
 						    	<div class="col-md-3 col-sm-3 align-left detailSecond detailSecondFirst">
-						    		A�O
+						    		A&Ntilde;O
 						    	</div><!--/.col-md-3 -->
 						    	<div class="col-md-9 col-sm-9 align-left detailSecond">
 						    		&nbsp;<?php echo $year;?>    
@@ -137,7 +137,7 @@
 						    </div><!--/.row -->
 						    <div class="row detailSecondGroup">
 						    	<div class="col-md-3 col-sm-3 align-left detailSecond detailSecondFirst">
-						    		DURACI�N
+						    		DURACI&Oacute;N
 						    	</div><!--/.col-md-3 -->
 						    	<div class="col-md-9 col-sm-9 align-left detailSecond">
 						    		&nbsp;<?php echo $time;?>&nbsp;mm
@@ -145,7 +145,7 @@
 						    </div><!--/.row -->
 						    <div class="row detailSecondGroup">
 						    	<div class="col-md-3 col-sm-3 align-left detailSecond detailSecondFirst">
-						    		SIN�PSIS
+						    		SINOPSIS
 						    	</div><!--/.col-md-3 -->
 						    	<div class="col-md-9 col-sm-9 align-left detailSecond detailSummary">
 						    		&nbsp;<?php echo $description;?>
