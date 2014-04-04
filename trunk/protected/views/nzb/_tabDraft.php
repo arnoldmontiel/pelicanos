@@ -1,4 +1,4 @@
-<div class="searchOverTab"><input onchange="searchTabDraft(this.value);" type="text" value="<?php echo $filter;?>" class="form-control" placeholder=" Buscar Pel&iacute;cula"></div>
+<div class="searchOverTab"><button onclick="searchTabDraft('');" type="button" class="btn btn-default btn-sm" ><i class="fa fa-hdd-o"></i> Borrar</button><input onchange="searchTabDraft(this.value);" type="text" value="<?php echo $filter;?>" class="form-control" placeholder=" Buscar Pel&iacute;cula"></div>
 	<?php 
 		foreach($modelNzbDraft as $item)
 		{
