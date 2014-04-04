@@ -2,7 +2,7 @@
 <?php if(Yii::app()->user->checkAccess('DeviceManage')):?>
 setInterval(function() {
 	getPendingDevices();
-}, 5 * 60 * 1000);
+}, 5 * 60 * 1000); // cada 5 minutos verifica los dispositivos pendientes
 
 getPendingDevices();
 
