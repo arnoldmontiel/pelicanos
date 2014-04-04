@@ -42,7 +42,7 @@
 						'header'=>'Acciones',
 						'value'=>function($data){
 							$device = "'$data->Id_device'";							
-							return '<button data-toggle="modal" data-target="#myModalCrearDispositivo" type="button" class="btn btn-default btn-sm" ><i class="fa fa-plus"></i> Crear Dispositivo</button>';
+							return '<button data-toggle="modal" onclick="createDevice('.$device.','.$data->Id_customer.');" type="button" class="btn btn-default btn-sm" ><i class="fa fa-plus"></i> Crear Dispositivo</button>';
 						},
 						'type'=>'raw',
 						'htmlOptions'=>array("style"=>"text-align:right;"),
