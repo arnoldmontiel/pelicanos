@@ -4,6 +4,26 @@ setInterval(function() {
 	$.fn.yiiGridView.update('pending-customer-device-grid');
 }, 5 * 60 * 1000);
 
+function createDevice(idDevice, idCustomer)
+{
+	if(confirm("¿Seguro desea crear este dispositivo?"))
+	{
+		$.post("<?php echo DeviceController::createUrl('AjaxCreateDevice'); ?>",
+				{
+					idDevice:idDevice,
+					idCustomer:idCustomer
+				}
+			).success(
+				function(data){
+					$.fn.yiiGridView.update('pending-customer-device-grid');
+					$.fn.yiiGridView.update('customer-device-grid');
+					getPendingDevices();
+				});
+	}
+	return false;
+		
+}
+
 function viewDownloads(id)
 {
 	$.fn.yiiGridView.update('nzb-device-grid', {

@@ -213,6 +213,24 @@ class DeviceController extends Controller
 		}
 	}
 	
+	public function actionAjaxCreateDevice()
+	{
+		$idDevice = isset($_POST['idDevice'])?$_POST['idDevice']:null;
+		$idCustomer = isset($_POST['idCustomer'])?$_POST['idCustomer']:null;
+	
+		if(isset($idDevice) && isset($idCustomer))
+		{
+	
+			$modelCustomerDevice = CustomerDevice::model()->findByAttributes(array('Id_device'=>$idDevice,'Id_customer'=>$idCustomer));
+	
+			if(isset($modelCustomerDevice))
+			{
+				$modelCustomerDevice->is_pending = 0;
+				$modelCustomerDevice->save();
+			}
+		}
+	}
+	
 	public function actionAjaxOpenConfigPort()
 	{
 		$idDevice = isset($_POST['idDevice'])?$_POST['idDevice']:null;
