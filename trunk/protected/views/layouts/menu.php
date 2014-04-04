@@ -4,6 +4,8 @@ setInterval(function() {
 	getPendingDevices();
 }, 5 * 60 * 1000);
 
+getPendingDevices();
+
 function getPendingDevices()
 {
 	$.post("<?php echo Yii::app()->createUrl('device/AjaxGetPendingDeviceQty'); ?>"
