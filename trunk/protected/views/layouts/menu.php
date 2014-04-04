@@ -11,7 +11,10 @@ function getPendingDevices()
 	$.post("<?php echo Yii::app()->createUrl('device/AjaxGetPendingDeviceQty'); ?>"
 		).success(
 			function(data){
-				$('#pendingDevicesQty').text(data);	  
+				if(data == 0)
+					$('#pendingDevicesQty').hide();
+				else
+					$('#pendingDevicesQty').text(data);
 			});
 	return false;
 }
