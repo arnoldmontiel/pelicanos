@@ -26,6 +26,25 @@ function openRequestDevice(idCustomer)
 			});
 	return false;
 }
+
+function cancelRequestedDevice(idDevice, idCustomer)
+{
+	if(confirm("¿Seguro desea cancelar este pedido?"))
+	{
+		$.post("<?php echo CustomerController::createUrl('AjaxCancelRequestedDevice'); ?>",
+				{
+					idDevice:idDevice,
+					idCustomer:idCustomer
+				}
+			).success(
+				function(data){
+					$.fn.yiiGridView.update('customer-grid');
+				});
+	}
+	return false;
+		
+}
+
 </script>
 <div class="container" id="screenClientes">
 <div class="row">

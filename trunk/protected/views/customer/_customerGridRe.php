@@ -27,7 +27,11 @@
 							{
 								$date = isset($item->request_date)?Yii::app()->dateFormatter->format("dd/MM/yyyy", $item->request_date):'';
 								if($item->is_pending == 1)
-									$value .= '<div class="noWrap dispClientes">&bull; '.$item->device->description.' - '.$item->Id_device.' <span class="label label-danger">pendiente '.$date.'</span></div>';
+								{
+									$idDevice = "'$item->Id_device'";
+									$value .= '<div class="noWrap dispClientes">&bull; '.$item->device->description.' - '.$item->Id_device.' <span class="label label-danger">pendiente '.$date.'</span></div>
+											<button onclick="cancelRequestedDevice('.$idDevice.','.$item->Id_customer.');" type="button" class="btn btn-default btn-sm" ><i class="fa fa-hdd-o"></i> Cancelar</button>';
+								}
 								else
 									$value .= '<div class="noWrap dispClientes">&bull; '.$item->device->description.' - '.$item->Id_device.'</div>';
 							}

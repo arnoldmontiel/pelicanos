@@ -70,6 +70,30 @@ class CustomerController extends Controller
 		}
 	}	
 	
+	public function actionAjaxCancelRequestedDevice()
+	{
+		$idDevice = isset($_POST['idDevice'])?$_POST['idDevice']:null;
+		$idCustomer = isset($_POST['idCustomer'])?$_POST['idCustomer']:null;
+		
+		if(isset($idDevice) && isset($idCustomer))
+		{
+			$modelDevice = Device::model()->findByPk($idDevice);
+			if(isset($modelDevice))
+			{
+				$modelCustomerDevice = CustomerDevice::model()->findByAttributes(array('Id_device'=>$idDevice,'Id_customer'=>$idCustomer));
+				
+				$transaction = $modelDevice->dbConnection->beginTransaction();
+				try {
+					$modelCustomerDevice->delete();
+					$modelDevice->delete();
+					$transaction->commit();
+				} catch (Exception $e) {
+					$transaction->rollback();
+				}
+			}
+		}
+	}
+	
 	public function actionAjaxRemoveCustomerDevice()
 	{
 		$idDevice = $_GET['idDevice'];
