@@ -170,9 +170,9 @@
 											echo '<td>'.$nzb->autoRipperFile->label.'</td>';
 											echo '<td>'.PelicanoHelper::format_bytes($nzb->autoRipperFile->size).'</td>';
 											echo '<td>';
-												echo $nzb->nzbType->description;
-												//echo CHtml::dropDownList("nzbType", $nzb->Id_nzb_type, $list, array('class' => 'form-control',
-												//															'onchange'=>'changeNzbType('.$nzb->Id.', this)'));
+												//echo $nzb->nzbType->description;
+												echo CHtml::dropDownList("nzbType", $nzb->Id_nzb_type, $list, array('class' => 'form-control',
+																											'onchange'=>'changeNzbType('.$nzb->Id.', this)'));
 											echo '</td>';
 										echo '</tr>';
 									} 
