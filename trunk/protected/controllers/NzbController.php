@@ -66,6 +66,7 @@ class NzbController extends Controller
 		
 		$criteria->addCondition('t.Id NOT IN(select Id_nzb from nzb_device where Id_device = "'. $Id_device.'" and need_update = 0)');
 		$criteria->addCondition('t.is_draft = 0');
+		$criteria->addCondition('t.Id_nzb_type <> 5'); //todos los que no sean NO ENVIAR
 		
 		$arrayNbz = Nzb::model()->findAll($criteria);
 		$arrayResponse = array();
@@ -2329,9 +2330,57 @@ class NzbController extends Controller
 		$idNzb = (isset($_POST['idNzb']))?$_POST['idNzb']:null;
 	
  		if(isset($idNzb))
+ 		{
  			$this->changeNzbState($idNzb, 4);
+ 			$this->changeParent($idNzb);
+ 		}
+
+ 		echo json_encode($this->getQtys());
+	}
 	
-		echo json_encode($this->getQtys());
+	private function changeParent($idNzb)
+	{
+		$modelNzb = Nzb::model()->findByPk($idNzb);
+		if(isset($modelNzb))
+		{
+			if($modelNzb->Id_nzb_type !=1)
+			{
+				$modelMainNzb = Nzb::model()->findByAttributes(array('Id_nzb'=>$idNzb, 'Id_nzb_type'=>1));
+				if(isset($modelMainNzb))
+				{
+					//seteo los campos del nuevo padre
+					$modelMainNzb->Id_my_movie_disc_nzb = $modelNzb->Id_my_movie_disc_nzb;
+					$modelMainNzb->Id_TMDB_data = $modelNzb->Id_TMDB_data;					
+					$modelMainNzb->Id_nzb = null;
+					$modelMainNzb->save();
+					
+					//traigo todos los hijos restantes
+					$criteria = new CDbCriteria();
+					$criteria->addCondition('Id <> '. $modelMainNzb->Id);
+					$criteria->addCondition('Id_nzb = '. $modelNzb->Id);
+					
+					$modelNzbChilds = Nzb::model()->findAll($criteria);
+					foreach($modelNzbChilds as $child)
+					{
+						$child->Id_nzb = $modelMainNzb->Id;
+						$child->save();
+					}
+											
+					//actualizo el viejo padre para que sea hijo
+					$modelNzb->Id_nzb = $modelMainNzb->Id;
+					$modelNzb->save();
+					
+					//actualizo el id en autoripper
+					$modelAutoRipper = AutoRipper::model()->findByAttributes(array('Id_nzb'=>$idNzb));
+					if(isset($modelAutoRipper))
+					{
+						$modelAutoRipper->Id_nzb = $modelMainNzb->Id;
+						$modelAutoRipper->save();
+					}
+					
+				}
+			}
+		}
 	}
 	
 	private function changeNzbState($idNzb, $idState, $rejectNote = '')

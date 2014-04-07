@@ -54,6 +54,7 @@
 							</thead>
 	    					<tbody>
 	    						<?php
+	    						$hasMain = 0;
 								foreach($modelNzbs as $nzb)
 								{
 									echo '<tr>';
@@ -61,12 +62,23 @@
 										echo '<td>'.PelicanoHelper::format_bytes($nzb->autoRipperFile->size).'</td>';
 										echo '<td>'.$nzb->nzbType->description.'</td>';
 									echo '</tr>';
+									
+									if($nzb->Id_nzb_type == 1)
+										$hasMain = 1;
 								} 
 								?>	    			
 	    					</tbody>
 	    				</table> 
 	      			</div>
-      			</div>     
+	      			<?php
+	      				echo CHtml::hiddenField('hasMain',$hasMain,array('id'=>'hasMain'));
+								 
+					?>	   
+      			</div>
+      			<div id="status-error" style="display:none;"  class="estadoModal">
+				      	<div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i>
+				 	Al menos un archivo debe ser de tipo MAIN.</div>
+				 </div>     
       		</div>
       		<div class="modal-footer">
         		<button type="button" class="btn btn-default btn-lg" data-dismiss="modal">Cancelar</button>
