@@ -94,6 +94,12 @@ function changeNzbType(idNzb, obj)
 
 function approveNzb(id)
 {
+	if($('#hasMain').val() == 0)
+	{
+		$('#status-error').show();	
+		return false;
+	}
+	
 	$.post("<?php echo NzbController::createUrl('AjaxApproveNzb'); ?>",
 			{
 				idNzb:id
@@ -129,6 +135,12 @@ function approveConfirm(id)
 
 function publishNzb(id)
 {
+	if($('#hasMain').val() == 0)
+	{
+		$('#status-error').show();	
+		return false;
+	}
+	
 	$.post("<?php echo NzbController::createUrl('AjaxPublishNzb'); ?>",
 			{
 				idNzb:id
