@@ -389,14 +389,30 @@ class CustomerController extends Controller
 			$modelCustomer = Customer::model()->findByPk($idCustomer);
 			
 			$modelDevice = new Device();
-			echo $this->renderPartial('_modalRequestDevice', array('modelCustomer'=>$modelCustomer, 'modelDevice'=>$modelDevice));
+			$modalCustomerUser = new CustomerUsers();
+			$modalCustomerUser->Id_customer = $idCustomer;
+			echo $this->renderPartial('_modalRequestDevice', array('modelCustomer'=>$modelCustomer, 'modelDevice'=>$modelDevice, 'modalCustomerUser'=>$modalCustomerUser));
 		}
+	}
+
+	public function actionAjaxCheckUser()
+	{
+		$response = 0;
+		$username = isset($_POST['username'])?$_POST['username']:null;
+		$idCustomer = isset($_POST['idCustomer'])?$_POST['idCustomer']:null;
+		
+		if(isset($username) && isset($idCustomer))
+		{
+			if(CustomerUsers::model()->countByAttributes(array('username'=>$username, 'Id_customer'=>$idCustomer)) == 0 )
+				$response = 1;
+		}
+		echo $response;
 	}
 	
 	public function actionAjaxSaveRequestDevice()
 	{		
 		
-		if(isset($_POST['Device']) && isset($_POST['Customer']))
+		if(isset($_POST['Device']) && isset($_POST['Customer']) && isset($_POST['CustomerUsers']))
 		{
 			$idCustomer = isset($_POST['Customer']['Id'])?$_POST['Customer']['Id']:null;
 			
@@ -413,6 +429,10 @@ class CustomerController extends Controller
 				$modelCustomerDevice->Id_device = $modelDevice->Id;
 				$modelCustomerDevice->Id_customer = $idCustomer;
 				$modelCustomerDevice->save();
+				
+				$modelCustomerUser = new CustomerUsers();
+				$modelCustomerUser->attributes = $_POST['CustomerUsers'];
+				$modelCustomerUser->save();
 				
 				$transaction->commit();
 			} catch (Exception $e) {
