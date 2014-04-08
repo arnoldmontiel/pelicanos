@@ -63,7 +63,7 @@ class NzbController extends Controller
 	{
 				
 		$criteria=new CDbCriteria;
-		
+		$criteria->join = 'inner join customer_device cd on (cd.Id_device = "'. $Id_device.'" and cd.is_pending = 0)';
 		$criteria->addCondition('t.Id NOT IN(select Id_nzb from nzb_device where Id_device = "'. $Id_device.'" and need_update = 0)');
 		$criteria->addCondition('t.is_draft = 0');
 		$criteria->addCondition('t.Id_nzb_type <> 5'); //todos los que no sean NO ENVIAR
@@ -113,7 +113,7 @@ class NzbController extends Controller
 				}
 			}
 				
-			$arrayNbz = Nzb::model()->findAll($criteria);
+			//$arrayNbz = Nzb::model()->findAll($criteria);
 			
 			$arrayResponse[]=$nzbResponse;
 				
