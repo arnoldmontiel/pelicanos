@@ -1,6 +1,7 @@
 <form id="request-device-form" method="post">
 	<?php
 		echo CHtml::activeHiddenField($modelCustomer, 'Id');
+		echo CHtml::activeHiddenField($modalCustomerUser, 'Id_customer');
 	?>
 	<div class="modal-dialog">
     	<div class="modal-content">
@@ -22,6 +23,25 @@
 					<label for="campoNombre">Descripci&oacute;n</label>
 			  		<?php echo CHtml::activeTextField($modelDevice, 'description', array('class'=>'form-control')); ?>
 			  	</div>
+			  	
+			  	<div class="form-group">
+			  		<label for="campoNombre">Usuario</label>
+			  		<?php echo CHtml::activeTextField($modalCustomerUser, 'username', array('class'=>'form-control')); ?>
+			 	</div>
+			  	<div class="form-group">
+			  		<label for="campoNombre">Password</label>
+			  		<?php echo CHtml::activeTextField($modalCustomerUser, 'password', array('class'=>'form-control')); ?>
+			  	</div>
+			  	<div class="form-group">
+			  		<label for="campoNombre">E-mail</label>
+			  		<?php echo CHtml::activeTextField($modalCustomerUser, 'email', array('class'=>'form-control')); ?>
+			  	</div>
+			  	<div id="status-error" style="display:none;"  class="estadoModal">
+					<label for="campoLineal">Estado</label>
+      				<div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i>
+      					<span id="errorMsg">El usuario ya existe, intente con otro.</span>
+ 					</div>
+				</div>
       		</div>
       		<div class="modal-footer">
         		<button type="button" class="btn btn-default btn-lg" data-dismiss="modal">Cancelar</button>
@@ -58,7 +78,21 @@
 		});
 	
 	function saveRequest()
-	{				
-		$('#request-device-form').submit();
+	{						
+		$.post("<?php echo UserController::createUrl('AjaxCheckUser'); ?>",
+				{
+					username:$("#CustomerUsers_username").val(),
+					idCustomer:$("#CustomerUsers_Id_customer").val(),
+				}
+			).success(
+				function(data){
+					if(data == 0)
+					{
+						$("#status-error").show();
+						return false;
+					}
+					else
+						$('#request-device-form').submit();
+				});		
 	}
 </script>
