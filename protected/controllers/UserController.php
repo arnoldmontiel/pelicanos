@@ -65,6 +65,19 @@ class UserController extends Controller
 			echo $this->renderPartial('_modalForm', array('modelUser'=>$modelUser));
 		}		
 	}
+
+	public function actionAjaxCheckUser()
+	{
+		$response = 0;
+		$username = isset($_POST['username'])?$_POST['username']:null;
+		
+		if(isset($username))
+		{
+			if(User::model()->countByAttributes(array('username'=>$username)) == 0 )
+				$response = 1;
+		}
+		echo $response;
+	}
 	
 	public function actionAjaxSaveUser()
 	{		

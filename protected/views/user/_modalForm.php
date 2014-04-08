@@ -30,7 +30,7 @@
 			  	<div id="status-error" style="display:none;"  class="estadoModal">
 					<label for="campoLineal">Estado</label>
       				<div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i>
-      					<span id="errorMsg">caramba</span>
+      					<span id="errorMsg">El usuario ya existe, intente con otro.</span>
  					</div>
 				</div>
       		</div>
@@ -80,6 +80,19 @@
 	
 	function saveReseller()
 	{				
-		$('#user-form').submit();
+		$.post("<?php echo UserController::createUrl('AjaxCheckUser'); ?>",
+				{
+					username:$("#User_username").val()
+				}
+			).success(
+				function(data){
+					if(data == 0)
+					{
+						$("#status-error").show();
+						return false;
+					}
+					else
+						$('#user-form').submit();
+				});		
 	}
 </script>
