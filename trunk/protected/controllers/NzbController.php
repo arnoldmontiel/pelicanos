@@ -139,6 +139,91 @@ class NzbController extends Controller
 		return $arrayResponse;
 	}
 
+	/**
+	 * Returns test nzbs
+	 * @param string Id_device
+	 * @return NzbResponse[]
+	 * @soap
+	 */
+	public function getTestNzbs($Id_device)
+	{
+	
+		$criteria=new CDbCriteria;
+		$criteria->join = 'inner join customer_device cd on (cd.Id_device = "'. $Id_device.'" and cd.is_pending = 0)';
+		$criteria->addCondition('t.Id NOT IN(select Id_nzb from nzb_device where Id_device = "'. $Id_device.'" and need_update = 0)');
+		$criteria->addCondition('t.is_draft = 1');
+	
+		$arrayNbz = Nzb::model()->findAll($criteria);
+		$arrayResponse = array();
+			
+		foreach ($arrayNbz as $modelNbz)
+		{
+			$nzbResponse = new NzbResponse();
+			$nzbResponse->nzb->setAttributes($modelNbz);
+				
+			if(isset($modelNbz->autoRipperFile))
+				$nzbResponse->nzb->mkv_file_name = $modelNbz->autoRipperFile->label;
+				
+			if(isset($modelNbz->myMovieDiscNzb))
+			{
+				$nzbResponse->myMovieDisc->setAttributes($modelNbz->myMovieDiscNzb);
+				$nzbResponse->myMovie->setAttributes($modelNbz->myMovieDiscNzb->myMovieNzb);
+				$nzbResponse->myMovie->myMovieSerieHeader = self::getSerie($modelNbz->myMovieDiscNzb);
+	
+				//set audio track
+				$relAudioTracks = MyMovieNzbAudioTrack::model()->findAllByAttributes(array('Id_my_movie_nzb'=>$modelNbz->myMovieDiscNzb->Id_my_movie_nzb));
+				foreach($relAudioTracks as $relAudioTrack)
+				{
+					$audioTrackSOAP = new MyMovieAudioTrackSOAP();
+					$audioTrackSOAP->setAttributes($relAudioTrack->audioTrack);
+					$nzbResponse->myMovie->AudioTrack[] = $audioTrackSOAP;
+				}
+	
+				//set subtitle
+				$relSubtitles = MyMovieNzbSubtitle::model()->findAllByAttributes(array('Id_my_movie_nzb'=>$modelNbz->myMovieDiscNzb->Id_my_movie_nzb));
+				foreach($relSubtitles as $relSubtitle)
+				{
+					$subtitleSOAP = new MyMovieSubtitleSOAP();
+					$subtitleSOAP->setAttributes($relSubtitle->subtitle);
+					$nzbResponse->myMovie->Subtitle[] = $subtitleSOAP;
+				}
+	
+				//set subtitle
+				$relPersons = MyMovieNzbPerson::model()->findAllByAttributes(array('Id_my_movie_nzb'=>$modelNbz->myMovieDiscNzb->Id_my_movie_nzb));
+				foreach($relPersons as $relPerson)
+				{
+					$personSOAP = new MyMoviePersonSOAP();
+					$personSOAP->setAttributes($relPerson->person);
+					$nzbResponse->myMovie->Person[] = $personSOAP;
+				}
+			}
+	
+			//$arrayNbz = Nzb::model()->findAll($criteria);
+				
+			$arrayResponse[]=$nzbResponse;
+	
+			$nzbDeviceDB = NzbDevice::model()->findByAttributes(array('Id_nzb'=>$modelNbz->Id, 'Id_device'=>$Id_device));
+			if($nzbDeviceDB != null)
+			{
+				$nzbDeviceDB->need_update = 1;
+				$nzbDeviceDB->save();
+			}
+			else
+			{
+				$modelNzbDevice = new NzbDevice();
+	
+				$modelNzbDevice->attributes = array(
+						'Id_nzb'=>$modelNbz->Id,
+						'Id_device'=>$Id_device,
+						'need_update'=> 1,
+				);
+				$modelNzbDevice->save();
+			}
+		}
+	
+		return $arrayResponse;
+	}
+	
 	private function getSerie($modelMyMovieDiscNzb)
 	{
 		if(isset($modelMyMovieDiscNzb->myMovieNzb->myMovieSerieHeader))

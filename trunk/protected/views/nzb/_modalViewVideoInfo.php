@@ -173,8 +173,11 @@
 												if($nzb->Id_creation_state == 4)
 													echo $nzb->nzbType->description;
 												else
-													echo CHtml::dropDownList("nzbType", $nzb->Id_nzb_type, $list, array('class' => 'form-control',
+												{
+													echo CHtml::dropDownList("nzbType", $nzb->Id_nzb_type, $list, array('class' => 'form-control', 'id'=>'ddl-nzb-'.$nzb->Id,
 																											'onchange'=>'changeNzbType('.$nzb->Id.', this)'));
+													echo '<span id="change-ok-'.$nzb->Id.'" class="checkAgregado"><i class="fa fa-check"></i> Modificado</span>';
+												}
 											echo '</td>';
 										echo '</tr>';
 									} 
