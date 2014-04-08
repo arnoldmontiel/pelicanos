@@ -604,6 +604,8 @@ padding: 6px 8px;
 .modalDetail .modal-body .row{ line-height:26px;}
 .modalDetail .modal-body .row.detailSummary{ line-height:20px;}
 
+.checkAgregado{margin-left:10px; color:#5cb85c; display:none;}
+
 .aficheDetail{ /*height:100% !important;*/ height:auto !important; width:100% !important;
 -moz-box-shadow: 0px 0px 5px #000;
 -webkit-box-shadow: 0px 0px 5px #000;

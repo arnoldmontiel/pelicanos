@@ -81,6 +81,8 @@ function searchTabDraft(value)
 
 function changeNzbType(idNzb, obj)
 {
+	var changeOk = $("#change-ok-"+idNzb);
+	var ddlNzb = $("#ddl-nzb-"+idNzb);
 	$.post("<?php echo NzbController::createUrl('AjaxChangeNzbType'); ?>",
 			{
 				idNzb:idNzb,
@@ -88,6 +90,12 @@ function changeNzbType(idNzb, obj)
 			}
 		).success(
 			function(data){
+				ddlNzb.hide();
+				
+				changeOk.animate({opacity: 'show'},240);
+				changeOk.animate({opacity: 'hide'},3000, function(){
+					ddlNzb.show();
+					});
 			});
 	return false;	
 }
