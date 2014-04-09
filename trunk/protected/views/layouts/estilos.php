@@ -376,6 +376,9 @@ padding:2px;
 .searchOverTab :-ms-input-placeholder::before  { font-family: FontAwesome; content:'\f002'; } /* ie */
 input.searchOverTab:-moz-placeholder::before  { font-family: FontAwesome; content:'\f002';  }
 
+.resetSearchBtn{position:absolute; right:0px; top:-2px; background:none; border:none; font-size:27px; color:#ccc;}
+.resetSearchBtn:hover{color:#999;}
+
 /* ------ END BODY / MAIN LAYOUT ------- */
 
 /* ------ MOVIE LISTS------- */
@@ -574,7 +577,7 @@ padding: 6px 8px;
 .modal .nav-tabs>li.active>a { background-color:#ccc; color:#fff !important;}
 
 .myModalViewDownloads.modal-dialog{width:1000px;}
-.myModalDescargas.modal-dialog{width:1000px;}
+.myModalDescargas .modal-dialog{width:1000px;}
 .myModalConfigPuertos.modal-dialog{width:1000px;}
 
 /* ------ END MODALS ------- */
