@@ -352,31 +352,47 @@ class CustomerController extends Controller
 		if(isset($idCustomer))
 		{
 			if($idCustomer == '0')
+			{
 				$modelCustomer = new Customer();
+				$modalCustomerUser = new CustomerUsers();
+			}
 			else
+			{
 				$modelCustomer = Customer::model()->findByPk($idCustomer);
+				$modalCustomerUser = CustomerUsers::model()->findByAttributes(array('Id_customer'=>$idCustomer));
+			}
 			
-			echo $this->renderPartial('_modalForm', array('modelCustomer'=>$modelCustomer));
+			
+			echo $this->renderPartial('_modalForm', array('modelCustomer'=>$modelCustomer, 'modalCustomerUser'=>$modalCustomerUser));
 		}		
 	}
 	
 	public function actionAjaxSaveCustomer()
 	{
 		$modelCustomer = new Customer();
-	
+		$modelCustomerUser = new CustomerUsers();
+		
 		if(isset($_POST['Customer']))
 		{
 			if(isset($_POST['Customer']['Id']))
+			{
 				$modelCustomer = Customer::model()->findByPk($_POST['Customer']['Id']);
+				$modelCustomerUser = CustomerUsers::model()->findByAttributes(array('Id_customer'=>$modelCustomer->Id));
+				
+			}
 			
 			$modelCustomer->attributes = $_POST['Customer'];
+			$modelCustomerUser->attributes = $_POST['CustomerUsers'];
+			
 			
 			$modelUser = User::model()->findByAttributes(array('username'=>Yii::app()->user->name));
 			if(isset($modelUser))
 				$modelCustomer->Id_reseller = $modelUser->Id_reseller;
 			 
 			$modelCustomer->save();
-				
+			
+			$modelCustomerUser->Id_customer = $modelCustomer->Id;
+			$modelCustomerUser->save();
 		}
 	}
 	
@@ -398,12 +414,10 @@ class CustomerController extends Controller
 	public function actionAjaxCheckUser()
 	{
 		$response = 0;
-		$username = isset($_POST['username'])?$_POST['username']:null;
-		$idCustomer = isset($_POST['idCustomer'])?$_POST['idCustomer']:null;
+		$username = isset($_POST['username'])?$_POST['username']:'';
 		
-		if(isset($username) && isset($idCustomer))
+		if(!empty($username))
 		{
-			if(CustomerUsers::model()->countByAttributes(array('username'=>$username, 'Id_customer'=>$idCustomer)) == 0 )
 				$response = 1;
 		}
 		echo $response;
@@ -412,7 +426,7 @@ class CustomerController extends Controller
 	public function actionAjaxSaveRequestDevice()
 	{		
 		
-		if(isset($_POST['Device']) && isset($_POST['Customer']) && isset($_POST['CustomerUsers']))
+		if(isset($_POST['Device']) && isset($_POST['Customer']))
 		{
 			$idCustomer = isset($_POST['Customer']['Id'])?$_POST['Customer']['Id']:null;
 			
@@ -429,10 +443,6 @@ class CustomerController extends Controller
 				$modelCustomerDevice->Id_device = $modelDevice->Id;
 				$modelCustomerDevice->Id_customer = $idCustomer;
 				$modelCustomerDevice->save();
-				
-				$modelCustomerUser = new CustomerUsers();
-				$modelCustomerUser->attributes = $_POST['CustomerUsers'];
-				$modelCustomerUser->save();
 				
 				$transaction->commit();
 			} catch (Exception $e) {
