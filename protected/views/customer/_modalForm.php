@@ -22,6 +22,26 @@
 			  		<label for="campoNombre">Direcci&oacute;n</label>
 			  		<?php echo CHtml::activeTextField($modelCustomer, 'address', array('class'=>'form-control')); ?>
 			  	</div>
+			  	
+			  	<div class="form-group">
+			  		<label for="campoNombre">Usuario</label>
+			  		<?php echo CHtml::activeTextField($modalCustomerUser, 'username', array('class'=>'form-control', 'disabled'=>(!$modelCustomer->isNewRecord)?'disabled':'')); ?>
+			 	</div>
+			  	<div class="form-group">
+			  		<label for="campoNombre">Password</label>
+			  		<?php echo CHtml::activeTextField($modalCustomerUser, 'password', array('class'=>'form-control')); ?>
+			  	</div>
+			  	<div class="form-group">
+			  		<label for="campoNombre">E-mail</label>
+			  		<?php echo CHtml::activeTextField($modalCustomerUser, 'email', array('class'=>'form-control')); ?>
+			  	</div>
+			  	<div id="status-error" style="display:none;"  class="estadoModal">
+					<label for="campoLineal">Estado</label>
+      				<div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i>
+      					<span id="errorMsg">El usuario no puede estar vacio.</span>
+ 					</div>
+				</div>
+				
       		</div>
       		<div class="modal-footer">
         		<button type="button" class="btn btn-default btn-lg" data-dismiss="modal">Cancelar</button>
@@ -60,6 +80,24 @@
 	
 	function saveCustomer()
 	{				
-		$('#customer-form').submit();
+		<?php if($modelCustomer->isNewRecord):?>
+			$.post("<?php echo UserController::createUrl('AjaxCheckUser'); ?>",
+				{
+					username:$("#CustomerUsers_username").val()
+				}
+			).success(
+				function(data){
+					if(data == 0)
+					{
+						$("#status-error").show();
+						return false;
+					}
+					else
+						$('#customer-form').submit();
+				});				
+		<?php else:?>
+			$('#customer-form').submit();
+		<?php endif;?>
+		
 	}
 </script>
