@@ -1,4 +1,4 @@
-<div class="searchOverTab"><button onclick="searchTabApproved('');" type="button" class="btn btn-default btn-sm" ><i class="fa fa-hdd-o"></i> Borrar</button><input onchange="searchTabApproved(this.value);" type="text" value="<?php echo $filter;?>" class="form-control" placeholder=" Buscar Pel&iacute;cula"></div>
+<div class="searchOverTab"><button onclick="searchTabApproved('');" type="button" class="resetSearchBtn" ><i class="fa fa-hdd-o"></i> Borrar</button><input onchange="searchTabApproved(this.value);" type="text" value="<?php echo $filter;?>" class="form-control" placeholder=" Buscar Pel&iacute;cula"></div>
 	<?php 
 		foreach($modelNzbApproved as $item)
 		{
