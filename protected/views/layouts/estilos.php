@@ -355,14 +355,14 @@ padding:2px;
 
 .nav-tabs{border-bottom:1px solid #ddd;}
 
-.nav-tabs>li>a{font-size:16px; color:#7F8C8D;  font-weight:600;}
+.nav-tabs>li>a{font-size:16px; color:#7F8C8D;  font-weight:600; margin-bottom:1px; border:0px transparent;}
 
 .nav-tabs>li>a .badge{background-color:#fff; color:#7F8C8D;}
 
-.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus{  background-color:#7F8C8D; color:white !important; cursor:default; border:1px solid #7F8C8D;}
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus{  background-color:#7F8C8D; color:white !important; cursor:default; border:0px transparent;}
 
 .nav-tabs>li.active>a{ background-color:#7F8C8D;color:#fff !important;}
-.nav-tabs>li>a:hover{ color:#666 !important; background-color:white;}
+.nav-tabs>li>a:hover{ color:#666 !important; background-color:#f7f7f7; border:0px transparent;}
 
 .grid-view .sort-link{background-image:url(images/sort-desc.png); background-repeat:no-repeat; background-position:right; padding-right:20px;}
 
@@ -579,6 +579,8 @@ padding: 6px 8px;
 .myModalViewDownloads.modal-dialog{width:1000px;}
 .myModalDescargas .modal-dialog{width:1000px;}
 .myModalConfigPuertos.modal-dialog{width:1000px;}
+
+.myModalConfigPuertos .tab-pane{padding-top:20px;}
 
 /* ------ END MODALS ------- */
 
@@ -1082,7 +1084,16 @@ top: 2px;}
 #wizardDispositivos button{min-width:120px;}
 
 .nav-tabs .dropdown-menu{ font-size:20px;}
-.buttonGroupDevices{width:310px;}
+.buttonGroupDevices{width:260px;}
+
+.myModalRequestDevice .grid-view{margin-bottom:10px;}
+
+.myModalRequestDevice .alert{margin-bottom:10px;}
+
+ul.playerList{margin:0px;padding-left:20px;}
+ul.playerList li{margin:0px;margin-left:0px;}
+
+.tableDis{width:600px;}
 
 /* ----- END DISPOSITIVOS --------*/
 

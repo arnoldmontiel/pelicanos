@@ -2,12 +2,21 @@
 	<div class="modal-content">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-          	<h4 class="modal-title">Configurar Puertos </h4>
+          	<h4 class="modal-title">Configurar </h4>
 		</div>
         <div class="modal-body">
+        <div class="panel panel-default panelCliente">
+  <div class="panel-body">
+   <div class="infoPanelCliente">
+   <div class="bold"><span id="device-desc"></span> (ID: <span id="device-id"></span>)</div>
+  </div></div>
+</div>
 			<ul class="nav nav-tabs">
-				<li class="active"><a><span id="device-desc"></span> (ID: <span id="device-id"></span>)</a></li>
-			</ul>			
+				<li class="active"><a href="#tabPuertos" data-toggle="tab">Puertos</a></li>
+				<li><a  href="#tabGeneral" data-toggle="tab">General</a></li>
+			</ul>
+			<div class="tab-content">
+			  <div class="tab-pane active" id="tabPuertos">			
          	<form class="form-inline formAddPort" role="form">
          		<?php echo CHtml::hiddenField('Id_device', ''); ?>
   				<div class="form-group">
@@ -92,6 +101,50 @@
 					),
 				)); ?>
               </div>
+              </div><!-- tab-pane -->
+                <div class="tab-pane" id="tabGeneral">
+                
+                <form class="form-horizontal" role="form">
+  <div class="form-group">
+    <label class="col-sm-3 control-label">themoviedb Password</label>
+    <div class="col-sm-9">
+      <input type="password" class="form-control" placeholder="password">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label">IP SAZNZB</label>
+    <div class="col-sm-9">
+      <input type="text" class="form-control" placeholder="000.000.0.0">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label">IP Payer Dormitorio Juan</label>
+    <div class="col-sm-9">
+      <input type="text" class="form-control" placeholder="000.000.0.0">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label">IP Payer Comedor Diario</label>
+    <div class="col-sm-9">
+      <input type="text" class="form-control" placeholder="000.000.0.0">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label">Path</label>
+    <div class="col-sm-9">
+      <input type="text" class="form-control" placeholder="000.000.0.0">
+    </div>
+    </div>
+  <div class="form-group">
+    <div class="col-sm-12">
+    <button type="button" class="btn btn-primary pull-right"><i class="fa fa-save"></i> Guardar</button>
+    </div>
+    </div>
+  
+</form>
+                
+              </div><!-- tab-pane -->
+              </div><!-- tab-content -->
 			</div>
         	<div class="modal-footer">
           		<button type="button" class="btn btn-default" data-dismiss="modal"> Cerrar</button>
