@@ -12,9 +12,15 @@ function getPendingDevices()
 		).success(
 			function(data){
 				if(data == 0)
+				{
 					$('#pendingDevicesQty').hide();
+					$('#tabPendingDevicesQty').hide();
+				}
 				else
+				{
 					$('#pendingDevicesQty').text(data);
+					$('#tabPendingDevicesQty').text(data);
+				}
 			});
 	return false;
 }
