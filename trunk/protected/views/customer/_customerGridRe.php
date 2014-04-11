@@ -1,4 +1,4 @@
-  <?php		
+ <?php		
 	$this->widget('zii.widgets.grid.CGridView', array(
 		'id'=>'customer-grid',
 		'dataProvider'=>$model->search(),
@@ -20,7 +20,7 @@
 				'address',
 				array(
 						'header'=>'Dispositivos',
-						'value'=>function($data){
+					'value'=>function($data){
 							$value = '';
 							$customerDevices = CustomerDevice::model()->findAllByAttributes(array('Id_customer'=>$data->Id));
 							foreach($customerDevices as $item)
@@ -44,12 +44,12 @@
 						'header'=>'Acciones',
 						'value'=>function($data){
 							
-							return '<div class="buttonGroupClientes"><button onclick="openForm('.$data->Id.')" type="button" class="btn btn-default btn-sm" ><i class="fa fa-pencil"></i> Editar</button><button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i> Borrar</button>
-									<button onclick="openRequestDevice('.$data->Id.');" type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#myModalRequest" ><i class="fa fa-hdd-o"></i> Solicitar Dispositivo</button></div>';
+							return '<button onclick="openForm('.$data->Id.')" type="button" class="btn btn-default btn-sm" ><i class="fa fa-pencil"></i> Editar</button><button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i> Borrar</button>
+									<button onclick="openRequestDevice('.$data->Id.');" type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#myModalRequest" ><i class="fa fa-hdd-o"></i> Solicitar Dispositivo</button>';
 						},
 						'type'=>'raw',
-						'htmlOptions'=>array("style"=>"text-align:right;"),
-						'headerHtmlOptions'=>array("style"=>"text-align:right;"),
+						'htmlOptions'=>array("style"=>"text-align:center;"),
+						'headerHtmlOptions'=>array("style"=>"text-align:center;"),
 				),
 			),
 		));		

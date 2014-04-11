@@ -1,11 +1,7 @@
 <script type="text/javascript">
 function viewDownloads(id)
 {
-	$.fn.yiiGridView.update('nzb-device-grid', {
- 		data: $(this).serialize() + '&idDevice=' + id
- 	});
- 	
-	$.post("<?php echo DeviceController::createUrl('AjaxOpenViewDownload'); ?>",
+	$.post("<?php echo Yii::app()->createUrl('AjaxOpenViewDownload'); ?>",
 			{
 				idDevice:id
 			}
@@ -116,27 +112,97 @@ function addPort()
 }
 </script>
 <div class="container" id="screenDispositivos">
-  
-  <div class="row">
-    <div class="col-sm-12">
-      <h1 class="pageTitle">Dispositivos</h1>
-    </div>
-  </div>
-  
-  <div class="row">
-    <div class="col-sm-12">
-  		<?php echo $this->renderPartial('_devices',array('modelCustomerDevice'=>$modelCustomerDevice)); ?>
-    </div>
-    <!-- /.col-sm-12 --> 
-  </div>
-  
+
+	<div class="row">
+		<div class="col-sm-12">
+			<h1 class="pageTitle">Dispositivos</h1>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12">
+			<ul class="nav nav-tabs">
+				<li class="active"><a id="tab-open" href="#tabExistentes"
+					data-toggle="tab">Existentes</a></li>
+				<li><a id="tab-waiting" href="#tabSolicitudes" data-toggle="tab">Solicitudes
+						<span class="badge">3</span>
+				</a></li>
+				<li class="pull-right"><button class="btn btn-primary superBoton"
+						data-toggle="modal" data-target="">
+						<i class="fa fa-plus"></i> Solicitar Dispositivos
+					</button></li>
+			</ul>
+			<div class="tab-content">
+				<div class="tab-pane active" id="tabExistentes">
+  	<?php echo $this->renderPartial('_devices',array('modelCustomerDevice'=>$modelCustomerDevice)); ?>
+     </div>
+				<!-- /.tab-pane -->
+				<div class="tab-pane" id="tabSolicitudes">
+
+					<table class="table table-bordered table-striped tablaIndividual noMargin">
+						<thead>
+							<tr>
+								<th>Cliente</th>
+								<th>Nombre</th>
+								<th>Dispositivo</th>
+								<th>Fecha Pedido</th>
+								<th>Players</th>
+								<th>Estado</th>
+								<th class="align-right">Acciones</th>
+							</tr>
+							<tr></tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Arnold Montiel</td>
+								<td>Castelar</td>
+								<td>00998893293</td>
+								<td>30/10/2020</td>
+								<td>
+									<ul class="playerList">
+										<li>Dormitorio</li>
+										<li>Comedor Diario</li>
+									</ul>
+								</td>
+								<td><div class="label label-danger">
+										<i class="fa fa-warning"></i> Pendiente
+									</div></td>
+								<td class="align-right"><button class="btn btn-default btn-sm"><i class="fa fa-times-circle"></i> Cancelar Pedido</button></td>
+							</tr>
+							<tr>
+								<td>Juan Perez</td>
+								<td>Villa Gesell</td>
+								<td>00998893293</td>
+								<td>30/10/2020</td>
+								<td>
+									<ul class="playerList">
+										<li>Dormitorio</li>
+										<li>Comedor Diario</li>
+										<li>Comedor Diario</li>
+									</ul>
+								</td>
+								<td><div class="label label-danger">
+										<i class="fa fa-warning"></i> Pendiente
+									</div></td>
+								<td class="align-right"><button class="btn btn-default btn-sm"><i class="fa fa-times-circle"></i> Cancelar Pedido</button></td>
+							</tr>
+						</tbody>
+					</table>
+
+				</div>
+				<!-- /.tab-pane -->
+			</div>
+			<!-- /.tab-content -->
+		</div>
+		<!-- /.col-sm-12 -->
+	</div>
+	<!-- /.row -->
+
 	<div id="container-modal-addPort" style="display: none">
 		<?php echo $this->renderPartial('_modalPortConfig', array( 'modelDeviceTunelGrid'=>$modelDeviceTunelGrid, 'idDevice'=>''));?>
 	</div>
-	
+
 	<div id="container-modal-viewDownload" style="display: none">
 		<?php echo $this->renderPartial('_modalViewDownload', array( 'modelNzbDevice'=>$modelNzbDevice, 'idDevice'=>''));?>
 	</div>
-  <!-- /.row --> 
 </div>
 <!-- /container -->

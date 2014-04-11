@@ -143,29 +143,33 @@ function addPort()
 <div class="container" id="screenDispositivos">
 	<div class="row">
     	<div class="col-sm-12">
-			<h1 class="pageTitle">Dispositivos Pedidos</h1>
+    	<h1 class="pageTitle">Dispositivos</h1>
     	</div>
   	</div>
 	<div class="row">
 		<div class="col-sm-12">
-			<?php echo $this->renderPartial('_pendingDevices',array('modelCustomerDevice'=>$modelCustomerDevice)); ?>
+			<ul class="nav nav-tabs">
+				<li class="active"><a id="tab-open" href="#tabExistentes" data-toggle="tab">Existentes</a></li>
+				<li><a id="tab-waiting" href="#tabSolicitudes" data-toggle="tab">Solicitudes <span class="badge">3</span></a></li>
+			</ul>
+			<div class="tab-content">
+				<div class="tab-pane active" id="tabExistentes">
+			<?php echo $this->renderPartial('_devices',array('modelCustomerDevice'=>$modelCustomerDevice)); ?>
+			</div>
+				<!-- /.tab-pane -->
+				<div class="tab-pane" id="tabSolicitudes">
+				  		<?php echo $this->renderPartial('_pendingDevices',array('modelCustomerDevice'=>$modelCustomerDevice)); ?>
+				
+
+				</div>
+				<!-- /.tab-pane -->
+			</div>
+			<!-- /.tab-content -->
     	</div>
     	<!-- /.col-sm-12 --> 
   	</div>
   	<!-- /.row --> 
   
-  <div class="row">
-    <div class="col-sm-12">
-      <h1 class="pageTitle">Dispositivos</h1>
-    </div>
-  </div>
-  
-  <div class="row">
-    <div class="col-sm-12">
-  		<?php echo $this->renderPartial('_devices',array('modelCustomerDevice'=>$modelCustomerDevice)); ?>
-    </div>
-    <!-- /.col-sm-12 --> 
-  </div>
   
 	<div id="container-modal-addPort" style="display: none">
 		<?php echo $this->renderPartial('_modalPortConfig', array( 'modelDeviceTunelGrid'=>$modelDeviceTunelGrid, 'idDevice'=>''));?>
