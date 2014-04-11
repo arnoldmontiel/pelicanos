@@ -433,13 +433,13 @@ border-color: #ddd;
 }
 ul.yiiPager .page a:hover{
 color: #fff;
-background-color: #5cb85c;
-border-color: #00A395;
+background-color: #34495E;
+border-color: #34495E;
 }
 
 ul.yiiPager{ padding-bottom:40px; margin-left:10px;}
 
-.pager{color:white;}
+.pager{color:#34495E;}
 .pager .next>a, .pager .previous>a{
 font-weight: normal;
 height: 32px;
@@ -456,27 +456,27 @@ border-color: #ddd;
 
 .pager .next>a:hover, .pager .previous>a:hover{
 color: #fff;
-background-color: #5cb85c;
-border-color: #00A395;
+background-color: #34495E;
+border-color: #34495E;
 }
 
 
 ul.yiiPager a:link, ul.yiiPager a:visited {
 
-color: #5cb85c;
+color: #34495E;
 background-color: #fff;
 border-color: #ddd;
 }
 
 ul.yiiPager .selected a{color: #ffffff;
-background-color: #5cb85c;
+background-color: #34495E;
 font-weight: 600;
-border-color: #5cb85c;
+border-color: #34495E;
 }
 ul.yiiPager .selected a:hover{color: #ffffff;
-background-color: #5cb85c;
+background-color: #34495E;
 font-weight: 600;
-border-color: #5cb85c;
+border-color: #34495E;
 cursor:inherit;
 }
 
