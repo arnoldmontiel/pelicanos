@@ -104,44 +104,86 @@
               </div><!-- tab-pane -->
                 <div class="tab-pane" id="tabGeneral">
                 
-                <form class="form-horizontal" role="form">
-  <div class="form-group">
-    <label class="col-sm-3 control-label">themoviedb Password</label>
-    <div class="col-sm-9">
-      <input type="password" class="form-control" placeholder="password">
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-3 control-label">IP SAZNZB</label>
-    <div class="col-sm-9">
-      <input type="text" class="form-control" placeholder="000.000.0.0">
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-3 control-label">IP Payer Dormitorio Juan</label>
-    <div class="col-sm-9">
-      <input type="text" class="form-control" placeholder="000.000.0.0">
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-3 control-label">IP Payer Comedor Diario</label>
-    <div class="col-sm-9">
-      <input type="text" class="form-control" placeholder="000.000.0.0">
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-3 control-label">Path</label>
-    <div class="col-sm-9">
-      <input type="text" class="form-control" placeholder="000.000.0.0">
-    </div>
-    </div>
-  <div class="form-group">
-    <div class="col-sm-12">
-    <button type="button" class="btn btn-primary pull-right"><i class="fa fa-save"></i> Guardar</button>
-    </div>
-    </div>
-  
-</form>
+                <form id="general-config-form" class="form-horizontal" role="form">
+  					<div class="form-group">
+    					<label class="col-sm-3 control-label">Sabnzb API Key</label>
+    					<div class="col-sm-9">
+      						<input id="Device_sabnzb_api_key" type="text" class="form-control">
+    					</div>
+  					</div>  					
+  					<div class="form-group">
+    					<label class="col-sm-3 control-label">Sabnzb API URL</label>
+    					<div class="col-sm-9">
+      						<input id="Device_sabnzb_api_url" type="text" class="form-control" placeholder="Url">
+    					</div>
+  					</div>
+  					<div class="form-group">
+    					<label class="col-sm-3 control-label">Path Sabnzb Descarga</label>
+    					<div class="col-sm-9">
+      						<input id="Device_path_sabnzbd_download" type="text" class="form-control">
+    					</div>
+  					</div>
+  					
+					<div class="form-group">
+    					<label class="col-sm-3 control-label">Path Nzb Pendientes</label>
+    					<div class="col-sm-9">
+      						<input id="Device_path_pending" type="text" class="form-control">
+    					</div>
+  					</div>
+					<div class="form-group">
+    					<label class="col-sm-3 control-label">Path Nzb Listos</label>
+    					<div class="col-sm-9">
+      						<input id="Device_path_ready" type="text" class="form-control">
+    					</div>
+  					</div>
+					<div class="form-group">
+    					<label class="col-sm-3 control-label">Path Imagenes</label>
+    					<div class="col-sm-9">
+      						<input id="Device_path_images" type="text" class="form-control">
+    					</div>
+  					</div>
+					<div class="form-group">
+    					<label class="col-sm-3 control-label">Path Compartidos</label>
+    					<div class="col-sm-9">
+      						<input id="Device_path_shared" type="text" class="form-control">
+    					</div>
+  					</div>
+  					<div class="form-group">
+    					<label class="col-sm-3 control-label">Themoviedb API KEY</label>
+    					<div class="col-sm-9">
+      						<input id="Device_tmdb_api_key" type="text" class="form-control">
+    					</div>
+  					</div>  					
+  					<div class="form-group">
+    					<label class="col-sm-3 control-label">Themoviedb API Idioma</label>
+    					<div class="col-sm-9">
+      						<input id="Device_tmdb_lang" type="text" class="form-control">
+    					</div>
+  					</div>
+  					<div class="form-group">
+    					<label class="col-sm-3 control-label">Host Path</label>
+    					<div class="col-sm-9">
+      						<input id="Device_host_path" type="text" class="form-control">
+    					</div>
+  					</div>
+  					<div class="form-group">
+    					<label class="col-sm-3 control-label">Host File Server</label>
+    					<div class="col-sm-9">
+      						<input id="Device_host_file_server" type="text" class="form-control">
+    					</div>
+  					</div>
+  					<div class="form-group">
+    					<label class="col-sm-3 control-label">Host File Server Path</label>
+    					<div class="col-sm-9">
+      						<input id="Device_host_file_server_path" type="text" class="form-control">
+    					</div>
+  					</div>
+  					<div class="form-group">
+    					<div class="col-sm-12">
+    						<button onclick="submitGeneralConfig();" type="button" class="btn btn-primary pull-right"><i class="fa fa-save"></i> Guardar</button>
+    					</div>
+    				</div>
+			</form>
                 
               </div><!-- tab-pane -->
               </div><!-- tab-content -->

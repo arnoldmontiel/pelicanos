@@ -6,7 +6,20 @@
  * The followings are the available columns in table 'device':
  * @property string $Id
  * @property string $description
- *
+ * @property string $sabnzb_api_key
+ * @property string $sabnzb_api_url
+ * @property string $path_sabnzbd_download
+ * @property string $path_pending
+ * @property string $host_name
+ * @property string $path_ready
+ * @property string $path_images
+ * @property string $path_shared
+ * @property string $host_path
+ * @property string $host_file_server
+ * @property string $host_file_server_path 
+ * @property string $tmdb_api_key
+ * @property string $tmdb_lang
+ * 
  * The followings are the available model relations:
  * @property ClientSettings[] $clientSettings
  * @property Customer[] $customers
@@ -41,11 +54,12 @@ class Device extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('Id', 'required'),
-			array('Id', 'length', 'max'=>45),
+			array('Id, tmdb_lang', 'length', 'max'=>45),
+			array('sabnzb_api_key, sabnzb_api_url, path_sabnzbd_download, path_pending, host_name, path_ready, path_images, path_shared, host_path, host_file_server, host_file_server_path, tmdb_api_key', 'length', 'max'=>255),
 			array('description', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id, description', 'safe', 'on'=>'search'),
+			array('Id, description, sabnzb_api_key, sabnzb_api_url, path_sabnzbd_download, path_pending, host_name, path_ready, path_images, path_shared, host_path, host_file_server, host_file_server_path, tmdb_api_key, tmdb_lang', 'safe', 'on'=>'search'),
 		);
 	}
 

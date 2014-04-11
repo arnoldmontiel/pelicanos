@@ -4,6 +4,8 @@ setInterval(function() {
 	$.fn.yiiGridView.update('pending-customer-device-grid');
 }, 5 * 60 * 1000);
 
+getPendingDevices();
+
 function createDevice(idDevice, idCustomer)
 {
 	if(confirm("¿Seguro desea crear este dispositivo?"))
@@ -22,6 +24,21 @@ function createDevice(idDevice, idCustomer)
 	}
 	return false;
 		
+}
+
+function openAcceptDeviceForm(idDevice, idCustomer)
+{
+	$.post("<?php echo CustomerController::createUrl('AjaxOpenAcceptDeviceForm'); ?>",
+			{
+				idDevice:idDevice,
+				idCustomer:idCustomer
+			}
+		).success(
+			function(data){
+				$('#myModalGeneric').html(data);
+				$('#myModalGeneric').modal('show');
+			});
+	return false;
 }
 
 function viewDownloads(id)
@@ -66,7 +83,7 @@ function portConfig(id)
 				//$('#container-modal-addPort').html(data);
 				var obj = jQuery.parseJSON(data);				
 				if(obj != null)
-				{
+				{					
 					$("#internalPort").html("");
 					if(obj.ddlPort.length == 0)
 						$('#btn-add-port').attr('disabled','disabled');
@@ -76,15 +93,22 @@ function portConfig(id)
 					for(var index = 0 ; index < obj.ddlPort.length; index++)
 						$('#internalPort').append( new Option(obj.ddlPort[index].description, obj.ddlPort[index].Id) );
 
-					$("#device-desc").text(obj.description);
-					$("#device-id").text(obj.idDevice);
-					$("#Id_device").val(obj.idDevice);
+					if(obj.modelDevice != null)
+					{
+						var objDevice = jQuery.parseJSON(obj.modelDevice);
+						if(objDevice != null)
+						{
+							$("#device-desc").text(objDevice.description);
+							$("#device-id").text(objDevice.Id);
+							$("#Id_device").val(objDevice.Id);
+						}
+					}					
 				}
 				$('#status-error').hide();		
 				$('#container-modal-viewDownload').hide();
-				$('#myModalGeneric').append($('#container-modal-addPort'));
+				$('#myModalPorts').append($('#container-modal-addPort'));
 				$('#container-modal-addPort').show();
-				$('#myModalGeneric').modal('show');
+				$('#myModalPorts').modal('show');
 			});
 	return false;	
 	
@@ -139,6 +163,42 @@ function addPort()
 			});
 	return false;	
 }
+
+
+function submitGeneralConfig()
+{
+	$('#general-config-form').submit();
+}
+
+$("#general-config-form").submit(function(e)
+		{
+			var formURL = "<?php echo DeviceController::createUrl("AjaxCreateDevicedddd"); ?>";
+			var formData = new FormData(this);
+			
+		    $.ajax({
+		        url: formURL,
+		    type: 'POST',
+		        data:  formData,
+		    mimeType:"multipart/form-data",
+		    contentType: false,
+		        cache: false,
+		        processData:false,
+		    success: function(data, textStatus, jqXHR)
+		    {	
+		    	//$.fn.yiiGridView.update('pending-customer-device-grid');
+				//$.fn.yiiGridView.update('customer-device-grid');
+				//getPendingDevices();
+	    		//$('#myModalGeneric').trigger('click');
+	    		return false;
+		    	
+		    },
+		     error: function(jqXHR, textStatus, errorThrown)
+		     {
+		     }         
+		    });
+		    return false;
+		    e.preventDefault(); //Prevent Default action.
+		});		
 </script>
 <div class="container" id="screenDispositivos">
 	<div class="row">
@@ -150,7 +210,7 @@ function addPort()
 		<div class="col-sm-12">
 			<ul class="nav nav-tabs">
 				<li class="active"><a id="tab-open" href="#tabExistentes" data-toggle="tab">Existentes</a></li>
-				<li><a id="tab-waiting" href="#tabSolicitudes" data-toggle="tab">Solicitudes <span class="badge">3</span></a></li>
+				<li><a id="tab-waiting" href="#tabSolicitudes" data-toggle="tab">Solicitudes <span id="tabPendingDevicesQty" class="badge"></span></a></li>
 			</ul>
 			<div class="tab-content">
 				<div class="tab-pane active" id="tabExistentes">

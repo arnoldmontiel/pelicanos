@@ -213,21 +213,27 @@ class DeviceController extends Controller
 		}
 	}
 	
+	
 	public function actionAjaxCreateDevice()
 	{
-		$idDevice = isset($_POST['idDevice'])?$_POST['idDevice']:null;
 		$idCustomer = isset($_POST['idCustomer'])?$_POST['idCustomer']:null;
 	
-		if(isset($idDevice) && isset($idCustomer))
+		if(isset($_POST['Device']) && isset($idCustomer))
 		{
-	
-			$modelCustomerDevice = CustomerDevice::model()->findByAttributes(array('Id_device'=>$idDevice,'Id_customer'=>$idCustomer));
-	
-			if(isset($modelCustomerDevice))
+			if(isset($_POST['Device']['Id']))
 			{
-				$modelCustomerDevice->is_pending = 0;
-				$modelCustomerDevice->save();
+				$modelDevice = Device::model()->findByPk($_POST['Device']['Id']);
+				$modelDevice->attributes = $_POST['Device'];
+				$modelDevice->save();
+				
+				$modelCustomerDevice = CustomerDevice::model()->findByAttributes(array('Id_device'=>$modelDevice->Id,'Id_customer'=>$idCustomer));
+				if(isset($modelCustomerDevice))
+				{
+					$modelCustomerDevice->is_pending = 0;
+					$modelCustomerDevice->save();
+				}	
 			}
+			
 		}
 	}
 	
@@ -246,7 +252,10 @@ class DeviceController extends Controller
 		foreach($modelPorts as $item)
 			$ddlPorts[] = array('Id'=>$item->Id, 'description'=>$item->description); 
 		
-		echo json_encode(array('ddlPort'=>$ddlPorts, 'idDevice'=>$modelDevice->Id, 'description'=>$modelDevice->description));
+		echo json_encode(array('ddlPort'=>$ddlPorts,
+								'modelDevice'=>json_encode($modelDevice->attributes), 
+								'idDevice'=>$modelDevice->Id, 
+								'description'=>$modelDevice->description));
 	}
 	
 	public function actionAjaxAddPort()
@@ -282,6 +291,18 @@ class DeviceController extends Controller
 				$model->save();
 			}
 				
+		}
+	}
+	
+	public function actionAjaxOpenAcceptDeviceForm()
+	{
+		$idCustomer = isset($_POST['idCustomer'])?$_POST['idCustomer']:null;
+		$idDevice = isset($_POST['idDevice'])?$_POST['idDevice']:null;
+	
+		if(isset($idCustomer) && isset($idDevice))
+		{
+			$modelDevice = Device::model()->findByPk($idDevice);
+			echo $this->renderPartial('_modalForm', array('modelDevice'=>$modelDevice, 'idCustomer'=>$idCustomer));
 		}
 	}
 	
