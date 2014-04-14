@@ -26,6 +26,8 @@
 		
 		<div id="myModalGeneric" class="modal fade" style="display: none;" aria-hidden="true">
 		</div>
+		<div id="myModalRequestDevice" class="modal fade" style="display: none;" aria-hidden="true">
+		</div>
 		<div id="myModalPorts" class="modal fade" style="display: none;" aria-hidden="true">
 		</div>
 		<div id="myModalEditarAsoc" class="modal fade in" tabindex="-1"

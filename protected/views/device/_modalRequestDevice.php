@@ -92,7 +92,7 @@
 						$("#qty-pending").hide();
 				}				
 				$.fn.yiiGridView.update("pending-customer-device-grid");
-	    		$('#myModalGeneric').trigger('click');
+	    		$('#myModalRequestDevice').trigger('click');
 		    },
 		     error: function(jqXHR, textStatus, errorThrown)
 		     {

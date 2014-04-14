@@ -91,15 +91,36 @@ function portConfig(id)
 					for(var index = 0 ; index < obj.ddlPort.length; index++)
 						$('#internalPort').append( new Option(obj.ddlPort[index].description, obj.ddlPort[index].Id) );
 
-					$("#device-desc").text(obj.description);
-					$("#device-id").text(obj.idDevice);
-					$("#Id_device").val(obj.idDevice);
+					if(obj.modelDevice != null)
+					{
+						var objDevice = jQuery.parseJSON(obj.modelDevice);
+						if(objDevice != null)
+						{
+							$("#device-desc").text(objDevice.description);
+							$("#device-id").text(objDevice.Id);
+							$("#Id_device").val(objDevice.Id);
+
+							$("#Device_Id").val(objDevice.Id);
+							$("#Device_sabnzb_api_key").val(objDevice.sabnzb_api_key);
+							$("#Device_sabnzb_api_url").val(objDevice.sabnzb_api_url);
+							$("#Device_path_sabnzbd_download").val(objDevice.path_sabnzbd_download);
+							$("#Device_path_pending").val(objDevice.path_pending);
+							$("#Device_path_ready").val(objDevice.path_ready);
+							$("#Device_path_images").val(objDevice.path_images);
+							$("#Device_path_shared").val(objDevice.path_shared);
+							$("#Device_tmdb_api_key").val(objDevice.tmdb_api_key);
+							$("#Device_tmdb_lang").val(objDevice.tmdb_lang);
+							$("#Device_host_path").val(objDevice.host_path);
+							$("#Device_host_file_server").val(objDevice.host_file_server);
+							$("#Device_host_file_server_path").val(objDevice.host_file_server_path);
+						}
+					}						
 				}
 				$('#status-error').hide();		
 				$('#container-modal-viewDownload').hide();
-				$('#myModalGeneric').append($('#container-modal-addPort'));
+				$('#myModalPorts').append($('#container-modal-addPort'));
 				$('#container-modal-addPort').show();
-				$('#myModalGeneric').modal('show');
+				$('#myModalPorts').modal('show');
 			});
 	return false;	
 	
@@ -163,8 +184,8 @@ function openRequestDevice(idCustomer)
 			}
 		).success(
 			function(data){
-				$('#myModalGeneric').html(data);
-				$('#myModalGeneric').modal('show');
+				$('#myModalRequestDevice').html(data);
+				$('#myModalRequestDevice').modal('show');
 			});
 	return false;
 }
@@ -225,59 +246,6 @@ function cancelRequestedDevice(idDevice, idCustomer)
 				<!-- /.tab-pane -->
 				<div class="tab-pane" id="tabSolicitudes">
 				  	<?php echo $this->renderPartial('_pendingDevicesRe',array('modelCustomerDevice'=>$modelCustomerDevice)); ?>
-				</div>
-				<div class="tab-pane" id="tabSolicitudes2">
-
-					<table class="table table-bordered table-striped tablaIndividual noMargin">
-						<thead>
-							<tr>
-								<th>Cliente</th>
-								<th>Nombre</th>
-								<th>Dispositivo</th>
-								<th>Fecha Pedido</th>
-								<th>Players</th>
-								<th>Estado</th>
-								<th class="align-right">Acciones</th>
-							</tr>
-							<tr></tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>Arnold Montiel</td>
-								<td>Castelar</td>
-								<td>00998893293</td>
-								<td>30/10/2020</td>
-								<td>
-									<ul class="playerList">
-										<li>Dormitorio</li>
-										<li>Comedor Diario</li>
-									</ul>
-								</td>
-								<td><div class="label label-danger">
-										<i class="fa fa-warning"></i> Pendiente
-									</div></td>
-								<td class="align-right"><button class="btn btn-default btn-sm"><i class="fa fa-times-circle"></i> Cancelar Pedido</button></td>
-							</tr>
-							<tr>
-								<td>Juan Perez</td>
-								<td>Villa Gesell</td>
-								<td>00998893293</td>
-								<td>30/10/2020</td>
-								<td>
-									<ul class="playerList">
-										<li>Dormitorio</li>
-										<li>Comedor Diario</li>
-										<li>Comedor Diario</li>
-									</ul>
-								</td>
-								<td><div class="label label-danger">
-										<i class="fa fa-warning"></i> Pendiente
-									</div></td>
-								<td class="align-right"><button class="btn btn-default btn-sm"><i class="fa fa-times-circle"></i> Cancelar Pedido</button></td>
-							</tr>
-						</tbody>
-					</table>
-
 				</div>
 				<!-- /.tab-pane -->
 			</div>
