@@ -33,6 +33,11 @@ class User extends CActiveRecord
 		return $user->Id_reseller;
 	}
 	
+	public static function isAdmin()
+	{
+		$user = User::model()->findByPk(Yii::app()->user->Id);	
+		return ($user->Id_profile == 1)?true:false;
+	}
 	/**
 	 * @return string the associated database table name
 	 */
