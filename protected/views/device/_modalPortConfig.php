@@ -105,77 +105,86 @@
                 <div class="tab-pane" id="tabGeneral">
                 
                 <form id="general-config-form" class="form-horizontal" role="form">
+                <?php 
+                	$modelDevice = new Device();
+                	echo CHtml::activeHiddenField($modelDevice, 'Id');
+                	$isAdmin = User::isAdmin();
+                ?>
+                    <?php if($isAdmin):?>            
   					<div class="form-group">
     					<label class="col-sm-3 control-label">Sabnzb API Key</label>
     					<div class="col-sm-9">
-      						<input id="Device_sabnzb_api_key" type="text" class="form-control">
+      						<?php echo CHtml::activeTelField($modelDevice, 'sabnzb_api_key', array('class'=>'form-control'));?>
     					</div>
-  					</div>  					
+  					</div>  			
+  					<?php endif;?>		
   					<div class="form-group">
     					<label class="col-sm-3 control-label">Sabnzb API URL</label>
     					<div class="col-sm-9">
-      						<input id="Device_sabnzb_api_url" type="text" class="form-control" placeholder="Url">
+      						<?php echo CHtml::activeTelField($modelDevice, 'sabnzb_api_url', array('class'=>'form-control', 'placeholder'=>'Url'));?>
     					</div>
   					</div>
   					<div class="form-group">
     					<label class="col-sm-3 control-label">Path Sabnzb Descarga</label>
     					<div class="col-sm-9">
-      						<input id="Device_path_sabnzbd_download" type="text" class="form-control">
+      						<?php echo CHtml::activeTelField($modelDevice, 'path_sabnzbd_download', array('class'=>'form-control'));?>
     					</div>
   					</div>
   					
 					<div class="form-group">
     					<label class="col-sm-3 control-label">Path Nzb Pendientes</label>
     					<div class="col-sm-9">
-      						<input id="Device_path_pending" type="text" class="form-control">
+    						<?php echo CHtml::activeTelField($modelDevice, 'path_pending', array('class'=>'form-control'));?>
     					</div>
   					</div>
 					<div class="form-group">
     					<label class="col-sm-3 control-label">Path Nzb Listos</label>
     					<div class="col-sm-9">
-      						<input id="Device_path_ready" type="text" class="form-control">
+    						<?php echo CHtml::activeTelField($modelDevice, 'path_ready', array('class'=>'form-control'));?>
     					</div>
   					</div>
 					<div class="form-group">
     					<label class="col-sm-3 control-label">Path Imagenes</label>
     					<div class="col-sm-9">
-      						<input id="Device_path_images" type="text" class="form-control">
+    						<?php echo CHtml::activeTelField($modelDevice, 'path_images', array('class'=>'form-control'));?>
     					</div>
   					</div>
 					<div class="form-group">
     					<label class="col-sm-3 control-label">Path Compartidos</label>
     					<div class="col-sm-9">
-      						<input id="Device_path_shared" type="text" class="form-control">
+      						<?php echo CHtml::activeTelField($modelDevice, 'path_shared', array('class'=>'form-control'));?>
     					</div>
   					</div>
+  					<?php if($isAdmin):?>
   					<div class="form-group">
     					<label class="col-sm-3 control-label">Themoviedb API KEY</label>
     					<div class="col-sm-9">
-      						<input id="Device_tmdb_api_key" type="text" class="form-control">
+      						<?php echo CHtml::activeTelField($modelDevice, 'tmdb_api_key', array('class'=>'form-control'));?>
     					</div>
   					</div>  					
   					<div class="form-group">
     					<label class="col-sm-3 control-label">Themoviedb API Idioma</label>
     					<div class="col-sm-9">
-      						<input id="Device_tmdb_lang" type="text" class="form-control">
+      						<?php echo CHtml::activeTelField($modelDevice, 'tmdb_lang', array('class'=>'form-control'));?>
     					</div>
   					</div>
   					<div class="form-group">
     					<label class="col-sm-3 control-label">Host Path</label>
     					<div class="col-sm-9">
-      						<input id="Device_host_path" type="text" class="form-control">
+      						<?php echo CHtml::activeTelField($modelDevice, 'host_path', array('class'=>'form-control'));?>
     					</div>
   					</div>
+  					<?php endif;?>
   					<div class="form-group">
     					<label class="col-sm-3 control-label">Host File Server</label>
     					<div class="col-sm-9">
-      						<input id="Device_host_file_server" type="text" class="form-control">
+      						<?php echo CHtml::activeTelField($modelDevice, 'host_file_server', array('class'=>'form-control'));?>
     					</div>
   					</div>
   					<div class="form-group">
     					<label class="col-sm-3 control-label">Host File Server Path</label>
     					<div class="col-sm-9">
-      						<input id="Device_host_file_server_path" type="text" class="form-control">
+      						<?php echo CHtml::activeTelField($modelDevice, 'host_file_server_path', array('class'=>'form-control'));?>
     					</div>
   					</div>
   					<div class="form-group">
@@ -193,5 +202,38 @@
 			</div>
 		</div>
       	<!-- /.modal-content -->
+      	
+<script type="text/javascript">
+function submitGeneralConfig()
+{
+	$('#general-config-form').submit();
+}
+
+$("#general-config-form").submit(function(e)
+{
+	var formURL = "<?php echo DeviceController::createUrl("AjaxSaveGeneralConfig"); ?>";
+	var formData = new FormData(this);
+			
+	$.ajax({
+		   url: formURL,
+		   type: 'POST',
+		        data:  formData,
+		   mimeType:"multipart/form-data",
+		   contentType: false,
+		   cache: false,
+		   processData:false,
+		   success: function(data, textStatus, jqXHR)
+		   {	
+	    		$('#myModalPorts').trigger('click');
+	    		return false;
+		   },
+		   error: function(jqXHR, textStatus, errorThrown)
+		   {
+		   }         
+	});
+	e.preventDefault(); //Prevent Default action.
+});	
+</script>      	
+
 </div>
 <!-- /.modal-dialog -->

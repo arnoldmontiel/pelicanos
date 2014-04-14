@@ -1,4 +1,48 @@
 <script type="text/javascript">
+function addPlayer()
+{
+	var playerNum = $("#body-players > tbody > tr").length + 1;
+	var playerDesc = $("#player-desc").val();
+
+	if(playerDesc != '')
+	{
+		var hidden = '<input type="hidden" name="player_name['+ playerNum +']" id="player_name'+ playerNum +'" value="'+ playerDesc +'">';
+		var newTr = '<tr>' +
+						'<td>'+ playerNum +'</td>' +
+						'<td>'+ playerDesc + hidden + '</td>' +
+						'<td class="align-right">' +
+							'<button onclick="removePlayer(this);" type="button" class="btn btn-default btn-sm noMargin"><i class="fa fa-trash-o"></i> Borrar</button>' +
+						'</td>' +
+					'</tr>';
+		
+		$("#body-players > tbody").append(newTr);
+		$("#player-desc").val('');	
+		$("#error-div").hide();
+	}
+	else		
+	{
+		$("#error-msg").html(" La descripci&oacute;n del player no puede estar vac&iacute;a");
+		$("#error-div").show();
+	}
+	
+}
+
+function removePlayer(obj)
+{
+	$(obj).parent().parent().remove();
+	var index = 1;
+	$("#body-players > tbody > tr").each(function(){
+		var tdNum = $(this).children()[0];
+		$(tdNum).text(index);
+		var tdDesc = $(this).children()[1];
+		
+		var hidden = '<input type="hidden" name="player_name['+ index +']" id="player_name'+ index +'" value="'+ tdDesc.textContent +'">';
+		$(tdDesc).find('input').remove();
+		$(tdDesc).append(hidden);
+		index++;
+	});
+}
+
 function viewDownloads(id)
 {
 	$.post("<?php echo Yii::app()->createUrl('AjaxOpenViewDownload'); ?>",
@@ -110,6 +154,49 @@ function addPort()
 			});
 	return false;	
 }
+
+function openRequestDevice(idCustomer)
+{
+	$.post("<?php echo CustomerController::createUrl('AjaxOpenRequestDevice'); ?>",
+			{
+				idCustomer:idCustomer
+			}
+		).success(
+			function(data){
+				$('#myModalGeneric').html(data);
+				$('#myModalGeneric').modal('show');
+			});
+	return false;
+}
+
+function cancelRequestedDevice(idDevice, idCustomer)
+{
+	if(confirm("¿Seguro desea cancelar este pedido?"))
+	{
+		$.post("<?php echo DeviceController::createUrl('AjaxCancelRequestedDevice'); ?>",
+				{
+					idDevice:idDevice,
+					idCustomer:idCustomer
+				}
+			).success(
+				function(data){
+					$.fn.yiiGridView.update('pending-customer-device-grid');
+					var obj = jQuery.parseJSON(data);				
+					if(obj != null)
+					{
+						if(obj.qtyPending > 0)
+						{
+							$("#qty-pending").show();
+							$("#qty-pending").html(obj.qtyPending);
+						}
+						else
+							$("#qty-pending").hide();
+					}
+				});
+	}
+	return false;
+		
+}
 </script>
 <div class="container" id="screenDispositivos">
 
@@ -124,19 +211,22 @@ function addPort()
 				<li class="active"><a id="tab-open" href="#tabExistentes"
 					data-toggle="tab">Existentes</a></li>
 				<li><a id="tab-waiting" href="#tabSolicitudes" data-toggle="tab">Solicitudes
-						<span class="badge">3</span>
+						<span id="qty-pending" class="badge"><?php echo ($qtyPending > 0)?$qtyPending:'';?></span>
 				</a></li>
-				<li class="pull-right"><button class="btn btn-primary superBoton"
+				<li class="pull-right"><button onclick="openRequestDevice();" class="btn btn-primary superBoton"
 						data-toggle="modal" data-target="">
 						<i class="fa fa-plus"></i> Solicitar Dispositivos
 					</button></li>
 			</ul>
 			<div class="tab-content">
 				<div class="tab-pane active" id="tabExistentes">
-  	<?php echo $this->renderPartial('_devices',array('modelCustomerDevice'=>$modelCustomerDevice)); ?>
-     </div>
+  					<?php echo $this->renderPartial('_devicesRe',array('modelCustomerDevice'=>$modelCustomerDevice)); ?>
+    			 </div>
 				<!-- /.tab-pane -->
 				<div class="tab-pane" id="tabSolicitudes">
+				  	<?php echo $this->renderPartial('_pendingDevicesRe',array('modelCustomerDevice'=>$modelCustomerDevice)); ?>
+				</div>
+				<div class="tab-pane" id="tabSolicitudes2">
 
 					<table class="table table-bordered table-striped tablaIndividual noMargin">
 						<thead>

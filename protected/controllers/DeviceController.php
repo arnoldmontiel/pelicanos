@@ -194,10 +194,16 @@ class DeviceController extends Controller
 		$modelDeviceTunelGrid->Id_device = $idDevice;
 		$modelNzbDevice->Id_device = $idDevice;
 		
+		$criteria=new CDbCriteria;
+		$criteria->join = 'INNER JOIN customer c on (c.Id = t.Id_customer)';
+		$criteria->addCondition('t.is_pending = 1');
+		$criteria->addCondition('c.Id_reseller = '.User::getResellerId());
+		
 		$this->render('indexRe',array(
 				'modelCustomerDevice'=>$modelCustomerDevice,
 				'modelDeviceTunelGrid'=>$modelDeviceTunelGrid,
 				'modelNzbDevice'=>$modelNzbDevice,
+				'qtyPending'=>CustomerDevice::model()->count($criteria),
 		));
 	}
 	
@@ -235,6 +241,104 @@ class DeviceController extends Controller
 			}
 			
 		}
+	}
+	
+	public function actionAjaxSaveGeneralConfig()
+	{			
+		if(isset($_POST['Device']))
+		{
+			if(isset($_POST['Device']['Id']))
+			{
+				$modelDevice = Device::model()->findByPk($_POST['Device']['Id']);
+				$modelDevice->attributes = $_POST['Device'];
+				$modelDevice->save();
+			}
+				
+		}
+	}
+	
+	public function actionAjaxSaveRequestDevice()
+	{
+		
+ 		if(isset($_POST['player_name']) && isset($_POST['CustomerDevice']))
+ 		{
+ 			$modelDevice = new Device();
+ 			$transaction = $modelDevice->dbConnection->beginTransaction();
+ 			try {
+ 				$modelDevice->Id = uniqid();
+ 				$modelDevice->description = $_POST['Device']['description'];
+ 				$modelDevice->save();
+ 				$modelDevice->refresh();
+ 			
+ 				$modelCustomerDevice = new CustomerDevice();
+ 				$modelCustomerDevice->Id_device = $modelDevice->Id;
+ 				$modelCustomerDevice->Id_customer = $_POST['CustomerDevice']['Id_customer'];
+ 				$modelCustomerDevice->save();
+ 			
+ 				foreach($_POST['player_name'] as $player)
+ 				{
+ 					$modelDevicePlayer = new DevicePlayer();
+ 					$modelDevicePlayer->Id_device = $modelDevice->Id;
+ 					$modelDevicePlayer->description = $player;
+ 					$modelDevicePlayer->save();
+ 				}
+ 				
+ 				$transaction->commit();
+ 			} catch (Exception $e) {
+ 				$transaction->rollback();
+ 			}
+ 			
+ 		}
+ 		
+ 		$criteria=new CDbCriteria;
+ 		$criteria->join = 'INNER JOIN customer c on (c.Id = t.Id_customer)';
+ 		$criteria->addCondition('t.is_pending = 1');
+ 		$criteria->addCondition('c.Id_reseller = '.User::getResellerId());
+ 		
+ 		echo json_encode(array('qtyPending'=>CustomerDevice::model()->count($criteria)));
+	}
+	
+	public function actionAjaxCancelRequestedDevice()
+	{
+		$idDevice = isset($_POST['idDevice'])?$_POST['idDevice']:null;
+		$idCustomer = isset($_POST['idCustomer'])?$_POST['idCustomer']:null;
+	
+		if(isset($idDevice) && isset($idCustomer))
+		{
+			$modelDevice = Device::model()->findByPk($idDevice);
+			if(isset($modelDevice))
+			{
+				$modelCustomerDevice = CustomerDevice::model()->findByAttributes(array('Id_device'=>$idDevice,'Id_customer'=>$idCustomer));
+				
+				$transaction = $modelDevice->dbConnection->beginTransaction();
+				try {
+					DevicePlayer::model()->deleteAllByAttributes(array('Id_device'=>$idDevice));
+					$modelCustomerDevice->delete();
+					$modelDevice->delete();
+					$transaction->commit();
+				} catch (Exception $e) {
+					$transaction->rollback();
+				}
+			}
+		}
+		
+		$criteria=new CDbCriteria;
+				
+		$criteria->join = 'INNER JOIN customer c on (c.Id = t.Id_customer)';
+ 		$criteria->addCondition('t.is_pending = 1');
+ 		$criteria->addCondition('c.Id_reseller = '.User::getResellerId());		
+		
+		echo json_encode(array('qtyPending'=>CustomerDevice::model()->count($criteria)));
+		
+	}
+	
+	public function actionAjaxOpenRequestDevice()
+	{
+		$modelCustomers = Customer::model()->findAllByAttributes(array('Id_reseller'=>User::getResellerId()),array('order'=>'name ASC'));
+			
+		$modelCustomerDevice = new CustomerDevice();
+		$modelDevice = new Device();
+		echo $this->renderPartial('_modalRequestDevice', array('modelCustomers'=>$modelCustomers, 'modelCustomerDevice'=>$modelCustomerDevice, 'modelDevice'=>$modelDevice));
 	}
 	
 	public function actionAjaxOpenConfigPort()

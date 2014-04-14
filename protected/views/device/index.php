@@ -101,6 +101,20 @@ function portConfig(id)
 							$("#device-desc").text(objDevice.description);
 							$("#device-id").text(objDevice.Id);
 							$("#Id_device").val(objDevice.Id);
+
+							$("#Device_Id").val(objDevice.Id);
+							$("#Device_sabnzb_api_key").val(objDevice.sabnzb_api_key);
+							$("#Device_sabnzb_api_url").val(objDevice.sabnzb_api_url);
+							$("#Device_path_sabnzbd_download").val(objDevice.path_sabnzbd_download);
+							$("#Device_path_pending").val(objDevice.path_pending);
+							$("#Device_path_ready").val(objDevice.path_ready);
+							$("#Device_path_images").val(objDevice.path_images);
+							$("#Device_path_shared").val(objDevice.path_shared);
+							$("#Device_tmdb_api_key").val(objDevice.tmdb_api_key);
+							$("#Device_tmdb_lang").val(objDevice.tmdb_lang);
+							$("#Device_host_path").val(objDevice.host_path);
+							$("#Device_host_file_server").val(objDevice.host_file_server);
+							$("#Device_host_file_server_path").val(objDevice.host_file_server_path);
 						}
 					}					
 				}
@@ -163,42 +177,6 @@ function addPort()
 			});
 	return false;	
 }
-
-
-function submitGeneralConfig()
-{
-	$('#general-config-form').submit();
-}
-
-$("#general-config-form").submit(function(e)
-		{
-			var formURL = "<?php echo DeviceController::createUrl("AjaxCreateDevicedddd"); ?>";
-			var formData = new FormData(this);
-			
-		    $.ajax({
-		        url: formURL,
-		    type: 'POST',
-		        data:  formData,
-		    mimeType:"multipart/form-data",
-		    contentType: false,
-		        cache: false,
-		        processData:false,
-		    success: function(data, textStatus, jqXHR)
-		    {	
-		    	//$.fn.yiiGridView.update('pending-customer-device-grid');
-				//$.fn.yiiGridView.update('customer-device-grid');
-				//getPendingDevices();
-	    		//$('#myModalGeneric').trigger('click');
-	    		return false;
-		    	
-		    },
-		     error: function(jqXHR, textStatus, errorThrown)
-		     {
-		     }         
-		    });
-		    return false;
-		    e.preventDefault(); //Prevent Default action.
-		});		
 </script>
 <div class="container" id="screenDispositivos">
 	<div class="row">
