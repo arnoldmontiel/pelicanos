@@ -13,7 +13,7 @@ function openForm(username, idProfile)
 			});
 	return false;
 }
-function deleteReseller(username, grid)
+function deleteInstaller(username, grid)
 {
 	if (confirm('¿Desea borrar este usuario?')) 
 	{
@@ -39,16 +39,12 @@ function deleteReseller(username, grid)
   <div class="row">
     <div class="col-sm-12">
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#tabAdmin" data-toggle="tab">Administradores</a></li>
-        <li><a href="#tabMovie" data-toggle="tab">Movie Managers</a></li>
+        <li class="active"><a href="tabInstaladores" data-toggle="tab">Instaladores</a></li>
       </ul>
       <div class="tab-content">
-	      <div class="tab-pane active" id="tabAdmin">
-	      	<?php echo $this->renderPartial('_tabAdmin',array('modelUser'=>$modelUser)); ?>	      
-	      </div><!-- /.tabAdmin -->
-	      <div class="tab-pane" id="tabMovie">
-	     	<?php echo $this->renderPartial('_tabMovieAdmin',array('modelUser'=>$modelUser)); ?>
-	      </div><!-- /.tabMovie -->
+	      <div class="tab-pane active" id="tabInstaladores">
+	      	<?php echo $this->renderPartial('_tabInstaller',array('modelUser'=>$modelUser)); ?>	      
+	      </div><!-- /.tabInstaladores -->    
       </div><!-- /.tabContent -->
     </div>
     <!-- /.col-sm-12 --> 

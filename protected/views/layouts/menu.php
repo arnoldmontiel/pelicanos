@@ -46,6 +46,9 @@ function getPendingDevices()
           <?php if(Yii::app()->user->checkAccess('UserManage')):?>
           <li <?php if ($active=="user"){ echo 'class="active"';}?> ><a href="<?php echo Yii::app()->createUrl("user/index")?>"><i class="fa fa-user fa-fw"></i> Usuarios</a></li>
           <?php endif?>
+          <?php if(Yii::app()->user->checkAccess('UserManageRe')):?>
+          <li <?php if ($active=="user"){ echo 'class="active"';}?> ><a href="<?php echo Yii::app()->createUrl("user/indexRe")?>"><i class="fa fa-user fa-fw"></i> Usuarios</a></li>
+          <?php endif?>
           <?php if(Yii::app()->user->checkAccess('ResellerManage')):?>
           <li <?php if ($active=="reseller"){ echo 'class="active"';}?> ><a href="<?php echo Yii::app()->createUrl("reseller/index")?>"><i class="fa fa-group fa-fw"></i> Resellers</a></li>
           <?php endif?>

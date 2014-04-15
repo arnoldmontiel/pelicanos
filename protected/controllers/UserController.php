@@ -47,6 +47,18 @@ class UserController extends Controller
 			'modelUser'=>$modelUser,
 		));
 	}
+	
+	public function actionIndexRe()
+	{
+		$modelUser = new User('search');
+		$modelUser->unsetAttributes();  // clear any default values
+		if(isset($_GET['User']))
+			$modelUser->attributes=$_GET['User'];
+	
+		$this->render('indexRe',array(
+				'modelUser'=>$modelUser,
+		));
+	}
 
 	public function actionAjaxOpenForm()
 	{
@@ -84,28 +96,34 @@ class UserController extends Controller
 	
 		if(isset($_POST['User']))
 		{
-			$isUpdate = false;
+			$isUpdate = true;
 			if(isset($_POST['User']['username']))
-			{
-				$modelUser = User::model()->findByPk($_POST['User']['username']);
-				$isUpdate = true;
-			}
+				$modelUser = User::model()->findByPk($_POST['User']['username']);				
 			
 			if(!isset($modelUser))
+			{
 				$modelUser = new User();
+				$isUpdate = false;
+			}
 			
 			$modelUser->attributes = $_POST['User'];
 				
 			if($modelUser->validate())
 			{
-				$modelUser->save();
-				
 				$itemname = 'MovieAdmin';
 				if($modelUser->Id_profile == 1)
 					$itemname = 'Administrator';
 				
-				if(!$isUpdate)
+				if($modelUser->Id_profile == 4)
 				{
+					$itemname = 'Installer';
+					$modelUser->Id_reseller = User::getResellerId();
+				}
+				
+				$modelUser->save();
+				
+				if(!$isUpdate)
+				{					
 					$ass = new Assignments();
 					$ass->userid = $modelUser->username;
 					$ass->data = 's:0:"";';
@@ -130,6 +148,7 @@ class UserController extends Controller
 		{
 			$transaction = $modelUser->dbConnection->beginTransaction();
 			try {
+				Assignments::model()->deleteAllByAttributes(array('userid'=>$modelUser->username));
 				$modelUser->delete();
 				$transaction->commit();
 			} catch (Exception $e) {

@@ -141,7 +141,9 @@ class ResellerController extends Controller
 		if(isset($modelReseller))
 		{
 			$transaction = $modelReseller->dbConnection->beginTransaction();
-			try {
+			try {				
+				$modelUser = User::model()->findByAttributes(array('Id_profile'=>3, 'Id_reseller'=>$idReseller));
+				Assignments::model()->deleteAllByAttributes(array('userid'=>$modelUser->username));
 				User::model()->deleteAllByAttributes(array('Id_reseller'=>$modelReseller->Id));
 				$modelReseller->delete();
 				$transaction->commit();
