@@ -79,7 +79,7 @@
 	
 	function saveReseller()
 	{						
-
+		<?php if($modelReseller->isNewRecord):?>
 		$.post("<?php echo ResellerController::createUrl('AjaxCheckUser'); ?>",
 				{
 					username:$("#User_username").val()
@@ -93,6 +93,9 @@
 					}
 					else
 						$('#reseller-form').submit();
-				});		
+				});
+		<?php else:?>
+			$('#reseller-form').submit();
+		<?php endif;?>		
 	}
 </script>

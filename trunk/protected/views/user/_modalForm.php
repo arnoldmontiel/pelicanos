@@ -7,6 +7,8 @@
 		$grid = 'user-grid-admin';
 		if($modelUser->Id_profile == 2)
 			$grid = 'user-grid-movie-admin';
+		if($modelUser->Id_profile == 4)
+			$grid = 'user-grid-installer';
 	?>
 	<div class="modal-dialog">
     	<div class="modal-content">
@@ -80,6 +82,7 @@
 	
 	function saveReseller()
 	{				
+		<?php if($modelUser->isNewRecord):?>
 		$.post("<?php echo UserController::createUrl('AjaxCheckUser'); ?>",
 				{
 					username:$("#User_username").val()
@@ -94,5 +97,8 @@
 					else
 						$('#user-form').submit();
 				});		
+		<?php else:?>
+			$('#user-form').submit();
+		<?php endif;?>
 	}
 </script>

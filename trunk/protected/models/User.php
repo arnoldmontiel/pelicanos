@@ -190,6 +190,34 @@ class User extends CActiveRecord
 	
 	}
 	
+	public function searchInstaller()
+	{
+		// Warning: Please modify the following code to remove attributes that
+		// should not be searched.
+	
+		$criteria=new CDbCriteria;
+	
+		$criteria->compare('username',$this->username,true);
+		$criteria->compare('password',$this->password,true);
+		$criteria->compare('email',$this->email,true);
+		$criteria->addCondition('Id_reseller = '.User::getResellerId() );
+		$criteria->addCondition('Id_profile = 4'); //perfil installer
+	
+		$sort=new CSort;
+		$sort->attributes=array(
+				'username',
+				'password',
+				'email',
+				'*',
+		);
+	
+		return new CActiveDataProvider($this, array(
+				'criteria'=>$criteria,
+				'sort'=>$sort,
+		));
+	
+	}
+	
 	public function searchReseller()
 	{
 		// Warning: Please modify the following code to remove attributes that
