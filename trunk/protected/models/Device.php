@@ -37,6 +37,27 @@ class Device extends CActiveRecord
 		return parent::model($className);
 	}
 
+	public function getState()
+	{
+		$state = 1; //offline
+		$modelClientSettings = ClientSettings::model()->findByAttributes(array('Id_device'=>$this->Id));
+		if(isset($modelClientSettings))
+		{
+			if(!isset($modelClientSettings->ip_v4))
+				$state = 2; //esperando startup
+			else 
+			{
+				//$newtimestamp = strtotime($modelClientSettings->last_update);				
+				//return date('Y-m-d H:i:s', $newtimestamp);
+				if(strtotime($modelClientSettings->last_update) > strtotime('now - 30 minutes' ))
+					$state = 3; //online
+				else
+					$state = 1; //offline
+			}
+		}	
+		return $state;
+	}
+	
 	/**
 	 * @return string the associated database table name
 	 */

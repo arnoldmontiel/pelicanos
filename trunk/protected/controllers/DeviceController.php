@@ -232,6 +232,11 @@ class DeviceController extends Controller
 				$modelDevice->attributes = $_POST['Device'];
 				$modelDevice->save();
 				
+				$modelClientSettings=new ClientSettings;
+				$modelClientSettings->Id_customer = $idCustomer;
+				$modelClientSettings->Id_device = $modelDevice->Id;
+				$modelClientSettings->save();
+				
 				$modelCustomerDevice = CustomerDevice::model()->findByAttributes(array('Id_device'=>$modelDevice->Id,'Id_customer'=>$idCustomer));
 				if(isset($modelCustomerDevice))
 				{
