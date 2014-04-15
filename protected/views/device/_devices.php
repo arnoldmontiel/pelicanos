@@ -35,7 +35,19 @@
 				array(
 						'header'=>'Estado',
 						'value'=>function($data){
-							return '<span class="label label-success">Online</span>';
+							$value = '';
+							switch ($data->device->state) {
+								case 1:
+									$value = '<span class="label label-danger">Offline</span>';
+									break;
+								case 2:
+									$value = '<span class="label label-warning">Waiting</span>';
+									break;
+								case 3:
+									$value = '<span class="label label-success">Online</span>';
+									break;
+							}
+							return $value;
 						},
 						'type'=>'raw',
 						'htmlOptions'=>array("style"=>"text-align:right;"),
