@@ -178,7 +178,7 @@ function addPort()
 
 function openRequestDevice(idCustomer)
 {
-	$.post("<?php echo CustomerController::createUrl('AjaxOpenRequestDevice'); ?>",
+	$.post("<?php echo DeviceController::createUrl('AjaxOpenRequestDevice'); ?>",
 			{
 				idCustomer:idCustomer
 			}
