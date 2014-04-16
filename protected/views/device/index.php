@@ -198,38 +198,10 @@ function addPort()
 				<!-- /.tab-pane -->
 				<div class="tab-pane" id="tabSolicitudes">
 				  		<?php echo $this->renderPartial('_pendingDevices',array('modelCustomerDevice'=>$modelCustomerDevice)); ?>
-				
-
 				</div>
 				<!-- /.tab-pane -->
 				<div class="tab-pane" id="tabAlertas">
-
-				<table class="table table-striped table-bordered tablaIndividual">
-<thead>
-<tr>
-<th>Reseller</th>
-<th>Cliente</th>
-<th>Nombre</th>
-<th>Dispositivo</th>
-<th class="align-center">Estado</th>
-</thead>
-<tbody>
-<tr>
-<td>Venezuela</td>
-<td>Arnol Montiel</td>
-<td>Castelar Norte</td>
-<td>50ed8335ae2ef</td>
-<td class="align-center"><span class="label label-primary"><i class="fa fa-exclamation-triangle"></i> Disco Lleno</span></td>
-</tr>
-<tr>
-<td>Venezuela</td>
-<td>Arnol Montiel</td>
-<td>Castelar Norte</td>
-<td>50ed8335ae2ef</td>
-<td class="align-center"><span class="label label-danger"> Offline</span></td>
-</tr>
-</tbody>
-</table>
+					<?php echo $this->renderPartial('_alerts',array('modelCustomerDevice'=>$modelCustomerDevice)); ?>
 				</div>
 				<!-- /.tab-pane -->
 			</div>
