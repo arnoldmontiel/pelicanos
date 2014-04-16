@@ -284,4 +284,108 @@ class CustomerDevice extends CActiveRecord
 				'sort'=>$sort,
 		));
 	}
+	
+	public function searchAlerts()
+	{
+		// Warning: Please modify the following code to remove attributes that
+		// should not be searched.
+	
+		$criteria=new CDbCriteria;
+	
+		$criteria->compare('t.Id_device',$this->Id_device,true);
+	
+		$criteria->join = 'INNER JOIN customer c on (c.Id = t.Id_customer)
+							INNER JOIN reseller r on (c.Id_reseller = r.Id)
+							INNER JOIN device d on (d.Id = t.Id_device)
+							INNER JOIN client_settings cs on (d.Id = cs.Id_device)
+							INNER JOIN setting s';
+		
+		$criteria->compare('d.description',$this->device_description, true);
+		$criteria->compare('r.description',$this->reseller_description, true);
+		$criteria->compare('CONCAT_WS(" ",c.name, c.last_name)',$this->customer_description, true);
+		$criteria->addCondition('t.is_pending = 0');
+		$criteria->addCondition('cs.ip_v4 is not null');
+		
+		$criteria->addCondition('(
+									(cs.last_update < DATE_SUB(NOW(), interval 30 Minute))
+									OR
+									( (cs.disc_total_space - cs.disc_used_space)*100/cs.disc_total_space <= s.disc_minimum_warning)
+								)');
+		
+		
+		$sort=new CSort;
+		$sort->attributes=array(
+				'Id_reseller',
+				'device_description' => array(
+						'asc' => 'd.description',
+						'desc' => 'd.description DESC',
+				),
+				'reseller_description' => array(
+						'asc' => 'r.description',
+						'desc' => 'r.description DESC',
+				),
+				'customer_description' => array(
+						'asc' => 'CONCAT_WS(" ",c.name, c.last_name)',
+						'desc' => 'CONCAT_WS(" ",c.name, c.last_name) DESC',
+				),
+				'*',
+		);
+	
+		return new CActiveDataProvider($this, array(
+				'criteria'=>$criteria,
+				'sort'=>$sort,
+		));
+	}
+	
+	public function searchAlertsRe()
+	{
+		// Warning: Please modify the following code to remove attributes that
+		// should not be searched.
+	
+		$criteria=new CDbCriteria;
+	
+		$criteria->compare('t.Id_device',$this->Id_device,true);
+	
+		$criteria->join = 'INNER JOIN customer c on (c.Id = t.Id_customer)
+							INNER JOIN reseller r on (c.Id_reseller = r.Id)
+							INNER JOIN device d on (d.Id = t.Id_device)
+							INNER JOIN client_settings cs on (d.Id = cs.Id_device)
+							INNER JOIN setting s';
+	
+		$criteria->compare('d.description',$this->device_description, true);
+		$criteria->compare('r.description',$this->reseller_description, true);
+		$criteria->compare('CONCAT_WS(" ",c.name, c.last_name)',$this->customer_description, true);
+		$criteria->addCondition('t.is_pending = 0');
+		$criteria->addCondition('cs.ip_v4 is not null');
+		$criteria->addCondition('c.Id_reseller = '.User::getResellerId());
+		$criteria->addCondition('(
+									(cs.last_update < DATE_SUB(NOW(), interval 30 Minute))
+									OR
+									( (cs.disc_total_space - cs.disc_used_space)*100/cs.disc_total_space <= s.disc_minimum_warning)
+								)');
+	
+	
+		$sort=new CSort;
+		$sort->attributes=array(
+				'Id_reseller',
+				'device_description' => array(
+						'asc' => 'd.description',
+						'desc' => 'd.description DESC',
+				),
+				'reseller_description' => array(
+						'asc' => 'r.description',
+						'desc' => 'r.description DESC',
+				),
+				'customer_description' => array(
+						'asc' => 'CONCAT_WS(" ",c.name, c.last_name)',
+						'desc' => 'CONCAT_WS(" ",c.name, c.last_name) DESC',
+				),
+				'*',
+		);
+	
+		return new CActiveDataProvider($this, array(
+				'criteria'=>$criteria,
+				'sort'=>$sort,
+		));
+	}
 }

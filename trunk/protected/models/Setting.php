@@ -8,6 +8,7 @@
  * @property string $path_anydvd_download
  * @property string $path_images
  * @property string $disc_minimum_warning
+ * @property integer $heartbeat_minutes
  */
 class Setting extends CActiveRecord
 {
@@ -50,13 +51,13 @@ class Setting extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('Id', 'required'),
-			array('Id', 'numerical', 'integerOnly'=>true),
+			array('Id, heartbeat_minutes', 'numerical', 'integerOnly'=>true),
 			array('path_images', 'length', 'max'=>255),
 			array('disc_minimum_warning', 'length', 'max'=>20),
 			array('path_anydvd_download', 'length', 'max'=>128),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id, path_anydvd_download, path_images, disc_minimum_warning', 'safe', 'on'=>'search'),
+			array('Id, path_anydvd_download, path_images, disc_minimum_warning, heartbeat_minutes', 'safe', 'on'=>'search'),
 		);
 	}
 
