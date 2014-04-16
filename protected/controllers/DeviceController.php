@@ -230,6 +230,29 @@ class DeviceController extends Controller
 		));
 	}
 	
+	public function actionAjaxGetAlerts()
+	{
+		$criteria=new CDbCriteria;
+		
+		$criteria->join = 'INNER JOIN customer c on (c.Id = t.Id_customer)
+							INNER JOIN reseller r on (c.Id_reseller = r.Id)
+							INNER JOIN device d on (d.Id = t.Id_device)
+							INNER JOIN client_settings cs on (d.Id = cs.Id_device)
+							INNER JOIN setting s';
+		
+		$criteria->addCondition('t.is_pending = 0');
+		$criteria->addCondition('cs.ip_v4 is not null');
+		if(!User::isAdmin())
+			$criteria->addCondition('c.Id_reseller = '.User::getResellerId());
+		
+		$criteria->addCondition('(
+									(cs.last_update < DATE_SUB(NOW(), interval 30 Minute))
+									OR
+									( (cs.disc_total_space - cs.disc_used_space)*100/cs.disc_total_space <= s.disc_minimum_warning)
+								)');
+		echo CustomerDevice::model()->count($criteria);
+	}
+	
 	public function actionAjaxOpenViewDownload()
 	{
 		$idDevice = (isset($_POST['idDevice']))?$_POST['idDevice']:null;

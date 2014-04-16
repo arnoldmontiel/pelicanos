@@ -2,9 +2,26 @@
 
 setInterval(function() {
 	$.fn.yiiGridView.update('pending-customer-device-grid');
+	getAlerts();
 }, 5 * 60 * 1000);
 
 getPendingDevices();
+getAlerts();
+
+function getAlerts()
+{
+	$.post("<?php echo DeviceController::createUrl('AjaxGetAlerts'); ?>"
+		).success(
+			function(data){
+				if(data == 0)
+					$('#tabAlertsQty').hide();
+				else
+					$('#tabAlertsQty').text(data);
+
+				$.fn.yiiGridView.update('device-alerts-grid');				
+			});
+	return false;
+}
 
 function createDevice(idDevice, idCustomer)
 {
@@ -189,7 +206,7 @@ function addPort()
 			<ul class="nav nav-tabs">
 				<li class="active"><a id="tab-open" href="#tabExistentes" data-toggle="tab">Existentes</a></li>
 				<li><a id="tab-waiting" href="#tabSolicitudes" data-toggle="tab">Solicitudes <span id="tabPendingDevicesQty" class="badge"></span></a></li>
-				<li><a href="#tabAlertas" data-toggle="tab">Alertas <span class="badge">3</span></a></li>
+				<li><a href="#tabAlertas" data-toggle="tab">Alertas <span id="tabAlertsQty" class="badge"></span></a></li>
 			</ul>
 			<div class="tab-content">
 				<div class="tab-pane active" id="tabExistentes">
