@@ -28,7 +28,7 @@ function createDevice(idDevice, idCustomer)
 
 function openAcceptDeviceForm(idDevice, idCustomer)
 {
-	$.post("<?php echo CustomerController::createUrl('AjaxOpenAcceptDeviceForm'); ?>",
+	$.post("<?php echo DeviceController::createUrl('AjaxOpenAcceptDeviceForm'); ?>",
 			{
 				idDevice:idDevice,
 				idCustomer:idCustomer
