@@ -207,6 +207,29 @@ class DeviceController extends Controller
 		));
 	}
 	
+	public function actionIndexIns()
+	{
+		$modelCustomerDevice = new CustomerDevice('search');
+		$modelCustomerDevice->unsetAttributes();  // clear any default values
+		if(isset($_GET['CustomerDevice']))
+			$modelCustomerDevice->attributes=$_GET['CustomerDevice'];
+	
+		$modelDeviceTunelGrid = new DeviceTunneling('search');
+		$modelDeviceTunelGrid->unsetAttributes();  // clear any default values
+	
+		$idDevice = isset($_GET['idDevice'])?$_GET['idDevice']:'';
+		if(isset($_GET['DeviceTunneling']))
+			$modelDeviceTunelGrid->attributes=$_GET['DeviceTunneling'];
+	
+		$modelDeviceTunelGrid->Id_device = $idDevice;
+	
+	
+		$this->render('indexIns',array(
+				'modelCustomerDevice'=>$modelCustomerDevice,
+				'modelDeviceTunelGrid'=>$modelDeviceTunelGrid,
+		));
+	}
+	
 	public function actionAjaxOpenViewDownload()
 	{
 		$idDevice = (isset($_POST['idDevice']))?$_POST['idDevice']:null;
