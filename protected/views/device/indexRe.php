@@ -66,7 +66,7 @@ function removePlayer(obj)
 
 function viewDownloads(id)
 {
-	$.post("<?php echo Yii::app()->createUrl('AjaxOpenViewDownload'); ?>",
+	$.post("<?php echo DeviceController::createUrl('AjaxOpenViewDownload'); ?>",
 			{
 				idDevice:id
 			}
