@@ -92,7 +92,7 @@ class SiteController extends Controller
 				elseif(Yii::app()->user->checkAccess('Reseller'))
 					$this->redirect(SiteController::createUrl('nzb/indexRe') );
 				else
-					$this->redirect(SiteController::createUrl('device/indexRe') );
+					$this->redirect(SiteController::createUrl('device/indexIns') );
 			}
 		}
 		// display the login form
