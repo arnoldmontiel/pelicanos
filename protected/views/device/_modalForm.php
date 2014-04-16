@@ -1,7 +1,7 @@
 <form id="device-form" method="post">
 	<?php echo CHtml::hiddenField('idCustomer', $idCustomer,array('id'=>'idCustomer')); ?>
 	<?php echo CHtml::activeHiddenField($modelDevice, 'Id'); ?>
-	<div class="modal-dialog">
+	<div class="modal-dialog" id="myModalCrearDisp">
     	<div class="modal-content">
       		<div class="modal-header">
       			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
@@ -16,59 +16,71 @@
 		  				</div>
 	  				</div>
 	  			</div>
-	  			
-			  	<div class="form-group">
-			  		<label for="campoNombre">Descripti&oacute;n</label>
+	  			<div class="row">
+  					<div class="form-group col-sm-12">
+			  		<label for="campoNombre">Descripci&oacute;n</label>
 			  		<?php echo CHtml::activeTextField($modelDevice, 'description', array('class'=>'form-control')); ?>
-			 	</div>
-			  	<div class="form-group">
+			 		</div>
+  				</div>
+  				<div class="row">
+			  	<div class="form-group col-sm-6">
 			  		<label for="campoNombre">Sabnzb API Key</label>
 			  		<?php echo CHtml::activeTextField($modelDevice, 'sabnzb_api_key', array('class'=>'form-control')); ?>
 			  	</div>
-			  	<div class="form-group">
+			  	<div class="form-group col-sm-6">
 			  		<label for="campoNombre">Sabnzb API URL</label>
 			  		<?php echo CHtml::activeTextField($modelDevice, 'sabnzb_api_url', array('class'=>'form-control')); ?>
 			  	</div>
-			  	<div class="form-group">
+			  	</div>
+  				<div class="row">
+  				<div class="form-group col-sm-6">
 			  		<label for="campoNombre">Path Sabnzb Descarga</label>
 			  		<?php echo CHtml::activeTextField($modelDevice, 'path_sabnzbd_download', array('class'=>'form-control')); ?>
 			  	</div>
-			  	<div class="form-group">
+			  	<div class="form-group col-sm-6">
 			  		<label for="campoNombre">Path Nzb Pendientes</label>
 			  		<?php echo CHtml::activeTextField($modelDevice, 'path_pending', array('class'=>'form-control')); ?>
 			  	</div>
-				
-				<div class="form-group">
+  				</div>
+  				<div class="row">				
+				<div class="form-group col-sm-6">
 			  		<label for="campoNombre">Path Nzb Listos</label>
 			  		<?php echo CHtml::activeTextField($modelDevice, 'path_ready', array('class'=>'form-control')); ?>
 			  	</div>
-			  	<div class="form-group">
+			  	<div class="form-group col-sm-6">
 			  		<label for="campoNombre">Path Imagenes</label>
 			  		<?php echo CHtml::activeTextField($modelDevice, 'path_images', array('class'=>'form-control')); ?>
 			  	</div>
-			  	<div class="form-group">
+			  	</div>
+  				<div class="row">
+			  	<div class="form-group col-sm-6">
 			  		<label for="campoNombre">Path Compartidos</label>
 			  		<?php echo CHtml::activeTextField($modelDevice, 'path_shared', array('class'=>'form-control')); ?>
 			  	</div>
-			  	<div class="form-group">
+			  	<div class="form-group col-sm-6">
 			  		<label for="campoNombre">Host Path</label>
 			  		<?php echo CHtml::activeTextField($modelDevice, 'host_path', array('class'=>'form-control')); ?>
 			  	</div>
-			  	 <div class="form-group">
+			  	</div>
+  				<div class="row">
+			  	 <div class="form-group col-sm-6">
 			  		<label for="campoNombre">Host File Server</label>
 			  		<?php echo CHtml::activeTextField($modelDevice, 'host_file_server', array('class'=>'form-control')); ?>
 			  	</div>
-			  	<div class="form-group">
+			  	<div class="form-group col-sm-6">
 			  		<label for="campoNombre">Host File Server Path</label>
 			  		<?php echo CHtml::activeTextField($modelDevice, 'host_file_server_path', array('class'=>'form-control')); ?>
 			  	</div>
- 				<div class="form-group">
+			  	</div>
+  				<div class="row">
+ 				<div class="form-group col-sm-6">
 			  		<label for="campoNombre">Tmdb API Key</label>
 			  		<?php echo CHtml::activeTextField($modelDevice, 'tmdb_api_key', array('class'=>'form-control')); ?>
 			  	</div>
-			  	<div class="form-group">
+			  	<div class="form-group col-sm-6">
 			  		<label for="campoNombre">Tmdb API Lang</label>
 			  		<?php echo CHtml::activeTextField($modelDevice, 'tmdb_lang', array('class'=>'form-control')); ?>
+			  	</div>
 			  	</div>
       		</div>
       		<div class="modal-footer">
