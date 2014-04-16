@@ -189,6 +189,7 @@ function addPort()
 			<ul class="nav nav-tabs">
 				<li class="active"><a id="tab-open" href="#tabExistentes" data-toggle="tab">Existentes</a></li>
 				<li><a id="tab-waiting" href="#tabSolicitudes" data-toggle="tab">Solicitudes <span id="tabPendingDevicesQty" class="badge"></span></a></li>
+				<li><a href="#tabAlertas" data-toggle="tab">Alertas <span class="badge">3</span></a></li>
 			</ul>
 			<div class="tab-content">
 				<div class="tab-pane active" id="tabExistentes">
@@ -199,6 +200,36 @@ function addPort()
 				  		<?php echo $this->renderPartial('_pendingDevices',array('modelCustomerDevice'=>$modelCustomerDevice)); ?>
 				
 
+				</div>
+				<!-- /.tab-pane -->
+				<div class="tab-pane" id="tabAlertas">
+
+				<table class="table table-striped table-bordered tablaIndividual">
+<thead>
+<tr>
+<th>Reseller</th>
+<th>Cliente</th>
+<th>Nombre</th>
+<th>Dispositivo</th>
+<th class="align-center">Estado</th>
+</thead>
+<tbody>
+<tr>
+<td>Venezuela</td>
+<td>Arnol Montiel</td>
+<td>Castelar Norte</td>
+<td>50ed8335ae2ef</td>
+<td class="align-center"><span class="label label-primary"><i class="fa fa-exclamation-triangle"></i> Disco Lleno</span></td>
+</tr>
+<tr>
+<td>Venezuela</td>
+<td>Arnol Montiel</td>
+<td>Castelar Norte</td>
+<td>50ed8335ae2ef</td>
+<td class="align-center"><span class="label label-danger"> Offline</span></td>
+</tr>
+</tbody>
+</table>
 				</div>
 				<!-- /.tab-pane -->
 			</div>
