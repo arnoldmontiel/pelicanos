@@ -73,19 +73,19 @@
 							return $value;
 						},
 						'type'=>'raw',
-						'htmlOptions'=>array("style"=>"text-align:right;"),
-						'headerHtmlOptions'=>array("style"=>"text-align:right;"),
+						'htmlOptions'=>array("class"=>"align-center"),
+						'headerHtmlOptions'=>array("class"=>"align-center"),
 				),
 				array(
 						'header'=>'Acciones',
 						'value'=>function($data){
 							$device = "'$data->Id_device'";
-							return '<div class="buttonGroupDevices"><button onclick="portConfig('.$device.');" data-toggle="modal" data-target="#myModalConfigPuertos" type="button" class="btn btn-default btn-sm" ><i class="fa fa-cog"></i> Configurar</button> 
+							return '<div class="buttonGroupDevices pull-right"><button onclick="portConfig('.$device.');" data-toggle="modal" data-target="#myModalConfigPuertos" type="button" class="btn btn-default btn-sm" ><i class="fa fa-cog"></i> Configurar</button> 
 									<button onclick="viewDownloads('.$device.');" type="button" class="btn btn-default btn-sm"  data-toggle="modal" data-target="#myModalViewDownloads" ><i class="fa fa-clock-o"></i> Ver Descargas</button></div>';
 						},
 						'type'=>'raw',
-						'htmlOptions'=>array("style"=>"text-align:right;"),
-						'headerHtmlOptions'=>array("style"=>"text-align:right;"),
+						'htmlOptions'=>array("class"=>"align-right"),
+						'headerHtmlOptions'=>array("class"=>"align-right"),
 				),
 			),
 		));		
