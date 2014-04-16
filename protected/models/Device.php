@@ -48,10 +48,22 @@ class Device extends CActiveRecord
 				$state = 2; //esperando startup
 			else 
 			{
+				$setting = Setting::getInstance();
 				//$newtimestamp = strtotime($modelClientSettings->last_update);				
 				//return date('Y-m-d H:i:s', $newtimestamp);
-				if(strtotime($modelClientSettings->last_update) > strtotime('now - 30 minutes' ))
-					$state = 3; //online
+				if(strtotime($modelClientSettings->last_update) > strtotime('now - '.$setting->heartbeat_minutes.' minutes' ))
+				{
+					if(isset($modelClientSettings->disc_total_space) && $modelClientSettings->disc_total_space > 0)
+					{
+						$freePercent = ($modelClientSettings->disc_total_space - $modelClientSettings->disc_used_space)*100/$modelClientSettings->disc_total_space;
+						if($freePercent <= $setting->disc_minimum_warning)
+							$state = 4; //need disc
+						else
+							$state = 3; //online
+					}
+					else 
+						$state = 3; //online
+				}
 				else
 					$state = 1; //offline
 			}

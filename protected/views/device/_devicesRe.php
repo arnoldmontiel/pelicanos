@@ -61,6 +61,9 @@
 								case 3:
 									$value = '<span class="label label-success">Online</span>';
 									break;
+								case 4:
+									$value = '<span class="label label-primary"><i class="fa fa-exclamation-triangle"></i> Disco lleno</span>';
+									break;
 							}
 							return $value;
 						},

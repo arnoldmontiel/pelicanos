@@ -234,6 +234,7 @@ function cancelRequestedDevice(idDevice, idCustomer)
 				<li><a id="tab-waiting" href="#tabSolicitudes" data-toggle="tab">Solicitudes
 						<span id="qty-pending" class="badge"><?php echo ($qtyPending > 0)?$qtyPending:'';?></span>
 				</a></li>
+				<li><a href="#tabAlertas" data-toggle="tab">Alertas <span class="badge">3</span></a></li>
 				<li class="pull-right"><button onclick="openRequestDevice();" class="btn btn-primary superBoton"
 						data-toggle="modal" data-target="">
 						<i class="fa fa-plus"></i> Solicitar Dispositivos
@@ -246,6 +247,10 @@ function cancelRequestedDevice(idDevice, idCustomer)
 				<!-- /.tab-pane -->
 				<div class="tab-pane" id="tabSolicitudes">
 				  	<?php echo $this->renderPartial('_pendingDevicesRe',array('modelCustomerDevice'=>$modelCustomerDevice)); ?>
+				</div>
+				<!-- /.tab-pane -->
+				<div class="tab-pane" id="tabAlertas">
+					<?php echo $this->renderPartial('_alertsRe',array('modelCustomerDevice'=>$modelCustomerDevice)); ?>
 				</div>
 				<!-- /.tab-pane -->
 			</div>

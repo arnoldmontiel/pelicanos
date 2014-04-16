@@ -1,7 +1,7 @@
   <?php		
 	$this->widget('zii.widgets.grid.CGridView', array(
 		'id'=>'device-alerts-grid',
-		'dataProvider'=>$modelCustomerDevice->searchAlerts(),
+		'dataProvider'=>$modelCustomerDevice->searchAlertsRe(),
 		'selectableRows' => 0,
 		'filter'=>$modelCustomerDevice,
 		'summaryText'=>'',	
@@ -47,7 +47,7 @@
 									$value = '<span class="label label-success">Online</span>';
 									break;
 								case 4:
-									$value = '<span class="label label-primary"><i class="fa fa-exclamation-triangle"></i> Disco lleno</span>';
+									$value = '<span class="label label-primary"><i class="fa fa-exclamation-triangle"></i> Disco lleno</span>'; 
 									break;
 							}
 							return $value;
