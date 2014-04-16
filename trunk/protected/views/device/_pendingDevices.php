@@ -39,6 +39,28 @@
 						'type'=>'raw',
 				),
 				array(
+						'header'=>'Players',
+						'value'=>function($data){
+							$modelDevicePlayers = DevicePlayer::model()->findAllByAttributes(array('Id_device'=>$data->Id_device));
+				
+							$playerList = '<ul class="playerList">';
+							foreach($modelDevicePlayers as $player)
+							{
+								$playerList .= '<li>'. $player->description . '</li>';
+							}
+							$playerList .= '</ul>';
+							return $playerList;
+						},
+						'type'=>'raw',
+				),
+				array(
+						'header'=>'Con NAS',
+						'value'=>function($data){
+							return ($data->device->need_nas == 0)?'No':'Si';
+						},
+						'type'=>'raw',
+				),
+				array(
 						'header'=>'Acciones',
 						'value'=>function($data){
 							$device = "'$data->Id_device'";							
