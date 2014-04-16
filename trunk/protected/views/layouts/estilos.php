@@ -1090,7 +1090,7 @@ top: 2px;}
 
 .myModalRequestDevice .alert{margin-bottom:10px;}
 
-ul.playerList{margin:0px;padding-left:20px;}
+ul.playerList{margin:0px;padding-left:16px; padding-right:5px;}
 ul.playerList li{margin:0px;margin-left:0px;}
 
 .tableDis{width:600px;}

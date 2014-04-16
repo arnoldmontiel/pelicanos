@@ -59,6 +59,7 @@
 							return ($data->device->need_nas == 0)?'No':'Si';
 						},
 						'type'=>'raw',
+						'headerHtmlOptions'=>array("style"=>"white-space:nowrap;"),
 				),
 				array(
 						'header'=>'Acciones',
