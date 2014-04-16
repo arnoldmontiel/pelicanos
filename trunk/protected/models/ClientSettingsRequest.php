@@ -32,4 +32,16 @@ class ClientSettingsRequest
 	* @soap
 	*/
 	public $port_v6;
+	
+	/**
+	 * @var string disc used space
+	 * @soap
+	 */
+	public $disc_used_space;
+	
+	/**
+	 * @var string disc total space
+	 * @soap
+	 */
+	public $disc_total_space;
 }

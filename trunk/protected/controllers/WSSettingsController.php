@@ -33,6 +33,8 @@ class WSSettingsController extends Controller
 				$model->ip_v6 = $settings->ip_v6;
 				$model->port_v4 = $settings->port_v4;
 				$model->port_v6 = $settings->port_v6;
+				$model->disc_used_space = $settings->disc_used_space;
+				$model->disc_total_space = $settings->disc_total_space;
 				$model->save();
 			}
 			catch (Exception $e) 

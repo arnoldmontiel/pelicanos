@@ -54,6 +54,14 @@
 						'type'=>'raw',
 				),
 				array(
+						'header'=>'Con NAS',
+						'value'=>function($data){
+							return ($data->device->need_nas == 0)?'No':'Si';
+						},
+						'type'=>'raw',
+						'headerHtmlOptions'=>array("style"=>"white-space:nowrap;"),
+				),
+				array(
 						'header'=>'Estado',
 						'value'=>function($data){
 							return '<div class="label label-danger">
