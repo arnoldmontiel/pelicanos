@@ -16,7 +16,7 @@
 				</div>
 				<div class="form-group">
 					<label for="campoNombre">Agregar NAS</label>
-					<input type="checkbox" >
+					<?php echo CHtml::activeCheckBox($modelDevice, 'need_nas', array('class'=>'form-control')); ?>
 				</div>
 				<div class="row">
 			  		<div class="col-sm-12 form-group">

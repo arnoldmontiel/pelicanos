@@ -19,6 +19,7 @@
  * @property string $host_file_server_path 
  * @property string $tmdb_api_key
  * @property string $tmdb_lang
+ * @property integer $need_nas
  * 
  * The followings are the available model relations:
  * @property ClientSettings[] $clientSettings
@@ -76,11 +77,12 @@ class Device extends CActiveRecord
 		return array(
 			array('Id', 'required'),
 			array('Id, tmdb_lang', 'length', 'max'=>45),
+			array('need_nas', 'numerical', 'integerOnly'=>true),
 			array('sabnzb_api_key, sabnzb_api_url, path_sabnzbd_download, path_pending, host_name, path_ready, path_images, path_shared, host_path, host_file_server, host_file_server_path, tmdb_api_key', 'length', 'max'=>255),
 			array('description', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id, description, sabnzb_api_key, sabnzb_api_url, path_sabnzbd_download, path_pending, host_name, path_ready, path_images, path_shared, host_path, host_file_server, host_file_server_path, tmdb_api_key, tmdb_lang', 'safe', 'on'=>'search'),
+			array('Id, description, sabnzb_api_key, sabnzb_api_url, path_sabnzbd_download, path_pending, host_name, path_ready, path_images, path_shared, host_path, host_file_server, host_file_server_path, tmdb_api_key, tmdb_lang, need_nas', 'safe', 'on'=>'search'),
 		);
 	}
 

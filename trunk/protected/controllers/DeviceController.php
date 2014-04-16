@@ -271,7 +271,7 @@ class DeviceController extends Controller
  			$transaction = $modelDevice->dbConnection->beginTransaction();
  			try {
  				$modelDevice->Id = uniqid();
- 				$modelDevice->description = $_POST['Device']['description'];
+ 				$modelDevice->attributes = $_POST['Device'];
  				$modelDevice->save();
  				$modelDevice->refresh();
  			
