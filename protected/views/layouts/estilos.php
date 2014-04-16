@@ -1095,6 +1095,8 @@ ul.playerList li{margin:0px;margin-left:0px;}
 
 .tableDis{width:600px;}
 
+#myModalCrearDisp.modal-dialog{width:800px;}
+
 /* ----- END DISPOSITIVOS --------*/
 
 /* ----- CLIENTES --------*/
