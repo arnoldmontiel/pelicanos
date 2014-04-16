@@ -104,89 +104,78 @@
               </div><!-- tab-pane -->
                 <div class="tab-pane" id="tabGeneral">
                 
-                <form id="general-config-form" class="form-horizontal" role="form">
+                <form id="general-config-form" role="form">
                 <?php 
                 	$modelDevice = new Device();
                 	echo CHtml::activeHiddenField($modelDevice, 'Id');
                 	$isAdmin = User::isAdmin();
-                ?>
-                    <?php if($isAdmin):?>            
-  					<div class="form-group">
-    					<label class="col-sm-3 control-label">Sabnzb API Key</label>
-    					<div class="col-sm-9">
-      						<?php echo CHtml::activeTelField($modelDevice, 'sabnzb_api_key', array('class'=>'form-control'));?>
-    					</div>
-  					</div>  			
-  					<?php endif;?>		
-  					<div class="form-group">
-    					<label class="col-sm-3 control-label">Sabnzb API URL</label>
-    					<div class="col-sm-9">
+                ?>    
+  					<div class="row">        
+  					<div class="form-group col-sm-6 ">
+    					<label>Sabnzb API URL</label>
       						<?php echo CHtml::activeTelField($modelDevice, 'sabnzb_api_url', array('class'=>'form-control', 'placeholder'=>'Url'));?>
-    					</div>
   					</div>
-  					<div class="form-group">
-    					<label class="col-sm-3 control-label">Path Sabnzb Descarga</label>
-    					<div class="col-sm-9">
+  					<div class="form-group col-sm-6">
+  					<?php if($isAdmin):?>
+    					<label>Sabnzb API Key</label>
+      						<?php echo CHtml::activeTelField($modelDevice, 'sabnzb_api_key', array('class'=>'form-control'));?>
+  					<?php endif;?>	
+  					</div>  	
+  					</div>			
+  					<div class="row">
+  					<div class="form-group col-sm-6 ">
+    					<label>Path Sabnzb Descarga</label>
       						<?php echo CHtml::activeTelField($modelDevice, 'path_sabnzbd_download', array('class'=>'form-control'));?>
-    					</div>
   					</div>
-  					
-					<div class="form-group">
-    					<label class="col-sm-3 control-label">Path Nzb Pendientes</label>
-    					<div class="col-sm-9">
+  					<div class="form-group col-sm-6 ">
+    					<label>Path Nzb Pendientes</label>
     						<?php echo CHtml::activeTelField($modelDevice, 'path_pending', array('class'=>'form-control'));?>
-    					</div>
   					</div>
-					<div class="form-group">
-    					<label class="col-sm-3 control-label">Path Nzb Listos</label>
-    					<div class="col-sm-9">
+  					</div>
+  					<div class="row">
+					<div class="form-group col-sm-6">
+    					<label>Path Nzb Listos</label>
     						<?php echo CHtml::activeTelField($modelDevice, 'path_ready', array('class'=>'form-control'));?>
-    					</div>
   					</div>
-					<div class="form-group">
-    					<label class="col-sm-3 control-label">Path Imagenes</label>
-    					<div class="col-sm-9">
+  					<div class="form-group col-sm-6 ">
+    					<label>Path Imagenes</label>
     						<?php echo CHtml::activeTelField($modelDevice, 'path_images', array('class'=>'form-control'));?>
-    					</div>
   					</div>
-					<div class="form-group">
-    					<label class="col-sm-3 control-label">Path Compartidos</label>
-    					<div class="col-sm-9">
+  					</div>
+  					<div class="row">
+					<div class="form-group col-sm-6">
+    					<label>Path Compartidos</label>
       						<?php echo CHtml::activeTelField($modelDevice, 'path_shared', array('class'=>'form-control'));?>
-    					</div>
+  					</div>
+  					<div class="form-group col-sm-6 ">
+  					<?php if($isAdmin):?>
+    					<label>Host Path</label>
+      						<?php echo CHtml::activeTelField($modelDevice, 'host_path', array('class'=>'form-control'));?>
+  					<?php endif;?>
+  					</div>
+  					</div>
+  					<div class="row">
+  					<div class="form-group col-sm-6 ">
+    					<label>Host File Server</label>
+      						<?php echo CHtml::activeTelField($modelDevice, 'host_file_server', array('class'=>'form-control'));?>
+  					</div>
+  					<div class="form-group col-sm-6">
+    					<label>Host File Server Path</label>
+      						<?php echo CHtml::activeTelField($modelDevice, 'host_file_server_path', array('class'=>'form-control'));?>
+  					</div>
   					</div>
   					<?php if($isAdmin):?>
-  					<div class="form-group">
-    					<label class="col-sm-3 control-label">Themoviedb API KEY</label>
-    					<div class="col-sm-9">
+  					<div class="row">
+  					<div class="form-group col-sm-6 ">
+    					<label>Tmdb API Key</label>
       						<?php echo CHtml::activeTelField($modelDevice, 'tmdb_api_key', array('class'=>'form-control'));?>
-    					</div>
   					</div>  					
-  					<div class="form-group">
-    					<label class="col-sm-3 control-label">Themoviedb API Idioma</label>
-    					<div class="col-sm-9">
+  					<div class="form-group col-sm-6">
+    					<label>Tmdb API Lang</label>
       						<?php echo CHtml::activeTelField($modelDevice, 'tmdb_lang', array('class'=>'form-control'));?>
-    					</div>
   					</div>
-  					<div class="form-group">
-    					<label class="col-sm-3 control-label">Host Path</label>
-    					<div class="col-sm-9">
-      						<?php echo CHtml::activeTelField($modelDevice, 'host_path', array('class'=>'form-control'));?>
-    					</div>
   					</div>
   					<?php endif;?>
-  					<div class="form-group">
-    					<label class="col-sm-3 control-label">Host File Server</label>
-    					<div class="col-sm-9">
-      						<?php echo CHtml::activeTelField($modelDevice, 'host_file_server', array('class'=>'form-control'));?>
-    					</div>
-  					</div>
-  					<div class="form-group">
-    					<label class="col-sm-3 control-label">Host File Server Path</label>
-    					<div class="col-sm-9">
-      						<?php echo CHtml::activeTelField($modelDevice, 'host_file_server_path', array('class'=>'form-control'));?>
-    					</div>
-  					</div>
   					<div class="form-group">
     					<div class="col-sm-12">
     						<button onclick="submitGeneralConfig();" type="button" class="btn btn-primary pull-right"><i class="fa fa-save"></i> Guardar</button>

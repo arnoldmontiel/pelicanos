@@ -24,12 +24,12 @@
   				</div>
   				<div class="row">
 			  	<div class="form-group col-sm-6">
-			  		<label for="campoNombre">Sabnzb API Key</label>
-			  		<?php echo CHtml::activeTextField($modelDevice, 'sabnzb_api_key', array('class'=>'form-control')); ?>
-			  	</div>
-			  	<div class="form-group col-sm-6">
 			  		<label for="campoNombre">Sabnzb API URL</label>
 			  		<?php echo CHtml::activeTextField($modelDevice, 'sabnzb_api_url', array('class'=>'form-control')); ?>
+			  	</div>
+			  	<div class="form-group col-sm-6">
+			  		<label for="campoNombre">Sabnzb API Key</label>
+			  		<?php echo CHtml::activeTextField($modelDevice, 'sabnzb_api_key', array('class'=>'form-control')); ?>
 			  	</div>
 			  	</div>
   				<div class="row">
