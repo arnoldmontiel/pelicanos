@@ -39,7 +39,7 @@
 							}
 							$value = '<div class="tablaNombre">'.$title.'</div>
 									<div class="tablaGenero">'.$genre.'</div>
-									<div>'.$description.'</div>';
+									<div>'.nl2br($description).'</div>';
 							return $value;
 						},
 						'type'=>'raw',

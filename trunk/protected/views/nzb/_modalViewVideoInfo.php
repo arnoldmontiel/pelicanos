@@ -68,7 +68,7 @@
 							    	GENERO
 							    </div><!--/.col-md-3 -->
 							    <div class="col-md-9 col-sm-9 align-left detailSecond">
-									&nbsp;<?php echo $genre;?>
+									<?php echo $genre;?>
 								</div><!--/.col-md-9 -->
     						</div><!--/.row -->    
 						    <div class="row detailSecondGroup">
@@ -76,7 +76,7 @@
 						    		PUBLICO
 						    	</div><!--/.col-md-3 -->
 						    	<div class="col-md-9 col-sm-9 align-left detailSecond">
-						    		&nbsp;<?php echo $parental;?>    
+						    		<?php echo $parental;?>    
 						    	</div><!--/.col-md-9 -->
 						    </div><!--/.row -->
 						    <div class="row detailSecondGroup">
@@ -116,7 +116,7 @@
 						    		A&Ntilde;O
 						    	</div><!--/.col-md-3 -->
 						    	<div class="col-md-9 col-sm-9 align-left detailSecond">
-						    		&nbsp;<?php echo $year;?>    
+						    		<?php echo $year;?>    
 						    	</div><!--/.col-md-9 -->
 						    </div><!--/.row -->
 						    <div class="row detailSecondGroup">
@@ -124,7 +124,7 @@
 						    		DIRECTOR
 						    	</div><!--/.col-md-3 -->
 						    	<div class="col-md-9 col-sm-9 align-left detailSecond">
-						    		&nbsp;<?php echo $directors;?>    
+						    		<?php echo $directors;?>    
 						    	</div><!--/.col-md-9 -->
 						    </div><!--/.row -->
 						    <div class="row detailSecondGroup">
@@ -132,7 +132,7 @@
 						    		ACTORES
 						    	</div><!--/.col-md-3 -->
 						    	<div class="col-md-9 col-sm-9 align-left detailSecond">
-						    		&nbsp;<?php echo $actor;?>
+						    		<?php echo $actor;?>
 						    	</div><!--/.col-md-9 -->
 						    </div><!--/.row -->
 						    <div class="row detailSecondGroup">
@@ -140,7 +140,7 @@
 						    		DURACI&Oacute;N
 						    	</div><!--/.col-md-3 -->
 						    	<div class="col-md-9 col-sm-9 align-left detailSecond">
-						    		&nbsp;<?php echo $time;?>&nbsp;mm
+						    		<?php echo $time;?>&nbsp;mm
 						    	</div><!--/.col-md-9 -->
 						    </div><!--/.row -->
 						    <div class="row detailSecondGroup">
@@ -148,7 +148,7 @@
 						    		SINOPSIS
 						    	</div><!--/.col-md-3 -->
 						    	<div class="col-md-9 col-sm-9 align-left detailSecond detailSummary">
-						    		&nbsp;<?php echo $description;?>
+						    		<?php echo nl2br($description);?>
 						    	</div><!--/.col-md-9 -->
 						    </div><!--/.row -->
     					</div><!--/.tab-pane#1 -->
