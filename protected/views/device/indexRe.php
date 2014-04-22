@@ -3,8 +3,6 @@ setInterval(function() {
 	getAlerts();
 }, 5 * 60 * 1000);
 
-getAlerts();
-
 function getAlerts()
 {
 	$.post("<?php echo DeviceController::createUrl('AjaxGetAlerts'); ?>"
@@ -19,6 +17,8 @@ function getAlerts()
 			});
 	return false;
 }
+
+getAlerts();
 
 function addPlayer()
 {
