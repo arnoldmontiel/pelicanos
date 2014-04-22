@@ -227,7 +227,7 @@ function addPort()
     	<!-- /.col-sm-12 --> 
   	</div>
   	<!-- /.row --> 
-  
+   
   
 	<div id="container-modal-addPort" style="display: none">
 		<?php echo $this->renderPartial('_modalPortConfig', array( 'modelDeviceTunelGrid'=>$modelDeviceTunelGrid, 'idDevice'=>''));?>
