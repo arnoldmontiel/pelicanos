@@ -111,69 +111,69 @@
                 	$isAdmin = User::isAdmin();
                 ?>    
   					<div class="row">        
-  					<div class="form-group col-sm-6 ">
-    					<label>Sabnzb API URL</label>
-      						<?php echo CHtml::activeTelField($modelDevice, 'sabnzb_api_url', array('class'=>'form-control', 'placeholder'=>'Url'));?>
-  					</div>
-  					<div class="form-group col-sm-6">
-  					<?php if($isAdmin):?>
-    					<label>Sabnzb API Key</label>
-      						<?php echo CHtml::activeTelField($modelDevice, 'sabnzb_api_key', array('class'=>'form-control'));?>
-  					<?php endif;?>	
-  					</div>  	
+	  					<div class="form-group col-sm-6 ">
+	    					<label>Sabnzb API URL</label>
+	      						<?php echo CHtml::activeTextField($modelDevice, 'sabnzb_api_url', array('class'=>'form-control', 'placeholder'=>'Url'));?>
+	  					</div>
+	  					<div class="form-group col-sm-6">
+	  					<?php if($isAdmin):?>
+	    					<label>Sabnzb API Key</label>
+	      						<?php echo CHtml::activeTextField($modelDevice, 'sabnzb_api_key', array('class'=>'form-control'));?>
+	  					<?php endif;?>	
+	  					</div>  	
   					</div>			
   					<div class="row">
-  					<div class="form-group col-sm-6 ">
-    					<label>Path Sabnzb Descarga</label>
-      						<?php echo CHtml::activeTelField($modelDevice, 'path_sabnzbd_download', array('class'=>'form-control'));?>
-  					</div>
-  					<div class="form-group col-sm-6 ">
-    					<label>Path Nzb Pendientes</label>
-    						<?php echo CHtml::activeTelField($modelDevice, 'path_pending', array('class'=>'form-control'));?>
-  					</div>
-  					</div>
-  					<div class="row">
-					<div class="form-group col-sm-6">
-    					<label>Path Nzb Listos</label>
-    						<?php echo CHtml::activeTelField($modelDevice, 'path_ready', array('class'=>'form-control'));?>
-  					</div>
-  					<div class="form-group col-sm-6 ">
-    					<label>Path Imagenes</label>
-    						<?php echo CHtml::activeTelField($modelDevice, 'path_images', array('class'=>'form-control'));?>
-  					</div>
+	  					<div class="form-group col-sm-6 ">
+	    					<label>Path Sabnzb Descarga</label>
+	      						<?php echo CHtml::activeTextField($modelDevice, 'path_sabnzbd_download', array('class'=>'form-control'));?>
+	  					</div>
+	  					<div class="form-group col-sm-6 ">
+	    					<label>Path Nzb Pendientes</label>
+	    						<?php echo CHtml::activeTextField($modelDevice, 'path_pending', array('class'=>'form-control'));?>
+	  					</div>
   					</div>
   					<div class="row">
-					<div class="form-group col-sm-6">
-    					<label>Path Compartidos</label>
-      						<?php echo CHtml::activeTelField($modelDevice, 'path_shared', array('class'=>'form-control'));?>
+						<div class="form-group col-sm-6">
+	    					<label>Path Nzb Listos</label>
+	    						<?php echo CHtml::activeTextField($modelDevice, 'path_ready', array('class'=>'form-control'));?>
+	  					</div>
+	  					<div class="form-group col-sm-6 ">
+	    					<label>Path Imagenes</label>
+	    						<?php echo CHtml::activeTextField($modelDevice, 'path_images', array('class'=>'form-control'));?>
+	  					</div>
   					</div>
-  					<div class="form-group col-sm-6 ">
+  					<div class="row">
+						<div class="form-group col-sm-6">
+	    					<label>Path Compartidos</label>
+	      						<?php echo CHtml::activeTextField($modelDevice, 'path_shared', array('class'=>'form-control'));?>
+	  					</div>
+	  					<div class="form-group col-sm-6 ">
+	  					<?php if($isAdmin):?>
+	    					<label>Host Path</label>
+	      						<?php echo CHtml::activeTextField($modelDevice, 'host_path', array('class'=>'form-control'));?>
+	  					<?php endif;?>
+	  					</div>
+  					</div>
+  					<div class="row">
+	  					<div class="form-group col-sm-6 ">
+	    					<label>Host File Server</label>
+	      						<?php echo CHtml::activeTextField($modelDevice, 'host_file_server', array('class'=>'form-control'));?>
+	  					</div>
+	  					<div class="form-group col-sm-6">
+	    					<label>Host File Server Path</label>
+	      						<?php echo CHtml::activeTextField($modelDevice, 'host_file_server_path', array('class'=>'form-control'));?>
+	  					</div>
+  					</div>
   					<?php if($isAdmin):?>
-    					<label>Host Path</label>
-      						<?php echo CHtml::activeTelField($modelDevice, 'host_path', array('class'=>'form-control'));?>
-  					<?php endif;?>
-  					</div>
-  					</div>
   					<div class="row">
-  					<div class="form-group col-sm-6 ">
-    					<label>Host File Server</label>
-      						<?php echo CHtml::activeTelField($modelDevice, 'host_file_server', array('class'=>'form-control'));?>
-  					</div>
-  					<div class="form-group col-sm-6">
-    					<label>Host File Server Path</label>
-      						<?php echo CHtml::activeTelField($modelDevice, 'host_file_server_path', array('class'=>'form-control'));?>
-  					</div>
-  					</div>
-  					<?php if($isAdmin):?>
-  					<div class="row">
-  					<div class="form-group col-sm-6 ">
-    					<label>Tmdb API Key</label>
-      						<?php echo CHtml::activeTelField($modelDevice, 'tmdb_api_key', array('class'=>'form-control'));?>
-  					</div>  					
-  					<div class="form-group col-sm-6">
-    					<label>Tmdb API Lang</label>
-      						<?php echo CHtml::activeTelField($modelDevice, 'tmdb_lang', array('class'=>'form-control'));?>
-  					</div>
+	  					<div class="form-group col-sm-6 ">
+	    					<label>Tmdb API Key</label>
+	      						<?php echo CHtml::activeTextField($modelDevice, 'tmdb_api_key', array('class'=>'form-control'));?>
+	  					</div>  					
+	  					<div class="form-group col-sm-6">
+	    					<label>Tmdb API Lang</label>
+	      						<?php echo CHtml::activeTextField($modelDevice, 'tmdb_lang', array('class'=>'form-control'));?>
+	  					</div>
   					</div>
   					<?php endif;?>
   					<div class="form-group">
