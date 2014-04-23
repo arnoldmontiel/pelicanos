@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 dramaal//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
@@ -9,7 +9,7 @@
 		<link href="css/image-picker.css" rel="stylesheet" media="screen">
 		<link href="js/select2-3.4.4/select2.css" rel="stylesheet" />		
 		<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0" />
-		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<?php include('estilos.php');?>
 		
 		<script src="js/tools.js"></script>
