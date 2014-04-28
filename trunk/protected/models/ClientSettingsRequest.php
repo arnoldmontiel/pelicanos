@@ -44,4 +44,10 @@ class ClientSettingsRequest
 	 * @soap
 	 */
 	public $disc_total_space;
+	
+	/**
+	 * @var integer is nas alive
+	 * @soap
+	 */
+	public $is_nas_alive;	
 }
