@@ -42,7 +42,7 @@ class WSSettingsController extends Controller
 				}
 				$model->save();
 				
-				foreach($model->ClientError as $clientError)
+				foreach($settings->ClientError as $clientError)
 				{
 					$modelErrorLog = new ErrorLog();
 					$modelErrorLog->error_type = $clientError->error_type;
