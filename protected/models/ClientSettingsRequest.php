@@ -49,5 +49,11 @@ class ClientSettingsRequest
 	 * @var integer is nas alive
 	 * @soap
 	 */
-	public $is_nas_alive;	
+	public $is_nas_alive;
+	
+	/**
+	 * @var ClientError[]
+	 * @soap
+	 */
+	public $ClientError;
 }
