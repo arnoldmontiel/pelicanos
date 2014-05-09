@@ -45,7 +45,9 @@ class WSSettingsController extends Controller
 				foreach($model->ClientError as $clientError)
 				{
 					$modelErrorLog = new ErrorLog();
-					$modelErrorLog->attributes = $clientError;
+					$modelErrorLog->error_type = $clientError->error_type;
+					$modelErrorLog->has_error = $clientError->has_error;
+					$modelErrorLog->date = $clientError->date;
 					$modelErrorLog->save();
 				}
 				$transaction->commit();
