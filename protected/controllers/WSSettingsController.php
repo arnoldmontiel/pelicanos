@@ -28,6 +28,7 @@ class WSSettingsController extends Controller
 		$model = ClientSettings::model()->findByAttributes(array('Id_device'=>$settings->Id_device));
 		if(isset($model))
 		{
+			$transaction = $model->dbConnection->beginTransaction();
 			try {
 				$model->ip_v4 = $settings->ip_v4;
 				$model->ip_v6 = $settings->ip_v6;
@@ -40,9 +41,18 @@ class WSSettingsController extends Controller
 					$model->disc_total_space = $settings->disc_total_space;
 				}
 				$model->save();
+				
+				foreach($model->ClientError as $clientError)
+				{
+					$modelErrorLog = new ErrorLog();
+					$modelErrorLog->attributes = $clientError;
+					$modelErrorLog->save();
+				}
+				$transaction->commit();
 			}
 			catch (Exception $e) 
 			{
+				$transaction->rollback();
 				return false;
 			}
 			return true;

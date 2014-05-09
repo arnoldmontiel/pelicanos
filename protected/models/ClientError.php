@@ -37,8 +37,8 @@ class ClientError
 	public $has_error;
 
 	/**
-	 * @var date log_date
+	 * @var date date
 	 * @soap
 	 */
-	public $log_date;
+	public $date;
 }
