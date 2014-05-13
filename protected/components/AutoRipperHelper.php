@@ -79,6 +79,17 @@ class AutoRipperHelper
 						
 						$myMovieNzb->Id = uniqid ("cust_");
 						$myMovieNzb->Id_parental_control = 1; //UNRATED
+						$myMovieNzb->certification = "UNRATED";
+						$releases = $movie->releases();				
+						$myMovieNzb->certification = "UNRATED";
+						foreach($releases->countries as $countries)
+						{
+							if(($countries->iso_3166_1=="US" || $countries->iso_3166_1=="GB") && $countries->certification!="")
+							{
+								$myMovieNzb->certification = $countries->certification;
+								break;
+							}
+						}								
 						$myMovieNzb->original_title = $movie->original_title;
 						$myMovieNzb->adult = $movie->adult?1:0;
 						$myMovieNzb->release_date = $movie->release_date;
