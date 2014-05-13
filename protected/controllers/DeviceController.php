@@ -302,7 +302,15 @@ class DeviceController extends Controller
 			{
 				$modelDevice = Device::model()->findByPk($_POST['Device']['Id']);
 				$modelDevice->attributes = $_POST['Device'];
-				$modelDevice->save();
+				if($modelDevice->save())
+				{
+					$modelCustomerDevice = CustomerDevice::model()->findByAttributes(array('Id_device'=>$modelDevice->Id));
+					if(isset($modelCustomerDevice))
+					{
+						$modelCustomerDevice->need_update = 1;
+						$modelCustomerDevice->save();
+					}
+				}
 			}
 				
 		}
