@@ -152,6 +152,7 @@ class NzbController extends Controller
 		$criteria->join = 'inner join customer_device cd on (cd.Id_device = "'. $Id_device.'" and cd.is_pending = 0)';
 		$criteria->addCondition('t.Id NOT IN(select Id_nzb from nzb_device where Id_device = "'. $Id_device.'" and need_update = 0)');
 		$criteria->addCondition('t.is_draft = 1');
+		$criteria->addCondition('t.Id_creation_state <> 3'); //no quiero las rechazadas		
 	
 		$arrayNbz = Nzb::model()->findAll($criteria);
 		$arrayResponse = array();
