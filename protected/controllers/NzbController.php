@@ -2630,6 +2630,17 @@ class NzbController extends Controller
 	
 				var_dump(TMDBHelper::downloadAndLinkImages($movie->id,$idNzb,$poster,$bigPoster,$backdrop));
 				
+				$releases = $movie->releases();
+				$myMovie->certification = "UNRATED";
+				foreach($releases->countries as $countries)
+				{
+					if(($countries->iso_3166_1=="US" || $countries->iso_3166_1=="GB") && $countries->certification!="")
+					{
+						$myMovie->certification = $countries->certification;
+						break;
+					}
+				}
+				
 				$myMovie->original_title = $movie->original_title;
 				$myMovie->adult = $movie->adult?1:0;
 				$myMovie->release_date = $movie->release_date;
