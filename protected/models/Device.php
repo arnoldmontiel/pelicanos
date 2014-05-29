@@ -39,12 +39,6 @@ class Device extends CActiveRecord
 		return parent::model($className);
 	}
 
-	public function beforeSave()
-	{
-		//Solo por ahora!!!
-		$this->host_name = 'http://gruposmartliving.com';
-		return parent::beforeSave();
-	}
 	
 	public function getState()
 	{
