@@ -8,19 +8,20 @@
  * @property string $description
  * @property string $sabnzb_api_key
  * @property string $sabnzb_api_url
- * @property string $path_sabnzbd_download
- * @property string $path_pending
  * @property string $host_name
- * @property string $path_ready
- * @property string $path_images
  * @property string $path_shared
- * @property string $host_path
  * @property string $host_file_server
  * @property string $host_file_server_path 
  * @property string $tmdb_api_key
  * @property string $tmdb_lang
  * @property integer $need_nas
  * @property string $michael_jackson
+ * @property string $sabnzb_pwd_file_path
+ * @property string $path_sabnzbd_download
+ * @property integer $is_movie_tester
+ * @property string $host_file_server_user
+ * @property string $host_file_server_passwd
+ * @property string $host_file_server_name
  * 
  * The followings are the available model relations:
  * @property ClientSettings[] $clientSettings
@@ -90,14 +91,14 @@ class Device extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('Id', 'required'),
+			array('is_movie_tester, need_nas', 'numerical', 'integerOnly'=>true),
 			array('Id, tmdb_lang', 'length', 'max'=>45),
-			array('need_nas', 'numerical', 'integerOnly'=>true),
+				array('sabnzb_api_key, sabnzb_api_url, host_name, path_shared, host_file_server, host_file_server_path, sabnzb_pwd_file_path, path_sabnzbd_download, host_file_server_user, host_file_server_passwd, host_file_server_name, tmdb_api_key', 'length', 'max'=>255),
 			array('michael_jackson', 'length', 'max'=>512),
-			array('sabnzb_api_key, sabnzb_api_url, path_sabnzbd_download, path_pending, host_name, path_ready, path_images, path_shared, host_path, host_file_server, host_file_server_path, tmdb_api_key', 'length', 'max'=>255),
 			array('description', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id, description, sabnzb_api_key, sabnzb_api_url, path_sabnzbd_download, path_pending, host_name, path_ready, path_images, path_shared, host_path, host_file_server, host_file_server_path, tmdb_api_key, tmdb_lang, need_nas, michael_jackson', 'safe', 'on'=>'search'),
+			array('Id, description, sabnzb_api_key, sabnzb_api_url, host_name, path_shared, host_file_server,  sabnzb_pwd_file_path, path_sabnzbd_download, is_movie_tester, host_file_server_user, host_file_server_passwd, michael_jackson, host_file_server_name, tmdb_api_key, tmdb_lang, need_nas', 'safe', 'on'=>'search'),
 		);
 	}
 
