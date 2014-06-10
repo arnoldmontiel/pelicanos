@@ -413,8 +413,7 @@ input.searchOverTab:-moz-placeholder::before  { font-family: FontAwesome; conten
 
 /* ---------- PORT ADMIN ------- */
 
-.formAddPort{margin-bottom:20px;padding: 20px 10px;
-background-color: #F9f9f9;}
+.formAddPort{margin-bottom:10px;}
 .formAddPort button{vertical-align:bottom;}
 
 /* ------ PAGINADOR------- */
@@ -495,7 +494,7 @@ cursor:inherit;
 .form-group input{font-size:16px; }
 .form-group textarea{font-size:16px; }
 .form-group label{ color:#333; text-align:right;
-padding-left: 5px;}
+padding-left: 5px; font-size:14px;}
 
 .form-control{ padding:4px;}
 
@@ -572,7 +571,7 @@ padding: 6px 8px;
 .modal-footer {padding: 9px 15px;}
 .modal-body{ overflow:hidden;}
 .modal-backdrop{z-index:1060;}
-.modal .nav-tabs li a{ color:#333;border:0px none;}
+.modal .nav-tabs li a{ color:#666;border:0px none;}
 
 .modal .nav-tabs>li.active>a { background-color:#ccc; color:#fff !important;}
 
@@ -580,7 +579,7 @@ padding: 6px 8px;
 .myModalDescargas .modal-dialog{width:1000px;}
 .myModalConfigPuertos.modal-dialog{width:1000px;}
 
-.myModalConfigPuertos .tab-pane{padding-top:20px;}
+.myModalConfigPuertos .tab-pane{padding-top:5px;}
 
 /* ------ END MODALS ------- */
 
@@ -864,10 +863,15 @@ color:white;
 background-color: rgba(92,184,92,0.8);}
 
 
-.inlineForm{background-color:#eee; padding:5px; border-radius:5px; margin:5px 0px;}
-
+.inlineForm{background-color:#F9f9f9; padding:5px; border-radius:5px; margin:5px 0px; margin-bottom:10px;}
+.inlineForm .form-group{margin-bottom:5px;}
 .inlineForm .table{margin-bottom:0px; }
 .inlineForm .table td{border: 0px none; }
+
+.inlineFormLabel{ text-transform:uppercase; color:#bbb;
+font-family: "GudeaRegular"; font-size:12px; padding:6px; display:block; padding-left:15px;}
+
+.inlineFormLabel:before{ content: '\2022'; position:absolute; left:30px;}
 
 .label-info{font-size: 13px;
 font-family: "GudeaRegular";
@@ -1096,6 +1100,10 @@ ul.playerList li{margin:0px;margin-left:0px;}
 .tableDis{width:600px;}
 
 #myModalCrearDisp.modal-dialog{width:800px;}
+
+/*label que se flota a la derecha mostrando id de dispositivo en popup con tabs*/
+.sideIDLabel .panel-body{padding:5px;}
+.sideIDLabel.panel{margin-bottom:5px;}
 
 /* ----- END DISPOSITIVOS --------*/
 

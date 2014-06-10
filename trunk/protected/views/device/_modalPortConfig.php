@@ -5,18 +5,20 @@
           	<h4 class="modal-title">Configurar </h4>
 		</div>
         <div class="modal-body">
-        <div class="panel panel-default panelCliente">
+        
+			<ul class="nav nav-tabs">
+				<li class="active"><a href="#tabPuertos" data-toggle="tab">Puertos</a></li>
+				<li><a  href="#tabGeneral" data-toggle="tab">General</a></li>
+				<li class="pull-right"><div class="panel panel-default panelCliente sideIDLabel">
   <div class="panel-body">
    <div class="infoPanelCliente">
    <div class="bold"><span id="device-desc"></span> (ID: <span id="device-id"></span>)</div>
   </div></div>
-</div>
-			<ul class="nav nav-tabs">
-				<li class="active"><a href="#tabPuertos" data-toggle="tab">Puertos</a></li>
-				<li><a  href="#tabGeneral" data-toggle="tab">General</a></li>
+</div> </li>
 			</ul>
 			<div class="tab-content">
-			  <div class="tab-pane active" id="tabPuertos">			
+			  <div class="tab-pane active" id="tabPuertos">
+			  <div class="inlineForm">
          	<form class="form-inline formAddPort" role="form">
          		<?php echo CHtml::hiddenField('Id_device', ''); ?>
   				<div class="form-group">
@@ -37,6 +39,7 @@
 				</div>
 			
 			</form>
+			</div>	
 			<div id="product-grid-add" class="grid-view">
 			<?php 
 				$this->widget('zii.widgets.grid.CGridView', array(
@@ -110,18 +113,19 @@
                 	echo CHtml::activeHiddenField($modelDevice, 'Id');
                 	$isAdmin = User::isAdmin();
                 ?>    
-  					
-  					<div class="row">        
-	  					<div class="form-group col-sm-6 ">
-	    					<label>Sabnzbd API URL</label>
-	      						<?php echo CHtml::activeTextField($modelDevice, 'sabnzb_api_url', array('class'=>'form-control', 'placeholder'=>'Url', 'onkeyup'=>'changeSaveLabel();'));?>
-	  					</div>
+  					<div class="inlineForm">
+  					<label class="inlineFormLabel">Sabnzbd</label>
+  					<div class="row">    
 	  					<div class="form-group col-sm-6">
 	  					<?php if($isAdmin):?>
 	    					<label>Sabnzbd API Key</label>
 	      						<?php echo CHtml::activeTextField($modelDevice, 'sabnzb_api_key', array('class'=>'form-control', 'onkeyup'=>'changeSaveLabel();'));?>
 	  					<?php endif;?>	
-	  					</div>  	
+	  					</div>  	    
+	  					<div class="form-group col-sm-6 ">
+	    					<label>Sabnzbd API URL</label>
+	      						<?php echo CHtml::activeTextField($modelDevice, 'sabnzb_api_url', array('class'=>'form-control', 'placeholder'=>'Url', 'onkeyup'=>'changeSaveLabel();'));?>
+	  					</div>
   					</div>			
   					<div class="row">
 						<div class="form-group col-sm-6">
@@ -133,6 +137,9 @@
 	    						<?php echo CHtml::activeTextField($modelDevice, 'path_sabnzbd_download', array('class'=>'form-control', 'onkeyup'=>'changeSaveLabel();'));?>
 	  					</div>
   					</div>
+  					</div>
+  					<div class="inlineForm">
+  					<label class="inlineFormLabel">Servidor Multimedia</label>
   					<div class="row">
 	  					<div class="form-group col-sm-6 ">
 	    					<label>Servidor Multimedia IP</label>
@@ -165,19 +172,10 @@
 	      				<?php endif;?>
 	  					</div>	  					
   					</div>
-  					<div class="row">
-	  					<div class="form-group col-sm-6 ">
-	  					<?php if($isAdmin):?>
-	    					<label>Host</label>
-	      						<?php echo CHtml::activeTextField($modelDevice, 'host_name', array('class'=>'form-control', 'onkeyup'=>'changeSaveLabel();'));?>
-	      				<?php endif;?>	
-	  					</div>
-	  					<div class="form-group col-sm-6 ">
-	    					<label>Path Compartidos</label>
-	    						<?php echo CHtml::activeTextField($modelDevice, 'path_shared', array('class'=>'form-control', 'onkeyup'=>'changeSaveLabel();'));?>
-	  					</div>
   					</div>
   					<?php if($isAdmin):?>
+  					<div class="inlineForm">
+  					<label class="inlineFormLabel">Tmdb</label>
   					<div class="row">
 	  					<div class="form-group col-sm-6 ">
 	    					<label>Tmdb API Key</label>
@@ -188,16 +186,32 @@
 	      						<?php echo CHtml::activeTextField($modelDevice, 'tmdb_lang', array('class'=>'form-control', 'onkeyup'=>'changeSaveLabel();'));?>
 	  					</div>
   					</div>
+  					</div>
+  					<?php endif;?>
+  					<div class="inlineForm">
+  					<label class="inlineFormLabel">Varios</label>
+  					<div class="row">
+	  					<div class="form-group col-sm-6 ">
+	    					<label>Path Compartidos</label>
+	    						<?php echo CHtml::activeTextField($modelDevice, 'path_shared', array('class'=>'form-control', 'onkeyup'=>'changeSaveLabel();'));?>
+	  					</div>
+	  					<div class="form-group col-sm-6 ">
+	  					<?php if($isAdmin):?>
+	    					<label>Host</label>
+	      						<?php echo CHtml::activeTextField($modelDevice, 'host_name', array('class'=>'form-control', 'onkeyup'=>'changeSaveLabel();'));?>
+	      				<?php endif;?>	
+	  					</div>
+  					</div>
   					<div class="row">
 	  					<div class="form-group col-sm-6 ">
 	    					<label>Password MJ</label>
 	      						<?php echo CHtml::activeTextField($modelDevice, 'michael_jackson', array('class'=>'form-control', 'onkeyup'=>'changeSaveLabel();'));?>
 	  					</div>  					
   					</div>
-  					<?php endif;?>
+  					</div>
   					<div class="form-group">
     					<div class="col-sm-12">    	
-    						<button id="btn-save-config" onclick="submitGeneralConfig();" type="button" class="btn btn-primary pull-right"><i class="fa fa-save"></i> <samp id="save-description">Guardar</samp>    						
+    						<button id="btn-save-config" onclick="submitGeneralConfig();" type="button" class="btn btn-primary pull-right"><i class="fa fa-save"></i> <span id="save-description">Guardar</span>    						
     						</button>
     					</div>
     				</div>
