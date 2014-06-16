@@ -187,6 +187,12 @@ class MyMovieSOAP
 	public $is_serie;
 
 	/**
+	 * @var string certification
+	 * @soap
+	 */
+	public $certification;
+	
+	/**
 	 * @var MyMovieSerieHeaderSOAP
 	 * @soap
 	 */
