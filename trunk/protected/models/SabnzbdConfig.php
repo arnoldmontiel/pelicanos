@@ -1,26 +1,36 @@
 <?php
 
 /**
- * This is the model class for table "device_player".
+ * This is the model class for table "sabnzbd_config".
  *
- * The followings are the available columns in table 'device_player':
+ * The followings are the available columns in table 'sabnzbd_config':
  * @property integer $Id
- * @property string $description
+ * @property string $server_name
+ * @property string $username
+ * @property integer $enable
+ * @property string $name
+ * @property string $fill_server
+ * @property integer $connections
+ * @property integer $ssl
+ * @property string $host
+ * @property integer $timeout
+ * @property string $password
+ * @property integer $optional
+ * @property integer $port
+ * @property integer $retention
  * @property string $Id_device
- * @property string $url
- * @property integer $type
  *
  * The followings are the available model relations:
  * @property Device $idDevice
  */
-class DevicePlayer extends CActiveRecord
+class SabnzbdConfig extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'device_player';
+		return 'sabnzbd_config';
 	}
 
 	/**
@@ -31,14 +41,13 @@ class DevicePlayer extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('Id_device', 'required'),
-			array('type', 'numerical', 'integerOnly'=>true),
-			array('description', 'length', 'max'=>225),
-			array('url', 'length', 'max'=>255),
+			array('Id, Id_device', 'required'),
+			array('Id, enable, connections, ssl, timeout, optional, port, retention', 'numerical', 'integerOnly'=>true),
+			array('server_name, username, name, fill_server, host, password', 'length', 'max'=>128),
 			array('Id_device', 'length', 'max'=>45),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('Id, description, Id_device, url, type', 'safe', 'on'=>'search'),
+			array('Id, server_name, username, enable, name, fill_server, connections, ssl, host, timeout, password, optional, port, retention, Id_device', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -61,10 +70,20 @@ class DevicePlayer extends CActiveRecord
 	{
 		return array(
 			'Id' => 'ID',
-			'description' => 'Description',
+			'server_name' => 'Server Name',
+			'username' => 'Username',
+			'enable' => 'Enable',
+			'name' => 'Name',
+			'fill_server' => 'Fill Server',
+			'connections' => 'Connections',
+			'ssl' => 'Ssl',
+			'host' => 'Host',
+			'timeout' => 'Timeout',
+			'password' => 'Password',
+			'optional' => 'Optional',
+			'port' => 'Port',
+			'retention' => 'Retention',
 			'Id_device' => 'Id Device',
-			'url' => 'Url',
-			'type' => 'Type',
 		);
 	}
 
@@ -87,10 +106,20 @@ class DevicePlayer extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('Id',$this->Id);
-		$criteria->compare('description',$this->description,true);
+		$criteria->compare('server_name',$this->server_name,true);
+		$criteria->compare('username',$this->username,true);
+		$criteria->compare('enable',$this->enable);
+		$criteria->compare('name',$this->name,true);
+		$criteria->compare('fill_server',$this->fill_server,true);
+		$criteria->compare('connections',$this->connections);
+		$criteria->compare('ssl',$this->ssl);
+		$criteria->compare('host',$this->host,true);
+		$criteria->compare('timeout',$this->timeout);
+		$criteria->compare('password',$this->password,true);
+		$criteria->compare('optional',$this->optional);
+		$criteria->compare('port',$this->port);
+		$criteria->compare('retention',$this->retention);
 		$criteria->compare('Id_device',$this->Id_device,true);
-		$criteria->compare('url',$this->url,true);
-		$criteria->compare('type',$this->type);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -101,7 +130,7 @@ class DevicePlayer extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return DevicePlayer the static model class
+	 * @return SabnzbdConfig the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
