@@ -191,6 +191,15 @@ class WSSettingsController extends Controller
 				$configSOAP = new ConfigurationSOAP();
 				$configSOAP->setAttributes($modelRel->device);
 				
+				$sabnzbdAccounts = SabnzbdConfig::model()->findAllByAttributes(array('Id_device'=>$idDevice));
+				
+				foreach($sabnzbdAccounts as $account)
+				{
+					$modelAccount = new SabnzbdAccountSOAP();
+					$modelAccount->setAttributes($account);
+					$configSOAP->SabnzbdAccounts[] = $modelAccount;
+				}
+				
 				$modelResponse->Configuration = $configSOAP;
 
 				$users = CustomerUsers::model()->findAllByAttributes(array('Id_customer'=>$modelRel->Id_customer));
