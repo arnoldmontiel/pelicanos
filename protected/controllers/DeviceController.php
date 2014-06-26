@@ -219,7 +219,15 @@ class DeviceController extends Controller
 		$model->attributes = $_POST['SabnzbdConfig'];
 		$model->name = $model->server_name;
 		$model->host = $model->server_name;
-		$model->save();
+		if($model->save())
+		{
+			$modelCustomerDevice = CustomerDevice::model()->findByAttributes(array('Id_device'=>$model->Id));
+			if(isset($modelCustomerDevice))
+			{
+				$modelCustomerDevice->need_update = 1;
+				$modelCustomerDevice->save();
+			}
+		}
 	}
 	
 	public function actionAjaxRemoveSabnzbdAccount()
