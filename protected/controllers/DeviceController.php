@@ -221,7 +221,7 @@ class DeviceController extends Controller
 		$model->host = $model->server_name;
 		if($model->save())
 		{
-			$modelCustomerDevice = CustomerDevice::model()->findByAttributes(array('Id_device'=>$model->Id));
+			$modelCustomerDevice = CustomerDevice::model()->findByAttributes(array('Id_device'=>$model->Id_device));
 			if(isset($modelCustomerDevice))
 			{
 				$modelCustomerDevice->need_update = 1;
