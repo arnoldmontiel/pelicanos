@@ -114,4 +114,10 @@ class ConfigurationSOAP
 	* @soap
 	*/
 	public $tmdb_lang;
+	
+	/**
+	 * @var SabnzbdAccountSOAP[]
+	 * @soap
+	 */
+	public $SabnzbdAccounts;
 }
