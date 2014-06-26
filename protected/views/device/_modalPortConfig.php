@@ -1,3 +1,4 @@
+<?php $isAdmin = User::isAdmin();?>
 <div class="modal-dialog myModalConfigPuertos">
 	<div class="modal-content">
 		<div class="modal-header">
@@ -9,6 +10,9 @@
 			<ul class="nav nav-tabs">
 				<li class="active"><a href="#tabPuertos" data-toggle="tab">Puertos</a></li>
 				<li><a  href="#tabGeneral" data-toggle="tab">General</a></li>
+				<?php if($isAdmin):?>
+				<li><a  href="#tabSabnzbd" data-toggle="tab">Sabnzbd</a></li>
+				<?php endif;?>
 				<li class="pull-right"><div class="panel panel-default panelCliente sideIDLabel">
   <div class="panel-body">
    <div class="infoPanelCliente">
@@ -110,8 +114,7 @@
                 <form id="general-config-form" role="form">
                 <?php 
                 	$modelDevice = new Device();
-                	echo CHtml::activeHiddenField($modelDevice, 'Id');
-                	$isAdmin = User::isAdmin();
+                	echo CHtml::activeHiddenField($modelDevice, 'Id');                	
                 ?>    
   					<div class="inlineForm">
   					<label class="inlineFormLabel">Sabnzbd</label>
@@ -219,6 +222,13 @@
 			</form>
                 
               </div><!-- tab-pane -->
+              <?php if($isAdmin):?>
+              <div class="tab-pane" id="tabSabnzbd">
+                <?php 
+				  	echo $this->renderPartial('_sabnzbdConfig', array( 'modelSabNzbdConfigs'=>$modelSabNzbdConfigs, 'idDevice'=>$modelDevice->Id));
+				  ?>
+              </div><!-- tab-pane -->
+              <?php endif;?>
               </div><!-- tab-content -->
 			</div>
         	<div class="modal-footer">
