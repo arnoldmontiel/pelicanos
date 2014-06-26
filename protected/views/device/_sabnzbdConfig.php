@@ -22,22 +22,6 @@ function addSabnzbdAccount()
 				  		$('#btn-add-account').addClass("disabled");
 	             }
 	          );
-		/*
-		$.get("",
-			{
-			  
-			  form:$("#form-new-sabnzbd-account").serialize()
-			}
-		).success(
-			function(data){
-				$("#commissionist_name").val(''),
-				$("#commissionist_last_name").val(''),
-				$("#commissionist_value").val(''),
-				$.fn.yiiGridView.update('sabnzbd-config-grid');
-				$('#btn-add-commissionist').addClass("disabled");
-			});
-		return false;
-		*/
 	
 }
 function removeAccount(idAccount)
@@ -68,33 +52,6 @@ function checkAddEnabled()
 		$('#btn-add-account').removeClass("disabled");
 	else
 		$('#btn-add-account').addClass("disabled");		
-}
-
-function saveNewCommission(idBudget, version, idPerson, obj)
-{
-	var value = $(obj).val();
-	if(value > 0)
-	{
-		var chkChanged = $("#chk-changed-"+idBudget+"-"+version+"-"+idPerson);
-		var divCommission = $("#div-commission-value-"+idBudget+"-"+version+"-"+idPerson);		
-		$.post("<?php echo DeviceController::createUrl('AjaxUpdateCommission'); ?>",
-			{
-				idBudget:idBudget,
-				version:version,
-				idPerson:idPerson,
-				value:value
-			}
-		).success(
-			function(data){
-				divCommission.hide();				
-				
-				chkChanged.animate({opacity: 'show'},240);
-				chkChanged.animate({opacity: 'hide'},3000, function(){
-					divCommission.show();
-				});
-			});
-		return false;
-	}
 }
 
 function checkNumber(obj)
