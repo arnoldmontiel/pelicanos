@@ -165,10 +165,16 @@ class DeviceController extends Controller
 		$modelDeviceTunelGrid->Id_device = $idDevice;
 		$modelNzbDevice->Id_device = $idDevice;
 		
+		$modelSabNzbdConfigs = new SabnzbdConfig('search');
+		$modelSabNzbdConfigs->unsetAttributes();
+		
+		$modelSabNzbdConfigs->Id_device = $idDevice;
+		
 		$this->render('index',array(
 				'modelCustomerDevice'=>$modelCustomerDevice,
 				'modelDeviceTunelGrid'=>$modelDeviceTunelGrid,
 				'modelNzbDevice'=>$modelNzbDevice,
+				'modelSabNzbdConfigs'=>$modelSabNzbdConfigs,
 		));
 	}
 
@@ -205,6 +211,26 @@ class DeviceController extends Controller
 				'modelNzbDevice'=>$modelNzbDevice,
 				'qtyPending'=>CustomerDevice::model()->count($criteria),
 		));
+	}
+	
+	public function actionAjaxAddSabnzbdAccount()
+	{
+		$model = new SabnzbdConfig();
+		$model->attributes = $_POST['SabnzbdConfig'];
+		$model->name = $model->server_name;
+		$model->host = $model->server_name;
+		$model->save();
+	}
+	
+	public function actionAjaxRemoveSabnzbdAccount()
+	{
+		$idSabnzbdConfig = isset($_POST['idAccount'])?$_POST['idAccount']:null;
+		
+		if(isset($idSabnzbdConfig))
+		{
+			SabnzbdConfig::model()->deleteByPk($idSabnzbdConfig);
+		}
+		 	
 	}
 	
 	public function actionIndexIns()
