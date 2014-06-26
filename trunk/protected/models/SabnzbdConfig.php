@@ -41,7 +41,7 @@ class SabnzbdConfig extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('Id, Id_device', 'required'),
+			array('Id_device', 'required'),
 			array('Id, enable, connections, ssl, timeout, optional, port, retention', 'numerical', 'integerOnly'=>true),
 			array('server_name, username, name, fill_server, host, password', 'length', 'max'=>128),
 			array('Id_device', 'length', 'max'=>45),
