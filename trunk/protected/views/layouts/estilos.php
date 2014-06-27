@@ -104,9 +104,19 @@ border: none;
 border: none;
 background: none;
 cursor: text;
+-webkit-box-shadow:none;
+box-shadow:none;
+-webkit-transition:none;
+transition:none;
 }
 
-.checkInline {
+input[type="radio"], input[type="checkbox"] {
+-webkit-box-shadow:none;
+box-shadow:none;
+-webkit-transition:none;
+transition:none;
+}
+.checkInline{
 width:auto;
 display:inline-block;
 }
