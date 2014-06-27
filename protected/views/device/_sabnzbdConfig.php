@@ -82,6 +82,14 @@ function checkAddEnabled()
 		$('#btn-add-account').addClass("disabled");		
 }
 
+function checkTimeOut(obj)
+{
+	checkNumber(obj);
+	var value=$(obj).val();
+	if(value < 30)
+		$(obj).val("30");
+}
+
 function checkNumber(obj)
 {
 	var value=$(obj).val();
@@ -124,7 +132,7 @@ function checkNumber(obj)
   </thead>
   <tbody>
   <tr>
-  <td colspan="13">Para agregar una cuenta complete los campos y presione <span class="bold">Agregar</span></td>
+  <td colspan="13">Para agregar una cuenta complete los campos y presione <span class="bold">Agregar</span> (Tiempo out minimo 30)</td>
  </tr>
   <tr>
   <?php $newModel = new SabnzbdConfig();
@@ -133,14 +141,14 @@ function checkNumber(obj)
   <td width="210"><?php echo CHtml::activeTextField($newModel, 'server_name',array('onkeyup'=>'checkAddEnabled()','class'=>'form-control', 'placeholder'=>"Servidor")); ?></td>
   <td width="210"><?php echo CHtml::activeTextField($newModel, 'username',array('onkeyup'=>'checkAddEnabled()','class'=>'form-control', 'placeholder'=>"Usuario")); ?></td>
   <td width="210"><?php echo CHtml::activeTextField($newModel, 'password',array('onkeyup'=>'checkAddEnabled()','class'=>'form-control', 'placeholder'=>"Clave")); ?></td>
-  <td width="210"><?php echo CHtml::activeTextField($newModel, 'connections',array('onkeyup'=>'checkNumber(this);','class'=>'form-control inputSmall')); ?></td>
-  <td width="210"><?php echo CHtml::activeTextField($newModel, 'port',array('onkeyup'=>'checkNumber(this);','class'=>'form-control inputSmall', 'placeholder'=>"Puerto")); ?></td>
-  <td width="210"><?php echo CHtml::activeTextField($newModel, 'timeout',array('onkeyup'=>'checkNumber(this);','class'=>'form-control inputSmall', 'placeholder'=>"Tiempo out")); ?></td>
+  <td width="210"><?php echo CHtml::activeTextField($newModel, 'connections',array('onkeyup'=>'checkNumber(this);','class'=>'form-control inputSmall', 'placeholder'=>"0")); ?></td>
+  <td width="210"><?php echo CHtml::activeTextField($newModel, 'port',array('onkeyup'=>'checkNumber(this);','class'=>'form-control inputSmall', 'placeholder'=>"0")); ?></td>
+  <td width="210"><?php echo CHtml::activeTextField($newModel, 'timeout',array('onkeyup'=>'checkTimeOut(this);','class'=>'form-control inputSmall', 'placeholder'=>"30")); ?></td>
   <td width="210"><?php echo CHtml::activeCheckBox($newModel, 'ssl',array('class'=>'form-control')); ?></td>
   <td width="210"><?php echo CHtml::activeCheckBox($newModel, 'enable',array('class'=>'form-control')); ?></td>
   <td width="210"><?php echo CHtml::activeCheckBox($newModel, 'optional',array('class'=>'form-control')); ?></td>
-  <td width="210"><?php echo CHtml::activeTextField($newModel, 'retention',array('onkeyup'=>'checkNumber(this);','class'=>'form-control inputSmall', 'placeholder'=>"Retencion")); ?></td>
-  <td width="210"><?php echo CHtml::activeTextField($newModel, 'fill_server',array('onkeyup'=>'checkNumber(this);','class'=>'form-control inputSmall', 'placeholder'=>"Fill Servidor")); ?></td>
+  <td width="210"><?php echo CHtml::activeTextField($newModel, 'retention',array('onkeyup'=>'checkNumber(this);','class'=>'form-control inputSmall', 'placeholder'=>"0")); ?></td>
+  <td width="210"><?php echo CHtml::activeTextField($newModel, 'fill_server',array('onkeyup'=>'checkNumber(this);','class'=>'form-control inputSmall', 'placeholder'=>"0")); ?></td>
   <td class="align-right"><button id="btn-add-account" type="button" onclick="addSabnzbdAccount();" class="btn btn-primary btn-sm noMargin disabled"><i class="fa fa-plus"></i> Agregar</button></td>
   </tr>
   </tbody>
@@ -194,7 +202,7 @@ function checkNumber(obj)
 				),
 				array(
 						'value'=>function($data){
-							return '<input type="text" idconfig="'.$data->Id.'" onkeyup="checkNumber(this);" class="form-control inputSmall" name="timeout_'.$data->Id.'" id="timeout_'.$data->Id.'" disabled value="'.$data->timeout.'">';
+							return '<input type="text" onkeyup="checkTimeOut(this);" idconfig="'.$data->Id.'" class="form-control inputSmall" name="timeout_'.$data->Id.'" id="timeout_'.$data->Id.'" disabled value="'.$data->timeout.'">';
 						},
 						'type'=>'raw',
 				),
