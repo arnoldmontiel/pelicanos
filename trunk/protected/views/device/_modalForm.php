@@ -22,66 +22,101 @@
 			  		<?php echo CHtml::activeTextField($modelDevice, 'description', array('class'=>'form-control')); ?>
 			 		</div>
   				</div>
-  				<div class="row">
-			  	<div class="form-group col-sm-6">
-			  		<label for="campoNombre">Sabnzb API URL</label>
-			  		<?php echo CHtml::activeTextField($modelDevice, 'sabnzb_api_url', array('class'=>'form-control')); ?>
-			  	</div>
-			  	<div class="form-group col-sm-6">
-			  		<label for="campoNombre">Sabnzb API Key</label>
-			  		<?php echo CHtml::activeTextField($modelDevice, 'sabnzb_api_key', array('class'=>'form-control')); ?>
-			  	</div>
-			  	</div>
-  				<div class="row">
-  				<div class="form-group col-sm-6">
-			  		<label for="campoNombre">Path Sabnzb Descarga</label>
-			  		<?php echo CHtml::activeTextField($modelDevice, 'path_sabnzbd_download', array('class'=>'form-control')); ?>
-			  	</div>
-			  	<div class="form-group col-sm-6">
-			  		<label for="campoNombre">Path Nzb Pendientes</label>
-			  		<?php echo CHtml::activeTextField($modelDevice, 'path_pending', array('class'=>'form-control')); ?>
-			  	</div>
+  				<div class="inlineForm">
+  					<label class="inlineFormLabel">Sabnzbd</label>
+  					<div class="row">
+						<div class="form-group col-sm-6">
+	    					<label>Sabnzbd password path</label>
+	    						<?php echo CHtml::activeTextField($modelDevice, 'sabnzb_pwd_file_path', array('class'=>'form-control'));?>
+	  					</div>
+	  					<div class="form-group col-sm-6 ">
+	    					<label>Sabnzbd path descarga</label>
+	    						<?php echo CHtml::activeTextField($modelDevice, 'path_sabnzbd_download', array('class'=>'form-control'));?>
+	  					</div>
+  					</div>
+  					<div class="row">   
+  						<div class="form-group col-sm-6 ">
+	    					<label>Sabnzbd API URL</label>
+	      						<?php echo CHtml::activeTextField($modelDevice, 'sabnzb_api_url', array('class'=>'form-control', 'placeholder'=>'Url'));?>
+	  					</div> 
+	  					<div class="form-group col-sm-6">
+	    					<label>Sabnzbd API Key</label>
+	      						<?php echo CHtml::activeTextField($modelDevice, 'sabnzb_api_key', array('class'=>'form-control'));?>
+	  					</div>  	    
+  					</div>			
   				</div>
-  				<div class="row">				
-				<div class="form-group col-sm-6">
-			  		<label for="campoNombre">Path Nzb Listos</label>
-			  		<?php echo CHtml::activeTextField($modelDevice, 'path_ready', array('class'=>'form-control')); ?>
-			  	</div>
-			  	<div class="form-group col-sm-6">
-			  		<label for="campoNombre">Path Imagenes</label>
-			  		<?php echo CHtml::activeTextField($modelDevice, 'path_images', array('class'=>'form-control')); ?>
-			  	</div>
-			  	</div>
-  				<div class="row">
-			  	<div class="form-group col-sm-6">
-			  		<label for="campoNombre">Path Compartidos</label>
-			  		<?php echo CHtml::activeTextField($modelDevice, 'path_shared', array('class'=>'form-control')); ?>
-			  	</div>
-			  	<div class="form-group col-sm-6">
-			  		<label for="campoNombre">Host Path</label>
-			  		<?php echo CHtml::activeTextField($modelDevice, 'host_path', array('class'=>'form-control')); ?>
-			  	</div>
-			  	</div>
-  				<div class="row">
-			  	 <div class="form-group col-sm-6">
-			  		<label for="campoNombre">Host File Server</label>
-			  		<?php echo CHtml::activeTextField($modelDevice, 'host_file_server', array('class'=>'form-control')); ?>
-			  	</div>
-			  	<div class="form-group col-sm-6">
-			  		<label for="campoNombre">Host File Server Path</label>
-			  		<?php echo CHtml::activeTextField($modelDevice, 'host_file_server_path', array('class'=>'form-control')); ?>
-			  	</div>
-			  	</div>
-  				<div class="row">
- 				<div class="form-group col-sm-6">
-			  		<label for="campoNombre">Tmdb API Key</label>
-			  		<?php echo CHtml::activeTextField($modelDevice, 'tmdb_api_key', array('class'=>'form-control')); ?>
-			  	</div>
-			  	<div class="form-group col-sm-6">
-			  		<label for="campoNombre">Tmdb API Lang</label>
-			  		<?php echo CHtml::activeTextField($modelDevice, 'tmdb_lang', array('class'=>'form-control')); ?>
-			  	</div>
-			  	</div>
+  				
+  				<div class="inlineForm">
+  					<label class="inlineFormLabel">Servidor Multimedia</label>
+  					<div class="row">
+	  					<div class="form-group col-sm-6 ">
+	    					<label>Servidor Multimedia IP</label>
+	      						<?php echo CHtml::activeTextField($modelDevice, 'host_file_server', array('class'=>'form-control'));?>
+	  					</div>
+	  					<div class="form-group col-sm-6">
+	    					<label>Servidor Multimedia Path Archivos</label>
+	      						<?php echo CHtml::activeTextField($modelDevice, 'host_file_server_path', array('class'=>'form-control'));?>
+	  					</div>
+  					</div>  					
+  					<div class="row">
+						<div class="form-group col-sm-6">
+	    					<label>Servidor Multimedia Usuario</label>
+	      						<?php echo CHtml::activeTextField($modelDevice, 'host_file_server_user', array('class'=>'form-control'));?>
+	  					</div>
+	  					<div class="form-group col-sm-6 ">
+	    					<label>Servidor Multimedia Password</label>
+	      						<?php echo CHtml::activeTextField($modelDevice, 'host_file_server_passwd', array('class'=>'form-control'));?>
+	  					</div>
+  					</div>
+  					<div class="row">
+						<div class="form-group col-sm-6">
+	    					<label>Servidor Multimedia Nombre</label>
+	      						<?php echo CHtml::activeTextField($modelDevice, 'host_file_server_name', array('class'=>'form-control'));?>
+	  					</div>
+	  					<div class="form-group col-sm-6 ">
+	  				
+	  					</div>	  					
+  					</div>
+  				</div>
+  				
+  				<div class="inlineForm">
+  					<label class="inlineFormLabel">Tmdb</label>
+  					<div class="row">
+	  					<div class="form-group col-sm-6 ">
+	    					<label>Tmdb API Key</label>
+	      						<?php echo CHtml::activeTextField($modelDevice, 'tmdb_api_key', array('class'=>'form-control'));?>
+	  					</div>  					
+	  					<div class="form-group col-sm-6">
+	    					<label>Tmdb API Lang</label>
+	      						<?php echo CHtml::activeTextField($modelDevice, 'tmdb_lang', array('class'=>'form-control'));?>
+	  					</div>
+  					</div>
+  				</div>
+  				
+  				<div class="inlineForm">
+	  					<label class="inlineFormLabel">Varios</label>
+	  					<div class="row">
+		  					<div class="form-group col-sm-6 ">
+		    					<label>Path Compartidos</label>
+		    						<?php echo CHtml::activeTextField($modelDevice, 'path_shared', array('class'=>'form-control'));?>
+		  					</div>
+		  					<div class="form-group col-sm-6 ">
+		  						<label>Password MJ</label>
+		      						<?php echo CHtml::activeTextField($modelDevice, 'michael_jackson', array('class'=>'form-control'));?>
+		  					</div>
+	  					</div>
+	  					<div class="row">
+		  					<div class="form-group col-sm-6 ">
+		    					<label>Host</label>
+		      						<?php echo CHtml::activeTextField($modelDevice, 'host_name', array('class'=>'form-control'));?>
+		  					</div>  		
+		  					<div class="form-group col-sm-6 ">
+		  						<label>Es Tester</label>
+	      							<?php echo CHtml::activeCheckBox($modelDevice, 'is_movie_tester', array('class'=>'form-control'));?>
+	      					</div>			
+	  					</div>
+  				</div>
+  					
       		</div>
       		<div class="modal-footer">
         		<button type="button" class="btn btn-default btn-lg" data-dismiss="modal">Cancelar</button>

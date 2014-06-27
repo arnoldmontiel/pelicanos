@@ -163,7 +163,7 @@ function checkNumber(obj)
   		'selectableRows' => 0,
   		'summaryText'=>'',
 		'hideHeader'=>true,
-		'emptyText' => 'Este presupuesto a&uacute;n no tiene comisionistas.',
+		'emptyText' => 'No existe a&uacute;n ninguna cuenta configurada.',
   		'itemsCssClass' => 'table table-condensed tablaIndividual',
 		//'ajaxUrl'=>DeviceController::createUrl('AjaxUpdateCommissionistGrid',array("Id"=>$modelBudget->Id,"version_number"=>$modelBudget->version_number)),
   		'columns'=>array(
