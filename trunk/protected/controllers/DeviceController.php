@@ -273,7 +273,16 @@ class DeviceController extends Controller
 					else
 						$modelSabmzbdConfig->enable = 0;
 				}
-				$modelSabmzbdConfig->save();
+				
+				if($modelSabmzbdConfig->save())
+				{
+					$modelCustomerDevice = CustomerDevice::model()->findByAttributes(array('Id_device'=>$modelSabmzbdConfig->Id_device));
+					if(isset($modelCustomerDevice))
+					{
+						$modelCustomerDevice->need_update = 1;
+						$modelCustomerDevice->save();
+					}
+				}
 			}
 		}
 		 	
