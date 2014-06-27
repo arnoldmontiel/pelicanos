@@ -41,6 +41,34 @@ function removeAccount(idAccount)
 	}
 }
 
+function saveAccount(id)
+{
+	var row = $("#sabnzbd-config-grid :input[idconfig='"+id+"']").serialize();
+	$.post("<?php echo DeviceController::createUrl('AjaxUpdateSabnzbdAccount'); ?>",
+			
+			$("#sabnzbd-config-grid :input[idconfig='"+id+"']").serialize() + '&idAccount='+id,
+				
+			 function(data) {
+  				$.fn.yiiGridView.update('sabnzbd-config-grid');  		
+ });
+
+	
+}
+
+function updateAccount(id)
+{
+	$("#edit_"+id).addClass('hidden');
+	$("#save_"+id).removeClass('hidden');
+	$("#cancel_"+id).removeClass('hidden');
+		
+	$("#sabnzbd-config-grid :input[idconfig='"+id+"']").each(function(){
+    	$(this).removeAttr('disabled');
+	});
+}
+function cancelEdit(id)
+{
+	$.fn.yiiGridView.update('sabnzbd-config-grid');
+}
 function checkAddEnabled()
 {
 	var server = $("#SabnzbdConfig_server_name").val();
@@ -132,32 +160,50 @@ function checkNumber(obj)
 		//'ajaxUrl'=>DeviceController::createUrl('AjaxUpdateCommissionistGrid',array("Id"=>$modelBudget->Id,"version_number"=>$modelBudget->version_number)),
   		'columns'=>array(
   				array(
-  						'value'=>'$data->server_name',
+						'value'=>function($data){
+							return '<input type="text" idconfig="'.$data->Id.'" class="form-control" name="server_name_'.$data->Id.'" id="server_name_'.$data->Id.'" disabled value="'.$data->server_name.'">';
+						},
+						'type'=>'raw',
 						'htmlOptions'=>array("width"=>"210"),
   				),
   				array(
-  						'value'=>'$data->username',
+						'value'=>function($data){
+							return '<input type="text" idconfig="'.$data->Id.'" class="form-control" name="username_'.$data->Id.'" id="username_'.$data->Id.'" disabled value="'.$data->username.'">';
+						},
+						'type'=>'raw',
 						'htmlOptions'=>array("width"=>"210"),
   				),
 				array(
-						'value'=>'$data->password',
+						'value'=>function($data){
+							return '<input type="text" idconfig="'.$data->Id.'" class="form-control" name="password_'.$data->Id.'" id="password_'.$data->Id.'" disabled value="'.$data->password.'">';
+						},
+						'type'=>'raw',
 						'htmlOptions'=>array("width"=>"210"),
 				),
 				array(
-						'value'=>'$data->connections',
+						'value'=>function($data){
+							return '<input type="text" idconfig="'.$data->Id.'" onkeyup="checkNumber(this);" class="form-control inputSmall" name="connections_'.$data->Id.'" id="connections_'.$data->Id.'" disabled value="'.$data->connections.'">';
+						},
+						'type'=>'raw',
 				),
 				array(
-						'value'=>'$data->port',
+						'value'=>function($data){
+							return '<input type="text" idconfig="'.$data->Id.'" onkeyup="checkNumber(this);" class="form-control inputSmall" name="port_'.$data->Id.'" id="port_'.$data->Id.'" disabled value="'.$data->port.'">';
+						},
+						'type'=>'raw',
 				),
 				array(
-						'value'=>'$data->timeout',
+						'value'=>function($data){
+							return '<input type="text" idconfig="'.$data->Id.'" onkeyup="checkNumber(this);" class="form-control inputSmall" name="timeout_'.$data->Id.'" id="timeout_'.$data->Id.'" disabled value="'.$data->timeout.'">';
+						},
+						'type'=>'raw',
 				),
 				array(
 						'value'=>function($data){
 							$checked = '';
 							if($data->ssl == 1)
 								$checked = 'checked';
-  							return '<input type="checkbox" '.$checked.' disabled value="'.$data->ssl.'">';
+  							return '<input idconfig="'.$data->Id.'" type="checkbox" '.$checked.' name="ssl_'.$data->Id.'" id="ssl_'.$data->Id.'" disabled >';
   						},
   						'type'=>'raw',
 						'htmlOptions'=>array("class"=>"align-right"),
@@ -167,7 +213,7 @@ function checkNumber(obj)
 							$checked = '';
 							if($data->enable == 1)
 								$checked = 'checked';
-							return '<input type="checkbox" '.$checked.' disabled value="'.$data->enable.'">';
+							return '<input idconfig="'.$data->Id.'" type="checkbox" '.$checked.' name="enable_'.$data->Id.'" id="enable_'.$data->Id.'" disabled >';
 						},
 						'type'=>'raw',
 						'htmlOptions'=>array("class"=>"align-right"),
@@ -177,20 +223,28 @@ function checkNumber(obj)
 							$checked = '';
 							if($data->optional == 1)
 								$checked = 'checked';
-							return '<input type="checkbox" '.$checked.' disabled value="'.$data->optional.'">';
+							return '<input idconfig="'.$data->Id.'" type="checkbox" '.$checked.' name="optional_'.$data->Id.'" id="optional_'.$data->Id.'" disabled >';
 						},
 						'type'=>'raw',
 						'htmlOptions'=>array("class"=>"align-right"),
 				),
 				array(
-						'value'=>'$data->retention',
+						'value'=>function($data){
+							return '<input type="text" idconfig="'.$data->Id.'" onkeyup="checkNumber(this);" class="form-control inputSmall" name="retention_'.$data->Id.'" id="retention_'.$data->Id.'" disabled value="'.$data->retention.'">';
+						},
+						'type'=>'raw',
 				),
 				array(
-						'value'=>'$data->fill_server',
+						'value'=>function($data){
+							return '<input type="text" idconfig="'.$data->Id.'" onkeyup="checkNumber(this);" class="form-control inputSmall" name="fill_server_'.$data->Id.'" id="fill_server_'.$data->Id.'" disabled value="'.$data->fill_server.'">';
+						},
+						'type'=>'raw',
 				),
   				array(  						
   						'value'=>function($data){
-  							return '<button type="button" onclick="removeAccount('.$data->Id.');" class="btn btn-default btn-sm noMargin"><i class="fa fa-trash-o"></i> Borrar</button>';
+  							return '<button id="edit_'.$data->Id.'" type="button" onclick="updateAccount('.$data->Id.');" class="btn btn-default btn-sm noMargin"><i class="fa fa-trash-o"></i> Editar</button>
+  									<button id="save_'.$data->Id.'" type="button" onclick="saveAccount('.$data->Id.');" class="hidden btn btn-default btn-sm noMargin"><i class="fa fa-trash-o"></i> Guardar</button>
+  									<button id="cancel_'.$data->Id.'" type="button" onclick="cancelEdit('.$data->Id.');" class="hidden btn btn-default btn-sm noMargin"><i class="fa fa-trash-o"></i> Cancelar</button>';
   						},
   						'type'=>'raw',
 						'htmlOptions'=>array("class"=>"align-right"),

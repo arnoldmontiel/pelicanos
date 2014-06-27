@@ -230,13 +230,51 @@ class DeviceController extends Controller
 		}
 	}
 	
-	public function actionAjaxRemoveSabnzbdAccount()
+	public function actionAjaxUpdateSabnzbdAccount()
 	{
 		$idSabnzbdConfig = isset($_POST['idAccount'])?$_POST['idAccount']:null;
 		
 		if(isset($idSabnzbdConfig))
 		{
-			SabnzbdConfig::model()->deleteByPk($idSabnzbdConfig);
+			$modelSabmzbdConfig = SabnzbdConfig::model()->findByPk($idSabnzbdConfig);
+			if(isset($modelSabmzbdConfig))
+			{
+				$modelSabmzbdConfig->connections = $_POST['connections_'.$idSabnzbdConfig];
+				$modelSabmzbdConfig->fill_server = $_POST['fill_server_'.$idSabnzbdConfig];
+				$modelSabmzbdConfig->password = $_POST['password_'.$idSabnzbdConfig];
+				$modelSabmzbdConfig->port = $_POST['port_'.$idSabnzbdConfig];
+				$modelSabmzbdConfig->retention = $_POST['retention_'.$idSabnzbdConfig];
+				$modelSabmzbdConfig->server_name = $_POST['server_name_'.$idSabnzbdConfig];
+				$modelSabmzbdConfig->name = $_POST['server_name_'.$idSabnzbdConfig];
+				$modelSabmzbdConfig->host = $_POST['server_name_'.$idSabnzbdConfig];				
+				$modelSabmzbdConfig->timeout = $_POST['timeout_'.$idSabnzbdConfig];
+				$modelSabmzbdConfig->username = $_POST['username_'.$idSabnzbdConfig];
+				
+				if(isset($_POST['ssl_'.$idSabnzbdConfig]))
+				{
+					if($_POST['ssl_'.$idSabnzbdConfig] == 'on')
+						$modelSabmzbdConfig->ssl = 1;
+					else
+						$modelSabmzbdConfig->ssl = 0;
+				}
+				
+				if(isset($_POST['optional_'.$idSabnzbdConfig]))
+				{
+					if($_POST['optional_'.$idSabnzbdConfig] == 'on')
+						$modelSabmzbdConfig->optional = 1;
+					else
+						$modelSabmzbdConfig->optional = 0;
+				}
+				
+				if(isset($_POST['enable_'.$idSabnzbdConfig]))
+				{
+					if($_POST['enable_'.$idSabnzbdConfig] == 'on')
+						$modelSabmzbdConfig->enable = 1;
+					else
+						$modelSabmzbdConfig->enable = 0;
+				}
+				$modelSabmzbdConfig->save();
+			}
 		}
 		 	
 	}
