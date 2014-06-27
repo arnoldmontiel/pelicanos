@@ -119,37 +119,37 @@ function checkNumber(obj)
   <th>Servidor</th>
   <th>Usuario</th>
   <th>Clave</th>
-  <th>Conexiones</th>
-  <th>Puerto</th>
-  <th>Tiempo out</th>
-  <th>SSL</th>
-  <th>Habilitado</th>
-  <th>Opcional</th>
-  <th>Retencion</th>
-  <th>Fill Servidor</th>
+  <th class="smallTH text-center">Conexiones</th>
+  <th class="smallTH text-center">Puerto</th>
+  <th class="smallTH text-center">Tiempo out</th>
+  <th class="smallTH text-center">SSL</th>
+  <th class="smallTH text-center">Habilitado</th>
+  <th class="smallTH text-center">Opcional</th>
+  <th class="smallTH text-center">Retencion</th>
+  <th class="smallTH text-center">Fill Servidor</th>
   <th class="align-right">Acciones</th>
   </tr>
   </thead>
   <tbody>
   <tr>
-  <td colspan="13">Para agregar una cuenta complete los campos y presione <span class="bold">Agregar</span> (Tiempo out minimo 30)</td>
+  <td colspan="13">Para agregar una cuenta complete los campos y presione <span class="bold"><i class="fa fa-plus"></i> Agregar</span> (Tiempo out minimo 30)</td>
  </tr>
   <tr>
   <?php $newModel = new SabnzbdConfig();
   echo CHtml::activeHiddenField($newModel, 'Id_device');
   ?>
-  <td width="210"><?php echo CHtml::activeTextField($newModel, 'server_name',array('onkeyup'=>'checkAddEnabled()','class'=>'form-control', 'placeholder'=>"Servidor")); ?></td>
-  <td width="210"><?php echo CHtml::activeTextField($newModel, 'username',array('onkeyup'=>'checkAddEnabled()','class'=>'form-control', 'placeholder'=>"Usuario")); ?></td>
-  <td width="210"><?php echo CHtml::activeTextField($newModel, 'password',array('onkeyup'=>'checkAddEnabled()','class'=>'form-control', 'placeholder'=>"Clave")); ?></td>
-  <td width="210"><?php echo CHtml::activeTextField($newModel, 'connections',array('onkeyup'=>'checkNumber(this);','class'=>'form-control inputSmall', 'placeholder'=>"0")); ?></td>
-  <td width="210"><?php echo CHtml::activeTextField($newModel, 'port',array('onkeyup'=>'checkNumber(this);','class'=>'form-control inputSmall', 'placeholder'=>"0")); ?></td>
-  <td width="210"><?php echo CHtml::activeTextField($newModel, 'timeout',array('onkeyup'=>'checkTimeOut(this);','class'=>'form-control inputSmall', 'placeholder'=>"30")); ?></td>
-  <td width="210"><?php echo CHtml::activeCheckBox($newModel, 'ssl',array('class'=>'form-control')); ?></td>
-  <td width="210"><?php echo CHtml::activeCheckBox($newModel, 'enable',array('class'=>'form-control')); ?></td>
-  <td width="210"><?php echo CHtml::activeCheckBox($newModel, 'optional',array('class'=>'form-control')); ?></td>
-  <td width="210"><?php echo CHtml::activeTextField($newModel, 'retention',array('onkeyup'=>'checkNumber(this);','class'=>'form-control inputSmall', 'placeholder'=>"0")); ?></td>
-  <td width="210"><?php echo CHtml::activeTextField($newModel, 'fill_server',array('onkeyup'=>'checkNumber(this);','class'=>'form-control inputSmall', 'placeholder'=>"0")); ?></td>
-  <td class="align-right"><button id="btn-add-account" type="button" onclick="addSabnzbdAccount();" class="btn btn-primary btn-sm noMargin disabled"><i class="fa fa-plus"></i> Agregar</button></td>
+  <td style="width:14%;"><?php echo CHtml::activeTextField($newModel, 'server_name',array('onkeyup'=>'checkAddEnabled()','class'=>'form-control', 'placeholder'=>"Servidor")); ?></td>
+  <td  style="width:14%;"><?php echo CHtml::activeTextField($newModel, 'username',array('onkeyup'=>'checkAddEnabled()','class'=>'form-control', 'placeholder'=>"Usuario")); ?></td>
+  <td  style="width:14%;"><?php echo CHtml::activeTextField($newModel, 'password',array('onkeyup'=>'checkAddEnabled()','class'=>'form-control', 'placeholder'=>"Clave")); ?></td>
+  <td class="text-center" style="width:6%;" align="center"><?php echo CHtml::activeTextField($newModel, 'connections',array('onkeyup'=>'checkNumber(this);','class'=>'form-control text-center', 'placeholder'=>"0")); ?></td>
+  <td class="text-center" style="width:4%;" align="center"><?php echo CHtml::activeTextField($newModel, 'port',array('onkeyup'=>'checkNumber(this);','class'=>'form-control text-center', 'placeholder'=>"0")); ?></td>
+  <td class="text-center" style="width:6%;" align="center"><?php echo CHtml::activeTextField($newModel, 'timeout',array('onkeyup'=>'checkTimeOut(this);','class'=>'form-control text-center', 'placeholder'=>"30")); ?></td>
+  <td class="text-center" style="width:4%;" align="center"><?php echo CHtml::activeCheckBox($newModel, 'ssl',array('class'=>'form-control')); ?></td>
+  <td class="text-center" style="width:5%;" align="center"><?php echo CHtml::activeCheckBox($newModel, 'enable',array('class'=>'form-control')); ?></td>
+  <td class="text-center" style="width:5%;" align="center"><?php echo CHtml::activeCheckBox($newModel, 'optional',array('class'=>'form-control')); ?></td>
+  <td class="text-center" style="width:5%;" align="center"><?php echo CHtml::activeTextField($newModel, 'retention',array('onkeyup'=>'checkNumber(this);','class'=>'form-control text-center', 'placeholder'=>"0")); ?></td>
+  <td class="text-center" style="width:6%;" align="center"><?php echo CHtml::activeTextField($newModel, 'fill_server',array('onkeyup'=>'checkNumber(this);','class'=>'form-control text-center', 'placeholder'=>"0")); ?></td>
+  <td class="text-center"  style="width:14%;"><button id="btn-add-account" type="button" onclick="addSabnzbdAccount();" class="btn btn-primary btn-sm btn100 noMargin disabled"><i class="fa fa-plus"></i> Agregar</button></td>
   </tr>
   </tbody>
   </table>
@@ -172,40 +172,43 @@ function checkNumber(obj)
 							return '<input type="text" idconfig="'.$data->Id.'" class="form-control" name="server_name_'.$data->Id.'" id="server_name_'.$data->Id.'" disabled value="'.$data->server_name.'">';
 						},
 						'type'=>'raw',
-						'htmlOptions'=>array("width"=>"210"),
+						'htmlOptions'=>array("style"=>"width:14%"),
   				),
   				array(
 						'value'=>function($data){
 							return '<input type="text" idconfig="'.$data->Id.'" class="form-control" name="username_'.$data->Id.'" id="username_'.$data->Id.'" disabled value="'.$data->username.'">';
 						},
 						'type'=>'raw',
-						'htmlOptions'=>array("width"=>"210"),
+						'htmlOptions'=>array("style"=>"width:14%"),
   				),
 				array(
 						'value'=>function($data){
 							return '<input type="text" idconfig="'.$data->Id.'" class="form-control" name="password_'.$data->Id.'" id="password_'.$data->Id.'" disabled value="'.$data->password.'">';
 						},
 						'type'=>'raw',
-						'htmlOptions'=>array("width"=>"210"),
+						'htmlOptions'=>array("style"=>"width:14%"),
 				),
 				array(
 						'value'=>function($data){
-							return '<input type="text" idconfig="'.$data->Id.'" onkeyup="checkNumber(this);" class="form-control inputSmall" name="connections_'.$data->Id.'" id="connections_'.$data->Id.'" disabled value="'.$data->connections.'">';
+							return '<input type="text" idconfig="'.$data->Id.'" onkeyup="checkNumber(this);" class="form-control text-center" name="connections_'.$data->Id.'" id="connections_'.$data->Id.'" disabled value="'.$data->connections.'">';
 						},
 						'type'=>'raw',
-				),
+						'htmlOptions'=>array("class"=>"align-center","style"=>"width:6%"),
+										),
 				array(
 						'value'=>function($data){
-							return '<input type="text" idconfig="'.$data->Id.'" onkeyup="checkNumber(this);" class="form-control inputSmall" name="port_'.$data->Id.'" id="port_'.$data->Id.'" disabled value="'.$data->port.'">';
+							return '<input type="text" idconfig="'.$data->Id.'" onkeyup="checkNumber(this);" class="form-control text-center" name="port_'.$data->Id.'" id="port_'.$data->Id.'" disabled value="'.$data->port.'">';
 						},
 						'type'=>'raw',
-				),
+						'htmlOptions'=>array("class"=>"align-center","style"=>"width:4%"),
+										),
 				array(
 						'value'=>function($data){
-							return '<input type="text" onkeyup="checkTimeOut(this);" idconfig="'.$data->Id.'" class="form-control inputSmall" name="timeout_'.$data->Id.'" id="timeout_'.$data->Id.'" disabled value="'.$data->timeout.'">';
+							return '<input type="text" onkeyup="checkTimeOut(this);" idconfig="'.$data->Id.'" class="form-control text-center" name="timeout_'.$data->Id.'" id="timeout_'.$data->Id.'" disabled value="'.$data->timeout.'">';
 						},
 						'type'=>'raw',
-				),
+						'htmlOptions'=>array("class"=>"align-center","style"=>"width:6%"),
+										),
 				array(
 						'value'=>function($data){
 							$checked = '';
@@ -214,8 +217,8 @@ function checkNumber(obj)
   							return '<input idconfig="'.$data->Id.'" type="checkbox" '.$checked.' name="ssl_'.$data->Id.'" id="ssl_'.$data->Id.'" disabled >';
   						},
   						'type'=>'raw',
-						'htmlOptions'=>array("class"=>"align-right"),
-				),
+						'htmlOptions'=>array("class"=>"align-center","style"=>"width:4%"),
+  										),
 				array(
 						'value'=>function($data){
 							$checked = '';
@@ -224,8 +227,8 @@ function checkNumber(obj)
 							return '<input idconfig="'.$data->Id.'" type="checkbox" '.$checked.' name="enable_'.$data->Id.'" id="enable_'.$data->Id.'" disabled >';
 						},
 						'type'=>'raw',
-						'htmlOptions'=>array("class"=>"align-right"),
-				),
+						'htmlOptions'=>array("class"=>"align-center","style"=>"width:5%"),
+										),
 				array(
 						'value'=>function($data){
 							$checked = '';
@@ -234,28 +237,30 @@ function checkNumber(obj)
 							return '<input idconfig="'.$data->Id.'" type="checkbox" '.$checked.' name="optional_'.$data->Id.'" id="optional_'.$data->Id.'" disabled >';
 						},
 						'type'=>'raw',
-						'htmlOptions'=>array("class"=>"align-right"),
+						'htmlOptions'=>array("class"=>"align-center","style"=>"width:5%"),
+										),
+				array(
+						'value'=>function($data){
+							return '<input type="text" idconfig="'.$data->Id.'" onkeyup="checkNumber(this);" class="form-control text-center" name="retention_'.$data->Id.'" id="retention_'.$data->Id.'" disabled value="'.$data->retention.'">';
+						},
+						'type'=>'raw',
+						'htmlOptions'=>array("class"=>"align-center","style"=>"width:5%"),
 				),
 				array(
 						'value'=>function($data){
-							return '<input type="text" idconfig="'.$data->Id.'" onkeyup="checkNumber(this);" class="form-control inputSmall" name="retention_'.$data->Id.'" id="retention_'.$data->Id.'" disabled value="'.$data->retention.'">';
+							return '<input type="text" idconfig="'.$data->Id.'" onkeyup="checkNumber(this);" class="form-control text-center" name="fill_server_'.$data->Id.'" id="fill_server_'.$data->Id.'" disabled value="'.$data->fill_server.'">';
 						},
 						'type'=>'raw',
-				),
-				array(
-						'value'=>function($data){
-							return '<input type="text" idconfig="'.$data->Id.'" onkeyup="checkNumber(this);" class="form-control inputSmall" name="fill_server_'.$data->Id.'" id="fill_server_'.$data->Id.'" disabled value="'.$data->fill_server.'">';
-						},
-						'type'=>'raw',
+						'htmlOptions'=>array("class"=>"align-center","style"=>"width:6%"),
 				),
   				array(  						
   						'value'=>function($data){
-  							return '<button id="edit_'.$data->Id.'" type="button" onclick="updateAccount('.$data->Id.');" class="btn btn-default btn-sm noMargin"><i class="fa fa-trash-o"></i> Editar</button>
-  									<button id="save_'.$data->Id.'" type="button" onclick="saveAccount('.$data->Id.');" class="hidden btn btn-default btn-sm noMargin"><i class="fa fa-trash-o"></i> Guardar</button>
-  									<button id="cancel_'.$data->Id.'" type="button" onclick="cancelEdit('.$data->Id.');" class="hidden btn btn-default btn-sm noMargin"><i class="fa fa-trash-o"></i> Cancelar</button>';
+  							return '<button id="edit_'.$data->Id.'" type="button" onclick="updateAccount('.$data->Id.');" class="btn btn-default btn-sm btn100 noMargin"><i class="fa fa-trash-o"></i> Editar</button>
+  									<button id="save_'.$data->Id.'" type="button" onclick="saveAccount('.$data->Id.');" class="hidden btn btn-primary btn-sm btn50 noMargin pull-left"><i class="fa fa-save"></i></button>
+  									<button id="cancel_'.$data->Id.'" type="button" onclick="cancelEdit('.$data->Id.');" class="hidden btn btn-default btn-sm btn50 noMargin pull-right"><i class="fa fa-times-circle"></i></button>';
   						},
   						'type'=>'raw',
-						'htmlOptions'=>array("class"=>"align-right"),
+						'htmlOptions'=>array("class"=>"align-right","style"=>"width:14%"),
   		),
   		),
   ));
