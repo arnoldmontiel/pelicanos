@@ -99,6 +99,18 @@ min-height: 48px;
 line-height: 35px;
 }
 
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+border: none;
+border: none;
+background: none;
+cursor: text;
+}
+
+input[type="radio"], input[type="checkbox"] {
+width:auto;
+display:inline-block;
+}
+
 body{
 	font-family: 'GudeaRegular', Arial, sans-serif; 
 	font-size:15px;
@@ -577,7 +589,7 @@ padding: 6px 8px;
 
 .myModalViewDownloads.modal-dialog{width:1000px;}
 .myModalDescargas .modal-dialog{width:1000px;}
-.myModalConfigPuertos.modal-dialog{width:1000px;}
+.myModalConfigPuertos.modal-dialog{width:85%;}
 
 .myModalConfigPuertos .tab-pane{padding-top:5px;}
 
@@ -1104,6 +1116,14 @@ ul.playerList li{margin:0px;margin-left:0px;}
 /*label que se flota a la derecha mostrando id de dispositivo en popup con tabs*/
 .sideIDLabel .panel-body{padding:5px;}
 .sideIDLabel.panel{margin-bottom:5px;}
+
+.myModalConfigPuertos .btn100{width:100%;}
+.myModalConfigPuertos .btn50{width:48%;}
+#form-new-sabnzbd-account .table.tablaIndividual{ margin-bottom:0px;}
+
+#form-new-sabnzbd-account .smallTH{letter-spacing: -1px; font-size:12px;}
+
+#form-new-sabnzbd-account th, #form-new-sabnzbd-account td{padding:3px;}
 
 /* ----- END DISPOSITIVOS --------*/
 
