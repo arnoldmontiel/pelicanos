@@ -106,7 +106,7 @@ background: none;
 cursor: text;
 }
 
-input[type="radio"], input[type="checkbox"] {
+.checkInline {
 width:auto;
 display:inline-block;
 }

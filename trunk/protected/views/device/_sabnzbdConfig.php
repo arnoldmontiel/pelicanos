@@ -144,9 +144,9 @@ function checkNumber(obj)
   <td class="text-center" style="width:6%;" align="center"><?php echo CHtml::activeTextField($newModel, 'connections',array('onkeyup'=>'checkNumber(this);','class'=>'form-control text-center', 'placeholder'=>"0")); ?></td>
   <td class="text-center" style="width:4%;" align="center"><?php echo CHtml::activeTextField($newModel, 'port',array('onkeyup'=>'checkNumber(this);','class'=>'form-control text-center', 'placeholder'=>"0")); ?></td>
   <td class="text-center" style="width:6%;" align="center"><?php echo CHtml::activeTextField($newModel, 'timeout',array('onkeyup'=>'checkTimeOut(this);','class'=>'form-control text-center', 'placeholder'=>"30")); ?></td>
-  <td class="text-center" style="width:4%;" align="center"><?php echo CHtml::activeCheckBox($newModel, 'ssl',array('class'=>'form-control')); ?></td>
-  <td class="text-center" style="width:5%;" align="center"><?php echo CHtml::activeCheckBox($newModel, 'enable',array('class'=>'form-control')); ?></td>
-  <td class="text-center" style="width:5%;" align="center"><?php echo CHtml::activeCheckBox($newModel, 'optional',array('class'=>'form-control')); ?></td>
+  <td class="text-center" style="width:4%;" align="center"><?php echo CHtml::activeCheckBox($newModel, 'ssl',array('class'=>'form-control checkInline')); ?></td>
+  <td class="text-center" style="width:5%;" align="center"><?php echo CHtml::activeCheckBox($newModel, 'enable',array('class'=>'form-control checkInline')); ?></td>
+  <td class="text-center" style="width:5%;" align="center"><?php echo CHtml::activeCheckBox($newModel, 'optional',array('class'=>'form-control checkInline')); ?></td>
   <td class="text-center" style="width:5%;" align="center"><?php echo CHtml::activeTextField($newModel, 'retention',array('onkeyup'=>'checkNumber(this);','class'=>'form-control text-center', 'placeholder'=>"0")); ?></td>
   <td class="text-center" style="width:6%;" align="center"><?php echo CHtml::activeTextField($newModel, 'fill_server',array('onkeyup'=>'checkNumber(this);','class'=>'form-control text-center', 'placeholder'=>"0")); ?></td>
   <td class="text-center"  style="width:14%;"><button id="btn-add-account" type="button" onclick="addSabnzbdAccount();" class="btn btn-primary btn-sm btn100 noMargin disabled"><i class="fa fa-plus"></i> Agregar</button></td>
@@ -214,7 +214,7 @@ function checkNumber(obj)
 							$checked = '';
 							if($data->ssl == 1)
 								$checked = 'checked';
-  							return '<input idconfig="'.$data->Id.'" type="checkbox" '.$checked.' name="ssl_'.$data->Id.'" id="ssl_'.$data->Id.'" disabled >';
+  							return '<input idconfig="'.$data->Id.'" type="checkbox" '.$checked.' class="form-control checkInline" name="ssl_'.$data->Id.'" id="ssl_'.$data->Id.'" disabled >';
   						},
   						'type'=>'raw',
 						'htmlOptions'=>array("class"=>"align-center","style"=>"width:4%"),
@@ -224,7 +224,7 @@ function checkNumber(obj)
 							$checked = '';
 							if($data->enable == 1)
 								$checked = 'checked';
-							return '<input idconfig="'.$data->Id.'" type="checkbox" '.$checked.' name="enable_'.$data->Id.'" id="enable_'.$data->Id.'" disabled >';
+							return '<input idconfig="'.$data->Id.'" type="checkbox" '.$checked.' class="form-control checkInline" name="enable_'.$data->Id.'" id="enable_'.$data->Id.'" disabled >';
 						},
 						'type'=>'raw',
 						'htmlOptions'=>array("class"=>"align-center","style"=>"width:5%"),
@@ -234,7 +234,7 @@ function checkNumber(obj)
 							$checked = '';
 							if($data->optional == 1)
 								$checked = 'checked';
-							return '<input idconfig="'.$data->Id.'" type="checkbox" '.$checked.' name="optional_'.$data->Id.'" id="optional_'.$data->Id.'" disabled >';
+							return '<input idconfig="'.$data->Id.'" type="checkbox" '.$checked.' class="form-control checkInline" name="optional_'.$data->Id.'" id="optional_'.$data->Id.'" disabled >';
 						},
 						'type'=>'raw',
 						'htmlOptions'=>array("class"=>"align-center","style"=>"width:5%"),
