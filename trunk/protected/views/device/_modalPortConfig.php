@@ -13,6 +13,7 @@
 				<?php if($isAdmin):?>
 				<li><a  href="#tabSabnzbd" data-toggle="tab">Sabnzbd</a></li>
 				<?php endif;?>
+				<li><a  href="#tabPlayer" data-toggle="tab">Player</a></li>				
 				<li class="pull-right"><div class="panel panel-default panelCliente sideIDLabel">
   <div class="panel-body">
    <div class="infoPanelCliente">
@@ -229,6 +230,11 @@
 				  ?>
               </div><!-- tab-pane -->
               <?php endif;?>
+              <div class="tab-pane" id="tabPlayer">
+                <?php 
+				  	echo $this->renderPartial('_playerConfig', array( 'modelPlayerConfigs'=>$modelPlayerConfigs, 'idDevice'=>$modelDevice->Id));
+				  ?>
+              </div><!-- tab-pane -->
               </div><!-- tab-content -->
 			</div>
         	<div class="modal-footer">
