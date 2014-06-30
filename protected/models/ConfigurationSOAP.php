@@ -120,4 +120,10 @@ class ConfigurationSOAP
 	 * @soap
 	 */
 	public $SabnzbdAccounts;
+	
+	/**
+	 * @var PlayerSOAP[]
+	 * @soap
+	 */
+	public $Players;	
 }
