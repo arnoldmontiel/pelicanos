@@ -257,6 +257,30 @@ class DeviceController extends Controller
 		}
 	}
 	
+	public function actionAjaxRemovePlayer()
+	{
+		$idPlayer = isset($_POST['idPlayer'])?$_POST['idPlayer']:null;
+		
+		if(isset($idPlayer))
+		{
+			$model = DevicePlayer::model()->findByPk($idPlayer);
+			if(isset($model))
+			{
+				$idDevice = $model->Id_device;
+				if($model->delete())
+				{
+					$modelCustomerDevice = CustomerDevice::model()->findByAttributes(array('Id_device'=>$idDevice));
+					if(isset($modelCustomerDevice))
+					{
+						$modelCustomerDevice->need_update = 1;
+						$modelCustomerDevice->save();
+					}
+				}
+			}
+			
+		}
+	}
+	
 	public function actionAjaxUpdateSabnzbdAccount()
 	{
 		$idSabnzbdConfig = isset($_POST['idAccount'])?$_POST['idAccount']:null;
