@@ -170,11 +170,17 @@ class DeviceController extends Controller
 		
 		$modelSabNzbdConfigs->Id_device = $idDevice;
 		
+		$modelPlayerConfigs = new DevicePlayer('search');
+		$modelPlayerConfigs->unsetAttributes();
+		
+		$modelPlayerConfigs->Id_device = $idDevice;
+		
 		$this->render('index',array(
 				'modelCustomerDevice'=>$modelCustomerDevice,
 				'modelDeviceTunelGrid'=>$modelDeviceTunelGrid,
 				'modelNzbDevice'=>$modelNzbDevice,
 				'modelSabNzbdConfigs'=>$modelSabNzbdConfigs,
+				'modelPlayerConfigs'=>$modelPlayerConfigs,
 		));
 	}
 
@@ -205,11 +211,17 @@ class DeviceController extends Controller
 		$criteria->addCondition('t.is_pending = 1');
 		$criteria->addCondition('c.Id_reseller = '.User::getResellerId());
 		
+		$modelPlayerConfigs = new DevicePlayer('search');
+		$modelPlayerConfigs->unsetAttributes();
+		
+		$modelPlayerConfigs->Id_device = $idDevice;
+		
 		$this->render('indexRe',array(
 				'modelCustomerDevice'=>$modelCustomerDevice,
 				'modelDeviceTunelGrid'=>$modelDeviceTunelGrid,
 				'modelNzbDevice'=>$modelNzbDevice,
 				'qtyPending'=>CustomerDevice::model()->count($criteria),
+				'modelPlayerConfigs'=>$modelPlayerConfigs,
 		));
 	}
 	
@@ -219,6 +231,21 @@ class DeviceController extends Controller
 		$model->attributes = $_POST['SabnzbdConfig'];
 		$model->name = $model->server_name;
 		$model->host = $model->server_name;
+		if($model->save())
+		{
+			$modelCustomerDevice = CustomerDevice::model()->findByAttributes(array('Id_device'=>$model->Id_device));
+			if(isset($modelCustomerDevice))
+			{
+				$modelCustomerDevice->need_update = 1;
+				$modelCustomerDevice->save();
+			}
+		}
+	}
+	
+	public function actionAjaxAddNewPlayer()
+	{
+		$model = new DevicePlayer();
+		$model->attributes = $_POST['DevicePlayer'];
 		if($model->save())
 		{
 			$modelCustomerDevice = CustomerDevice::model()->findByAttributes(array('Id_device'=>$model->Id_device));
@@ -288,6 +315,33 @@ class DeviceController extends Controller
 		 	
 	}
 	
+	public function actionAjaxUpdatePlayerConfig()
+	{
+		$idPlayer = isset($_POST['idPlayer'])?$_POST['idPlayer']:null;
+		
+		if(isset($idPlayer))
+		{
+			$modelDevicePlayer = DevicePlayer::model()->findByPk($idPlayer);
+			if(isset($modelDevicePlayer))
+			{
+				$modelDevicePlayer->description = $_POST['description_'.$idPlayer];
+				$modelDevicePlayer->url = $_POST['url_'.$idPlayer];
+				$modelDevicePlayer->type = $_POST['type_'.$idPlayer];
+				
+				if($modelDevicePlayer->save())
+				{
+					$modelCustomerDevice = CustomerDevice::model()->findByAttributes(array('Id_device'=>$modelDevicePlayer->Id_device));
+					if(isset($modelCustomerDevice))
+					{
+						$modelCustomerDevice->need_update = 1;
+						$modelCustomerDevice->save();
+					}
+				}
+			}
+		}
+		
+	}
+	
 	public function actionIndexIns()
 	{
 		$modelCustomerDevice = new CustomerDevice('search');
@@ -304,10 +358,15 @@ class DeviceController extends Controller
 	
 		$modelDeviceTunelGrid->Id_device = $idDevice;
 	
+		$modelPlayerConfigs = new DevicePlayer('search');
+		$modelPlayerConfigs->unsetAttributes();
+		
+		$modelPlayerConfigs->Id_device = $idDevice;
 	
 		$this->render('indexIns',array(
 				'modelCustomerDevice'=>$modelCustomerDevice,
 				'modelDeviceTunelGrid'=>$modelDeviceTunelGrid,
+				'modelPlayerConfigs'=>$modelPlayerConfigs,
 		));
 	}
 	

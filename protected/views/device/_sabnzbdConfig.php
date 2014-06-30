@@ -6,7 +6,7 @@ function addSabnzbdAccount()
 			  "<?php echo DeviceController::createUrl('AjaxAddSabnzbdAccount'); ?>",
 	             $("#form-new-sabnzbd-account").serialize(),
 		             function(data) {
-				  		$.fn.yiiGridView.update('sabnzbd-config-grid');
+				  		$.fn.yiiGridView.update('sabnzbd-config-grid');		  				
 				  		$("#SabnzbdConfig_server_name").val('');
 				  		$("#SabnzbdConfig_username").val('');
 				  		$("#SabnzbdConfig_password").val('');
@@ -49,7 +49,7 @@ function saveAccount(id)
 			$("#sabnzbd-config-grid :input[idconfig='"+id+"']").serialize() + '&idAccount='+id,
 				
 			 function(data) {
-  				$.fn.yiiGridView.update('sabnzbd-config-grid');  		
+  				$.fn.yiiGridView.update('sabnzbd-config-grid');
  });
 
 	
@@ -60,16 +60,16 @@ function updateAccount(id)
 	$("#edit_"+id).addClass('hidden');
 	$("#save_"+id).removeClass('hidden');
 	$("#cancel_"+id).removeClass('hidden');
-		
+	$(".btn100").addClass('disabled');
 	$("#sabnzbd-config-grid :input[idconfig='"+id+"']").each(function(){
     	$(this).removeAttr('disabled');
 	});
 }
-function cancelEdit(id)
+function cancelEditAccount(id)
 {
 	$.fn.yiiGridView.update('sabnzbd-config-grid');
 }
-function checkAddEnabled()
+function checkAddEnabledAccount()
 {
 	var server = $("#SabnzbdConfig_server_name").val();
 	var username = $("#SabnzbdConfig_username").val();
@@ -106,7 +106,7 @@ function checkNumber(obj)
     	$(obj).val(orignalValue);
     	//alert(msg);
     }
-    checkAddEnabled();
+    checkAddEnabledAccount();
 }
 </script>
 
@@ -138,9 +138,9 @@ function checkNumber(obj)
   <?php $newModel = new SabnzbdConfig();
   echo CHtml::activeHiddenField($newModel, 'Id_device');
   ?>
-  <td style="width:14%;"><?php echo CHtml::activeTextField($newModel, 'server_name',array('onkeyup'=>'checkAddEnabled()','class'=>'form-control', 'placeholder'=>"Servidor")); ?></td>
-  <td  style="width:14%;"><?php echo CHtml::activeTextField($newModel, 'username',array('onkeyup'=>'checkAddEnabled()','class'=>'form-control', 'placeholder'=>"Usuario")); ?></td>
-  <td  style="width:14%;"><?php echo CHtml::activeTextField($newModel, 'password',array('onkeyup'=>'checkAddEnabled()','class'=>'form-control', 'placeholder'=>"Clave")); ?></td>
+  <td style="width:14%;"><?php echo CHtml::activeTextField($newModel, 'server_name',array('onkeyup'=>'checkAddEnabledAccount()','class'=>'form-control', 'placeholder'=>"Servidor")); ?></td>
+  <td  style="width:14%;"><?php echo CHtml::activeTextField($newModel, 'username',array('onkeyup'=>'checkAddEnabledAccount()','class'=>'form-control', 'placeholder'=>"Usuario")); ?></td>
+  <td  style="width:14%;"><?php echo CHtml::activeTextField($newModel, 'password',array('onkeyup'=>'checkAddEnabledAccount()','class'=>'form-control', 'placeholder'=>"Clave")); ?></td>
   <td class="text-center" style="width:6%;" align="center"><?php echo CHtml::activeTextField($newModel, 'connections',array('onkeyup'=>'checkNumber(this);','class'=>'form-control text-center', 'placeholder'=>"0")); ?></td>
   <td class="text-center" style="width:4%;" align="center"><?php echo CHtml::activeTextField($newModel, 'port',array('onkeyup'=>'checkNumber(this);','class'=>'form-control text-center', 'placeholder'=>"0")); ?></td>
   <td class="text-center" style="width:6%;" align="center"><?php echo CHtml::activeTextField($newModel, 'timeout',array('onkeyup'=>'checkTimeOut(this);','class'=>'form-control text-center', 'placeholder'=>"30")); ?></td>
@@ -255,9 +255,9 @@ function checkNumber(obj)
 				),
   				array(  						
   						'value'=>function($data){
-  							return '<button id="edit_'.$data->Id.'" type="button" onclick="updateAccount('.$data->Id.');" class="btn btn-default btn-sm btn100 noMargin"><i class="fa fa-trash-o"></i> Editar</button>
+  							return '<button id="edit_'.$data->Id.'" type="button" onclick="updateAccount('.$data->Id.');" class="btn btn-default btn-sm btn100 noMargin"><i class="fa fa-pencil"></i> Editar</button>
   									<button id="save_'.$data->Id.'" type="button" onclick="saveAccount('.$data->Id.');" class="hidden btn btn-primary btn-sm btn50 noMargin pull-left"><i class="fa fa-save"></i></button>
-  									<button id="cancel_'.$data->Id.'" type="button" onclick="cancelEdit('.$data->Id.');" class="hidden btn btn-default btn-sm btn50 noMargin pull-right"><i class="fa fa-times-circle"></i></button>';
+  									<button id="cancel_'.$data->Id.'" type="button" onclick="cancelEditAccount('.$data->Id.');" class="hidden btn btn-default btn-sm btn50 noMargin pull-right"><i class="fa fa-times-circle"></i></button>';
   						},
   						'type'=>'raw',
 						'htmlOptions'=>array("class"=>"align-right","style"=>"width:14%"),

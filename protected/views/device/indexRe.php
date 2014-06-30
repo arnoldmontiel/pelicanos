@@ -92,6 +92,10 @@ function portConfig(id)
 	$.fn.yiiGridView.update('device-tunel-grid', {
  		data: $(this).serialize() + '&idDevice=' + id
  	});
+
+	$.fn.yiiGridView.update('player-config-grid', {
+ 		data: $(this).serialize() + '&idDevice=' + id
+ 	});
  	
 	$.post("<?php echo DeviceController::createUrl('AjaxOpenConfigPort'); ?>",
 			{
@@ -120,7 +124,8 @@ function portConfig(id)
 							$("#device-desc").text(objDevice.description);
 							$("#device-id").text(objDevice.Id);
 							$("#Id_device").val(objDevice.Id);
-
+							$("#DevicePlayer_Id_device").val(objDevice.Id);
+							
 							$("#Device_Id").val(objDevice.Id);
 							$("#Device_sabnzb_api_key").val(objDevice.sabnzb_api_key);
 							$("#Device_sabnzb_api_url").val(objDevice.sabnzb_api_url);
@@ -282,7 +287,7 @@ function cancelRequestedDevice(idDevice, idCustomer)
 	<!-- /.row -->
 
 	<div id="container-modal-addPort" style="display: none">
-		<?php echo $this->renderPartial('_modalPortConfig', array( 'modelDeviceTunelGrid'=>$modelDeviceTunelGrid, 'idDevice'=>''));?>
+		<?php echo $this->renderPartial('_modalPortConfig', array('modelPlayerConfigs'=>$modelPlayerConfigs, 'modelDeviceTunelGrid'=>$modelDeviceTunelGrid, 'idDevice'=>''));?>
 	</div>
 
 	<div id="container-modal-viewDownload" style="display: none">
