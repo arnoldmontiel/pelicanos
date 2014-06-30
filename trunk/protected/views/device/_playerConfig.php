@@ -29,13 +29,32 @@ function savePlayer(id)
 
 	
 }
+function removePlayer(idPlayer)
+{		
+	if(confirm("¿Seguro desea eliminar el player?"))
+	{
+		
+		$.post("<?php echo DeviceController::createUrl('AjaxRemovePlayer'); ?>",
+			{
+			idPlayer:idPlayer
+			}
+		).success(
+			function(data){
+				$.fn.yiiGridView.update('player-config-grid');
+  				$.fn.yiiGridView.update('customer-device-grid');
+			});
+		return false;
+	}
+}
 
 function updatePlayer(id)
 {
 	$("#edit_"+id).addClass('hidden');
+	$("#remove_"+id).addClass('hidden');
 	$("#save_"+id).removeClass('hidden');
 	$("#cancel_"+id).removeClass('hidden');
-	$(".btn100").addClass('disabled');
+		
+	$(".mainEdit").addClass('disabled');
 	$("#player-config-grid :input[idconfig='"+id+"']").each(function(){
     	$(this).removeAttr('disabled');
 	});
@@ -154,7 +173,8 @@ function checkAddEnabled()
   				),
   				array(  						
 						'value'=>function($data){
-  							return '<button id="edit_'.$data->Id.'" type="button" onclick="updatePlayer('.$data->Id.');" class="btn btn-default btn-sm btn100 noMargin"><i class="fa fa-pencil"></i> Editar</button>
+  							return '<button id="edit_'.$data->Id.'" type="button" onclick="updatePlayer('.$data->Id.');" class="btn btn-default btn-sm btn50 noMargin mainEdit"><i class="fa fa-pencil"></i> Editar</button>
+									<button id="remove_'.$data->Id.'" type="button" onclick="removePlayer('.$data->Id.');" class="btn btn-default btn-sm btn50 noMargin mainEdit"><i class="fa fa-trash-o"></i> Borrar</button>
   									<button id="save_'.$data->Id.'" type="button" onclick="savePlayer('.$data->Id.');" class="hidden btn btn-default btn-sm btn50 noMargin pull-left"><i class="fa fa-save"></i></button>
   									<button id="cancel_'.$data->Id.'" type="button" onclick="cancelEdit('.$data->Id.');" class="hidden btn btn-default btn-sm btn50 noMargin pull-right"><i class="fa fa-times-circle"></i></button>';
   						},
