@@ -48,7 +48,13 @@ class PlayerSOAP
 	 * @soap
 	 */
 	public $type;
-		
+
+	/**
+	 * @var string File Protocol
+	 * @soap
+	 */
+	public $file_protocol;
+	
 	/**
 	* @var string Id_device
 	* @soap

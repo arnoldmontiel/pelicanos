@@ -82,10 +82,16 @@ function checkAddEnabled()
   										array('id'=>'1','value'=>'Oppo')
   									)
   								,'id','value');
+  $fileProtocolList = CHtml::listData(  array(
+										array('id'=>'smb','value'=>'Smb'),
+										array('id'=>'nfs','value'=>'Nfs')
+									)
+								,'id','value');
   ?>
-  <td style="width:30%;"><?php echo CHtml::activeTextField($newModel, 'description',array('onkeyup'=>'checkAddEnabled()','class'=>'form-control', 'placeholder'=>"Description")); ?></td>
-  <td style="width:30%;"><?php echo CHtml::activeTextField($newModel, 'url',array('onkeyup'=>'checkAddEnabled()','class'=>'form-control', 'placeholder'=>"Url")); ?></td>
-  <td style="width:30%;"><?php echo CHtml::activeDropDownList($newModel, 'type', $typeList, array('class'=>'form-control')); ?></td>  
+  <td style="width:20%;"><?php echo CHtml::activeTextField($newModel, 'description',array('onkeyup'=>'checkAddEnabled()','class'=>'form-control', 'placeholder'=>"Description")); ?></td>
+  <td style="width:20%;"><?php echo CHtml::activeTextField($newModel, 'url',array('onkeyup'=>'checkAddEnabled()','class'=>'form-control', 'placeholder'=>"Url")); ?></td>
+  <td style="width:20%;"><?php echo CHtml::activeDropDownList($newModel, 'type', $typeList, array('class'=>'form-control')); ?></td>  
+  <td style="width:20%;"><?php echo CHtml::activeDropDownList($newModel, 'file_protocol', $fileProtocolList, array('class'=>'form-control')); ?></td>
   <td class="align-right"><button id="btn-add-player" type="button" onclick="addNewPlayer();" class="btn btn-primary btn-sm noMargin disabled"><i class="fa fa-plus"></i> Agregar</button></td>
   </tr>
   </tbody>
@@ -109,14 +115,14 @@ function checkAddEnabled()
 							return '<input type="text" idconfig="'.$data->Id.'" class="form-control" name="description_'.$data->Id.'" id="description_'.$data->Id.'" disabled value="'.$data->description.'">';
 						},
 						'type'=>'raw',
-						'htmlOptions'=>array("style"=>"width:30%"),
+						'htmlOptions'=>array("style"=>"width:20%"),
   				),
   				array(
 						'value'=>function($data){
 							return '<input type="text" idconfig="'.$data->Id.'" class="form-control" name="url_'.$data->Id.'" id="url_'.$data->Id.'" disabled value="'.$data->url.'">';
 						},
 						'type'=>'raw',
-						'htmlOptions'=>array("style"=>"width:30%"),
+						'htmlOptions'=>array("style"=>"width:20%"),
   				),
   				array(
 
@@ -130,11 +136,25 @@ function checkAddEnabled()
 						return $value;
 					},
 					'type'=>'raw',
-					'htmlOptions'=>array("style"=>"width:30%"),
+					'htmlOptions'=>array("style"=>"width:20%"),
+  				),
+  				array(
+  				
+  						'value'=>function($data){
+  							$fileProtocolList = CHtml::listData(  array(
+  									array('id'=>'smb','value'=>'Smb'),
+  									array('id'=>'nfs','value'=>'Nfs')
+  							)
+  									,'id','value');
+  							$value = CHtml::activeDropDownList($data, 'file_protocol', $fileProtocolList, array('class'=>'form-control', 'idconfig'=>$data->Id, 'disabled'=>'disabled', 'name'=>'file_protocol_'.$data->Id));
+  							return $value;
+  						},
+  						'type'=>'raw',
+  						'htmlOptions'=>array("style"=>"width:20%"),
   				),
   				array(  						
 						'value'=>function($data){
-  							return '<button id="edit_'.$data->Id.'" type="button" onclick="updatePlayer('.$data->Id.');" class="btn btn-default btn-sm btn100 noMargin"><i class="fa fa-trash"></i> Editar</button>
+  							return '<button id="edit_'.$data->Id.'" type="button" onclick="updatePlayer('.$data->Id.');" class="btn btn-default btn-sm btn100 noMargin"><i class="fa fa-pencil"></i> Editar</button>
   									<button id="save_'.$data->Id.'" type="button" onclick="savePlayer('.$data->Id.');" class="hidden btn btn-default btn-sm btn50 noMargin pull-left"><i class="fa fa-save"></i></button>
   									<button id="cancel_'.$data->Id.'" type="button" onclick="cancelEdit('.$data->Id.');" class="hidden btn btn-default btn-sm btn50 noMargin pull-right"><i class="fa fa-times-circle"></i></button>';
   						},

@@ -327,6 +327,7 @@ class DeviceController extends Controller
 				$modelDevicePlayer->description = $_POST['description_'.$idPlayer];
 				$modelDevicePlayer->url = $_POST['url_'.$idPlayer];
 				$modelDevicePlayer->type = $_POST['type_'.$idPlayer];
+				$modelDevicePlayer->file_protocol = $_POST['file_protocol_'.$idPlayer];
 				
 				if($modelDevicePlayer->save())
 				{
