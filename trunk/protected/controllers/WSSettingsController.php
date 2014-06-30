@@ -191,6 +191,7 @@ class WSSettingsController extends Controller
 				$configSOAP = new ConfigurationSOAP();
 				$configSOAP->setAttributes($modelRel->device);
 				
+				//agrego las cuentas de sabnzbd
 				$sabnzbdAccounts = SabnzbdConfig::model()->findAllByAttributes(array('Id_device'=>$idDevice));
 				
 				foreach($sabnzbdAccounts as $account)
@@ -198,6 +199,16 @@ class WSSettingsController extends Controller
 					$modelAccount = new SabnzbdAccountSOAP();
 					$modelAccount->setAttributes($account);
 					$configSOAP->SabnzbdAccounts[] = $modelAccount;
+				}
+				
+				//agrego los players
+				$devicePlayers = DevicePlayer::model()->findAllByAttributes(array('Id_device'=>$idDevice));
+				
+				foreach($devicePlayers as $player)
+				{
+					$modelPlayer = new PlayerSOAP();
+					$modelPlayer->setAttributes($player);
+					$configSOAP->Players[] = $modelPlayer;
 				}
 				
 				$modelResponse->Configuration = $configSOAP;
