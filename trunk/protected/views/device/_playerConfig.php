@@ -84,7 +84,8 @@ function checkAddEnabled()
   <tr>
   <th>Nombre</th>
   <th>Url</th>
-  <th>Tipo</th>  
+  <th>Tipo</th>
+  <th>Protocolo</th>  
   <th class="align-right">Acciones</th>
   </tr>
   </thead>
