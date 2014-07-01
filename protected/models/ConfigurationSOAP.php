@@ -32,18 +32,6 @@ class ConfigurationSOAP
 	public $sabnzb_api_key;
 	
 	/**
-	* @var string Sabnzbd API URL
-	* @soap
-	*/
-	public $sabnzb_api_url;
-	
-	/**
-	 * @var string Sabnzbd password path
-	 * @soap
-	 */
-	public $sabnzb_pwd_file_path;
-	
-	/**
 	 * @var string Sabnzbd path descarga
 	 * @soap
 	 */

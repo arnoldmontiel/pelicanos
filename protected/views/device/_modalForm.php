@@ -23,30 +23,6 @@
 			 		</div>
   				</div>
   				<div class="inlineForm">
-  					<label class="inlineFormLabel">Sabnzbd</label>
-  					<div class="row">
-						<div class="form-group col-sm-6">
-	    					<label>Sabnzbd password path</label>
-	    						<?php echo CHtml::activeTextField($modelDevice, 'sabnzb_pwd_file_path', array('class'=>'form-control'));?>
-	  					</div>
-	  					<div class="form-group col-sm-6 ">
-	    					<label>Sabnzbd path descarga</label>
-	    						<?php echo CHtml::activeTextField($modelDevice, 'path_sabnzbd_download', array('class'=>'form-control'));?>
-	  					</div>
-  					</div>
-  					<div class="row">   
-  						<div class="form-group col-sm-6 ">
-	    					<label>Sabnzbd API URL</label>
-	      						<?php echo CHtml::activeTextField($modelDevice, 'sabnzb_api_url', array('class'=>'form-control', 'placeholder'=>'Url'));?>
-	  					</div> 
-	  					<div class="form-group col-sm-6">
-	    					<label>Sabnzbd API Key</label>
-	      						<?php echo CHtml::activeTextField($modelDevice, 'sabnzb_api_key', array('class'=>'form-control'));?>
-	  					</div>  	    
-  					</div>			
-  				</div>
-  				
-  				<div class="inlineForm">
   					<label class="inlineFormLabel">Servidor Multimedia</label>
   					<div class="row">
 	  					<div class="form-group col-sm-6 ">
@@ -100,20 +76,19 @@
 		    					<label>Path Compartidos</label>
 		    						<?php echo CHtml::activeTextField($modelDevice, 'path_shared', array('class'=>'form-control'));?>
 		  					</div>
-		  					<div class="form-group col-sm-6 ">
-		  						<label>Password MJ</label>
-		      						<?php echo CHtml::activeTextField($modelDevice, 'michael_jackson', array('class'=>'form-control'));?>
-		  					</div>
+		  					<div class="form-group col-sm-6">
+	    						<label>Sabnzbd API Key</label>
+	      						<?php echo CHtml::activeTextField($modelDevice, 'sabnzb_api_key', array('class'=>'form-control'));?>
+	  						</div>  
 	  					</div>
 	  					<div class="row">
 		  					<div class="form-group col-sm-6 ">
-		    					<label>Host</label>
-		      						<?php echo CHtml::activeTextField($modelDevice, 'host_name', array('class'=>'form-control'));?>
-		  					</div>  		
-		  					<div class="form-group col-sm-6 ">
 		  						<label>Es Tester</label>
 	      							<?php echo CHtml::activeCheckBox($modelDevice, 'is_movie_tester', array('class'=>'form-control'));?>
-	      					</div>			
+	      					</div>		
+	      					<div class="form-group col-sm-6 ">
+	  				
+	  					</div>	 	
 	  					</div>
   				</div>
   					

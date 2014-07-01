@@ -441,6 +441,8 @@ class DeviceController extends Controller
 			{
 				$modelDevice = Device::model()->findByPk($_POST['Device']['Id']);
 				$modelDevice->attributes = $_POST['Device'];
+				$modelDevice->host_name = 'http://gruposmartliving.com/';
+				$modelDevice->path_sabnzbd_download = $modelDevice->path_shared;
 				$modelDevice->save();
 				
 				$modelClientSettings=new ClientSettings;
@@ -467,6 +469,8 @@ class DeviceController extends Controller
 			{
 				$modelDevice = Device::model()->findByPk($_POST['Device']['Id']);
 				$modelDevice->attributes = $_POST['Device'];
+				$modelDevice->path_sabnzbd_download = $modelDevice->path_shared;
+				
 				if($modelDevice->save())
 				{
 					$modelCustomerDevice = CustomerDevice::model()->findByAttributes(array('Id_device'=>$modelDevice->Id));
