@@ -32,12 +32,6 @@ class ConfigurationSOAP
 	public $sabnzb_api_key;
 	
 	/**
-	 * @var string Sabnzbd path descarga
-	 * @soap
-	 */
-	public $path_sabnzbd_download;
-	
-	/**
 	 * @var string Servidor Multimedia IP
 	 * @soap
 	 */
@@ -78,12 +72,6 @@ class ConfigurationSOAP
 	 * @soap
 	 */
 	public $host_name;
-	
-	/**
-	 * @var string path_shared
-	 * @soap
-	 */
-	public $path_shared;
 	
 	/**
 	 * @var string michael_jackson
