@@ -40,17 +40,18 @@ function portConfig(id)
 							
 							$("#Device_Id").val(objDevice.Id);
 							$("#Device_sabnzb_api_key").val(objDevice.sabnzb_api_key);
-							$("#Device_sabnzb_api_url").val(objDevice.sabnzb_api_url);
-							$("#Device_path_sabnzbd_download").val(objDevice.path_sabnzbd_download);
-							$("#Device_path_pending").val(objDevice.path_pending);
-							$("#Device_path_ready").val(objDevice.path_ready);
-							$("#Device_path_images").val(objDevice.path_images);
-							$("#Device_path_shared").val(objDevice.path_shared);
-							$("#Device_tmdb_api_key").val(objDevice.tmdb_api_key);
-							$("#Device_tmdb_lang").val(objDevice.tmdb_lang);
-							$("#Device_host_path").val(objDevice.host_path);
 							$("#Device_host_file_server").val(objDevice.host_file_server);
 							$("#Device_host_file_server_path").val(objDevice.host_file_server_path);
+							$("#Device_host_file_server_user").val(objDevice.host_file_server_user);
+							$("#Device_host_file_server_passwd").val(objDevice.host_file_server_passwd);
+							$("#Device_host_file_server_name").val(objDevice.host_file_server_name);							
+							$("#Device_tmdb_api_key").val(objDevice.tmdb_api_key);
+							$("#Device_tmdb_lang").val(objDevice.tmdb_lang);
+
+							if(objDevice.is_movie_tester == 1)
+								$("#Device_is_movie_tester").attr('checked',true);
+							else							
+								$("#Device_is_movie_tester").attr('checked',false)
 						}
 					}						
 				}

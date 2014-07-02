@@ -167,26 +167,17 @@
   					<div class="inlineForm">
 	  					<label class="inlineFormLabel">Varios</label>
 	  					<div class="row">
-		  					<div class="form-group col-sm-6 ">
-		    					<label>Path Compartidos</label>
-		    						<?php echo CHtml::activeTextField($modelDevice, 'path_shared', array('class'=>'form-control', 'onkeyup'=>'changeSaveLabel();'));?>
-		  					</div>
-		  					<div class="form-group col-sm-6">
+	  						<div class="form-group col-sm-6">
 		    					<label>Sabnzbd API Key</label>
 		      						<?php echo CHtml::activeTextField($modelDevice, 'sabnzb_api_key', array('class'=>'form-control', 'onkeyup'=>'changeSaveLabel();'));?>
-		  					</div>  
-	  					</div>
-	  					<?php if($isAdmin):?>
-	  					<div class="row">  		
+		  					</div>
 		  					<div class="form-group col-sm-6 ">
-		  						<label>Es Tester</label>
+		  					<?php if($isAdmin):?>
+		    					<label>Es Tester</label>
 	      							<?php echo CHtml::activeCheckBox($modelDevice, 'is_movie_tester', array('class'=>'form-control', 'onkeyup'=>'changeSaveLabel();'));?>
-	      					</div>		
-	      					<div class="form-group col-sm-6 ">
-	  				
-	  						</div>		
+	      					<?php endif;?>
+		  					</div>
 	  					</div>
-	  					<?php endif;?>
   					</div>
   					<div class="form-group">
     					<div class="col-sm-12">    	
