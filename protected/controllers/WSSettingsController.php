@@ -48,6 +48,7 @@ class WSSettingsController extends Controller
 					$modelErrorLog->error_type = $clientError->error_type;
 					$modelErrorLog->has_error = $clientError->has_error;
 					$modelErrorLog->date = $clientError->date;
+					$modelErrorLog->Id_device = $settings->Id_device;
 					$modelErrorLog->save();
 				}
 				$transaction->commit();
