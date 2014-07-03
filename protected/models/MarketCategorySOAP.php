@@ -50,7 +50,7 @@ class MarketCategorySOAP
 	public $order;
 	
 	/**
-	 * @var NzbSOAP[]
+	 * @var integer[]
 	 * @soap
 	 */
 	public $Nzbs;	
