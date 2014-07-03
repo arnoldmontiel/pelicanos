@@ -102,4 +102,10 @@ class ConfigurationSOAP
 	 * @soap
 	 */
 	public $Players;	
+	
+	/**
+	 * @var MarketCategorySOAP[]
+	 * @soap
+	 */
+	public $MarketCategorys;
 }
