@@ -35,6 +35,8 @@ class WSSettingsController extends Controller
 				$model->port_v4 = $settings->port_v4;
 				$model->port_v6 = $settings->port_v6;
 				$model->is_nas_alive = $settings->is_nas_alive;
+				$model->version = $settings->version;
+				
 				if($model->is_nas_alive != 0)
 				{
 					$model->disc_used_space = $settings->disc_used_space;
