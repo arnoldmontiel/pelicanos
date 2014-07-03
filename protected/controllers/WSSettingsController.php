@@ -214,6 +214,20 @@ class WSSettingsController extends Controller
 					$configSOAP->Players[] = $modelPlayer;
 				}
 				
+				//agrego market categorys
+				$marketCategorys = MarketCategory::model()->findAll();
+				foreach($marketCategorys as $marketCat)
+				{
+					$modelMarketCategory = new MarketCategorySOAP();
+					$modelMarketCategory->setAttributes($marketCat);
+					$modelMCNzbs = MarketCategoryNzb::model()->findAllByAttributes(array('Id_market_category'=>$marketCat->Id));
+					foreach($modelMCNzbs as $item)
+					{
+						$modelMarketCategory->Nzbs[] = $item->Id_nzb;
+					}
+					$configSOAP->MarketCategorys[] = $modelMarketCategory;
+				}
+				
 				$modelResponse->Configuration = $configSOAP;
 
 				$users = CustomerUsers::model()->findAllByAttributes(array('Id_customer'=>$modelRel->Id_customer));
