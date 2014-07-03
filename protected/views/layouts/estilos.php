@@ -115,6 +115,8 @@ input[type="radio"], input[type="checkbox"] {
 box-shadow:none;
 -webkit-transition:none;
 transition:none;
+width: 20px;
+margin: 0px 5px;
 }
 .checkInline{
 width:auto;
