@@ -52,6 +52,12 @@ class ClientSettingsRequest
 	public $is_nas_alive;
 	
 	/**
+	 * @var string Version
+	 * @soap
+	 */
+	public $version;
+	
+	/**
 	 * @var ClientError[]
 	 * @soap
 	 */

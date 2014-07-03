@@ -18,6 +18,7 @@
  * @property string $disc_used_space
  * @property string $disc_total_space
  * @property integer $is_nas_alive
+ * @property string $version
  *
  * The followings are the available model relations:
  * @property Device $idDevice
@@ -54,7 +55,7 @@ class ClientSettings extends CActiveRecord
 			array('Id_customer, Id_device', 'required'),
 			array('Id, port_v4, port_v6, Id_customer, need_update, is_nas_alive', 'numerical', 'integerOnly'=>true),
 			array('ip_v4, ip_v6, anydvd_version_installed, anydvd_version_downloaded', 'length', 'max'=>128),
-			array('Id_device', 'length', 'max'=>45),
+			array('Id_device, version', 'length', 'max'=>45),
 			array('disc_used_space, disc_total_space', 'length', 'max'=>20),
 			array('last_update','default',
 									              'value'=>new CDbExpression('NOW()'),
@@ -65,7 +66,7 @@ class ClientSettings extends CActiveRecord
 			array('last_update', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id, ip_v4, ip_v6, port_v4, port_v6, Id_customer, last_update, anydvd_version_installed, anydvd_version_downloaded, need_update, Id_device, disc_used_space, disc_total_space, is_nas_alive', 'safe', 'on'=>'search'),
+			array('Id, ip_v4, ip_v6, port_v4, port_v6, Id_customer, last_update, anydvd_version_installed, anydvd_version_downloaded, need_update, Id_device, disc_used_space, disc_total_space, is_nas_alive, version', 'safe', 'on'=>'search'),
 		);
 	}
 
