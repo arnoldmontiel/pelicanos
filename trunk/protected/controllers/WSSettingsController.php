@@ -225,7 +225,7 @@ class WSSettingsController extends Controller
 					{
 						$modelMarketCategory->Nzbs[] = $item->Id_nzb;
 					}
-					$configSOAP->MarketCategorys[] = $modelMarketCategory;
+					$configSOAP->MarketCategories[] = $modelMarketCategory;
 				}
 				
 				$modelResponse->Configuration = $configSOAP;
