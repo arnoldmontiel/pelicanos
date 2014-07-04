@@ -107,5 +107,5 @@ class ConfigurationSOAP
 	 * @var MarketCategorySOAP[]
 	 * @soap
 	 */
-	public $MarketCategorys;
+	public $MarketCategories;
 }
