@@ -29,7 +29,7 @@ class MarketCategorySOAP
 	* @var string Id
 	* @soap
 	*/
-	public $Idy;
+	public $Id;
 	
 	/**
 	 * @var string Description
