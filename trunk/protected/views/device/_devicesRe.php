@@ -72,6 +72,18 @@
 						'headerHtmlOptions'=>array("class"=>"align-center"),
 				),
 				array(
+						'header'=>'Versi&oacute;n',
+						'value'=>function($data){
+							$modelClientSetting = ClientSettings::model()->findByAttributes(array('Id_device'=>$data->Id_device, 'Id_customer'=>$data->Id_customer));
+							$version = 0;
+							if(isset($modelClientSetting))
+								$version = (isset($modelClientSetting->version))?$modelClientSetting->version:0;
+								
+							return $version;
+						},
+						'type'=>'raw',
+				),
+				array(
 						'header'=>'Acciones',
 						'value'=>function($data){
 							$device = "'$data->Id_device'";
