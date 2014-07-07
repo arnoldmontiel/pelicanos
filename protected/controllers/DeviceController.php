@@ -442,6 +442,8 @@ class DeviceController extends Controller
 				$modelDevice = Device::model()->findByPk($_POST['Device']['Id']);
 				$modelDevice->attributes = $_POST['Device'];
 				$modelDevice->host_name = 'http://gruposmartliving.com/';
+				$modelDevice->tmdb_api_key = 'd69f685047265d0f04a0a61bc09c8382';
+				$modelDevice->tmdb_lang = 'es';
 				$modelDevice->save();
 				
 				$modelClientSettings=new ClientSettings;
