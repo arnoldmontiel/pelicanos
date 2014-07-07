@@ -54,21 +54,6 @@
 	  					</div>	  					
   					</div>
   				</div>
-  				
-  				<div class="inlineForm">
-  					<label class="inlineFormLabel">Tmdb</label>
-  					<div class="row">
-	  					<div class="form-group col-sm-6 ">
-	    					<label>Tmdb API Key</label>
-	      						<?php echo CHtml::activeTextField($modelDevice, 'tmdb_api_key', array('class'=>'form-control'));?>
-	  					</div>  					
-	  					<div class="form-group col-sm-6">
-	    					<label>Tmdb API Lang</label>
-	      						<?php echo CHtml::activeTextField($modelDevice, 'tmdb_lang', array('class'=>'form-control'));?>
-	  					</div>
-  					</div>
-  				</div>
-  				
   				<div class="inlineForm">
 	  					<label class="inlineFormLabel">Varios</label>
 	  					<div class="row">
