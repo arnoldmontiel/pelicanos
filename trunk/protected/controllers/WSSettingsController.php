@@ -172,6 +172,25 @@ class WSSettingsController extends Controller
 	}
 	
 	/**
+	 *
+	 * Returns the customer name and last name if not validate return empty string
+	 * @param string idDevice
+	 * @return string
+	 * @soap
+	 */
+	public function validateDeviceId($idDevice)
+	{
+		$fullName = "";
+		$modelCustomerDevice = CustomerDevice::model()->findByAttributes(array('Id_device'=>$idDevice));
+		
+		if(isset($modelCustomerDevice))
+		{
+			$fullName = $modelCustomerDevice->customer->getFullName();
+		}
+		return $fullName;		
+	}
+	
+	/**
 	*
 	* Returns the customer configuration
 	* @param string idDevice
