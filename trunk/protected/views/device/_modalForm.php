@@ -71,7 +71,7 @@
       		</div>
       		<div class="modal-footer">
         		<button type="button" class="btn btn-default btn-lg" data-dismiss="modal">Cancelar</button>
-        		<button onclick="acceptDevice();" type="button" class="btn btn-primary btn-lg"><i class="fa fa-save"></i> Guardar</button>
+        		<button onclick="acceptDevice();" type="button" class="btn btn-primary btn-lg"><i class="fa fa-save"></i> Crear</button>
       		</div>
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal-dialog -->
