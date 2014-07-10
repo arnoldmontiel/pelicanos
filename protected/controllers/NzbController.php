@@ -2172,6 +2172,7 @@ class NzbController extends Controller
 			$actors = explode(',',$_POST['input_actors']);
 			$directors = explode(',',$_POST['input_directors']);
 			$genres = explode(',',$_POST['input_genres']);
+			$marketCategories = explode(',',$_POST['input_categories']);
 			
 			$modelNzb = Nzb::model()->findByPk($_POST['idNzb']);
 			$myMovie = $modelNzb->myMovieDiscNzb->myMovieNzb;
@@ -2196,6 +2197,15 @@ class NzbController extends Controller
 		
 				$myMovie->save();
 		
+				MarketCategoryNzb::model()->deleteAllByAttributes(array('Id_nzb'=>$_POST['idNzb']));
+				foreach($marketCategories as $cateogry)
+				{
+					$modelMarketCategoryNzb = new MarketCategoryNzb();
+					$modelMarketCategoryNzb->Id_nzb = $_POST['idNzb'];
+					$modelMarketCategoryNzb->Id_market_category = $cateogry;
+					$modelMarketCategoryNzb->save();
+				}
+				
 				if(isset($persons))
 				{
 					foreach ($persons as $person){
@@ -2335,11 +2345,38 @@ class NzbController extends Controller
 	
 	public function actionAjaxGetMarketCategories()
 	{
-		$model = MarketCategory::model()->findAll();	
-	
-		$categoryList = CHtml::listData(  MarketCategory::model()->findAll()
-				,'Id','description');
-		echo json_encode ($categoryList);
+		$id = $_POST['idNzb'];	
+		$response = array();
+
+		$availableCategories = MarketCategory::model()->findAll();
+		
+		$available = array();
+		foreach($availableCategories as $item)
+		{
+			$category = array();
+			$category['id'] = $item->Id;
+			$category['text'] = $item->description;
+			$available[] = $category;
+		}
+		
+		$criteria = new CDbCriteria();
+		$criteria->join = 'inner join market_category_nzb mc on (mc.Id_market_category = t.Id)';
+		$criteria->addCondition('mc.Id_nzb = '.$id);		
+		$usedCategories = MarketCategory::model()->findAll($criteria);
+		
+		$used = array();
+		foreach($usedCategories as $item)
+		{
+			$category = array();
+			$category['id'] = $item->Id;
+			$category['text'] = $item->description;
+			$used[] = $category;
+		}
+		
+		$response['used'] = $used;				
+		$response['available'] = $available;
+		
+		echo json_encode ($response);
 	}
 	
 	public function actionAjaxGetPersons()
