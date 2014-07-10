@@ -116,7 +116,8 @@ Yii::app()->clientScript->registerScript('update-video-info', "
 		$('#actors').select2({tags:[],tokenSeparators: [',']});
 		$('#directors').select2({tags:[],tokenSeparators: [',']});
 		$('#genres').select2({tags:[],tokenSeparators: [',']});
-		
+	   	$('#marketcategories').select2({tags:[],tokenSeparators: [',']});
+	   				
 		$.ajax({
 	   		type: 'POST',
 	   		url: '". NzbController::createUrl('AjaxGetGenres') . "',
@@ -126,7 +127,7 @@ Yii::app()->clientScript->registerScript('update-video-info', "
 	 	{	
 	   		vals = '';
 	   		first = true;
-			for (var i in data) {
+			for (var i in data) {	   				
 				item = data[i];
 				if(first)
    				{
@@ -144,6 +145,34 @@ Yii::app()->clientScript->registerScript('update-video-info', "
 		}
 	 	);
 		$('#genres').on('change',function(e){ $('#input_genres').val(e.val);});
+
+	   	$.ajax({
+	   		type: 'POST',
+	   		url: '". NzbController::createUrl('AjaxGetMarketCategories') . "',
+	   		data: {idNzb:'".$modelNzb->Id."'},
+	   		dataType: 'json'
+	 	}).success(function(data)
+	 	{	
+	   		vals = '';
+	   		first = true;
+			for (var i in data.used) {
+				item = data.used[i];
+				if(first)
+   				{
+	   				first = false;
+	   				vals = item.id;
+				}
+	   			else
+	   			{
+	   				vals = vals+','+item.id;
+	   			}
+			} 				
+			$('#marketcategories').select2({tags:data.available,tokenSeparators: [',']});
+	   		$('#marketcategories').val(vals).trigger('change');
+			$('#input_categories').val(vals);	   						   				
+		}
+	 	);
+		$('#marketcategories').on('change',function(e){ $('#input_categories').val(e.val);});
 	   				
 		$.ajax({
 	   		type: 'POST',
@@ -236,6 +265,7 @@ Yii::app()->clientScript->registerScript('update-video-info', "
 	echo CHtml::hiddenField('idNzb',$modelNzb->Id);	
 	echo CHtml::hiddenField('input_actors');
 	echo CHtml::hiddenField('input_genres');	
+	echo CHtml::hiddenField('input_categories');
 	echo CHtml::hiddenField('input_directors');	
 	?>
     <div class="row">
@@ -254,6 +284,17 @@ Yii::app()->clientScript->registerScript('update-video-info', "
     <label for="fieldGenero" class="col-md-1 control-label">Genero</label>
     <div class="col-md-11">
       <div id="genres" style="width:100%">
+    </div>
+    </div>
+    </div>
+    </div><!-- /col-md-12 -->
+    </div><!-- /row -->
+    <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+    <label for="fieldMarketCategory" class="col-md-1 control-label">Categorias en Market</label>
+    <div class="col-md-11">
+      <div id="marketcategories" style="width:100%">
     </div>
     </div>
     </div>
