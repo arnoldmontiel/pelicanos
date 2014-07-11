@@ -39,6 +39,7 @@ function getPendingDevices()
           <?php $active = Yii::app()->controller->id;?>
           <?php if(Yii::app()->user->checkAccess('NzbManage')):?>
           <li <?php if ($active=="nzb"){ echo 'class="active"';}?> ><a href="<?php echo Yii::app()->createUrl("nzb/index")?>"><i class="fa fa-film fa-fw"></i> Pel&iacute;culas</a></li>
+          <li <?php if ($active=="marketCategory"){ echo 'class="active"';}?> ><a href="<?php echo Yii::app()->createUrl("marketCategory/index")?>"><i class="fa fa-shopping-cart fa-fw"></i> Market</a></li>
           <?php endif?>
           <?php if(Yii::app()->user->checkAccess('NzbManageRe')):?>
           <li <?php if ($active=="nzb"){ echo 'class="active"';}?> ><a href="<?php echo Yii::app()->createUrl("nzb/indexRe")?>"><i class="fa fa-film fa-fw"></i> Pel&iacute;culas</a></li>
