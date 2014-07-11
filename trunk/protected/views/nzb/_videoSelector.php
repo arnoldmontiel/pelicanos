@@ -67,7 +67,7 @@
 		$('#list-movies').html('<div class="loadingMessage"><i class="fa fa-spinner fa-spin"></i> Buscando opciones..</div>');		
 		$(this).attr("disabled", "disabled");
 		$('#searchMoviesResult').html("Buscando...");
-		$.post("<?php echo SiteController::createUrl('AjaxSearchMovieTMDB'); ?>",
+		$.post("<?php echo NzbController::createUrl('AjaxSearchMovieTMDB'); ?>",
 			{title: $('#fieldSearchName').val(),
 			year:$('#fieldAno').val()}
 		).success(
@@ -114,7 +114,7 @@
 			var target = $('.list-group-item.active')[0];
 			$.ajax({
 		   		type: 'POST',
-		   		url: '<?php echo SiteController::createUrl('AjaxSaveSelectedVideo');?>',
+		   		url: '<?php echo NzbController::createUrl('AjaxSaveSelectedVideo');?>',
 		   		data: {Id_movie:target.id,idNzb:<?php echo $idNzb; ?>},
 		 	}).success(function(data)
 		 	{	
