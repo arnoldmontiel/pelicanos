@@ -48,7 +48,7 @@
     	{
 		$.ajax({
 	   		type: 'POST',
-	   		url: '<?php echo SiteController::createUrl('ajaxSaveSelectedPoster') ?>',
+	   		url: '<?php echo NzbController::createUrl('ajaxSaveSelectedPoster') ?>',
 	   		data: {idNzb:<?php echo $idNzb;?>,TMDB_id:<?php echo $movie->id;?>,poster:$("select.image-picker").val()},
 	   		dataType:'json'
 	 	}).success(function(data)
