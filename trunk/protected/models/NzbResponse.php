@@ -26,5 +26,11 @@ class NzbResponse
 	 * @soap
 	 */
 	public $myMovieDisc;
+	
+	/**
+	 * @var integer[]
+	 * @soap
+	 */
+	public $MarketCategories;
 
 }

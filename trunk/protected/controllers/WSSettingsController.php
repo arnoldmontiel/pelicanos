@@ -238,12 +238,7 @@ class WSSettingsController extends Controller
 				foreach($marketCategorys as $marketCat)
 				{
 					$modelMarketCategory = new MarketCategorySOAP();
-					$modelMarketCategory->setAttributes($marketCat);
-					$modelMCNzbs = MarketCategoryNzb::model()->findAllByAttributes(array('Id_market_category'=>$marketCat->Id));
-					foreach($modelMCNzbs as $item)
-					{
-						$modelMarketCategory->Nzbs[] = $item->Id_nzb;
-					}
+					$modelMarketCategory->setAttributes($marketCat);					
 					$configSOAP->MarketCategories[] = $modelMarketCategory;
 				}
 				

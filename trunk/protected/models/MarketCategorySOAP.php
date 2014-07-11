@@ -48,10 +48,4 @@ class MarketCategorySOAP
 	 * @soap
 	 */
 	public $order;
-	
-	/**
-	 * @var integer[]
-	 * @soap
-	 */
-	public $Nzbs;	
 }
