@@ -170,10 +170,11 @@ class MarketCategoryController extends Controller
 	private function updateNzbDeviceRelation($id)
 	{
 		$criteria = new CDbCriteria();
-		$criteria->join = 'inner join market_category_nzb n on (n.Id_nzb = t.Id_nzb)';
-		$criteria->addCondition('n.Id_market_category = '.$id);		
+		$criteria->join = 'inner join nzb_device n on (t.Id_device = n.Id_device) 
+							inner join market_category_nzb mcn on (n.Id_nzb = mcn.Id_nzb)';
+		$criteria->addCondition('mcn.Id_market_category = '.$id);		
 		
-		$modelRelation = NzbDevice::model()->findAll($criteria);
+		$modelRelation = CustomerDevice::model()->findAll($criteria);
 	
 		if(!empty($modelRelation) )
 		{
