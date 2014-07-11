@@ -2198,14 +2198,15 @@ class NzbController extends Controller
 				$first = true;
 				foreach($genres as $genre)
 				{
+					$genreVal = trim($genre);
 					if($first)
 					{
 						$first = false;
-						$myMovie->genre = $genre;
+						$myMovie->genre = $genreVal;
 					}
 					else
 					{
-						$myMovie->genre = $myMovie->genre.", ".$genre;
+						$myMovie->genre = $myMovie->genre.", ".$genreVal;
 					}
 				}
 		
