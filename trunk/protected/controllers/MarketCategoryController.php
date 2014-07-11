@@ -29,7 +29,7 @@ class MarketCategoryController extends Controller
 		$criteria = new CDbCriteria();
 		$criteria->order = 't.order ASC';
 		$models = MarketCategory::model()->findAll($criteria);		
-		if(isset($models))
+		if(count($models)>0)
 		{
 			foreach($models as $item)
 			{
