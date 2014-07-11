@@ -130,7 +130,9 @@ class MarketCategoryController extends Controller
 				}
 			}
 				
-			$modelMarketCategory->save();			
+			if($modelMarketCategory->save())
+				self::updateNzbDeviceRelation($modelMarketCategory->Id);
+						
 		}
 	}
 	
@@ -155,12 +157,29 @@ class MarketCategoryController extends Controller
 					$item->order = $item->order - 1;
 					$item->save();
 				}
-				
+				self::updateNzbDeviceRelation($id);
 				MarketCategoryNzb::model()->deleteAllByAttributes(array('Id_market_category'=>$id));
 				$modelMarketCategory->delete();
 				$transaction->commit();
 			} catch (Exception $e) {
 				$transaction->rollback();
+			}
+		}
+	}
+	
+	private function updateNzbDeviceRelation($id)
+	{
+		$criteria = new CDbCriteria();
+		$criteria->join = 'inner join market_category_nzb n on (n.Id_nzb = t.Id_nzb)';
+		$criteria->addCondition('n.Id_market_category = '.$id);		
+		
+		$modelRelation = NzbDevice::model()->findAll($criteria);
+	
+		if(!empty($modelRelation) )
+		{
+			foreach ($modelRelation as $modelRel){
+				$modelRel->need_update = 1;
+				$modelRel->save();
 			}
 		}
 	}
