@@ -29,7 +29,7 @@ class TMDBHelper
 			var_dump($e);
 		}
 	}
-	private function getImage($original, $newFileName, $copy = false)
+	static private function getImage($original, $newFileName, $copy = false)
 	{
 		$validator = new CUrlValidator();
 		$setting = Setting::getInstance();
