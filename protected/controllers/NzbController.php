@@ -112,7 +112,14 @@ class NzbController extends Controller
 					$nzbResponse->myMovie->Person[] = $personSOAP;
 				}
 			}
-				
+
+			//agrego las categorias
+			$modelMCNzbs = MarketCategoryNzb::model()->findAllByAttributes(array('Id_nzb'=>$modelNbz->Id));
+			foreach($modelMCNzbs as $item)
+			{
+				$nzbResponse->MarketCategories[] = $item->Id_market_category;
+			}
+			
 			//$arrayNbz = Nzb::model()->findAll($criteria);
 			
 			$arrayResponse[]=$nzbResponse;
@@ -199,6 +206,13 @@ class NzbController extends Controller
 				}
 			}
 	
+			//agrego las categorias
+			$modelMCNzbs = MarketCategoryNzb::model()->findAllByAttributes(array('Id_nzb'=>$modelNbz->Id));
+			foreach($modelMCNzbs as $item)
+			{
+				$nzbResponse->MarketCategories[] = $item->Id_market_category;
+			}
+			
 			//$arrayNbz = Nzb::model()->findAll($criteria);
 				
 			$arrayResponse[]=$nzbResponse;
