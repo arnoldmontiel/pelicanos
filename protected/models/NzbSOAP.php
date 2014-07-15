@@ -102,4 +102,10 @@ class NzbSOAP
 	 */
 	public $mkv_file_name;
 	
+	/**
+	 * @var string size
+	 * @soap
+	 */
+	public $size;
+	
 }
