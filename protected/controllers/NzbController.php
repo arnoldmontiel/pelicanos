@@ -172,7 +172,10 @@ class NzbController extends Controller
 			$nzbResponse->nzb->setAttributes($modelNbz);
 				
 			if(isset($modelNbz->autoRipperFile))
+			{
 				$nzbResponse->nzb->mkv_file_name = $modelNbz->autoRipperFile->label;
+				$nzbResponse->nzb->size = $modelNbz->autoRipperFile->size;
+			}
 				
 			if(isset($modelNbz->myMovieDiscNzb))
 			{
