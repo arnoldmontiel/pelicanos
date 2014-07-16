@@ -9,7 +9,7 @@
 					'summaryText'=>'',
 					'columns'=>array(							
 							array(
-									'header'=>'Tipo de error',							
+									'name'=>'error_type',							
 									'value'=>function($data){
 										$value = 'Desconocido';
 										switch ($data->error_type) {
@@ -27,13 +27,13 @@
 									},
 									'type'=>'raw',
 									'htmlOptions'=>array("style"=>"width:20%"),
-									'filter'=>CHtml::dropDownList('ErrorLog[error_type]', 'error_log',
+									'filter'=>CHtml::listData(
 											array(
-													''=>'Todos',
-													'1'=>'Players',
-													'2'=>'NAS',
-													'3'=>'Espacio en NAS',
+													array('id'=>'1','value'=>'Players'),
+													array('id'=>'2','value'=>'NAS'),
+													array('id'=>'3','value'=>'Espacio en NAS')
 											)
+											,'id','value'
 									),
 							),
 							array(
