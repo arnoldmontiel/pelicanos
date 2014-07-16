@@ -599,6 +599,7 @@ padding: 6px 8px;
 
 .modal .nav-tabs>li.active>a { background-color:#ccc; color:#fff !important;}
 
+.myModalViewInfo.modal-dialog{width:1000px;}
 .myModalViewDownloads.modal-dialog{width:1000px;}
 .myModalDescargas .modal-dialog{width:1000px;}
 .myModalConfigPuertos.modal-dialog{width:85%;}
