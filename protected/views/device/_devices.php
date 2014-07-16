@@ -96,7 +96,7 @@
 						'value'=>function($data){
 							$device = "'$data->Id_device'";
 							return '<div class="buttonGroupDevices pull-right"><button onclick="portConfig('.$device.');" data-toggle="modal" data-target="#myModalConfigPuertos" type="button" class="btn btn-default btn-sm" ><i class="fa fa-cog"></i> Configurar</button> 
-									<button onclick="viewDownloads('.$device.');" type="button" class="btn btn-default btn-sm"  data-toggle="modal" data-target="#myModalViewDownloads" ><i class="fa fa-clock-o"></i> Ver Descargas</button></div>';
+									<button onclick="viewDeviceInfo('.$device.');" type="button" class="btn btn-default btn-sm"  data-toggle="modal" data-target="#myModalViewInfo" ><i class="fa fa-clock-o"></i> Ver Info</button></div>';
 						},
 						'type'=>'raw',
 						'htmlOptions'=>array("class"=>"align-right"),

@@ -64,8 +64,16 @@ function removePlayer(obj)
 	});
 }
 
-function viewDownloads(id)
+function viewDeviceInfo(id)
 {
+	$.fn.yiiGridView.update('nzb-device-grid', {
+ 		data: $(this).serialize() + '&idDevice=' + id
+ 	});
+
+	$.fn.yiiGridView.update('error-log-grid', {
+ 		data: $(this).serialize() + '&idDevice=' + id
+ 	});
+ 	
 	$.post("<?php echo DeviceController::createUrl('AjaxOpenViewDownload'); ?>",
 			{
 				idDevice:id
@@ -292,7 +300,7 @@ function cancelRequestedDevice(idDevice, idCustomer)
 	</div>
 
 	<div id="container-modal-viewDownload" style="display: none">
-		<?php echo $this->renderPartial('_modalViewDownload', array( 'modelNzbDevice'=>$modelNzbDevice, 'idDevice'=>''));?>
+		<?php echo $this->renderPartial('_modalViewInfo', array( 'modelNzbDevice'=>$modelNzbDevice, 'modelErrorLog'=>$modelErrorLog, 'idDevice'=>''));?>
 	</div>
 </div>
 <!-- /container -->

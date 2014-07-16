@@ -58,9 +58,13 @@ function openAcceptDeviceForm(idDevice, idCustomer)
 	return false;
 }
 
-function viewDownloads(id)
+function viewDeviceInfo(id)
 {
 	$.fn.yiiGridView.update('nzb-device-grid', {
+ 		data: $(this).serialize() + '&idDevice=' + id
+ 	});
+
+	$.fn.yiiGridView.update('error-log-grid', {
  		data: $(this).serialize() + '&idDevice=' + id
  	});
  	
@@ -254,7 +258,7 @@ function addPort()
 	</div>
 	
 	<div id="container-modal-viewDownload" style="display: none">
-		<?php echo $this->renderPartial('_modalViewDownload', array( 'modelNzbDevice'=>$modelNzbDevice, 'idDevice'=>''));?>
+		<?php echo $this->renderPartial('_modalViewInfo', array( 'modelNzbDevice'=>$modelNzbDevice, 'modelErrorLog'=>$modelErrorLog, 'idDevice'=>''));?>
 	</div>
   <!-- /.row --> 
 </div>

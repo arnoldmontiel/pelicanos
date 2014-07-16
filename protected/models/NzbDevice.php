@@ -83,11 +83,15 @@ class NzbDevice extends CActiveRecord
 		return array(
 			'Id_nzb' => 'Id Nzb',
 			'Id_device' => 'Id Device',
-			'need_update' => 'Need Update',
+			'need_update' => 'Need Update',			
 			'date_sent' => 'Date Sent',
 			'date_downloading' => 'Date Downloading',
 			'date_downloaded' => 'Date Downloaded',
 			'Id_nzb_state' => 'Id Nzb State',
+			'id_imdb'=>'Imdb',
+			'title'=>'Titulo',
+			'year'=>'Año',
+			'nzb_status'=>'Estado',
 		);
 	}
 
@@ -133,7 +137,7 @@ class NzbDevice extends CActiveRecord
 		$criteria->with[]='nzbState';
 		$criteria->addSearchCondition("nzbState.description",$this->nzb_status);
 	
-		$criteria->join =	"LEFT OUTER JOIN nzb n ON n.Id=t.Id_nzb
+		$criteria->join =	"INNER JOIN nzb n ON (n.Id=t.Id_nzb and n.Id_nzb is null) 
 								LEFT OUTER JOIN customer_device cd ON cd.Id_device = t.Id_device
 								LEFT OUTER JOIN my_movie_disc_nzb dn ON dn.Id = n.Id_my_movie_disc_nzb
 								LEFT OUTER JOIN my_movie_nzb i ON dn.Id_my_movie_nzb=i.Id";
