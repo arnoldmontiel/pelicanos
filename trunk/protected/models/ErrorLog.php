@@ -79,6 +79,7 @@ class ErrorLog extends CActiveRecord
 
 		$criteria->compare('Id',$this->Id);
 		$criteria->compare('date',$this->date,true);
+		$criteria->compare('Id_device',$this->Id_device, true);
 		$criteria->compare('error_type',$this->error_type);
 		$criteria->compare('has_error',$this->has_error);
 
