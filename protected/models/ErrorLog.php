@@ -54,7 +54,7 @@ class ErrorLog extends CActiveRecord
 		return array(
 			'Id' => 'ID',
 			'date' => 'Date',
-			'error_type' => 'Error Type',
+			'error_type' => 'Tipo de Error',
 			'has_error' => 'Has Error',
 		);
 	}
