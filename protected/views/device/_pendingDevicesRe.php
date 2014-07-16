@@ -43,12 +43,11 @@
 						'value'=>function($data){
 							$modelDevicePlayers = DevicePlayer::model()->findAllByAttributes(array('Id_device'=>$data->Id_device));
 
-							$playerList = '<ul class="playerList">';
+							$playerList = '';
 							foreach($modelDevicePlayers as $player)
 							{
-								$playerList .= '<li>'. $player->description . '</li>';
+								$playerList .= '<div class="noWrap tableList">&bull; '. $player->description . '</div>';
 							}
-							$playerList .= '</ul>';
 							return $playerList;
 						},
 						'type'=>'raw',
