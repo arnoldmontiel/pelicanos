@@ -19,6 +19,7 @@
 									return $value;
 								},
 								'type'=>'raw',
+								'htmlOptions'=>array('width'=>'8%')
 						),
 						array(
 								'name'=>"title",
@@ -30,7 +31,7 @@
 									return $value;
 								},
 								'type'=>'raw',
-								'htmlOptions'=>array("class"=>"bold"),
+								'htmlOptions'=>array("class"=>"bold",'width'=>'23%'),
 						),
 						array(
 								'header'=>"Genero",
@@ -42,6 +43,7 @@
 									return $value;
 								},
 								'type'=>'raw',
+								'htmlOptions'=>array('width'=>'20%'),
 						),
 						array(
 								'name'=>"year",
@@ -53,6 +55,7 @@
 									return $value;
 								},
 								'type'=>'raw',
+								'htmlOptions'=>array('width'=>'5%')
 						),
 						array(
 								'name'=>'nzb_status',
@@ -64,21 +67,25 @@
 									return $value;
 								},
 								'type'=>'raw',
+								'htmlOptions'=>array('width'=>'7%')
 						),
 						array(
-								'header'=>"Fecha enviado",
+								'header'=>"Enviado",
 								'value'=>'$data->date_sent',
 								'type'=>'raw',
+								'htmlOptions'=>array('width'=>'12%')
 						),
 						array(
-								'header'=>"Fecha comienzo descarga",
+								'header'=>"Inicio Descarga",
 								'value'=>'$data->date_downloading',
 								'type'=>'raw',
+								'htmlOptions'=>array('width'=>'12%')
 						),
 						array(
-								'header'=>"Fecha fin descargado",
+								'header'=>"Fin Descarga",
 								'value'=>'$data->date_downloaded',
 								'type'=>'raw',
+								'htmlOptions'=>array('width'=>'12%')
 						),
 					),
 				)); ?>
