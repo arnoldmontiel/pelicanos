@@ -1,6 +1,5 @@
 <?php
 $modelTMDB =  $modelNzb->TMDBData;
-$moviePoster = 'noImage.jpg';
 if(isset($modelTMDB)&&$modelTMDB->big_poster!="")
 {
 	$moviePoster = $modelTMDB->big_poster;
@@ -251,11 +250,11 @@ Yii::app()->clientScript->registerScript('update-video-info', "
     <div class="row superContainer">
     <div class="col-md-3">
     <div class="editAfiche">
-<img id="poster" class="aficheImg" src="images/<?php echo $moviePoster;?>" border="0">
+<img id="poster" class="peliAfiche" src="images/<?php echo $moviePoster;?>" border="0">
 </div>
 <div class="editImagesButtons">   
 <a id="open-change-poster" data-toggle="modal"  class="btn btn-large btn-primary"><i class="fa fa-pencil"></i> Cambiar Afiche</a>
-<a id="open-change-backdrop" data-toggle="modal" class="btn btn-large btn-primary"><i class="fa fa-pencil"></i> Cambiar Fondo</a>
+<!--<a id="open-change-backdrop" data-toggle="modal" class="btn btn-large btn-primary"><i class="fa fa-pencil"></i> Cambiar Fondo</a>-->
 </div>
 </div>
     <!-- /col-md-3 -->
