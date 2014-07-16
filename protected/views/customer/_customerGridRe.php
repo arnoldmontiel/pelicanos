@@ -38,6 +38,7 @@
 							return $data->address;
 						},
 						'type'=>'raw',
+						'htmlOptions'=>array("width"=>"30%"),
 				),
 				array(
 						'header'=>'Dispositivos',
@@ -48,16 +49,11 @@
 							foreach($customerDevices as $item)
 							{
 								$date = isset($item->request_date)?Yii::app()->dateFormatter->format("dd/MM/yyyy", $item->request_date):'';
-								
-								$value .= '<div class="noWrap dispClientes">&bull; '.$item->device->description.' - '.$item->Id_device.'</div>';
-								
-// 								if($item->is_pending == 1)
-// 								{
-// 									$idDevice = "'$item->Id_device'";
-// 									$value .= '<div class="noWrap dispClientes">&bull; '.$item->device->description.' - '.$item->Id_device.' <span class="label label-danger">pendiente '.$date.'</span></div>';
-// 								}
-// 								else
-// 									$value .= '<div class="noWrap dispClientes">&bull; '.$item->device->description.' - '.$item->Id_device.'</div>';
+																
+ 								if($item->is_pending == 1)
+									$value .=  '<div class="noWrap tableList">'.$date.' <span class="labelPendiente">Pendiente</span> <br/>&bull; '.$item->device->description.' - '.$item->Id_device.'</div>';
+								else
+									$value .= '<div class="noWrap tableList">&bull; '.$item->device->description.' - '.$item->Id_device.'</div>';
 							}
 							
 							return $value;
@@ -68,11 +64,11 @@
 						'header'=>'Acciones',
 						'value'=>function($data){
 							
-							return '<button onclick="openForm('.$data->Id.')" type="button" class="btn btn-default btn-sm" ><i class="fa fa-pencil"></i> Editar</button><button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i> Borrar</button>';
+							return '<div class="editBorrarBtnGroup"><button onclick="openForm('.$data->Id.')" type="button" class="btn btn-default btn-sm" ><i class="fa fa-pencil"></i> Editar</button><button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i> Borrar</button></div>';
 						},
 						'type'=>'raw',
-						'htmlOptions'=>array("style"=>"text-align:center;"),
-						'headerHtmlOptions'=>array("style"=>"text-align:center;"),
+						'htmlOptions'=>array("style"=>"text-align:right;"),
+						'headerHtmlOptions'=>array("style"=>"text-align:right;"),
 				),
 			),
 		));		

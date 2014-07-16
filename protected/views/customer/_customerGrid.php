@@ -38,6 +38,7 @@
 							return $data->address;
 						},
 						'type'=>'raw',
+						'htmlOptions'=>array("width"=>"30%"),
 				),
 				array(
 						'header'=>'Dispositivos',
@@ -48,9 +49,9 @@
 							{
 								$date = isset($item->request_date)?Yii::app()->dateFormatter->format("dd/MM/yyyy", $item->request_date):'';
 								if($item->is_pending == 1)
-									$value .= '<div>&bull; '.$item->device->description.' - '.$item->Id_device.'<span class="label label-danger">pendiente '.$date.'</span></div>';
+									$value .=  '<div class="noWrap tableList">'.$date.' <span class="labelPendiente">Pendiente</span> <br/>&bull; '.$item->device->description.' - '.$item->Id_device.'</div>';
 								else
-									$value .= '<div>&bull; '.$item->device->description.' - '.$item->Id_device.'</div>';
+									$value .= '<div class="noWrap tableList">&bull; '.$item->device->description.' - '.$item->Id_device.'</div>';
 							}
 							
 							return $value;

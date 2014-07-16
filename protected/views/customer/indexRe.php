@@ -52,7 +52,7 @@ function cancelRequestedDevice(idDevice, idCustomer)
   <h1 class="pageTitle">Clientes</h1>
   </div>
     <div class="col-sm-6 align-right">
-  <a onclick="openForm(0);" class="btn btn-primary superBoton" data-toggle="modal" data-target="#myModalCrearCliente"><i class="fa fa-plus"></i> Agregar Cliente</a>
+  <a onclick="openForm(0);" class="btn btn-primary superBoton" data-toggle="modal"><i class="fa fa-plus"></i> Agregar Cliente</a>
   </div>
   </div>
   <div class="row">
