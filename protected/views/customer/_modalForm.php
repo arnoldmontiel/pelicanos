@@ -1,13 +1,17 @@
 <form id="customer-form" method="post">
 	<?php
+		$title = 'Agregar Cliente';
 		if(!$modelCustomer->isNewRecord)
+		{
+			$title = 'Editar Cliente';
 			echo CHtml::activeHiddenField($modelCustomer, 'Id');
+		}
 	?>
 	<div class="modal-dialog">
     	<div class="modal-content">
       		<div class="modal-header">
       			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-        		<h4 class="modal-title">Agregar Cliente</h4>
+        		<h4 class="modal-title"><?php echo $title;?></h4>
       		</div>
       		<div class="modal-body">
   				<div class="form-group">
@@ -81,7 +85,7 @@
 	function saveCustomer()
 	{				
 		<?php if($modelCustomer->isNewRecord):?>
-			$.post("<?php echo UserController::createUrl('AjaxCheckUser'); ?>",
+			$.post("<?php echo CustomerController::createUrl('user/AjaxCheckUser'); ?>",
 				{
 					username:$("#CustomerUsers_username").val()
 				}
