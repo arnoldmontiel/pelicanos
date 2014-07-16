@@ -15,9 +15,30 @@
 						},
 						'type'=>'raw',
 				),
-				'name',
-				'last_name',
-				'address',
+				array(
+						'name'=>'name',
+						'value'=>function($data){
+				
+							return $data->name;
+						},
+						'type'=>'raw',
+				),
+				array(
+						'name'=>'last_name',
+						'value'=>function($data){
+				
+							return $data->last_name;
+						},
+						'type'=>'raw',
+				),
+				array(
+						'name'=>'address',
+						'value'=>function($data){
+				
+							return $data->address;
+						},
+						'type'=>'raw',
+				),
 				array(
 						'header'=>'Dispositivos',
 					'value'=>function($data){
