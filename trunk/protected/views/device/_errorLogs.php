@@ -14,13 +14,19 @@
 										$value = 'Desconocido';
 										switch ($data->error_type) {
 											case 1:
-												$value = 'Error en Players';
+												$value = 'Players Error';
+												if($data->has_error == 0)
+													$value = 'Players OK';
 												break;
 											case 2:
-												$value = 'Error en NAS';
+												$value = 'NAS Error';
+												if($data->has_error == 0)
+													$value = 'NAS OK';
 												break;
 											case 3:
-												$value = 'Error de espacio en NAS';
+												$value = 'Espacio en NAS Error';
+												if($data->has_error == 0)
+													$value = 'Espacio en NAS OK';
 												break;
 										}
 										return $value;
@@ -39,16 +45,6 @@
 							array(
 									'header'=>"Fecha",
 									'value'=>'$data->date',
-									'type'=>'raw',
-							),
-							array(
-									'header'=>'Error solucionado',
-									'value'=>function($data){
-										$value = 'NO';
-										if($data->has_error == 0)
-											$value = 'SI';
-										return $value;
-									},
 									'type'=>'raw',
 							),
 					),
