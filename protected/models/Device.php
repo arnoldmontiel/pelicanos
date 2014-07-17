@@ -74,6 +74,25 @@ class Device extends CActiveRecord
 		return $state;
 	}
 	
+	public function getHasError()
+	{
+		$hasError = false;
+		$criteria = new CDbCriteria();
+		
+		$criteria->addCondition('
+						(Id = (select max(Id) as Id from pelicanos.error_log where Id_device = "'.$this->Id.'" and error_type = 2  )
+						OR Id = (select max(Id) as Id from pelicanos.error_log where Id_device = "'.$this->Id.'" and error_type = 1  )
+						OR Id = (select max(Id) as Id from pelicanos.error_log where Id_device = "'.$this->Id.'" and error_type = 3  )
+						)');
+		$criteria->addCondition('has_error = 1');
+		
+		if(ErrorLog::model()->count($criteria)>0)
+			$hasError = true;
+		
+		return $hasError;
+		
+	}
+	
 	/**
 	 * @return string the associated database table name
 	 */
