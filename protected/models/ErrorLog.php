@@ -54,7 +54,7 @@ class ErrorLog extends CActiveRecord
 		return array(
 			'Id' => 'ID',
 			'date' => 'Date',
-			'error_type' => 'Tipo de Error',
+			'error_type' => 'Informe',
 			'has_error' => 'Has Error',
 		);
 	}
@@ -83,8 +83,18 @@ class ErrorLog extends CActiveRecord
 		$criteria->compare('error_type',$this->error_type);
 		$criteria->compare('has_error',$this->has_error);
 
+		
+		// Create a custom sort
+		$sort=new CSort;
+		$sort->attributes=array(
+				'*',
+		);
+		
+		$sort->defaultOrder = 'date DESC';
+		
 		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
+				'criteria'=>$criteria,
+				'sort'=>$sort,
 		));
 	}
 

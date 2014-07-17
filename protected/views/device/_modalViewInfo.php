@@ -7,7 +7,7 @@
         <div class="modal-body">
 			<ul class="nav nav-tabs">
 				<li class="active"><a href="#tabDescargas" data-toggle="tab">Descargas</a></li>
-				<li><a href="#tabErrorLog" data-toggle="tab">Errores</a></li>
+				<li><a href="#tabErrorLog" data-toggle="tab">Informes</a></li>
 				<li class="pull-right">
 					<div class="panel panel-default panelCliente sideIDLabel">
   						<div class="panel-body">
