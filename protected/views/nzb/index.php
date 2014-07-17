@@ -50,6 +50,15 @@ $('#a-tab-rejected').click(function(){
 	   		$('#tabRejected').html(data);
 		});
 });
+$('#a-tab-deleted').click(function(){
+	$.ajax({
+	   		type: 'POST',
+	   		url: '". NzbController::createUrl('AjaxOpenTabDeleted') . "',
+	 	}).success(function(data)
+	 	{	
+	   		$('#tabDeleted').html(data);
+		});
+});
 ");
 ?>
 <script type="text/javascript">
@@ -268,6 +277,40 @@ function editVideoInfo(id)
 	return false;
 }
 
+function deletePublication(idNzb)
+{
+	if (confirm('¿Desea eliminarla del marketplace?')) 
+	{
+		$.post("<?php echo NzbController::createUrl('AjaxDeletePublication'); ?>",
+			{
+			id:idNzb
+			}
+		).success(
+			function(data){
+				$.fn.yiiGridView.update('nzb-grid_published');
+			});
+		return false;
+	}
+	return false;	
+}
+
+function publicAgain(idNzb)
+{
+	if (confirm('¿Desea volver a publicar?')) 
+	{
+		$.post("<?php echo NzbController::createUrl('AjaxRePublic'); ?>",
+			{
+			id:idNzb
+			}
+		).success(
+			function(data){
+				$.fn.yiiGridView.update('nzb-grid_deleted');
+			});
+		return false;
+	}
+	return false;	
+}
+
 </script>
 
 <div class="container" id="screenInicio">
@@ -280,6 +323,7 @@ function editVideoInfo(id)
 		        <li><a id="a-tab-approved" href="#tabApproved" data-toggle="tab">Aprobadas <span class="badge"><?php echo $approvedQty; ?></span></a></li>
 		        <li><a id="a-tab-published" href="#tabPublished" data-toggle="tab">Publicadas</a></li>
 		        <li><a id="a-tab-rejected" href="#tabRejected" data-toggle="tab">Rechazadas <span class="badge"><?php echo $cancelledQty; ?></span></a></li>
+		        <li><a id="a-tab-deleted" href="#tabDeleted" data-toggle="tab">Eliminadas <span class="badge"></span></a></li>
 	      	</ul>
 			<div class="tab-content">
 				<div class="tab-pane" id="tabUploading">
@@ -296,6 +340,9 @@ function editVideoInfo(id)
 			    </div><!-- /.tab4 -->
 			    <div class="tab-pane" id="tabRejected">
 			    	<?php echo $this->renderPartial('_tabRejected',array('modelNzb'=>$modelNzb)); ?>
+			    </div><!-- /.tab5 -->
+			    <div class="tab-pane" id="tabDeleted">
+			    	<?php echo $this->renderPartial('_tabDeleted',array('modelNzb'=>$modelNzb)); ?>
 			    </div><!-- /.tab5 -->
 			</div><!-- /.tab-content -->
 	   </div><!-- /.col-sm-12 --> 

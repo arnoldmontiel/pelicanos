@@ -1,7 +1,7 @@
 <?php			
 	$this->widget('zii.widgets.grid.CGridView', array(
-		'id'=>'nzb-grid_published',
-		'dataProvider'=>$modelNzb->searchPublished(),
+		'id'=>'nzb-grid_deleted',
+		'dataProvider'=>$modelNzb->searchDeleted(),
 		'selectableRows' => 0,
 		'summaryText'=>'',	
 		'filter'=>$modelNzb,
@@ -91,7 +91,7 @@
 						'header'=>'Acciones',
 						'value'=>function($data){
 							return '<div style="width:250px;">
-										<a onclick="deletePublication('.$data->Id.');" data-toggle="modal" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i> Eliminar</a>
+										<a onclick="publicAgain('.$data->Id.');" data-toggle="modal" class="btn btn-default btn-sm"><i class="fa fa-history"></i> Volver a Publicar</a>
 										<a onclick="viewVideoInfo('.$data->autoRipperId.');" data-toggle="modal" class="btn btn-default btn-sm"><i class="fa fa-pencil"></i> Editar</a>
 										<a onclick="viewDownloads('.$data->Id.');" data-toggle="modal" class="btn btn-default btn-sm"><i class="fa fa-clock-o"></i> Ver Descargas</a>
 									</div>';
