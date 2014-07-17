@@ -1111,6 +1111,8 @@ top: 2px;}
 
 #form-new-sabnzbd-account th, #form-new-sabnzbd-account td{padding:3px;}
 
+.conErrores{width:95px; padding-top:5px; color:#666;}
+
 /* ----- END DISPOSITIVOS --------*/
 
 /* ----- CLIENTES --------*/
