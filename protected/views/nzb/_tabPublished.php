@@ -90,8 +90,8 @@
 				array(
 						'header'=>'Acciones',
 						'value'=>function($data){
-							return '<div style="width:250px;">
-										<a onclick="deletePublication('.$data->Id.');" data-toggle="modal" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i> Eliminar</a>
+							return '<div style="width:306px;">
+										<a onclick="deletePublication('.$data->Id.');" data-toggle="modal" class="btn btn-primary btn-sm"><i class="fa fa-trash-o"></i> Eliminar</a>
 										<a onclick="viewVideoInfo('.$data->autoRipperId.');" data-toggle="modal" class="btn btn-default btn-sm"><i class="fa fa-pencil"></i> Editar</a>
 										<a onclick="viewDownloads('.$data->Id.');" data-toggle="modal" class="btn btn-default btn-sm"><i class="fa fa-clock-o"></i> Ver Descargas</a>
 									</div>';
