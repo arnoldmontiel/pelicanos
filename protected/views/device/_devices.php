@@ -83,12 +83,12 @@
 							}
 							
 							if($data->device->hasError)
-								$value = $value.' Con Error';
+								$value = $value.'<div class="conErrores"><i class="fa fa-exclamation-triangle"></i> Con Errores</div>';
 							return $value;
 						},
 						'type'=>'raw',
-						'htmlOptions'=>array("class"=>"align-center"),
-						'headerHtmlOptions'=>array("class"=>"align-center"),
+						'htmlOptions'=>array("class"=>"align-left"),
+						'headerHtmlOptions'=>array("class"=>"align-left"),
 				),
 				array(
 						'header'=>'Versi&oacute;n',
