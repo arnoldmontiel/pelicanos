@@ -81,6 +81,9 @@
 									$value = '<span class="label label-primary"><i class="fa fa-exclamation-triangle"></i> Disco lleno</span>';
 									break;
 							}
+							
+							if($data->device->hasError)
+								$value = $value.' Con Error';
 							return $value;
 						},
 						'type'=>'raw',
