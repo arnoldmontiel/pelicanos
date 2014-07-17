@@ -312,7 +312,8 @@ class Nzb extends CActiveRecord
 		$criteria->addCondition('t.Id_nzb is null');
 		$criteria->compare('t.Id_creation_state',4); // publicada
 		$criteria->compare('t.is_draft',0);
-	
+		$criteria->compare('t.deleted',0);
+		
 		// Create a custom sort
 		$sort=new CSort;
 		$sort->attributes=array(
@@ -338,6 +339,52 @@ class Nzb extends CActiveRecord
 				'sort'=>$sort,
 		));
 		
+	}
+	
+	public function searchDeleted()
+	{
+		// Warning: Please modify the following code to remove attributes that
+		// should not be searched.
+	
+		$criteria=new CDbCriteria;
+	
+		$criteria->join =	" LEFT OUTER JOIN my_movie_disc_nzb dn ON dn.Id = t.Id_my_movie_disc_nzb
+							  LEFT OUTER JOIN auto_ripper ar ON ar.Id_nzb = t.Id
+										LEFT OUTER JOIN my_movie_nzb n ON n.Id = dn.Id_my_movie_nzb";
+	
+		$criteria->compare("n.original_title",$this->title, true);
+		$criteria->addSearchCondition("n.production_year",$this->year);
+		$criteria->addSearchCondition("n.rating",$this->rating);
+		$criteria->addCondition('t.Id_nzb is null');
+		$criteria->compare('t.Id_creation_state',4); // publicada
+		$criteria->compare('t.is_draft',0);
+		$criteria->compare('t.deleted',1);
+	
+		// Create a custom sort
+		$sort=new CSort;
+		$sort->attributes=array(
+				// For each relational attribute, create a 'virtual attribute' using the public variable name
+				'title' => array(
+						'asc' => 'n.original_title',
+						'desc' => 'n.original_title DESC',
+				),
+				'year' => array(
+						'asc' => 'n.production_year',
+						'desc' => 'n.production_year DESC',
+				),
+				'rating' => array(
+						'asc' => 'n.rating',
+						'desc' => 'n.rating DESC',
+				),
+				'*',
+		);
+		$sort->defaultOrder = 't.Id DESC';
+	
+		return new CActiveDataProvider($this, array(
+				'criteria'=>$criteria,
+				'sort'=>$sort,
+		));
+	
 	}
 	
 	public function searchMovie()

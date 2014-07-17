@@ -2138,6 +2138,16 @@ class NzbController extends Controller
 		echo $this->renderPartial('_tabRejected',array('modelNzb'=>$modelNzb));
 	}
 	
+	public function actionAjaxOpenTabDeleted()
+	{
+		$modelNzb = new Nzb('search');
+		$modelNzb->unsetAttributes();
+		if(isset($_GET['Nzb']))
+			$modelNzb->attributes=$_GET['Nzb'];
+	
+		echo $this->renderPartial('_tabDeleted',array('modelNzb'=>$modelNzb));
+	}
+	
 	public function actionAjaxSaveRejectConfirm()
 	{
 		if( isset($_POST['Nzb']))
@@ -2490,6 +2500,34 @@ class NzbController extends Controller
  		echo json_encode($this->getQtys());
 	}
 	
+	public function actionAjaxDeletePublication()
+	{
+		$idNzb = (isset($_POST['id']))?$_POST['id']:null;
+		
+		if(isset($idNzb))
+		{
+			$model = Nzb::model()->findByPk($idNzb);
+			$model->deleted = 1;
+			if($model->save())
+				$this->updateRelation($idNzb);
+		}
+		
+	}
+	
+	public function actionAjaxRePublic()
+	{
+		$idNzb = (isset($_POST['id']))?$_POST['id']:null;
+	
+		if(isset($idNzb))
+		{
+			$model = Nzb::model()->findByPk($idNzb);
+			$model->deleted = 0;
+			if($model->save())
+				$this->updateRelation($idNzb);
+		}
+	
+	}
+		
 	private function changeParent($idNzb)
 	{
 		$modelNzb = Nzb::model()->findByPk($idNzb);
