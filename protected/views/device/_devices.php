@@ -91,6 +91,14 @@
 						'headerHtmlOptions'=>array("class"=>"align-left"),
 				),
 				array(
+						'header'=>'Actualizado',
+						'value'=>function($data){
+							return ($data->device->isUpToDate)?'Si':'No';
+						},
+						'type'=>'raw',
+						'headerHtmlOptions'=>array("style"=>"white-space:nowrap;"),
+				),
+				array(
 						'header'=>'Versi&oacute;n',
 						'value'=>function($data){
 							$modelClientSetting = ClientSettings::model()->findByAttributes(array('Id_device'=>$data->Id_device, 'Id_customer'=>$data->Id_customer));

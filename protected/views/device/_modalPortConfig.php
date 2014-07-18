@@ -218,6 +218,7 @@ $("#general-config-form").submit(function(e)
 		   {	
 				$("#btn-save-config").removeAttr("disabled");
 				$("#save-description").html("Guardado");
+				$.fn.yiiGridView.update('customer-device-grid');
 					    		
 		   },
 		   error: function(jqXHR, textStatus, errorThrown)

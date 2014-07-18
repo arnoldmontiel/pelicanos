@@ -50,6 +50,7 @@ function saveAccount(id)
 				
 			 function(data) {
   				$.fn.yiiGridView.update('sabnzbd-config-grid');
+  				$.fn.yiiGridView.update('customer-device-grid');
  });
 
 	
