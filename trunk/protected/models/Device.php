@@ -74,6 +74,17 @@ class Device extends CActiveRecord
 		return $state;
 	}
 	
+	public function getIsUpToDate()
+	{
+		$isUpToDate = false;
+		
+		$modelCustomerDevice = CustomerDevice::model()->findByAttributes(array('Id_device'=>$this->Id));
+		if(isset($modelCustomerDevice) && $modelCustomerDevice->need_update == 0)
+			$isUpToDate = true;
+		
+		return $isUpToDate;	
+	}
+	
 	public function getHasError()
 	{
 		$hasError = false;

@@ -82,6 +82,26 @@
 						'headerHtmlOptions'=>array("class"=>"align-center"),
 				),
 				array(
+						'header'=>'Actualizado',
+						'value'=>function($data){
+							return ($data->device->isUpToDate)?'Si':'No';
+						},
+						'type'=>'raw',
+						'headerHtmlOptions'=>array("style"=>"white-space:nowrap;"),
+				),
+				array(
+						'header'=>'Versi&oacute;n',
+						'value'=>function($data){
+							$modelClientSetting = ClientSettings::model()->findByAttributes(array('Id_device'=>$data->Id_device, 'Id_customer'=>$data->Id_customer));
+							$version = 0;
+							if(isset($modelClientSetting))
+								$version = (isset($modelClientSetting->version))?$modelClientSetting->version:0;
+								
+							return $version;
+						},
+						'type'=>'raw',
+				),
+				array(
 						'header'=>'Acciones',
 						'value'=>function($data){
 							$device = "'$data->Id_device'";
