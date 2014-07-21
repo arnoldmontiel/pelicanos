@@ -506,9 +506,13 @@ class DeviceController extends Controller
  		{
  			$modelDevice = new Device();
  			$transaction = $modelDevice->dbConnection->beginTransaction();
- 			try {
+ 			try { 				
  				$modelDevice->Id = uniqid();
  				$modelDevice->attributes = $_POST['Device'];
+ 				
+ 				$setting = Setting::getInstance();
+ 				$modelDevice->disc_min_size_warning = $setting->disc_minimum_warning;
+ 				
  				$modelDevice->save();
  				$modelDevice->refresh();
  			

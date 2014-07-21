@@ -92,6 +92,12 @@ class ConfigurationSOAP
 	public $tmdb_lang;
 	
 	/**
+	 * @var integer disc_min_size_warning
+	 * @soap
+	 */
+	public $disc_min_size_warning;
+	
+	/**
 	 * @var SabnzbdAccountSOAP[]
 	 * @soap
 	 */

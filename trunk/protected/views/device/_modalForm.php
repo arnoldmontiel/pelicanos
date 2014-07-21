@@ -62,8 +62,16 @@
 	      						<?php echo CHtml::activeTextField($modelDevice, 'sabnzb_api_key', array('class'=>'form-control'));?>
 	  						</div>
 	  						<div class="form-group col-sm-6 ">
-		  						<label>Es Tester</label>
+		  						<label>Porcentaje de aviso de disco lleno</label>
+	      							<?php echo CHtml::activeTextField($modelDevice, 'disc_min_size_warning', array('class'=>'form-control', 'onkeyup'=>'checkPercentaje(this);'));?>
+	      					</div>  
+	  					</div>
+	  					<div class="row">
+		  					<div class="form-group col-sm-6">
+	    						<label>Es Tester</label>
 	      							<?php echo CHtml::activeCheckBox($modelDevice, 'is_movie_tester', array('class'=>'form-control'));?>
+	  						</div>
+	  						<div class="form-group col-sm-6 ">
 	      					</div>  
 	  					</div>
   				</div>

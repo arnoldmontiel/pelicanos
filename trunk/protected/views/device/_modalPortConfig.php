@@ -157,10 +157,18 @@
 		      						<?php echo CHtml::activeTextField($modelDevice, 'sabnzb_api_key', array('class'=>'form-control', 'onkeyup'=>'changeSaveLabel();'));?>
 		  					</div>
 		  					<div class="form-group col-sm-6 ">
-		  					<?php if($isAdmin):?>
-		    					<label>Es Tester</label>
+		  						<label>Porcentaje de aviso de disco lleno</label>
+		      						<?php echo CHtml::activeTextField($modelDevice, 'disc_min_size_warning', array('class'=>'form-control', 'onkeyup'=>'checkPercentaje(this);changeSaveLabel();'));?>
+		  					</div>
+	  					</div>
+	  					<div class="row">
+	  						<div class="form-group col-sm-6">
+		    					<?php if($isAdmin):?>
+		    						<label>Es Tester</label>
 	      							<?php echo CHtml::activeCheckBox($modelDevice, 'is_movie_tester', array('class'=>'form-control', 'onkeyup'=>'changeSaveLabel();'));?>
-	      					<?php endif;?>
+	      						<?php endif;?>
+		  					</div>
+		  					<div class="form-group col-sm-6 ">
 		  					</div>
 	  					</div>
   					</div>
@@ -197,6 +205,18 @@
 function submitGeneralConfig()
 {
 	$('#general-config-form').submit();
+}
+
+function checkPercentaje(obj)
+{
+	checkNumber(obj);
+	var value=$(obj).val();
+	if(value > 100)
+		$(obj).val("100");
+
+	if(value <= 0)
+		$(obj).val("1");
+	
 }
 
 $("#general-config-form").submit(function(e)
