@@ -85,28 +85,15 @@ function checkAddEnabledAccount()
 
 function checkTimeOut(obj)
 {
-	checkNumber(obj);
+	validNumber(obj);
 	var value=$(obj).val();
 	if(value < 30)
 		$(obj).val("30");
 }
 
-function checkNumber(obj)
+function validNumber(obj)
 {
-	var value=$(obj).val();
-	if(value=="")
-	{
-    	$(obj).val("0");
-	}
-    var orignalValue=value;
-    value=value.replace(/[0-9]*/g, "");			
-   	var msg="Only Decimal Values allowed."; 						
-   	value=value.replace(/\./, "");
-    if (value!=""){
-    	orignalValue=orignalValue.replace(value, "");
-    	$(obj).val(orignalValue);
-    	//alert(msg);
-    }
+	checkNumber(obj);	
     checkAddEnabledAccount();
 }
 </script>
@@ -142,14 +129,14 @@ function checkNumber(obj)
   <td style="width:14%;"><?php echo CHtml::activeTextField($newModel, 'server_name',array('onkeyup'=>'checkAddEnabledAccount()','class'=>'form-control', 'placeholder'=>"Servidor")); ?></td>
   <td  style="width:14%;"><?php echo CHtml::activeTextField($newModel, 'username',array('onkeyup'=>'checkAddEnabledAccount()','class'=>'form-control', 'placeholder'=>"Usuario")); ?></td>
   <td  style="width:14%;"><?php echo CHtml::activeTextField($newModel, 'password',array('onkeyup'=>'checkAddEnabledAccount()','class'=>'form-control', 'placeholder'=>"Clave")); ?></td>
-  <td class="text-center" style="width:6%;" align="center"><?php echo CHtml::activeTextField($newModel, 'connections',array('onkeyup'=>'checkNumber(this);','class'=>'form-control text-center', 'placeholder'=>"0")); ?></td>
-  <td class="text-center" style="width:4%;" align="center"><?php echo CHtml::activeTextField($newModel, 'port',array('onkeyup'=>'checkNumber(this);','class'=>'form-control text-center', 'placeholder'=>"0")); ?></td>
+  <td class="text-center" style="width:6%;" align="center"><?php echo CHtml::activeTextField($newModel, 'connections',array('onkeyup'=>'validNumber(this);','class'=>'form-control text-center', 'placeholder'=>"0")); ?></td>
+  <td class="text-center" style="width:4%;" align="center"><?php echo CHtml::activeTextField($newModel, 'port',array('onkeyup'=>'validNumber(this);','class'=>'form-control text-center', 'placeholder'=>"0")); ?></td>
   <td class="text-center" style="width:6%;" align="center"><?php echo CHtml::activeTextField($newModel, 'timeout',array('onkeyup'=>'checkTimeOut(this);','class'=>'form-control text-center', 'placeholder'=>"30")); ?></td>
   <td class="text-center" style="width:4%;" align="center"><?php echo CHtml::activeCheckBox($newModel, 'ssl',array('class'=>'form-control checkInline')); ?></td>
   <td class="text-center" style="width:5%;" align="center"><?php echo CHtml::activeCheckBox($newModel, 'enable',array('class'=>'form-control checkInline')); ?></td>
   <td class="text-center" style="width:5%;" align="center"><?php echo CHtml::activeCheckBox($newModel, 'optional',array('class'=>'form-control checkInline')); ?></td>
-  <td class="text-center" style="width:5%;" align="center"><?php echo CHtml::activeTextField($newModel, 'retention',array('onkeyup'=>'checkNumber(this);','class'=>'form-control text-center', 'placeholder'=>"0")); ?></td>
-  <td class="text-center" style="width:6%;" align="center"><?php echo CHtml::activeTextField($newModel, 'fill_server',array('onkeyup'=>'checkNumber(this);','class'=>'form-control text-center', 'placeholder'=>"0")); ?></td>
+  <td class="text-center" style="width:5%;" align="center"><?php echo CHtml::activeTextField($newModel, 'retention',array('onkeyup'=>'validNumber(this);','class'=>'form-control text-center', 'placeholder'=>"0")); ?></td>
+  <td class="text-center" style="width:6%;" align="center"><?php echo CHtml::activeTextField($newModel, 'fill_server',array('onkeyup'=>'validNumber(this);','class'=>'form-control text-center', 'placeholder'=>"0")); ?></td>
   <td class="text-center"  style="width:14%;"><button id="btn-add-account" type="button" onclick="addSabnzbdAccount();" class="btn btn-primary btn-sm btn100 noMargin disabled"><i class="fa fa-plus"></i> Agregar</button></td>
   </tr>
   </tbody>
@@ -191,14 +178,14 @@ function checkNumber(obj)
 				),
 				array(
 						'value'=>function($data){
-							return '<input type="text" idconfig="'.$data->Id.'" onkeyup="checkNumber(this);" class="form-control text-center" name="connections_'.$data->Id.'" id="connections_'.$data->Id.'" disabled value="'.$data->connections.'">';
+							return '<input type="text" idconfig="'.$data->Id.'" onkeyup="validNumber(this);" class="form-control text-center" name="connections_'.$data->Id.'" id="connections_'.$data->Id.'" disabled value="'.$data->connections.'">';
 						},
 						'type'=>'raw',
 						'htmlOptions'=>array("class"=>"align-center","style"=>"width:6%"),
 										),
 				array(
 						'value'=>function($data){
-							return '<input type="text" idconfig="'.$data->Id.'" onkeyup="checkNumber(this);" class="form-control text-center" name="port_'.$data->Id.'" id="port_'.$data->Id.'" disabled value="'.$data->port.'">';
+							return '<input type="text" idconfig="'.$data->Id.'" onkeyup="validNumber(this);" class="form-control text-center" name="port_'.$data->Id.'" id="port_'.$data->Id.'" disabled value="'.$data->port.'">';
 						},
 						'type'=>'raw',
 						'htmlOptions'=>array("class"=>"align-center","style"=>"width:4%"),
@@ -242,14 +229,14 @@ function checkNumber(obj)
 										),
 				array(
 						'value'=>function($data){
-							return '<input type="text" idconfig="'.$data->Id.'" onkeyup="checkNumber(this);" class="form-control text-center" name="retention_'.$data->Id.'" id="retention_'.$data->Id.'" disabled value="'.$data->retention.'">';
+							return '<input type="text" idconfig="'.$data->Id.'" onkeyup="validNumber(this);" class="form-control text-center" name="retention_'.$data->Id.'" id="retention_'.$data->Id.'" disabled value="'.$data->retention.'">';
 						},
 						'type'=>'raw',
 						'htmlOptions'=>array("class"=>"align-center","style"=>"width:5%"),
 				),
 				array(
 						'value'=>function($data){
-							return '<input type="text" idconfig="'.$data->Id.'" onkeyup="checkNumber(this);" class="form-control text-center" name="fill_server_'.$data->Id.'" id="fill_server_'.$data->Id.'" disabled value="'.$data->fill_server.'">';
+							return '<input type="text" idconfig="'.$data->Id.'" onkeyup="validNumber(this);" class="form-control text-center" name="fill_server_'.$data->Id.'" id="fill_server_'.$data->Id.'" disabled value="'.$data->fill_server.'">';
 						},
 						'type'=>'raw',
 						'htmlOptions'=>array("class"=>"align-center","style"=>"width:6%"),
