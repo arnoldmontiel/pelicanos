@@ -4,10 +4,11 @@ if(isset($modelTMDB)&&$modelTMDB->big_poster!="")
 {
 	$moviePoster = $modelTMDB->big_poster;
 }
-elseif(isset($modelMyMovieNzb->big_poster))
+else
 {
 	$moviePoster = $modelMyMovieNzb->big_poster;
 }
+$moviePoster = PelicanoHelper::getImageName($moviePoster,"_big");
 
 if(isset($modelTMDB)&&$modelTMDB->backdrop!="")
 {
@@ -250,7 +251,7 @@ Yii::app()->clientScript->registerScript('update-video-info', "
     <div class="row superContainer">
     <div class="col-md-3">
     <div class="editAfiche">
-<img id="poster" class="peliAfiche" src="images/<?php echo $moviePoster;?>" border="0">
+<img id="poster" class="peliAfiche" src="<?php echo $moviePoster;?>" border="0">
 </div>
 <div class="editImagesButtons">   
 <a id="open-change-poster" data-toggle="modal"  class="btn btn-large btn-primary"><i class="fa fa-pencil"></i> Cambiar Afiche</a>
