@@ -73,6 +73,10 @@ function viewDeviceInfo(id)
 	$.fn.yiiGridView.update('error-log-grid', {
  		data: $(this).serialize() + '&idDevice=' + id
  	});
+
+	$.fn.yiiGridView.update('nas-grid', {
+ 		data: $(this).serialize() + '&idDevice=' + id
+ 	});
  	
 	$.post("<?php echo DeviceController::createUrl('AjaxOpenViewDownload'); ?>",
 			{
@@ -300,7 +304,10 @@ function cancelRequestedDevice(idDevice, idCustomer)
 	</div>
 
 	<div id="container-modal-viewDownload" style="display: none">
-		<?php echo $this->renderPartial('_modalViewInfo', array( 'modelNzbDevice'=>$modelNzbDevice, 'modelErrorLog'=>$modelErrorLog, 'idDevice'=>''));?>
+		<?php echo $this->renderPartial('_modalViewInfo', array( 'modelNzbDevice'=>$modelNzbDevice, 
+																'modelErrorLog'=>$modelErrorLog,
+																'modelClientSetting'=>$modelClientSetting,
+																'idDevice'=>''));?>
 	</div>
 </div>
 <!-- /container -->
