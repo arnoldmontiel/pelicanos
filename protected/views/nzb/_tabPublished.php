@@ -12,17 +12,18 @@
 					
 					'value'=>function($data){
 						$poster = 'no_image.jpg';
-						if(isset($item->Id_TMDB_data))
+						if(isset($data->Id_TMDB_data))
 						{
-							if(isset($item->TMDBData->poster))
-								$poster = $item->TMDBData->poster;
+							if(isset($data->TMDBData->poster))
+								$poster = $data->TMDBData->poster;
 						}
-						elseif (isset($item->myMovieDiscNzb->myMovieNzb->poster))
+						elseif (isset($data->myMovieDiscNzb->myMovieNzb->poster))
 						{
-							$poster = $item->myMovieDiscNzb->myMovieNzb->poster;
-						}					
+							$poster = $data->myMovieDiscNzb->myMovieNzb->poster;
+						}
 						$poster = PelicanoHelper::getImageName($poster);
-						return '<a onclick="viewVideoInfo('.$data->autoRipperId.');" data-toggle="modal" ><img class="tableMovieImage" src="'.$poster.'" width="50"></a>';
+						
+						return '<a onclick="viewVideoInfo('.$data->autoRipperId.');" data-toggle="modal" ><img class="tableMovieImage" src="images/'.$poster.'" width="50"></a>';
 					},
 					'type'=>'raw',
 					'htmlOptions'=>array("width"=>"50;", "class"=>"tdImage", "valign"=>"top"),
