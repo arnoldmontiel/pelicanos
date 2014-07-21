@@ -160,6 +160,11 @@ class DeviceController extends Controller
 		if(isset($_GET['ErrorLog']))
 			$modelErrorLog->attributes=$_GET['ErrorLog'];
 		
+		$modelClientSetting = new ClientSettings('search');
+		$modelClientSetting->unsetAttributes();  // clear any default values
+		if(isset($_GET['ClientSettings']))
+			$modelClientSetting->attributes=$_GET['ClientSettings'];
+		
 		$modelDeviceTunelGrid = new DeviceTunneling('search');
 		$modelDeviceTunelGrid->unsetAttributes();  // clear any default values
 		
@@ -170,6 +175,7 @@ class DeviceController extends Controller
 		$modelDeviceTunelGrid->Id_device = $idDevice;
 		$modelNzbDevice->Id_device = $idDevice;
 		$modelErrorLog->Id_device = $idDevice;
+		$modelClientSetting->Id_device = $idDevice;
 		
 		$modelSabNzbdConfigs = new SabnzbdConfig('search');
 		$modelSabNzbdConfigs->unsetAttributes();
@@ -186,6 +192,7 @@ class DeviceController extends Controller
 				'modelDeviceTunelGrid'=>$modelDeviceTunelGrid,
 				'modelNzbDevice'=>$modelNzbDevice,
 				'modelErrorLog'=>$modelErrorLog,
+				'modelClientSetting'=>$modelClientSetting,
 				'modelSabNzbdConfigs'=>$modelSabNzbdConfigs,
 				'modelPlayerConfigs'=>$modelPlayerConfigs,
 		));
@@ -208,6 +215,11 @@ class DeviceController extends Controller
 		if(isset($_GET['ErrorLog']))
 			$modelErrorLog->attributes=$_GET['ErrorLog'];
 		
+		$modelClientSetting = new ClientSettings('search');
+		$modelClientSetting->unsetAttributes();  // clear any default values
+		if(isset($_GET['ClientSettings']))
+			$modelClientSetting->attributes=$_GET['ClientSettings'];
+		
 		$modelDeviceTunelGrid = new DeviceTunneling('search');
 		$modelDeviceTunelGrid->unsetAttributes();  // clear any default values
 	
@@ -218,6 +230,7 @@ class DeviceController extends Controller
 		$modelDeviceTunelGrid->Id_device = $idDevice;
 		$modelNzbDevice->Id_device = $idDevice;
 		$modelErrorLog->Id_device = $idDevice;
+		$modelClientSetting->Id_device = $idDevice;
 		
 		$criteria=new CDbCriteria;
 		$criteria->join = 'INNER JOIN customer c on (c.Id = t.Id_customer)';
@@ -234,6 +247,7 @@ class DeviceController extends Controller
 				'modelDeviceTunelGrid'=>$modelDeviceTunelGrid,
 				'modelNzbDevice'=>$modelNzbDevice,
 				'modelErrorLog'=>$modelErrorLog,
+				'modelClientSetting'=>$modelClientSetting,
 				'qtyPending'=>CustomerDevice::model()->count($criteria),
 				'modelPlayerConfigs'=>$modelPlayerConfigs,
 		));

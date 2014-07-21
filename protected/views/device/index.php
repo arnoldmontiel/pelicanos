@@ -67,6 +67,10 @@ function viewDeviceInfo(id)
 	$.fn.yiiGridView.update('error-log-grid', {
  		data: $(this).serialize() + '&idDevice=' + id
  	});
+
+	$.fn.yiiGridView.update('nas-grid', {
+ 		data: $(this).serialize() + '&idDevice=' + id
+ 	});
  	
 	$.post("<?php echo DeviceController::createUrl('AjaxOpenViewDownload'); ?>",
 			{
@@ -101,7 +105,7 @@ function portConfig(id)
 
 	$.fn.yiiGridView.update('player-config-grid', {
  		data: $(this).serialize() + '&idDevice=' + id
- 	});
+ 	});	
  	
 	$.post("<?php echo DeviceController::createUrl('AjaxOpenConfigPort'); ?>",
 			{
@@ -259,7 +263,10 @@ function addPort()
 	</div>
 	
 	<div id="container-modal-viewDownload" style="display: none">
-		<?php echo $this->renderPartial('_modalViewInfo', array( 'modelNzbDevice'=>$modelNzbDevice, 'modelErrorLog'=>$modelErrorLog, 'idDevice'=>''));?>
+		<?php echo $this->renderPartial('_modalViewInfo', array( 'modelNzbDevice'=>$modelNzbDevice, 
+																'modelErrorLog'=>$modelErrorLog,
+																'modelClientSetting'=>$modelClientSetting, 
+																'idDevice'=>''));?>
 	</div>
   <!-- /.row --> 
 </div>

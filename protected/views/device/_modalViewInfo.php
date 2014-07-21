@@ -8,6 +8,7 @@
 			<ul class="nav nav-tabs">
 				<li class="active"><a href="#tabDescargas" data-toggle="tab">Descargas</a></li>
 				<li><a href="#tabErrorLog" data-toggle="tab">Informes</a></li>
+				<li><a href="#tabNas" data-toggle="tab">NAS</a></li>				
 				<li class="pull-right">
 					<div class="panel panel-default panelCliente sideIDLabel">
   						<div class="panel-body">
@@ -27,6 +28,11 @@
               	<div class="tab-pane" id="tabErrorLog">
                 	<?php 
 				  		echo $this->renderPartial('_errorLogs', array('modelErrorLog'=>$modelErrorLog));
+				  	?>
+              	</div><!-- tab-pane -->
+              	<div class="tab-pane" id="tabNas">
+                	<?php 
+				  		echo $this->renderPartial('_nas', array('modelClientSetting'=>$modelClientSetting));
 				  	?>
               	</div><!-- tab-pane -->
 			</div><!-- tab-content -->
