@@ -8,7 +8,7 @@ $directors = "&nbsp;";
 $actor = "&nbsp;";
 $time = "0";
 $description = "&nbsp;";
-$img = "noImage.jpg";
+$img = "images/no_image_big.jpg";
 $modelNzb = $modalAutoRipper->nzb;
 if (isset ( $modelNzb )) {
 	if (isset ( $modelNzb->myMovieDiscNzb )) {
@@ -20,13 +20,13 @@ if (isset ( $modelNzb )) {
 		$year = $modeMyMovieNzb->production_year;
 		$time = $modeMyMovieNzb->running_time;
 		$description = $modeMyMovieNzb->description;
-		$img = "noImage.jpg";
-		if (isset ( $modelNzb->Id_TMDB_data )) {
-			if (isset ( $modelNzb->TMDBData->poster ))
-				$img = $modelNzb->TMDBData->poster;
-		} elseif (isset ( $modeMyMovieNzb->poster )) {
-			$img = $modeMyMovieNzb->poster;
+		
+		$img = $modeMyMovieNzb->big_poster;
+		if(isset($modelNzb->TMDBData)&&$modelNzb->TMDBData->big_poster!="")
+		{
+			$img = $modelNzb->TMDBData->big_poster;
 		}
+		$img = PelicanoHelper::getImageName($img, "_big");
 		
 		$modelPerson = MyMovieNzbPerson::model ()->findByAttributes ( array (
 				'Id_my_movie_nzb' => $modeMyMovieNzb->Id 
@@ -48,7 +48,7 @@ if (isset ( $modelNzb )) {
 		<div class="modal-body">
 			<div class="row">
 				<div class="col-md-3 col-sm-3 align-center hidden-nexus-p">
-						<img class="aficheDetail" src="images/<?php echo $img;?>"
+						<img class="aficheDetail" src="<?php echo $img;?>"
 						width="100%" height="100%" border="0">
 				</div>
 				<!--/.col-md-3PRINCIPAL -->

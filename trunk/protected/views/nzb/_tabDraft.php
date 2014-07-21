@@ -16,7 +16,7 @@
 						echo '<tr>';
 				if(isset($item->Id_my_movie_disc_nzb))
 				{
-					$poster = 'noImage.jpg';
+					$poster = 'no_image.jpg';
 					if(isset($item->Id_TMDB_data))
 					{
 						if(isset($item->TMDBData->poster))
@@ -26,7 +26,7 @@
 					{
 						$poster = $item->myMovieDiscNzb->myMovieNzb->poster;
 					}					
-					
+					$poster = PelicanoHelper::getImageName($poster);
 					$title = $item->myMovieDiscNzb->myMovieNzb->original_title;
 					if(strlen($title)>15)
 						$title = str_pad(substr($title,0,15),18,".",STR_PAD_RIGHT);
@@ -35,7 +35,7 @@
 					if(strlen($genre)>30)
 						$genre = str_pad(substr($genre,0,30),33,".",STR_PAD_RIGHT);
 										
-					echo '<td valign="top" class="tdImage"><a onclick="viewVideoInfo('.$modelAutoRipper->Id.');" data-toggle="modal" ><img class="movieImage" src="images/'.$poster.'" width="120"/><i class="fa fa-info-circle iconOverlay"></i></a></td>';
+					echo '<td valign="top" class="tdImage"><a onclick="viewVideoInfo('.$modelAutoRipper->Id.');" data-toggle="modal" ><img class="movieImage" src="'.$poster.'" width="120"/><i class="fa fa-info-circle iconOverlay"></i></a></td>';
 					echo '<td>';
 					echo '<div class="movieName">'.$title.'
 						<div class="dropdown editFiles">
