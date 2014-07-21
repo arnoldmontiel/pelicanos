@@ -19,7 +19,12 @@
 							array(
 									'header'=>'Espacio utilizado',
 									'value'=>function($data){
-										return PelicanoHelper::format_bytes($data->disc_used_space);
+										$value = PelicanoHelper::format_bytes($data->disc_used_space);
+										$percent = 0;
+										if($data->disc_total_space > 0)
+											$percent = round($data->disc_used_space * 100 / $data->disc_total_space,2);
+										 
+										return $value . ' ('.$percent.'% del total)';
 									},
 									'type'=>'raw',
 									'htmlOptions'=>array("style"=>"width:20%"),
