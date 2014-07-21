@@ -59,8 +59,7 @@ class Device extends CActiveRecord
 				{
 					if(isset($modelClientSettings->disc_total_space) && $modelClientSettings->disc_total_space > 0)
 					{
-						$freePercent = ($modelClientSettings->disc_total_space - $modelClientSettings->disc_used_space)*100/$modelClientSettings->disc_total_space;
-						if($freePercent <= $setting->disc_minimum_warning)
+						if(($modelClientSettings->disc_used_space / $modelClientSettings->disc_total_space * 100)> $this->disc_min_size_warning)
 							$state = 4; //need disc
 						else
 							$state = 3; //online
