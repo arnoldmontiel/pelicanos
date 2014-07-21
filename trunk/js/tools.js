@@ -90,3 +90,21 @@ function fillWieghtTextBox(url,textBoxId,formId)
 		}
 	);
 }
+
+function checkNumber(obj)
+{
+	var value=$(obj).val();
+	if(value=="")
+	{
+    	$(obj).val("0");
+	}
+    var orignalValue=value;
+    value=value.replace(/[0-9]*/g, "");			
+   	var msg="Only Decimal Values allowed."; 						
+   	value=value.replace(/\./, "");
+    if (value!=""){
+    	orignalValue=orignalValue.replace(value, "");
+    	$(obj).val(orignalValue);
+    	//alert(msg);
+    }
+}
