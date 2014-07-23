@@ -15,6 +15,16 @@ class PelicanoHelper
 		}
 	}
 	
+	static public function format_kbytes($a_kbytes) {
+		if ($a_kbytes < 1024) {
+			return $a_kbytes .' KB';
+		} elseif ($a_kbytes < 1048576) {
+			return round($a_kbytes / 1024, 2) .' MB';
+		} elseif ($a_kbytes < 1073741824) {
+			return round($a_kbytes / 1048576, 2) . ' GB';
+		} 
+	}
+	
 	static public function getImageName($name, $posFix = "")
 	{
 		$pos = strpos($name, "?");
