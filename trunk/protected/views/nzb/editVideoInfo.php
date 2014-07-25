@@ -26,6 +26,50 @@ Yii::app()->clientScript->registerScript('update-video-info-head', "
 ",CClientScript::POS_BEGIN);
 
 Yii::app()->clientScript->registerScript('update-video-info', "
+		$('#selectize-genres').selectize({
+	   			plugins: ['remove_button'],
+		    	delimiter: ',',
+		    	persist: true,
+		    	create: function(input) {
+		        	return {
+		            	value: input,
+		            	text: input
+		        	}
+		    	},
+	   			onChange: function() {
+		        	$('#input_genres').val(this.getValue());
+		    	} 
+			});
+		
+		$('#selectize-actors').selectize({
+	   			plugins: ['remove_button'],
+		    	delimiter: ',',
+		    	persist: true,
+		    	create: function(input) {
+		        	return {
+		            	value: input,
+		            	text: input
+		        	}
+		    	},
+	   			onChange: function() {
+		        	$('#input_actors').val(this.getValue());
+		    	} 
+			});
+		
+			$('#selectize-directors').selectize({
+	   			plugins: ['remove_button'],
+		    	delimiter: ',',
+		    	persist: true,
+		    	create: function(input) {
+		        	return {
+		            	value: input,
+		            	text: input
+		        	}
+		    	},
+	   			onChange: function() {
+		        	$('#input_directors').val(this.getValue());
+		    	} 
+			});
 		$('#myModalCambiarAfiche').on('hidden.bs.modal', function () {
   			$(this).html('');
 		})
@@ -113,38 +157,8 @@ Yii::app()->clientScript->registerScript('update-video-info', "
 		}
 		);
 	   				
-		$('#actors').select2({tags:[],tokenSeparators: [',']});
-		$('#directors').select2({tags:[],tokenSeparators: [',']});
-		$('#genres').select2({tags:[],tokenSeparators: [',']});
 	   	$('#marketcategories').select2({tags:[],tokenSeparators: [',']});
 	   				
-		$.ajax({
-	   		type: 'POST',
-	   		url: '". NzbController::createUrl('AjaxGetGenres') . "',
-	   		data: {idMyMovieNzb:'".$modelMyMovieNzb->Id."'},
-	   		dataType: 'json'
-	 	}).success(function(data)
-	 	{	
-	   		vals = '';
-	   		first = true;
-			for (var i in data) {	   				
-				item = data[i];
-				if(first)
-   				{
-	   				first = false;
-	   				vals = item;
-				}
-	   			else
-	   			{
-	   				vals = vals+','+item;
-	   			}
-			} 				
-			$('#genres').select2({tags:data,tokenSeparators: [',']});
-	   		$('#genres').val(vals).trigger('change');
-			$('#input_genres').val(vals);	   						   				
-		}
-	 	);
-		$('#genres').on('change',function(e){ $('#input_genres').val(e.val);});
 
 	   	$.ajax({
 	   		type: 'POST',
@@ -174,63 +188,6 @@ Yii::app()->clientScript->registerScript('update-video-info', "
 	 	);
 		$('#marketcategories').on('change',function(e){ $('#input_categories').val(e.val);});
 	   				
-		$.ajax({
-	   		type: 'POST',
-	   		url: '". NzbController::createUrl('AjaxGetPersons') . "',
-	   		data: {idMyMovieNzb:'".$modelMyMovieNzb->Id."',type:'Actor'},
-	   		dataType: 'json'
-	 	}).success(function(data)
-	 	{	
-	   		vals = '';
-	   		first = true;
-			for (var i in data) {
-				item = data[i];
-				if(first)
-   				{
-	   				first = false;
-					vals = item.id;
-				}
-	   			else
-	   			{
-	   				vals = vals+','+item.id;
-	   			}
-			} 				
-	   		//alert(data[0].id);
-			$('#actors').select2({tags:data,tokenSeparators: [',']});
-	   		$('#actors').val(vals).trigger('change');
-			$('#input_actors').val(vals);	   						   				
-		}
-	 	);
-		$('#actors').on('change',function(e){ $('#input_actors').val(e.val);});
-		$.ajax({
-	   		type: 'POST',
-	   		url: '". NzbController::createUrl('AjaxGetPersons') . "',
-	   		data: {idMyMovieNzb:'".$modelMyMovieNzb->Id."',type:'Director'},
-	   		dataType: 'json'
-	 	}).success(function(data)
-	 	{	 				
-	   		vals = '';
-	   		first = true;
-			for (var i in data) {
-				item = data[i];
-				if(first)
-   				{
-	   				first = false;
-					vals = item.id;
-				}
-	   			else
-	   			{
-	   				vals = vals+','+item.id;
-	   			}
-			} 				
-	   		//alert(data[0].id);
-			$('#directors').select2({tags:data,tokenSeparators: [',']});
-	   		$('#directors').val(vals).trigger('change');
-	   		$('#input_directors').val(vals);	
-	   					   				
-		}
-	 	);
-		$('#directors').on('change',function(e){ $('#input_directors').val(e.val);});
 		");
 ?>
 <div class="container" id="screenEditMovie">
@@ -262,11 +219,23 @@ Yii::app()->clientScript->registerScript('update-video-info', "
     <div class="col-md-9">
     <form class="form-horizontal" id="my-movie-form" role="form" method="post" >
     <?php    
-	echo CHtml::hiddenField('idNzb',$modelNzb->Id);	
-	echo CHtml::hiddenField('input_actors');
-	echo CHtml::hiddenField('input_genres');	
+	echo CHtml::hiddenField('idNzb',$modelNzb->Id);
+	$actorsIds= array();
+	foreach ($actors as $actor)
+	{
+		$actorsIds[]=$actor['id'];
+	}
+	
+	echo CHtml::hiddenField('input_actors',implode(',', $actorsIds));
+	echo CHtml::hiddenField('input_genres',$modelMyMovieNzb->genre);	
 	echo CHtml::hiddenField('input_categories');
-	echo CHtml::hiddenField('input_directors');	
+	$directorsIds= array();
+	foreach ($directors as $director)
+	{
+		$directorsIds[]=$director['id'];
+	}
+	
+	echo CHtml::hiddenField('input_directors',implode(',', $directorsIds));	
 	?>
     <div class="row">
         <div class="col-md-12">
@@ -283,8 +252,21 @@ Yii::app()->clientScript->registerScript('update-video-info', "
           <div class="form-group">
     <label for="fieldGenero" class="col-md-1 control-label">Genero</label>
     <div class="col-md-11">
-      <div id="genres" style="width:100%">
-    </div>
+    <select id="selectize-genres" name="genres[]" multiple placeholder="Seleccione un genero">	
+		<?php
+		$genresExplodes =explode(',', $modelMyMovieNzb->genre); 		
+		foreach ($genresExplodes as $genre)
+		{
+			$genre = trim($genre);
+			echo '<option value="'.$genre.'" selected>'.$genre.'</option>';
+		}
+		foreach ($genres as $genre)
+		{
+			echo '<option value="'.$genre.'" >'.$genre.'</option>';
+		}
+		?>
+	</select>	
+    
     </div>
     </div>
     </div><!-- /col-md-12 -->
@@ -364,8 +346,15 @@ Yii::app()->clientScript->registerScript('update-video-info', "
           <div class="form-group">
     <label for="fieldDirector" class="col-md-1 control-label">Director</label>
               <div class="col-md-11">
-	<div id="directors" style="width:100%">
-    </div>
+	<select id="selectize-directors" name="directors[]" multiple class="demo-default" placeholder="Seleccione un director">	
+		<?php		
+		foreach ($directors as $director)
+		{
+			echo '<option value="'.$director['id'].'" selected>'.$director['text'].'</option>';
+		}
+		?>
+	</select>	
+              
 	</div>
     </div>
     </div><!-- /col-md-12 -->
@@ -374,9 +363,15 @@ Yii::app()->clientScript->registerScript('update-video-info', "
         <div class="col-md-12">
           <div class="form-group">
     <label for="fieldActores" class="col-md-1 control-label">Actores</label>
-              <div class="col-md-11">
-	<div id="actors" style="width:100%">
-    </div>
+    <div class="col-md-11">
+		<select id="selectize-actors" name="actors[]" multiple class="demo-default" placeholder="Seleccione un actor">	
+		<?php		
+		foreach ($actors as $actor)
+		{
+			echo '<option value="'.$actor['id'].'" selected>'.$actor['text'].'</option>';
+		}
+		?>
+	</select>	    
       
 	</div>
     </div>

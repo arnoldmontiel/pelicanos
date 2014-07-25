@@ -16,6 +16,9 @@
 		<script src="js/select2-3.4.4/select2.js"></script>
 		<script type="text/javascript" src="js/image-picker.min.js"></script>
 		<script src="js/lite-uploader-master/jquery.liteuploader.js"></script>
+		<link href="css/selectize/selectize.legacy.css" rel="stylesheet" />
+		<script src="js/selectize/selectizeDelfi.js"></script>
+		
 	</head>
 	<body>
 		<?php 
