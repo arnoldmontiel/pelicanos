@@ -2194,6 +2194,7 @@ class NzbController extends Controller
 		
 		echo $this->renderPartial('_tabApproved',array('modelNzbApproved'=>$modelNzbApproved, 'filter'=>$filter));
 	}
+	
 	public function actionEditVideoInfo($idNzb)
 	{
 		if(isset($_POST['MyMovieNzb']) && isset($_POST['idNzb']))
@@ -2359,7 +2360,45 @@ class NzbController extends Controller
 		
 		$modelMyMovieNzb = $modelNzb->myMovieDiscNzb->myMovieNzb;
 			
-		$this->render('editVideoInfo',array('modelMyMovieNzb'=>$modelMyMovieNzb,'modelNzb'=>$modelNzb));
+		$type= "Actor";
+		$persons = $modelMyMovieNzb->persons;
+		$actor = array();
+		$names = array();
+		foreach ($persons as $person){
+			if($person->type!=$type) continue;
+			$actor['id']=$person->Id;
+			$actor['text']=$person->name;
+			$names[]=$actor;
+		}
+		$actors = $names;
+		
+		$type= "Director";
+		$persons = $modelMyMovieNzb->persons;
+		$directors = array();
+		$names = array();
+		foreach ($persons as $person){
+			if($person->type!=$type) continue;
+			$director['id']=$person->Id;
+			$director['text']=$person->name;
+			$names[] =$director;
+		}
+		$directors = $names;
+			
+		$genres = array();
+		$movies = MyMovieNzb::model()->findAll();
+		foreach($movies as $item)
+		{
+			$movieGenres = explode(', ',$item->genre);
+			foreach($movieGenres as $value)
+			{
+				if(!empty($value) && ! in_array($value,$genres))
+					$genres[] = trim($value);
+			}
+		}
+		asort($genres);
+		
+		
+		$this->render('editVideoInfo',array('modelMyMovieNzb'=>$modelMyMovieNzb,'modelNzb'=>$modelNzb,'actors'=>$actors,'directors'=>$directors,'genres'=>$genres));
 
 		
 	}
