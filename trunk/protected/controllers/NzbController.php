@@ -2397,8 +2397,20 @@ class NzbController extends Controller
 		}
 		asort($genres);
 		
+		//Category
+		$categories = array();
 		
-		$this->render('editVideoInfo',array('modelMyMovieNzb'=>$modelMyMovieNzb,'modelNzb'=>$modelNzb,'actors'=>$actors,'directors'=>$directors,'genres'=>$genres));
+		$availableCategories = MarketCategory::model()->findAll();
+		
+		foreach($availableCategories as $item)
+		{
+			$category = array();
+			$category['id'] = $item->Id;
+			$category['text'] = $item->description;
+			$categories[] = $category;
+		}						
+		
+		$this->render('editVideoInfo',array('modelMyMovieNzb'=>$modelMyMovieNzb,'modelNzb'=>$modelNzb,'actors'=>$actors,'directors'=>$directors,'genres'=>$genres,'categories'=>$categories));
 
 		
 	}

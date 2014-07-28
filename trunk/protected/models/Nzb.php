@@ -200,6 +200,7 @@ class Nzb extends CActiveRecord
 			'creationState' => array(self::BELONGS_TO, 'CreationState', 'Id_creation_state'),
 			'TMDBData' => array(self::BELONGS_TO, 'TMDBData', 'Id_TMDB_data'),
 			'autoRipperFile' => array(self::BELONGS_TO, 'AutoRipperFile', 'Id_auto_ripper_file'),
+			'marketCategorys' => array(self::MANY_MANY, 'MarketCategory', 'market_category_nzb(Id_market_category, Id_nzb)'),
 		);
 	}
 

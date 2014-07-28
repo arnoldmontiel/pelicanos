@@ -70,6 +70,15 @@ Yii::app()->clientScript->registerScript('update-video-info', "
 		        	$('#input_directors').val(this.getValue());
 		    	} 
 			});
+			$('#selectize-categories').selectize({
+	   			plugins: ['remove_button'],
+		    	delimiter: ',',
+		    	persist: false,
+		    	create: false,
+	   			onChange: function() {
+		        	$('#input_categories').val(this.getValue());
+		    	} 
+			});		
 		$('#myModalCambiarAfiche').on('hidden.bs.modal', function () {
   			$(this).html('');
 		})
@@ -155,39 +164,7 @@ Yii::app()->clientScript->registerScript('update-video-info', "
 		});			
 	   		return false;
 		}
-		);
-	   				
-	   	$('#marketcategories').select2({tags:[],tokenSeparators: [',']});
-	   				
-
-	   	$.ajax({
-	   		type: 'POST',
-	   		url: '". NzbController::createUrl('AjaxGetMarketCategories') . "',
-	   		data: {idNzb:'".$modelNzb->Id."'},
-	   		dataType: 'json'
-	 	}).success(function(data)
-	 	{	
-	   		vals = '';
-	   		first = true;
-			for (var i in data.used) {
-				item = data.used[i];
-				if(first)
-   				{
-	   				first = false;
-	   				vals = item.id;
-				}
-	   			else
-	   			{
-	   				vals = vals+','+item.id;
-	   			}
-			} 				
-			$('#marketcategories').select2({tags:data.available,tokenSeparators: [',']});
-	   		$('#marketcategories').val(vals).trigger('change');
-			$('#input_categories').val(vals);	   						   				
-		}
-	 	);
-		$('#marketcategories').on('change',function(e){ $('#input_categories').val(e.val);});
-	   				
+		);	   					   				
 		");
 ?>
 <div class="container" id="screenEditMovie">
@@ -227,14 +204,19 @@ Yii::app()->clientScript->registerScript('update-video-info', "
 	}
 	
 	echo CHtml::hiddenField('input_actors',implode(',', $actorsIds));
-	echo CHtml::hiddenField('input_genres',$modelMyMovieNzb->genre);	
-	echo CHtml::hiddenField('input_categories');
+	echo CHtml::hiddenField('input_genres',$modelMyMovieNzb->genre);
+	$categoriesIds= array();
+	foreach ($categories as $category)
+	{
+		$categoriesIds[]=$category['id'];
+	}
+	
+	echo CHtml::hiddenField('input_categories',implode(',', $categoriesIds));
 	$directorsIds= array();
 	foreach ($directors as $director)
 	{
 		$directorsIds[]=$director['id'];
 	}
-	
 	echo CHtml::hiddenField('input_directors',implode(',', $directorsIds));	
 	?>
     <div class="row">
@@ -276,8 +258,20 @@ Yii::app()->clientScript->registerScript('update-video-info', "
           <div class="form-group">
     <label for="fieldMarketCategory" class="col-md-1 control-label">Categorias en Market</label>
     <div class="col-md-11">
-      <div id="marketcategories" style="width:100%">
-    </div>
+      <select id="selectize-categories" name="categories[]" multiple class="demo-default" placeholder="Seleccione una categor&iacute;a">	
+		<?php		
+		$marketCategories = $modelNzb->marketCategorys;
+		foreach ($marketCategories as $marketCategory)
+		{
+			echo '<option value="'.$marketCategory->Id.'" selected>'.$marketCategory->description.'</option>';
+		}
+		foreach ($categories as $category)
+		{
+			echo '<option value="'.$category['id'].'">'.$category['text'].'</option>';
+		}		
+		?>
+	</select>	
+      
     </div>
     </div>
     </div><!-- /col-md-12 -->
