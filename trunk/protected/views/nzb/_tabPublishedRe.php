@@ -22,10 +22,10 @@
 							$poster = $data->myMovieDiscNzb->myMovieNzb->poster;
 						}
 						$poster = PelicanoHelper::getImageName($poster);	
-						return '<a onclick="viewVideoInfo('.$data->autoRipperId.');" data-toggle="modal" ><img class="tableMovieImage" src="'.$poster.'" width="50"></a>';
+						return '<a onclick="viewVideoInfo('.$data->autoRipperId.');" data-toggle="modal" ><img class="tableMovieImage valignTop" src="'.$poster.'" width="50"></a>';
 					},
 					'type'=>'raw',
-					'htmlOptions'=>array("width"=>"50;", "class"=>"tdImage", "valign"=>"top"),
+					'htmlOptions'=>array("width"=>"50;", "class"=>"tdImage valignTop", "valign"=>"top"),
 				),
 				array(
 						'name'=>'title',
