@@ -24,13 +24,16 @@
 			
 		}
 	}
+	$modalTitle = 'Aprobar Pel&iacute;cula';
+	if($confirmType == 2)
+		$modalTitle = 'Publicar Pel&iacute;cula';
 ?>
 <form id="brand-form" method="post">
 	<div class="modal-dialog">
     	<div class="modal-content">
 			<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times-circle fa-lg"></i></button>
-			        		<h4 class="modal-title">Aprobar Pel&iacute;cula</h4>
+			        		<h4 class="modal-title"><?php echo $modalTitle;?></h4>
       		</div>
       		<div class="modal-body">
       			<div class="row">
@@ -44,6 +47,9 @@
       				</div>
       			<div class="col-md-9">
 	     			<div class="bold"> <?php echo $title;?></div>
+	     			<?php if($confirmType == 2):?>
+	     			<div class="bold">Puntos <?php echo CHtml::textField('nzb-points',0,array('id'=>'nzb-points','onkeyup'=>'checkNumber(this)'));?> </div>
+	     			<?php endif;?>
 						<table class="table tablaArchivos">
 	    					<thead>
 								<tr>

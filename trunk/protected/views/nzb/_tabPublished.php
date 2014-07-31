@@ -61,13 +61,14 @@
 						'headerHtmlOptions'=>array("class"=>"align-right"),
 				),
 				array(
-						'name'=>'rating',
+						'header'=>'Puntos',
 						'value'=>function($data){
-							$rating = '';
-							if(isset($data->myMovieDiscNzb->myMovieNzb))
-								$rating = $data->myMovieDiscNzb->myMovieNzb->rating;
-								
-							return $rating;
+							
+								return '<input type="text" idnzb="'.$data->Id.'" onkeyup="checkNumber(this);" class="form-control text-center" name="points_'.$data->Id.'" id="points_'.$data->Id.'" disabled value="'.$data->points.'">
+										<button id="edit_'.$data->Id.'" type="button" onclick="updatePoints('.$data->Id.');" class="btn btn-default btn-sm btn100 noMargin"><i class="fa fa-pencil"></i> </button>
+  										<button id="save_'.$data->Id.'" type="button" onclick="savePoints('.$data->Id.');" class="hidden btn btn-primary btn-sm btn50 noMargin pull-left"><i class="fa fa-save"></i></button>
+  										<button id="cancel_'.$data->Id.'" type="button" onclick="cancelEditPoints('.$data->Id.');" class="hidden btn btn-default btn-sm btn50 noMargin pull-right"><i class="fa fa-times-circle"></i></button>';
+							
 						},
 						'type'=>'raw',
 						'htmlOptions'=>array("class"=>"align-right"),

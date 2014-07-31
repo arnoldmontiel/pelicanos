@@ -2541,14 +2541,32 @@ class NzbController extends Controller
 	public function actionAjaxPublishNzb()
 	{
 		$idNzb = (isset($_POST['idNzb']))?$_POST['idNzb']:null;
-	
+		$nzbPoints = (isset($_POST['points']))?$_POST['points']:0;
  		if(isset($idNzb))
  		{
- 			$this->changeNzbState($idNzb, 4);
- 			$this->changeParent($idNzb);
+ 			$model = Nzb::model()->findByPk($idNzb);
+ 			$model->points = $nzbPoints;
+ 			if($model->save())
+ 			{
+	 			$this->changeNzbState($idNzb, 4);
+	 			$this->changeParent($idNzb);
+ 			}
  		}
 
  		echo json_encode($this->getQtys());
+	}
+	
+	public function actionAjaxUpdatePoints()
+	{
+		$idNzb = (isset($_POST['idNzb']))?$_POST['idNzb']:null;
+		$nzbPoints = (isset($_POST['points']))?$_POST['points']:0;
+		if(isset($idNzb))
+		{
+			$model = Nzb::model()->findByPk($idNzb);
+			$model->points = $nzbPoints;
+			if($model->save())
+				$this->updateRelation($idNzb);
+		}
 	}
 	
 	public function actionAjaxDeletePublication()
