@@ -23,10 +23,10 @@
 						}
 						$poster = PelicanoHelper::getImageName($poster);
 						
-						return '<a onclick="viewVideoInfo('.$data->autoRipperId.');" data-toggle="modal" ><img class="tableMovieImage" src="'.$poster.'" width="50"></a>';
+						return '<a onclick="viewVideoInfo('.$data->autoRipperId.');" data-toggle="modal" ><img class="tableMovieImage valignTop" src="'.$poster.'" width="50"></a>';
 					},
 					'type'=>'raw',
-					'htmlOptions'=>array("width"=>"50;", "class"=>"tdImage", "valign"=>"top"),
+					'htmlOptions'=>array("width"=>"50;", "class"=>"tdImage valignTop", "valign"=>"top"),
 				),
 				array(
 						'name'=>'title',
@@ -64,15 +64,15 @@
 						'header'=>'Puntos',
 						'value'=>function($data){
 							
-								return '<input type="text" idnzb="'.$data->Id.'" onkeyup="checkNumber(this);" class="form-control text-center" name="points_'.$data->Id.'" id="points_'.$data->Id.'" disabled value="'.$data->points.'">
-										<button id="edit_'.$data->Id.'" type="button" onclick="updatePoints('.$data->Id.');" class="btn btn-default btn-sm btn100 noMargin"><i class="fa fa-pencil"></i> </button>
-  										<button id="save_'.$data->Id.'" type="button" onclick="savePoints('.$data->Id.');" class="hidden btn btn-primary btn-sm btn50 noMargin pull-left"><i class="fa fa-save"></i></button>
-  										<button id="cancel_'.$data->Id.'" type="button" onclick="cancelEditPoints('.$data->Id.');" class="hidden btn btn-default btn-sm btn50 noMargin pull-right"><i class="fa fa-times-circle"></i></button>';
+								return '<div class="inputInlineGroup clearfix"><input type="text" idnzb="'.$data->Id.'" onkeyup="checkNumber(this);" class="form-control text-center inputInlineSmall pull-left" name="points_'.$data->Id.'" id="points_'.$data->Id.'" disabled value="'.$data->points.'">
+										<button id="edit_'.$data->Id.'" type="button" onclick="updatePoints('.$data->Id.');" class="btn btn-default btn-sm pull-right"><i class="fa fa-pencil"></i> </button>
+  										<button id="cancel_'.$data->Id.'" type="button" onclick="cancelEditPoints('.$data->Id.');" class="hidden btn btn-default btn-sm  pull-right"><i class="fa fa-times-circle"></i></button>
+  										<button id="save_'.$data->Id.'" type="button" onclick="savePoints('.$data->Id.');" class="hidden btn btn-primary btn-sm  pull-right"><i class="fa fa-save"></i></button></div>';
 							
 						},
 						'type'=>'raw',
-						'htmlOptions'=>array("class"=>"align-right"),
-						'headerHtmlOptions'=>array("class"=>"align-right"),
+						'htmlOptions'=>array("class"=>"align-left"),
+						'headerHtmlOptions'=>array("class"=>"align-left"),
 				),
 				array(
 						'header'=>'Fecha de Creacion',
@@ -88,8 +88,8 @@
 							return $data->downloadsQty;
 						},
 						'type'=>'raw',
-						'htmlOptions'=>array("class"=>"align-right"),
-						'headerHtmlOptions'=>array("class"=>"align-right"),
+						'htmlOptions'=>array("class"=>"align-center"),
+						'headerHtmlOptions'=>array("class"=>"align-center"),
 				),
 				array(
 						'header'=>'Acciones',
