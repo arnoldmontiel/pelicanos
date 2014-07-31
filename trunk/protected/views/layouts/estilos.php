@@ -82,6 +82,7 @@ button {
 .block{display:block !important;}
 .inline{display:inline !important;}
 .inlineBlock{display:inline-block !important;}
+.valignTop{vertical-align:top !important;}
 
 .clear{clear:both;}
 
@@ -441,6 +442,10 @@ input.searchOverTab:-moz-placeholder::before  { font-family: FontAwesome; conten
 .tablaNombre{ font-size:15px; font-weight:bold; font-family:'GudeaBold';}
 .tablaGenero{ font-size:15px;}
 .modalDetail .table.tablaArchivos tbody>tr>td{padding:5px; line-height:34px;}
+
+.inputInlineGroup{width:145px;}
+.inputInlineGroup .btn{margin-top:2px;}
+.inputInlineSmall{ display:inline-block; width:60px; }
 
 /* ------ END MOVIE LIST------- */
 
@@ -1002,45 +1007,6 @@ font-family: "GudeaRegular";
 
 /* ------ END CREAR PRESU ------- */
 
-/* ------ CREAR IMPORTADOR ------- */
-
-#myModalFormImporter .modal-dialog{width:850px;}
-
-#myModalFormImporter .modal-body{padding:10px;}
-
-#myModalFormImporter h4{margin-top:15px;}
-
-#myModalFormImporter .form-group{margin-bottom:5px;}
-
-
-.grupoAereo{background-color:#eee; border-right:2px solid #fff; margin-top:5px;}
-.grupoMaritimo{background-color:#eee; margin-top:5px;}
-
-/* ------ END CREAR IMPORTADOR ------- */
-
-/* ------ CURRENCY ------- */
-
-.table .miniTableCurrency thead th{font-family:'GudeaRegular'; font-size:12px; background-color:#eee; border-color:#eee;}
-
-.table .miniTableCurrency .btn{margin-left:5px;}
-/* ------ END CURRENCY ------- */
-
-
-/* ------ UPLOAD IMAGENES PRODUCTO ------- */
-.xupload-form{ background-color:rgba(255,255,255,0.5);  font-size:16px;border: 3px dotted #eee; line-height:60px; height:250px; 
-width:auto; padding:50px; border-radius:0px; display:block;margin-right:20px;margin-left: 20px; margin:auto;}
-
-.xupload-form.file_upload_highlight{background-color:white; font-size:16px;}
-
-.xupload-form div{color:#666;}
-
-#files{margin-top:20px;}
-
-.imageUploadCont{width:120px;}
-
-.tablaUploadImagenes .imageUploadCont img{width:100%;}
-
-/* ------ END UPLOAD IMAGENES PRODUCTO ------- */
 
 /* ----- DISPOSITIVOS --------*/
 
