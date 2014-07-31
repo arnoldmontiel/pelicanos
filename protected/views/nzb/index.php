@@ -157,10 +157,13 @@ function publishNzb(id)
 		$('#status-error').show();	
 		return false;
 	}
+
+	var points = $('#nzb-points').val();
 	
 	$.post("<?php echo NzbController::createUrl('AjaxPublishNzb'); ?>",
 			{
-				idNzb:id
+				idNzb:id,
+				points:points
 			}
 		).success(
 			function(data){
@@ -175,6 +178,39 @@ function publishNzb(id)
 					$('#a-tab-rejected').children().text(obj.cancelledQty);
 				}
 			});
+}
+
+function updatePoints(id)
+{
+	$("#edit_"+id).addClass('hidden');
+	$("#save_"+id).removeClass('hidden');
+	$("#cancel_"+id).removeClass('hidden');
+	$(".btn100").addClass('disabled');
+	$("#nzb-grid_published :input[idnzb='"+id+"']").each(function(){
+    	$(this).removeAttr('disabled');
+	});
+}
+
+function cancelEditPoints(id)
+{
+	$.fn.yiiGridView.update('nzb-grid_published');
+}
+
+function savePoints(id)
+{
+	var obj = $("#nzb-grid_published :input[idnzb='"+id+"']");	
+	$.post("<?php echo NzbController::createUrl('AjaxUpdatePoints'); ?>",
+			{
+				idNzb:id,
+				points:obj.val()
+			}
+		).success(
+			function(data){
+				$.fn.yiiGridView.update('nzb-grid_published');
+			});
+	return false;
+
+	
 }
 
 function publishConfirm(id)
