@@ -27,4 +27,9 @@ class NzbStateRequest
 	*/
 	public $change_state_date;
 	
+	/**
+	 * @var integer points
+	 * @soap
+	 */
+	public $points;
 }

@@ -11,6 +11,7 @@
  * @property string $date_downloading
  * @property string $date_downloaded
  * @property integer $Id_nzb_state
+ * @property integer $points
  */
 class NzbDevice extends CActiveRecord
 {
@@ -51,12 +52,12 @@ class NzbDevice extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('Id_nzb, Id_device', 'required'),
-			array('Id_nzb, need_update, Id_nzb_state', 'numerical', 'integerOnly'=>true),
+			array('Id_nzb, need_update, Id_nzb_state, points', 'numerical', 'integerOnly'=>true),
 			array('Id_device', 'length', 'max'=>45),
 			array('date_sent, date_downloading, date_downloaded', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id_nzb, Id_device, need_update, date_sent, date_downloading, date_downloaded, Id_nzb_state, title, year, genre, nzb_status, id_imdb, episode, season, serie_title, Id_customer', 'safe', 'on'=>'search'),			
+			array('Id_nzb, Id_device, need_update, date_sent, date_downloading, date_downloaded, Id_nzb_state, title, year, genre, nzb_status, id_imdb, episode, season, serie_title, Id_customer, points', 'safe', 'on'=>'search'),			
 		);
 	}
 
