@@ -768,6 +768,11 @@ font-size: 14px;
 line-height: 18px;
 padding: 3px 0px;
 }
+
+.modal-content .alert.publishPuntos{margin-bottom:10px; margin-top:15px; padding:0px;}
+.publishPuntos .table{margin-bottom:0px;}
+.publishPuntos .table td{border-top:0px transparent;}
+
 /* ------ END MODAL DETAIL ------- */
 
 
