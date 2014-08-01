@@ -108,4 +108,9 @@ class NzbSOAP
 	 */
 	public $size;
 	
+	/**
+	 * @var integer already downloaded
+	 * @soap
+	 */
+	public $already_downloaded;
 }

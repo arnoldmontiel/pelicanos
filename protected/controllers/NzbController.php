@@ -76,6 +76,18 @@ class NzbController extends Controller
 			$nzbResponse = new NzbResponse();
 			$nzbResponse->nzb->setAttributes($modelNbz);			
 			
+			//me fijo si ese cliente ya tiene descargado ese nzb
+			$criteria=new CDbCriteria;
+			$criteria->join = 'inner join nzb_device nd on (nd.Id_device = t.Id_device)';
+			$criteria->addCondition('t.Id_customer in(
+								select cd.Id_customer from customer_device cd where cd.Id_device = "'.$Id_device.'")');
+			$criteria->addCondition('nd.Id_nzb = '. $modelNbz->Id);
+			$criteria->addCondition('nd.Id_nzb_state = 3'); //que este descargado			
+			
+			$nzbResponse->nzb->already_downloaded = 0;
+			if(CustomerDevice::model()->count($criteria) > 0)
+				$nzbResponse->nzb->already_downloaded = 1;
+				
 			if(isset($modelNbz->autoRipperFile))
 			{
 				$nzbResponse->nzb->mkv_file_name = $modelNbz->autoRipperFile->label;
@@ -105,7 +117,7 @@ class NzbController extends Controller
 					$nzbResponse->myMovie->Subtitle[] = $subtitleSOAP;
 				}
 				
-				//set subtitle
+				//set person
 				$relPersons = MyMovieNzbPerson::model()->findAllByAttributes(array('Id_my_movie_nzb'=>$modelNbz->myMovieDiscNzb->Id_my_movie_nzb));
 				foreach($relPersons as $relPerson)
 				{
@@ -558,36 +570,27 @@ class NzbController extends Controller
 		// 		Yii::trace('idMovie param: '. $idMovie, 'webService');
 		// 		Yii::trace('idState param: '. $idState, 'webService');
 		
-		try {
-			$log = new Log();
-			$log->username = 'admin';
-			$log->Id_customer = 26;
-			$log->description = 'DENTRO setNzbState';
-			$log->save();
+		try {			
 			foreach($nzbStateRequest as $item)
-			{
-				$log = new Log();
-				$log->username = 'admin';
-				$log->Id_customer = 26;
-				$log->description = 'Item: '. $item->Id_nzb;
-				$log->save();
+			{				
 				$model = NzbDevice::model()->findByAttributes(array('Id_device'=>$item->Id_device, 'Id_nzb'=>$item->Id_nzb));
 			
 				if(isset($model))
 				{
 					$model->Id_nzb_state = $item->Id_state;
-// 					switch ($item->Id_state) {
-// 						case 1:
-// 							$model->date_sent = date("Y-m-d H:i:s",$item->change_state_date);
-// 							break;
-// 						case 2:
-// 							$model->date_downloading = date("Y-m-d H:i:s",$item->change_state_date);
-// 							//$this->doTransaction($item->Id_nzb, $item->Id_device);
-// 							break;
-// 						case 3:
-// 							$model->date_downloaded = date("Y-m-d H:i:s",$item->change_state_date);
-// 							break;
-// 					}
+					switch ($item->Id_state) {
+						case 1:
+							$model->date_sent = date("Y-m-d H:i:s",$item->change_state_date);
+							break;
+						case 2:
+							$model->date_downloading = date("Y-m-d H:i:s",$item->change_state_date);
+							$model->points = $item->points;
+							break;
+						case 3:
+							$model->date_downloaded = date("Y-m-d H:i:s",$item->change_state_date);
+							self::updateClientDevices($item->Id_nzb, $item->Id_device);
+							break;
+					}
 					$model->need_update = 0;
 					$model->save();
 				}
@@ -1709,6 +1712,24 @@ class NzbController extends Controller
 		
 		} catch (Exception $e) {
 			$transaction->rollback();
+		}
+	}
+	
+	private function updateClientDevices($idNzb, $idCurrentDevice)
+	{
+		$criteria = new CDbCriteria();		
+		$criteria->addCondition('Id_device <> "'. $idCurrentDevice.'"');
+		$criteria->addCondition('Id_customer IN (select cd.Id_customer from customer_device cd where cd.Id_device = "'.$idCurrentDevice.'")');
+		$customerDevices = CustomerDevice::model()->findAll($criteria);
+		
+		foreach($customerDevices as $item)
+		{
+			$modelRelation = NzbDevice::model()->findAllByAttributes(array('Id_nzb'=>$id, 'Id_device'=>$item->Id_device));
+			if(!empty($modelRelation) )
+			{
+				$modelRelation->need_update = 1;
+				$modelRelation->save();
+			}
 		}
 	}
 	
