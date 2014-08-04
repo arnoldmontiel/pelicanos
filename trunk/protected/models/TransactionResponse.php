@@ -47,12 +47,6 @@ class TransactionResponse
 	public $points;
 	
 	/**
-	* @var integer Id_transaction_type
-	* @soap
-	*/
-	public $Id_transaction_type;
-	
-	/**
 	* @var string description
 	* @soap
 	*/
