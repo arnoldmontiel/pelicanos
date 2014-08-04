@@ -60,7 +60,7 @@ class ConsumptionController extends Controller
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='device-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='consumption-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
