@@ -68,6 +68,9 @@ function getPendingDevices()
           <?php if(Yii::app()->user->checkAccess('DeviceManage')):?>
           <li <?php if ($active=="device"){ echo 'class="active"';}?> ><a href="<?php echo Yii::app()->createUrl("device/index")?>"><i class="fa fa-hdd-o fa-fw"></i> Dispositivos <span id="pendingDevicesQty" class="badge"></span></a></li>
           <?php endif?>
+          <?php if(Yii::app()->user->checkAccess('ConsumptionManage')):?>
+          <li <?php if ($active=="consumption"){ echo 'class="active"';}?> ><a href="<?php echo Yii::app()->createUrl("consumption/index")?>"><i class="fa fa-database"></i> Consumos</a></li>
+          <?php endif?>
           </ul>
           <ul class="nav navbar-nav navbar-right">
       <li class="dropdown">
