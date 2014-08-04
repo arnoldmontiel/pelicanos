@@ -75,18 +75,22 @@ class NzbController extends Controller
 		{
 			$nzbResponse = new NzbResponse();
 			$nzbResponse->nzb->setAttributes($modelNbz);			
-			
-			//me fijo si ese cliente ya tiene descargado ese nzb
-			$criteria=new CDbCriteria;
-			$criteria->join = 'inner join nzb_device nd on (nd.Id_device = t.Id_device)';
-			$criteria->addCondition('t.Id_customer in(
-								select cd.Id_customer from customer_device cd where cd.Id_device = "'.$Id_device.'")');
-			$criteria->addCondition('nd.Id_nzb = '. $modelNbz->Id);
-			$criteria->addCondition('nd.Id_nzb_state = 3'); //que este descargado			
-			
+
 			$nzbResponse->nzb->already_downloaded = 0;
-			if(CustomerDevice::model()->count($criteria) > 0)
-				$nzbResponse->nzb->already_downloaded = 1;
+			//me fijo si ese cliente ya tiene descargado ese nzb
+			$modelCustomerDevice = CustomerDevice::model()->findByAttributes(array('Id_device'=>$Id_device));
+			if(isset($modelCustomerDevice))
+			{
+				$modelConsumption = Consumption::model()->findByAttributes(array('Id_customer'=>$modelCustomerDevice->Id_customer,
+						'Id_nzb'=>$modelNbz->Id));
+				if(isset($modelConsumption))
+				{
+					$nzbResponse->consumption = new ConsumptionSOAP;
+					$nzbResponse->consumption->setAttributes($modelConsumption);
+					$nzbResponse->nzb->already_downloaded = 1;
+				}
+			}
+			//----------------------------------------
 				
 			if(isset($modelNbz->autoRipperFile))
 			{
@@ -587,7 +591,9 @@ class NzbController extends Controller
 							break;
 					}
 					$model->need_update = 0;
-					if($model->save() && $item->Id_state == 3) //si se termino de descargar genero la transaccion
+					$model->save();
+					
+					if($item->Id_state == 3) //si se termino de descargar genero la transaccion
 					{
 						$modelCustDevice = CustomerDevice::model()->findByAttributes(array('Id_device'=>$item->Id_device));
 						if(isset($modelCustDevice))
