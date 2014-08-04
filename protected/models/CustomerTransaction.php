@@ -9,7 +9,6 @@
  * @property integer $Id_customer
  * @property integer $points
  * @property string $date
- * @property integer $Id_transaction_type
  * @property string $description
  *
  * The followings are the available model relations:
@@ -19,7 +18,6 @@
  */
 class CustomerTransaction extends CActiveRecord
 {
-	public $transaction_type;
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -46,15 +44,15 @@ class CustomerTransaction extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('Id_customer, Id_transaction_type', 'required'),
-			array('Id_nzb, Id_customer, points, Id_transaction_type', 'numerical', 'integerOnly'=>true),
+			array('Id_customer, Id_nzb', 'required'),
+			array('Id_customer, points, Id_nzb', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>255),
 			array('date','default',
 		              'value'=>new CDbExpression('NOW()'),
 		              'setOnEmpty'=>true,'on'=>'insert'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id, Id_nzb, Id_customer, points, date, Id_transaction_type, transaction_type, description', 'safe', 'on'=>'search'),
+			array('Id, Id_nzb, Id_customer, points, date, description', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -67,8 +65,7 @@ class CustomerTransaction extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'idCustomer' => array(self::BELONGS_TO, 'Customer', 'Id_customer'),
-			'idNzb' => array(self::BELONGS_TO, 'Nzb', 'Id_nzb'),
-			'transactionType' => array(self::BELONGS_TO, 'TransactionType', 'Id_transaction_type'),
+			'idNzb' => array(self::BELONGS_TO, 'Nzb', 'Id_nzb'),			
 		);
 	}
 
@@ -83,7 +80,6 @@ class CustomerTransaction extends CActiveRecord
 			'Id_customer' => 'Id Customer',
 			'points' => 'Points',
 			'date' => 'Date',
-			'Id_transaction_type' => 'Transaction Type',
 			'description' => 'Description',
 		);
 	}
@@ -104,7 +100,6 @@ class CustomerTransaction extends CActiveRecord
 		$criteria->compare('Id_customer',$this->Id_customer);
 		$criteria->compare('points',$this->points);
 		$criteria->compare('date',$this->date,true);
-		$criteria->compare('Id_transaction_type',$this->Id_transaction_type);
 		$criteria->compare('description',$this->description,true);
 
 		return new CActiveDataProvider($this, array(
@@ -124,21 +119,14 @@ class CustomerTransaction extends CActiveRecord
 		$criteria->compare('Id_customer',$this->Id_customer);
 		$criteria->compare('points',$this->points);
 		$criteria->compare('date',$this->date,true);
-		$criteria->compare('Id_transaction_type',$this->Id_transaction_type);
 		$criteria->compare('description',$this->description,true);
 	
-		$criteria->with[]='transactionType';
-		$criteria->addSearchCondition("transaction_type.description",$this->transaction_type);
 		
 		// Create a custom sort
 		$sort=new CSort;
 		$sort->attributes=array(
 				      'points',
 				      'date',
-				      'transaction_type' => array(
-				        	'asc' => 'transaction_type.description',
-				        	'desc' => 'transaction_type.description DESC',
-						),
 						'*',
 				);
 	
