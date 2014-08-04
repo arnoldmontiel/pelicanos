@@ -6,7 +6,7 @@ class NzbResponse
 	{
 		$this->nzb = new NzbSOAP;
 		$this->myMovie = new MyMovieSOAP;
-		$this->myMovieDisc = new MyMovieDiscSOAP;
+		$this->myMovieDisc = new MyMovieDiscSOAP;		
 	}
 	
 	/**
@@ -32,5 +32,11 @@ class NzbResponse
 	 * @soap
 	 */
 	public $MarketCategories;
+	
+	/**
+	 * @var ConsumptionSOAP
+	 * @soap
+	 */
+	public $consumption;
 
 }
