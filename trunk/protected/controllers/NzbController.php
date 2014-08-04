@@ -606,8 +606,7 @@ class NzbController extends Controller
 								$modelNewConsumption->attributes = array('Id_customer'=>$modelCustDevice->Id_customer,
 																		'Id_nzb'=>$item->Id_nzb,
 																		'date'=>date("Y-m-d H:i:s",$item->change_state_date),
-																		'points'=>$model->points,
-																		'already_paid'=>1);
+																		'points'=>$model->points);
 								$modelNewConsumption->save();
 								
 							}
