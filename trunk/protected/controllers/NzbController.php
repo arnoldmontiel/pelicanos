@@ -564,13 +564,8 @@ class NzbController extends Controller
 	 * @soap
 	 */
 	public function setNzbState($nzbStateRequest )
-	{
-		// 		Yii::trace('date param: '. $date, 'webService');
-		// 		Yii::trace('idCustomer param: '. $idCustomer, 'webService');
-		// 		Yii::trace('idMovie param: '. $idMovie, 'webService');
-		// 		Yii::trace('idState param: '. $idState, 'webService');
-		
-		try {			
+	{	
+		try {		
 			foreach($nzbStateRequest as $item)
 			{				
 				$model = NzbDevice::model()->findByAttributes(array('Id_device'=>$item->Id_device, 'Id_nzb'=>$item->Id_nzb));
@@ -592,7 +587,26 @@ class NzbController extends Controller
 							break;
 					}
 					$model->need_update = 0;
-					$model->save();
+					if($model->save() && $item->Id_state == 3) //si se termino de descargar genero la transaccion
+					{
+						$modelCustDevice = CustomerDevice::model()->findByAttributes(array('Id_device'=>$item->Id_device));
+						if(isset($modelCustDevice))
+						{
+							$modelConsumptionDB = Consumption::model()->findByAttributes(array('Id_customer'=>$modelCustDevice->Id_customer, 
+																											'Id_nzb'=>$item->Id_nzb));
+							if(!isset($modelConsumptionDB))
+							{
+								$modelNewConsumption = new Consumption();
+								$modelNewConsumption->attributes = array('Id_customer'=>$modelCustDevice->Id_customer,
+																		'Id_nzb'=>$item->Id_nzb,
+																		'date'=>date("Y-m-d H:i:s",$item->change_state_date),
+																		'points'=>$model->points,
+																		'already_paid'=>1);
+								$modelNewConsumption->save();
+								
+							}
+						}
+					}
 				}
 			}
 			
@@ -636,30 +650,6 @@ class NzbController extends Controller
 		
 		
 		return $arrayResponse;
-	}
-	
-	/***
-	 * Make a debit transaction with the nzb and customer
-	 */
-	private function doTransaction($idNzb, $idCustomer)
-	{
-		$modelNzb =  Nzb::model()->findByPk($idNzb);
-		if(isset($modelNzb))
-		{
-			$model = new CustomerTransaction;
-			$model->attributes = array('Id_nzb'=>$idNzb,
-										'Id_customer'=>$idCustomer,
-										'points'=>$modelNzb->points,
-										'Id_transaction_type'=>1, //Debit
-										'description'=>'Extraccion automatica por consumo');
-			$model->save();
-			
-			
-			//customer points decrement
-			$modelCustomer = Customer::model()->findByPk($idCustomer);
-			$modelCustomer->current_points = $modelCustomer->current_points - $model->points;
-			$modelCustomer->save();
-		}
 	}
 	
 	/**

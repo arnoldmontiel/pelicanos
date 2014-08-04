@@ -141,31 +141,6 @@ class CustomerController extends Controller
 		));
 	}
 	
-	public function actionAjaxDoTransaction()
-	{
-		$pointsQty = $_POST['pointsQty'];
-		$pointsDesc = $_POST['pointsDesc'];
-		$transType = (int)$_POST['rbnTransType'];
-		$idCustomer = $_POST['Customer']['Id'];
-		
-		$currentPoints = 0;
-		$modelTransaction = new CustomerTransaction;
-		$modelTransaction->attributes = array('Id_customer'=>$idCustomer,
-												'points'=>$pointsQty,
-												'description'=>$pointsDesc,
-												'Id_transaction_type'=>$transType);
-		
-		if($transType == 1) //Debit
-		{
-			$currentPoints = $this->removeCredit($modelTransaction);
-		}
-		else //Credit 
-		{
-			$currentPoints = $this->addCredit($modelTransaction);
-		}
-		
-		echo $currentPoints;
-	}
 	
 	private function addCredit($modelTransaction)
 	{
