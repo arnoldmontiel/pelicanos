@@ -1,5 +1,6 @@
 <?php
 require_once(__DIR__ . '/TMDB/Asset.php');
+require_once(__DIR__ . '/TMDB/TMDBTv.php');
 require_once(__DIR__ . '/TMDB/TMDBMovie.php');
 require_once(__DIR__ . '/TMDB/TMDBPerson.php');
 require_once(__DIR__ . '/TMDB/TMDBCollection.php');
@@ -153,6 +154,7 @@ class TMDBApi {
     $params = $this->params_merge($params);
     $query = http_build_query($params);
     $url = $this->api_url . '/' . $this->api_version . '/' . $method . '?' . $query;
+     
     // Initializing curl
     $ch = curl_init();
     if ($ch) {

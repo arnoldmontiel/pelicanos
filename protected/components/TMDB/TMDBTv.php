@@ -4,12 +4,12 @@
  *
  * @link http://help.themoviedb.org/kb/api/movie-info-2
  */
-class TMDBMovie extends Asset {
+class TMDBTv extends Asset {
 
-  public static $type = 'movie';
+  public static $type = 'tv';
 
   /**
-   * @link http://help.themoviedb.org/kb/api/movie-alternative-titles
+   * @link http://help.themoviedb.org/kb/api/tv-alternative-titles
    */
   public function alternative_titles($country=''){
     $db = TMDBApi::getInstance();

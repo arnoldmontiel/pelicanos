@@ -2426,6 +2426,225 @@ class NzbController extends Controller
 		
 	}
 	
+	public function actionEditSerieInfo($idNzb)
+	{
+		if(isset($_POST['MyMovieNzb']) && isset($_POST['idNzb']))
+		{
+			$actors = explode(',',$_POST['input_actors']);
+			$directors = explode(',',$_POST['input_directors']);
+			$genres = explode(',',$_POST['input_genres']);
+			$marketCategories = explode(',',$_POST['input_categories']);
+			
+			$modelNzb = Nzb::model()->findByPk($_POST['idNzb']);
+			$myMovie = $modelNzb->myMovieDiscNzb->myMovieNzb;
+			
+			$transaction = Yii::app()->db->beginTransaction();
+			try {
+				$myMovie->attributes = $_POST['MyMovieNzb'];
+				$myMovie->genre= "";
+				$first = true;
+				foreach($genres as $genre)
+				{
+					$genreVal = trim($genre);
+					if($first)
+					{
+						$first = false;
+						$myMovie->genre = $genreVal;
+					}
+					else
+					{
+						$myMovie->genre = $myMovie->genre.", ".$genreVal;
+					}
+				}
+		
+				$myMovie->save();
+		
+				MarketCategoryNzb::model()->deleteAllByAttributes(array('Id_nzb'=>$_POST['idNzb']));
+				foreach($marketCategories as $cateogry)
+				{
+					$modelMarketCategoryNzb = new MarketCategoryNzb();
+					$modelMarketCategoryNzb->Id_nzb = $_POST['idNzb'];
+					$modelMarketCategoryNzb->Id_market_category = $cateogry;
+					$modelMarketCategoryNzb->save();
+				}
+				
+				if(isset($persons))
+				{
+					foreach ($persons as $person){
+						$relationDB = new MyMovieNzbPerson;
+						$relationDB->Id_person = $person->Id;
+						$relationDB->Id_my_movie_nzb =$myMovie->Id;
+						$relationDB->save();
+					}
+				}
+				$persons = $myMovie->persons;
+				foreach ($persons as $person){
+					if($person->type!='Actor' && $person->type!='Director') continue;
+					//$selectedActors[]=$person->Id;
+					if(!in_array($person->Id,$actors)&&!in_array($person->Id,$directors))
+					{
+						MyMovieNzbPerson::model()->deleteByPk(array('Id_my_movie_nzb'=>$myMovie->Id,'Id_person'=>$person->Id));
+						$person->delete();
+					}
+				}
+				foreach ($actors as $actor){
+					if($actor=="") continue;
+					$actorInDB = Person::model()->findByPk($actor);
+					if(!isset($actorInDB))
+					{
+						$actorInDB = new Person();
+						$actorInDB->name = $actor;
+						$actorInDB->type = "Actor";
+						$actorInDB->save();
+						$newRelation = new MyMovieNzbPerson;
+						$newRelation->Id_person = $actorInDB->Id;
+						$newRelation->Id_my_movie_nzb = $myMovie->Id;
+						$newRelation->save();
+					}
+					$relationDB = MyMovieNzbPerson::model()->findByPk(array('Id_my_movie_nzb'=>$myMovie->Id,'Id_person'=>$actorInDB->Id));
+					if(!isset($relationDB))
+					{
+						$relationDB = new MyMovieNzbPerson;
+						$relationDB->Id_person = $actorInDB->Id;
+						$relationDB->Id_my_movie_nzb =$myMovie->Id;
+						$relationDB->save();
+					}
+				}
+				foreach ($directors as $director){
+					if($director=="") continue;
+					$directorInDB = Person::model()->findByPk($director);
+					if(!isset($directorInDB))
+					{
+						$directorInDB = new Person();
+						$directorInDB->name = $director;
+						$directorInDB->type = "Director";
+						$directorInDB->save();
+						$newRelation = new MyMovieNzbPerson;
+						$newRelation->Id_person = $directorInDB->Id;
+						$newRelation->Id_my_movie_nzb = $myMovie->Id;
+						$newRelation->save();
+					}
+					$relationDB = MyMovieNzbPerson::model()->findByPk(array('Id_my_movie_nzb'=>$myMovie->Id,'Id_person'=>$directorInDB->Id));
+					if(!isset($relationDB))
+					{
+						$relationDB = new MyMovieNzbPerson;
+						$relationDB->Id_person = $directorInDB->Id;
+						$relationDB->Id_my_movie_nzb =$myMovie->Id;
+						$relationDB->save();
+					}
+				}
+				if($modelNzb->is_draft == 0)
+					$this->updateRelation($modelNzb->Id);
+				
+				$transaction->commit();
+				$this->redirect( NzbController::createUrl('index'));
+			} catch (Exception $e) {
+				$transaction->rollback();
+			}
+		}
+	
+		$modelNzb = Nzb::model()->findByPk($idNzb);
+		
+		if(!isset($modelNzb->myMovieDiscNzb))
+		{
+			$myMovie = new MyMovieNzb();
+			$myMovie->Id = uniqid ("cust_");
+			$myMovie->genre= "";
+			$myMovie->poster="noImage.jpg";
+			$myMovie->big_poster="noImage.jpg";
+			$myMovie->backdrop="";
+			$myMovie->bar_code="";
+			$myMovie->country="";
+			$myMovie->local_title="";
+			$myMovie->original_title="";
+			$myMovie->sort_title="";
+			$myMovie->aspect_ratio="";
+			$myMovie->video_standard="";
+			$myMovie->production_year="";
+			$myMovie->release_date="";
+			$myMovie->running_time="";
+			$myMovie->description="";
+			$myMovie->extra_features="";
+			$myMovie->parental_rating_desc="";
+			$myMovie->imdb="";
+			$myMovie->rating="0";
+			$myMovie->data_changed="";
+			$myMovie->covers_changed="";
+			$myMovie->studio="";
+			$myMovie->media_type="";
+			$myMovie->Id_parental_control=1;
+			
+			$myMovie->save();
+			
+			$myMovieDiscNzb = new MyMovieDiscNzb();
+			$myMovieDiscNzb->Id = uniqid ("cust_");
+			$myMovieDiscNzb->name = "";
+			$myMovieDiscNzb->Id_my_movie_nzb = $myMovie->Id;
+			
+			$myMovieDiscNzb->save();
+			
+			$modelNzb->Id_my_movie_disc_nzb = $myMovieDiscNzb->Id;
+			$modelNzb->save();
+			$modelNzb->refresh();
+		}
+		
+		
+		$modelMyMovieNzb = $modelNzb->myMovieDiscNzb->myMovieNzb;
+			
+		$type= "Actor";
+		$persons = $modelMyMovieNzb->persons;
+		$actor = array();
+		$names = array();
+		foreach ($persons as $person){
+			if($person->type!=$type) continue;
+			$actor['id']=$person->Id;
+			$actor['text']=$person->name;
+			$names[]=$actor;
+		}
+		$actors = $names;
+		
+		$type= "Director";
+		$persons = $modelMyMovieNzb->persons;
+		$directors = array();
+		$names = array();
+		foreach ($persons as $person){
+			if($person->type!=$type) continue;
+			$director['id']=$person->Id;
+			$director['text']=$person->name;
+			$names[] =$director;
+		}
+		$directors = $names;
+			
+		$genres = array();
+		$movies = MyMovieNzb::model()->findAll();
+		foreach($movies as $item)
+		{
+			$movieGenres = explode(', ',$item->genre);
+			foreach($movieGenres as $value)
+			{
+				if(!empty($value) && ! in_array($value,$genres))
+					$genres[] = trim($value);
+			}
+		}
+		asort($genres);
+		
+		//Category
+		$categories = array();
+		
+		$availableCategories = MarketCategory::model()->findAll();
+		
+		foreach($availableCategories as $item)
+		{
+			$category = array();
+			$category['id'] = $item->Id;
+			$category['text'] = $item->description;
+			$categories[] = $category;
+		}						
+		
+		$this->render('editSerieInfo',array('modelMyMovieNzb'=>$modelMyMovieNzb,'modelNzb'=>$modelNzb,'actors'=>$actors,'directors'=>$directors,'genres'=>$genres,'categories'=>$categories));
+
+		
+	}
 	public function actionAjaxGetGenres()
 	{
 		$id = $_POST['idMyMovieNzb'];
@@ -2769,8 +2988,33 @@ class NzbController extends Controller
 		}
 	
 	}
+	public function actionAjaxFillSerieList()
+	{
+		if(isset($_POST['idMyMovieNzb']) && isset($_POST['idNzb']))
+		{
+			$id = $_POST['idMyMovieNzb'];
+				
+			$myMovie = MyMovieNzb::model()->findByPk($id);
 	
-	public function actionAjaxSearchMovieTMDB()
+			$modelAutoRipper = AutoRipper::model()->findByAttributes(array('Id_nzb'=>$_POST['idNzb']));
+				
+			$query = $myMovie->original_title;
+			if(empty($query) && isset($modelAutoRipper))
+				$query = $modelAutoRipper->name;
+				
+			$db = TMDBApi::getInstance();
+			$db->adult = true;  // return adult content
+			$db->paged = false; // merges all paged results into a single result automatically
+			$results = array();
+			if(!empty($query) && strlen($query) > 3)
+				$results = $db->search('tv', array('query'=>$query));
+				
+			$this->renderPartial('_serieSelector',array('idNzb'=>$_POST['idNzb'],'myMovie'=>$myMovie,'series'=>$results, 'query'=>$query));
+		}
+	
+	}
+	
+	public function actionAjaxSearchSerieTMDB()
 	{
 		if(isset($_POST['title']))
 		{
@@ -2781,13 +3025,13 @@ class NzbController extends Controller
 			//$db->debug = true;
 			if(isset($_POST['year'])&&$_POST['year']!="")
 			{
-				$results = $db->search('movie', array('query'=>$title,'year'=>$_POST['year']));
+				$results = $db->search('tv', array('query'=>$title,'first_air_date_year'=>$_POST['year']));
 			}
 			else
 			{
-				$results = $db->search('movie', array('query'=>$title));
+				$results = $db->search('tv', array('query'=>$title));
 			}
-			$this->renderPartial('_searchVideosResult',array('movies'=>$results));
+			$this->renderPartial('_searchSeriesResult',array('series'=>$results));
 		}
 	}
 	
