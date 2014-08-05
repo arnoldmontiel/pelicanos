@@ -1723,7 +1723,7 @@ class NzbController extends Controller
 		foreach($customerDevices as $item)
 		{
 			$modelRelation = NzbDevice::model()->findAllByAttributes(array('Id_nzb'=>$idNzb, 'Id_device'=>$item->Id_device));
-			if(!empty($modelRelation) )
+			if(isset($modelRelation) )
 			{
 				$modelRelation->need_update = 1;
 				$modelRelation->save();
