@@ -568,7 +568,7 @@ class NzbController extends Controller
 	 * @soap
 	 */
 	public function setNzbState($nzbStateRequest )
-	{	
+	{			
 		try {		
 			foreach($nzbStateRequest as $item)
 			{				
@@ -608,6 +608,9 @@ class NzbController extends Controller
 																		'date'=>date("Y-m-d H:i:s",$item->change_state_date),
 																		'points'=>$model->points);
 								$modelNewConsumption->save();
+								
+								$model->need_update = 1;
+								$model->save();
 								
 							}
 						}
@@ -1719,7 +1722,7 @@ class NzbController extends Controller
 		
 		foreach($customerDevices as $item)
 		{
-			$modelRelation = NzbDevice::model()->findAllByAttributes(array('Id_nzb'=>$id, 'Id_device'=>$item->Id_device));
+			$modelRelation = NzbDevice::model()->findAllByAttributes(array('Id_nzb'=>$idNzb, 'Id_device'=>$item->Id_device));
 			if(!empty($modelRelation) )
 			{
 				$modelRelation->need_update = 1;
