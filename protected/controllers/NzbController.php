@@ -564,7 +564,7 @@ class NzbController extends Controller
 	 *
 	 * Change nzb status in relation device/nzb
 	 * @param NzbStateRequest[]
-	 * @return boolean
+	 * @return booblean
 	 * @soap
 	 */
 	public function setNzbState($nzbStateRequest )
@@ -590,16 +590,19 @@ class NzbController extends Controller
 							self::updateClientDevices($item->Id_nzb, $item->Id_device);
 							break;
 					}
+					
 					$model->need_update = 0;
 					$model->save();
 					
 					if($item->Id_state == 3) //si se termino de descargar genero la transaccion
 					{
 						$modelCustDevice = CustomerDevice::model()->findByAttributes(array('Id_device'=>$item->Id_device));
+						
 						if(isset($modelCustDevice))
 						{
 							$modelConsumptionDB = Consumption::model()->findByAttributes(array('Id_customer'=>$modelCustDevice->Id_customer, 
 																											'Id_nzb'=>$item->Id_nzb));
+							
 							if(!isset($modelConsumptionDB))
 							{
 								$modelNewConsumption = new Consumption();
@@ -1722,7 +1725,7 @@ class NzbController extends Controller
 		
 		foreach($customerDevices as $item)
 		{
-			$modelRelation = NzbDevice::model()->findAllByAttributes(array('Id_nzb'=>$idNzb, 'Id_device'=>$item->Id_device));
+			$modelRelation = NzbDevice::model()->findByAttributes(array('Id_nzb'=>$idNzb, 'Id_device'=>$item->Id_device));
 			if(isset($modelRelation) )
 			{
 				$modelRelation->need_update = 1;
