@@ -577,9 +577,10 @@ class NzbController extends Controller
 				if(isset($model))
 				{
 					$model->Id_nzb_state = $item->Id_state;
+					$needUpdate = 0;
 					switch ($item->Id_state) {
 						case 1:
-							$model->date_sent = date("Y-m-d H:i:s",$item->change_state_date);
+							$model->date_sent = date("Y-m-d H:i:s",$item->change_state_date);							
 							break;
 						case 2:
 							$model->date_downloading = date("Y-m-d H:i:s",$item->change_state_date);
@@ -588,10 +589,11 @@ class NzbController extends Controller
 						case 3:
 							$model->date_downloaded = date("Y-m-d H:i:s",$item->change_state_date);
 							self::updateClientDevices($item->Id_nzb, $item->Id_device);
+							$needUpdate = 1;
 							break;
 					}
-					
-					$model->need_update = 0;
+
+					$model->need_update = $needUpdate;
 					$model->save();
 					
 					if($item->Id_state == 3) //si se termino de descargar genero la transaccion
@@ -612,8 +614,6 @@ class NzbController extends Controller
 																		'points'=>$model->points);
 								$modelNewConsumption->save();
 								
-								$model->need_update = 1;
-								$model->save();
 								
 							}
 						}
