@@ -564,7 +564,7 @@ class NzbController extends Controller
 	 *
 	 * Change nzb status in relation device/nzb
 	 * @param NzbStateRequest[]
-	 * @return booblean
+	 * @return boolean
 	 * @soap
 	 */
 	public function setNzbState($nzbStateRequest )
