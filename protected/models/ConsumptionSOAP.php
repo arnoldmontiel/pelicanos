@@ -31,6 +31,12 @@ class ConsumptionSOAP
 	public $Id;
 
 	/**
+	 * @var integer Id nzb
+	 * @soap
+	 */
+	public $Id_nzb;
+	
+	/**
 	 * @var integer points
 	 * @soap
 	 */
