@@ -559,6 +559,29 @@ class NzbController extends Controller
 	
 	}
 	
+	/**
+	 *
+	 * Send consumptions by customer
+	 * @param string Id_device
+	 * @return ConsumptionSOAP[]
+	 * @soap
+	 */
+	public function getConsumptions($Id_device)
+	{
+		$arrayResponse = array();
+		$modelCustomerDevice = CustomerDevice::model()->findByAttributes(array('Id_device'=>$Id_device, 'need_update_consumption'=>1));
+		if(isset($modelCustomerDevice))
+		{
+			$consumptions = Consumption::model()->findAllByAttributes(array('Id_customer'=>$modelCustomerDevice->Id_customer));
+			foreach($consumptions as $consumption)
+			{
+				$item = new ConsumptionSOAP();
+				$item->setAttributes($consumption);
+				$arrayResponse[]=$item;
+			}
+		}
+		return $arrayResponse;
+	}
 	
 	/**
 	 *
@@ -577,7 +600,6 @@ class NzbController extends Controller
 				if(isset($model))
 				{
 					$model->Id_nzb_state = $item->Id_state;
-					$needUpdate = 0;
 					switch ($item->Id_state) {
 						case 1:
 							$model->date_sent = date("Y-m-d H:i:s",$item->change_state_date);							
@@ -587,13 +609,11 @@ class NzbController extends Controller
 							$model->points = $item->points;
 							break;
 						case 3:
-							$model->date_downloaded = date("Y-m-d H:i:s",$item->change_state_date);
-							self::updateClientDevices($item->Id_nzb, $item->Id_device);
-							$needUpdate = 1;
+							$model->date_downloaded = date("Y-m-d H:i:s",$item->change_state_date);							
 							break;
 					}
 
-					$model->need_update = $needUpdate;
+					$model->need_update = 0;
 					$model->save();
 					
 					if($item->Id_state == 3) //si se termino de descargar genero la transaccion
@@ -612,7 +632,8 @@ class NzbController extends Controller
 																		'Id_nzb'=>$item->Id_nzb,
 																		'date'=>date("Y-m-d H:i:s",$item->change_state_date),
 																		'points'=>$model->points);
-								$modelNewConsumption->save();
+								if($modelNewConsumption->save())
+									CustomerDevice::model()->updateAll(array('need_update_consumption'=>1),'Id_customer = '. $idCurrentDevice->Id_customer);
 								
 								
 							}
@@ -1713,24 +1734,6 @@ class NzbController extends Controller
 		
 		} catch (Exception $e) {
 			$transaction->rollback();
-		}
-	}
-	
-	private function updateClientDevices($idNzb, $idCurrentDevice)
-	{
-		$criteria = new CDbCriteria();		
-		$criteria->addCondition('Id_device <> "'. $idCurrentDevice.'"');
-		$criteria->addCondition('Id_customer IN (select cd.Id_customer from customer_device cd where cd.Id_device = "'.$idCurrentDevice.'")');
-		$customerDevices = CustomerDevice::model()->findAll($criteria);
-		
-		foreach($customerDevices as $item)
-		{
-			$modelRelation = NzbDevice::model()->findByAttributes(array('Id_nzb'=>$idNzb, 'Id_device'=>$item->Id_device));
-			if(isset($modelRelation) )
-			{
-				$modelRelation->need_update = 1;
-				$modelRelation->save();
-			}
 		}
 	}
 	

@@ -11,6 +11,7 @@
  * @property integer $is_pending
  * @property string $request_date
  * @property string $approve_date
+ * @property integer $need_update_consumption
  */
 class CustomerDevice extends CActiveRecord
 {
@@ -45,12 +46,12 @@ class CustomerDevice extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('Id_device, Id_customer', 'required'),
-			array('Id_customer, need_update, is_pending', 'numerical', 'integerOnly'=>true),
+			array('Id_customer, need_update, is_pending, need_update_consumption', 'numerical', 'integerOnly'=>true),
 			array('Id_device', 'length', 'max'=>45),
 			array('last_read_date, request_date, approve_date', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id_device, Id_customer, device_description, reseller_description, customer_description, need_update, is_pending, request_date, approve_date', 'safe', 'on'=>'search'),
+			array('Id_device, Id_customer, device_description, reseller_description, customer_description, need_update, is_pending, request_date, approve_date, need_update_consumption', 'safe', 'on'=>'search'),
 		);
 	}
 
