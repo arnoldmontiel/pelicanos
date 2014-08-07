@@ -31,12 +31,6 @@ class NzbResponse
 	 * @var integer[]
 	 * @soap
 	 */
-	public $MarketCategories;
-	
-	/**
-	 * @var ConsumptionSOAP
-	 * @soap
-	 */
-	public $consumption;
+	public $MarketCategories;	
 
 }

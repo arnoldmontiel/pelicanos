@@ -84,11 +84,7 @@ class NzbController extends Controller
 				$modelConsumption = Consumption::model()->findByAttributes(array('Id_customer'=>$modelCustomerDevice->Id_customer,
 						'Id_nzb'=>$modelNbz->Id));
 				if(isset($modelConsumption))
-				{
-					$nzbResponse->consumption = new ConsumptionSOAP;
-					$nzbResponse->consumption->setAttributes($modelConsumption);
 					$nzbResponse->nzb->already_downloaded = 1;
-				}
 			}
 			//----------------------------------------
 				
