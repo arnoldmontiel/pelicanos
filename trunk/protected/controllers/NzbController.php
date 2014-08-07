@@ -579,6 +579,21 @@ class NzbController extends Controller
 		return $arrayResponse;
 	}
 	
+
+	/**
+	 *
+	 * Set "getConsumptions" acknowledge
+	 * @param string Id_device
+	 * @return boolean
+	 * @soap
+	 */
+	public function ackGetConsumptions($Id_device)
+	{		
+		$modelCustomerDevice = CustomerDevice::model()->updateAll(array('need_update_consumption'=>0),'Id_device = "'.$Id_device.'"');
+		
+		return true;
+	}
+	
 	/**
 	 *
 	 * Change nzb status in relation device/nzb
