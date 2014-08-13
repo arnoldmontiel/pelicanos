@@ -96,6 +96,14 @@ function registerResellerPayment(idReseller, month, year, fullName)
 	return false;
 		
 }
+
+function generateTicket()
+{
+	//var params = "&id="+id+"&version="+version;
+	window.open("<?php echo ConsumptionController::createUrl('GeneratePDF'); ?>", "_blank");
+	return false;	
+}
+
 </script>
 <div class="container" id="screenConsumos">
 	<div class="row">
