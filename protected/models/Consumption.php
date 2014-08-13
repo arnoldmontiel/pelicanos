@@ -18,6 +18,12 @@
  */
 class Consumption extends CActiveRecord
 {
+	public $reseller;
+	public $total_points;
+	public $Id_reseller;
+	public $year;
+	public $month;
+	
 	/**
 	 * @return string the associated database table name
 	 */
@@ -26,6 +32,46 @@ class Consumption extends CActiveRecord
 		return 'consumption';
 	}
 
+	static public function pendingQtyByReseller()
+	{
+		$criteria=new CDbCriteria;
+		$criteria->compare('already_paid',0);
+		$criteria->select = 'r.Id as Id_reseller, r.description as reseller, t.date, SUM(t.points) as total_points, YEAR(t.date) as year ,MONTH(t.date) as month';
+		$criteria->join = 'inner join customer c on (t.Id_customer = c.Id)
+							inner join reseller r on (r.Id = c.Id_reseller)';		
+		$criteria->group = 'r.Id, YEAR(t.date),MONTH(t.date)';
+		return Consumption::model()->count($criteria);
+	}
+	
+	static public function pendingQtyByCustomer()
+	{
+		$criteria=new CDbCriteria;
+		$criteria->compare('already_paid',0);
+		$criteria->select = 't.Id_customer, t.date, SUM(t.points) as total_points, YEAR(t.date) as year ,MONTH(t.date) as month';		
+		$criteria->group = 't.Id_customer, YEAR(t.date),MONTH(t.date)';
+		return Consumption::model()->count($criteria);
+	}
+	
+	static public function pointsAccumulated($paid = true)
+	{
+		$points = 0;
+		$criteria=new CDbCriteria;
+		
+		if($paid)
+			$criteria->compare('already_paid',1);
+		else
+			$criteria->compare('already_paid',0);
+		
+		$criteria->select = 'SUM(t.points) as total_points';
+		
+		$model = Consumption::model()->find($criteria);
+		if(isset($model))
+			$points = $model->total_points;
+		
+		return $points;
+	}
+		
+	
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -40,7 +86,7 @@ class Consumption extends CActiveRecord
 			array('date', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('Id, Id_nzb, Id_customer, points, date, description, already_paid', 'safe', 'on'=>'search'),
+			array('Id, Id_nzb, Id_customer, points, date, description, already_paid, reseller, total_points, Id_reseller, year, month', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -104,6 +150,132 @@ class Consumption extends CActiveRecord
 		));
 	}
 
+	public function searchPendingByReseller()
+	{
+		// @todo Please modify the following code to remove attributes that should not be searched.
+	
+		$criteria=new CDbCriteria;
+	
+		$criteria->compare('Id',$this->Id);
+		$criteria->compare('Id_nzb',$this->Id_nzb);
+		$criteria->compare('Id_customer',$this->Id_customer);
+		$criteria->compare('points',$this->points);
+		$criteria->compare('date',$this->date,true);
+		$criteria->compare('description',$this->description,true);
+		$criteria->compare('already_paid',0);
+		$criteria->select = 'r.Id as Id_reseller, r.description as reseller, t.date, SUM(t.points) as total_points, YEAR(t.date) as year ,MONTH(t.date) as month';
+		$criteria->join = 'inner join customer c on (t.Id_customer = c.Id)
+							inner join reseller r on (r.Id = c.Id_reseller)';
+		$criteria->group = 'r.Id, YEAR(t.date),MONTH(t.date)';		
+		
+		return new CActiveDataProvider($this, array(
+				'criteria'=>$criteria,
+		));
+	}
+	
+	public function searchPaymentByReseller()
+	{
+		// @todo Please modify the following code to remove attributes that should not be searched.
+		
+		$criteria=new CDbCriteria;
+		
+		$criteria->compare('Id',$this->Id);
+		$criteria->compare('Id_nzb',$this->Id_nzb);
+		$criteria->compare('Id_customer',$this->Id_customer);
+		$criteria->compare('points',$this->points);
+		$criteria->compare('date',$this->date,true);
+		$criteria->compare('description',$this->description,true);
+		$criteria->compare('already_paid',1);
+		$criteria->select = 'r.Id as Id_reseller, r.description as reseller, t.date, SUM(t.points) as total_points, YEAR(t.date) as year ,MONTH(t.date) as month';
+		$criteria->join = 'inner join customer c on (t.Id_customer = c.Id)
+							inner join reseller r on (r.Id = c.Id_reseller)';
+		$criteria->group = 'r.Id, YEAR(t.date),MONTH(t.date)';
+		
+		return new CActiveDataProvider($this, array(
+				'criteria'=>$criteria,
+		));
+	}
+	
+	public function searchPendingByCustomer()
+	{
+		// @todo Please modify the following code to remove attributes that should not be searched.
+	
+		$criteria=new CDbCriteria;
+	
+		$criteria->compare('Id',$this->Id);
+		$criteria->compare('Id_nzb',$this->Id_nzb);
+		$criteria->compare('Id_customer',$this->Id_customer);
+		$criteria->compare('points',$this->points);
+		$criteria->compare('date',$this->date,true);
+		$criteria->compare('description',$this->description,true);
+		$criteria->compare('already_paid',0);
+		
+		$criteria->select = 't.Id_customer, t.date, SUM(t.points) as total_points, YEAR(t.date) as year ,MONTH(t.date) as month';		
+		$criteria->group = 't.Id_customer, YEAR(t.date),MONTH(t.date)';
+		
+		return new CActiveDataProvider($this, array(
+				'criteria'=>$criteria,
+		));
+	}
+	
+	public function searchPaymentByCustomer()
+	{
+		// @todo Please modify the following code to remove attributes that should not be searched.
+	
+		$criteria=new CDbCriteria;
+	
+		$criteria->compare('Id',$this->Id);
+		$criteria->compare('Id_nzb',$this->Id_nzb);
+		$criteria->compare('Id_customer',$this->Id_customer);
+		$criteria->compare('points',$this->points);
+		$criteria->compare('date',$this->date,true);
+		$criteria->compare('description',$this->description,true);
+		$criteria->compare('already_paid',1);
+		
+		$criteria->select = 't.Id_customer, t.date, SUM(t.points) as total_points, YEAR(t.date) as year ,MONTH(t.date) as month';		
+		$criteria->group = 't.Id_customer, YEAR(t.date),MONTH(t.date)';
+		
+		return new CActiveDataProvider($this, array(
+				'criteria'=>$criteria,
+		));
+	}
+	
+	public function searchByMonth()
+	{
+		// @todo Please modify the following code to remove attributes that should not be searched.
+	
+		$criteria=new CDbCriteria;
+	
+		$criteria->compare('Id',$this->Id);
+		$criteria->compare('Id_nzb',$this->Id_nzb);
+		$criteria->compare('Id_customer',$this->Id_customer);
+		$criteria->compare('points',$this->points);
+		$criteria->compare('description',$this->description,true);
+		$criteria->compare('already_paid',$this->already_paid);
+	
+		if(isset($this->Id_reseller))
+		{
+			$criteria->join = 'inner join customer c on (t.Id_customer = c.Id)';
+			
+			$criteria->addCondition('c.Id_reseller = '. $this->Id_reseller);
+		}
+		$criteria->addCondition('MONTH(t.date) = '. $this->month);
+		$criteria->addCondition('YEAR(t.date) = '. $this->year);
+	
+		// Create a custom sort
+		$sort=new CSort;
+		$sort->attributes=array(
+				'*',
+		);
+	
+		$sort->defaultOrder = 't.date DESC';
+	
+		return new CActiveDataProvider($this, array(
+				'criteria'=>$criteria,
+				'sort'=>$sort,
+		));
+	}
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
