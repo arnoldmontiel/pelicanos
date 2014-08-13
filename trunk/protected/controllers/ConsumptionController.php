@@ -37,10 +37,92 @@ class ConsumptionController extends Controller
 	 */
 	public function actionIndex()
 	{
-				
-		$this->render('index');
+		$model = new Consumption('search');
+		$model->unsetAttributes();  // clear any default values
+		if(isset($_GET['Consumption']))
+			$model->attributes=$_GET['Consumption'];
+		
+		$this->render('index',array(
+				'model'=>$model,
+		));
 	}
 
+	public function actionAjaxConsumptionDetail()
+	{
+		$idCustomer = $_POST['idCustomer'];
+		$month = $_POST['month'];
+		$year = $_POST['year'];
+		
+		$modelConsumptions=new Consumption('search');
+		$modelConsumptions->unsetAttributes();  // clear any default values
+		if(isset($_GET['Consumption']))
+			$modelConsumptions->attributes=$_GET['Consumption'];
+		
+		$modelConsumptions->Id_customer = $idCustomer;
+		$modelConsumptions->month = $month;
+		$modelConsumptions->year = $year;
+		$this->renderPartial('_consumptionDetail',array('modelConsumptions'=>$modelConsumptions, 'month'=>$month, 'year'=>$year));
+	}
+	
+	public function actionAjaxConsumptionDetailByReseller()
+	{
+		$idReseller = $_POST['idReseller'];
+		$month = $_POST['month'];
+		$year = $_POST['year'];
+		
+		$modelConsumptions=new Consumption('search');
+		$modelConsumptions->unsetAttributes();  // clear any default values
+		if(isset($_GET['Consumption']))
+			$modelConsumptions->attributes=$_GET['Consumption'];
+		
+		$modelConsumptions->Id_reseller = $idReseller;
+		$modelConsumptions->month = $month;
+		$modelConsumptions->year = $year;
+		$this->renderPartial('_consumptionDetail',array('modelConsumptions'=>$modelConsumptions, 'month'=>$month, 'year'=>$year));
+	}
+	
+	public function actionAjaxRegisterCustomerPayment()
+	{
+		$idCustomer = $_POST['idCustomer'];
+		$month = $_POST['month'];
+		$year = $_POST['year'];
+		
+		$criteria=new CDbCriteria;		
+		$criteria->addCondition('Id_customer = '. $idCustomer);
+		$criteria->addCondition('MONTH(date) = '.$month);
+		$criteria->addCondition('YEAR(date) = '.$year);
+		
+		Consumption::model()->updateAll(array('already_paid'=>1),$criteria);
+		
+		
+		echo json_encode(array('qtyByCustomer'=>Consumption::pendingQtyByCustomer(),
+							 'qtyByReseller'=>Consumption::pendingQtyByReseller(),
+							 'pointsPaid'=>Consumption::pointsAccumulated(),
+							 'pointsPending'=>Consumption::pointsAccumulated(false)
+						));
+	}
+	
+	public function actionAjaxRegisterResellerPayment()
+	{
+		$idReseller = $_POST['idReseller'];
+		$month = $_POST['month'];
+		$year = $_POST['year'];
+	
+		$criteria=new CDbCriteria;
+		$criteria->addCondition('Id_customer IN (select Id from customer where Id_reseller = '.$idReseller.') ');		
+		$criteria->addCondition('MONTH(date) = '.$month);
+		$criteria->addCondition('YEAR(date) = '.$year);
+	
+		Consumption::model()->updateAll(array('already_paid'=>1),$criteria);
+		
+		echo json_encode(array('qtyByCustomer'=>Consumption::pendingQtyByCustomer(),
+							 'qtyByReseller'=>Consumption::pendingQtyByReseller(),
+							'pointsPaid'=>Consumption::pointsAccumulated(),
+							'pointsPending'=>Consumption::pointsAccumulated(false)
+						));
+	
+	}
+	
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.

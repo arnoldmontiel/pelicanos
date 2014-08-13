@@ -25,7 +25,7 @@
 <?php include('estilos.php');?>
 
 <!-- JQUERY -->
-<script src="js/jquery-2.1.1.min.js"></script>
+
 </head>
 <body>
 		<?php
@@ -43,6 +43,9 @@
 	<div id="myModalEditarAsoc" class="modal fade in" tabindex="-1"
 		role="dialog" aria-labelledby="myModalLabel" aria-hidden="false"
 		style="display: hidden;"></div>
+	<div id="myModalConsumptionDetail" class="modal fade in" tabindex="-1"
+		role="dialog" aria-labelledby="myModalLabel" aria-hidden="false"
+		style="display: hidden;"></div>		
 	<div id="myModalCambiarAfiche" class="modal fade in" tabindex="-1"
 		role="dialog" aria-labelledby="myModalLabel" aria-hidden="false"
 		style="display: hidden;"></div>
