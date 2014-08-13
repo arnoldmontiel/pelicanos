@@ -42,4 +42,9 @@ class PelicanoHelper
 	
 		return $imageName;
 	}
+	
+	static public function generateTicketPDF()
+	{
+		return "hola carola";
+	}
 }

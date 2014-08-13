@@ -123,6 +123,22 @@ class ConsumptionController extends Controller
 	
 	}
 	
+	public function actionGeneratePDF()
+	{
+	
+		include('js/mpdf/mpdf.php');
+		ob_end_clean();
+
+		$mpdf=new mPDF('utf-8','A4');
+		$stylesheet = file_get_contents('css/bootstrap.min.css');
+		$stylesheet2 = file_get_contents('protected/views/layouts/estilos.php');
+		$mpdf->WriteHTML($stylesheet,1);
+		$mpdf->WriteHTML($stylesheet2,1);
+		$mpdf->WriteHTML(PelicanoHelper::generateTicketPDF(),2);
+		$mpdf->Output();
+		
+	}
+	
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
