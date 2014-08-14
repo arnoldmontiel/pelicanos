@@ -92,8 +92,9 @@ class ConsumptionController extends Controller
 		$criteria->addCondition('MONTH(date) = '.$month);
 		$criteria->addCondition('YEAR(date) = '.$year);
 		
-		Consumption::model()->updateAll(array('already_paid'=>1),$criteria);
+		Consumption::model()->updateAll(array('already_paid'=>1, 'paid_date'=>new CDbExpression('NOW()')),$criteria);
 		
+		CustomerDevice::model()->updateAll(array('need_update_consumption'=>1), 'Id_customer = '. $idCustomer);
 		
 		echo json_encode(array('qtyByCustomer'=>Consumption::pendingQtyByCustomer(),
 							 'qtyByReseller'=>Consumption::pendingQtyByReseller(),
@@ -113,7 +114,10 @@ class ConsumptionController extends Controller
 		$criteria->addCondition('MONTH(date) = '.$month);
 		$criteria->addCondition('YEAR(date) = '.$year);
 	
-		Consumption::model()->updateAll(array('already_paid'=>1),$criteria);
+		Consumption::model()->updateAll(array('already_paid'=>1, 'paid_date'=>new CDbExpression('NOW()')),$criteria);
+		
+		CustomerDevice::model()->updateAll(array('need_update_consumption'=>1), 'Id_customer IN (select cu.Id from customer cu 
+											inner join consumption c on (c.Id_customer = cu.Id) where cu.Id_reseller = '.$idReseller.') ');
 		
 		echo json_encode(array('qtyByCustomer'=>Consumption::pendingQtyByCustomer(),
 							 'qtyByReseller'=>Consumption::pendingQtyByReseller(),

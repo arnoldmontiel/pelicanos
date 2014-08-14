@@ -11,6 +11,7 @@
  * @property string $date
  * @property string $description
  * @property integer $already_paid
+ * @property string $paid_date
  *
  * The followings are the available model relations:
  * @property Customer $idCustomer
@@ -83,10 +84,10 @@ class Consumption extends CActiveRecord
 			array('Id_nzb, Id_customer', 'required'),
 			array('Id_nzb, Id_customer, points, already_paid', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>255),
-			array('date', 'safe'),
+			array('date, paid_date', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('Id, Id_nzb, Id_customer, points, date, description, already_paid, reseller, total_points, Id_reseller, year, month', 'safe', 'on'=>'search'),
+			array('Id, Id_nzb, Id_customer, points, date, description, already_paid, reseller, total_points, Id_reseller, year, month, paid_date', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -186,7 +187,7 @@ class Consumption extends CActiveRecord
 		$criteria->compare('date',$this->date,true);
 		$criteria->compare('description',$this->description,true);
 		$criteria->compare('already_paid',1);
-		$criteria->select = 'r.Id as Id_reseller, r.description as reseller, t.date, SUM(t.points) as total_points, YEAR(t.date) as year ,MONTH(t.date) as month';
+		$criteria->select = 't.paid_date, r.Id as Id_reseller, r.description as reseller, t.date, SUM(t.points) as total_points, YEAR(t.date) as year ,MONTH(t.date) as month';
 		$criteria->join = 'inner join customer c on (t.Id_customer = c.Id)
 							inner join reseller r on (r.Id = c.Id_reseller)';
 		$criteria->group = 'r.Id, YEAR(t.date),MONTH(t.date)';
@@ -232,7 +233,7 @@ class Consumption extends CActiveRecord
 		$criteria->compare('description',$this->description,true);
 		$criteria->compare('already_paid',1);
 		
-		$criteria->select = 't.Id_customer, t.date, SUM(t.points) as total_points, YEAR(t.date) as year ,MONTH(t.date) as month';		
+		$criteria->select = 't.paid_date, t.Id_customer, t.date, SUM(t.points) as total_points, YEAR(t.date) as year ,MONTH(t.date) as month';		
 		$criteria->group = 't.Id_customer, YEAR(t.date),MONTH(t.date)';
 		
 		return new CActiveDataProvider($this, array(
