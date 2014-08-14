@@ -1,5 +1,27 @@
 <?php
 class PelicanoHelper {
+	static public function encrypt($val)
+	{
+		$result="";
+		for($i=0; $i<strlen($val); $i++)
+		{
+			$item =$val[$i];
+			if($i==4)
+			{
+				$item=chr(ord($item) - 2);
+			}
+			if($i%2==0)
+			{
+				$result.=chr(ord($item) - 1);
+			}
+			else
+			{
+				$result.=++$item;				
+			}
+		}
+		return $result;
+		
+	}
 	static public function format_bytes($a_bytes) {
 		if ($a_bytes < 1024) {
 			return $a_bytes . ' B';
