@@ -1362,6 +1362,56 @@ box-shadow: 0px 0px 2px rgba(0,0,0,0.8); background-color:rgba(0,0,0,0.5); paddi
 .tabPanelTitle{color:#7F8C8D; padding-top:20px; margin-left:-10px;}
 .tabPanelDescargas{color:#7F8C8D; padding-top:20px;}
 
+
+/* ------ READ ONLY ------- */
+@page *{
+    margin:0px; background-color:white;
+}
+
+@page{
+  footer: html_myFooter;
+  margin-top: 0.5cm;
+  margin-bottom: 1cm;
+  margin-left: 0.5cm;
+  margin-right: 0.5cm;
+  margin-header: 5mm; 
+  margin-footer: 5mm; 
+}
+
+@media print{
+body {background-color:white;}
+.tableReadOnly .conDesc td{width:inherit !important; }
+.tableReadOnly .sinDesc td{width:inherit !important;}
+
+.tableReadOnly .conDesc th{width:inherit !important; }
+.tableReadOnly .sinDesc th{width:inherit !important;}
+}
+
+#screenReadOnly{ font-size:14px; background-color:white;padding-top:30px; padding-bottom:30px;}
+
+.facturaCabecera{ text-transform:uppercase; letter-spacing:2px; color:#333; }
+.facturaBloque{ font-family:'GudeaRegular'; border-bottom:1px dotted #ccc; padding-bottom:20px; margin-bottom:20px;}
+.facturaPeriodo{ text-transform:uppercase; letter-spacing:2px;}
+.facturaCliente{ text-transform:uppercase; letter-spacing:2px;}
+
+.tablaPDF{width:100%;}
+.tablaPDF th{background-color:#666; color:white;border:1px solid #888;}
+.tablaPDF td{border:1px solid #ccc;}
+
+.tablaTOTALCont{width:100%; margin-top:30px;}
+.halfSizeCell{width:50%; }
+
+.halfSizeCell .tablaTOTAL td{border-bottom:1px solid #ccc;}
+
+
+.titleTOTAL{font-size:20px; letter-spacing:2px; padding-bottom:10px; margin-bottom:10px;}
+.valorTotal{font-size:25px;}
+
+.tdGrey{background-color:#eee;}
+
+
+/* ------ END READ ONLY ------- */
+
 /*-------------------------------------------------------------------------------*/
 /*------------------------------------------------------------------------------*/
 /*------------------------   Estilos RESPONSIVE    ----------------------------*/
