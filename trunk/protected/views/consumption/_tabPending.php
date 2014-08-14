@@ -26,7 +26,7 @@
 						'value'=>function($data){
 							$value = '';
 							
-							return strftime('%B', mktime(0, 0, 0, $data->month)).' '. $data->year;;
+							return strftime('%B', mktime(0, 0, 0, $data->month)).' '. $data->year;
 						},
 						'type'=>'raw',
 				),
