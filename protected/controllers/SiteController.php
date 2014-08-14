@@ -109,7 +109,7 @@ class SiteController extends Controller
 	}
 	public function actionUnlock()
 	{
-		if(isset($_GET['Id_device']))
+		if(isset($_GET['Id']))
 		{
 			echo "pelicano";
 		}				
