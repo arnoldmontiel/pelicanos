@@ -31,7 +31,7 @@
 						'type'=>'raw',
 				),
 				array(
-						'header'=>'Valor',
+						'header'=>'Total',
 						'value'=>function($data){
 							return $data->total_points;
 						},
@@ -44,9 +44,9 @@
 						'value'=>function($data){							
 							$name = $data->reseller;
 							$fullName = "'$name'";
-							return '<a onclick="openConsumptionDetailByReseller('.$data->Id_reseller.','.$data->month.','.$data->year.');" class="btn btn-default">Ver Detalles</a> 
-									<a onclick="registerResellerPayment('.$data->Id_reseller.', '.$data->month.', '.$data->year.', '.$fullName.');" class="btn btn-default">Registrar Pago</a> 
-									<a onclick="generateTicket();" class="btn btn-default">Imprimir Factura</a>';
+							return '<a onclick="openConsumptionDetailByReseller('.$data->Id_reseller.','.$data->month.','.$data->year.');" class="btn btn-default"><i class="fa fa-eye"></i> Ver Detalles</a> 
+									<a onclick="registerResellerPayment('.$data->Id_reseller.', '.$data->month.', '.$data->year.', '.$fullName.');" class="btn btn-default"><i class="fa fa-check-square-o"></i> Registrar Pago</a> 
+									<a onclick="generateTicket();" class="btn btn-default"><i class="fa fa-print"></i> Imprimir Factura</a>';
 						},
 						'type'=>'raw',
 						'htmlOptions'=>array("class"=>"align-right"),
