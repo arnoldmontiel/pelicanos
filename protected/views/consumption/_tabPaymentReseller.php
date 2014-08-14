@@ -51,7 +51,7 @@
 						'name'=>'Acciones',
 						'value'=>function($data){							
 							//return '<a onclick="openConsumptionDetail('.$data->Id_reseller.');" data-toggle="modal" class="btn btn-primary"><i class="fa fa-list"></i> Ver Detalle</a>';
-							return '<a onclick="openConsumptionDetailByReseller('.$data->Id_reseller.','.$data->month.','.$data->year.');" class="btn btn-default">Ver Detalle</a>';
+							return '<a onclick="openConsumptionDetailByReseller('.$data->Id_reseller.','.$data->month.','.$data->year.');" class="btn btn-default"><i class="fa fa-eye"></i> Ver Detalle</a>';
 						},
 						'type'=>'raw',
 						'htmlOptions'=>array("class"=>"align-right"),
