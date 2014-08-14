@@ -111,14 +111,29 @@ class SiteController extends Controller
 	{
 		if(isset($_GET['Id']))
 		{
-			echo "pelicano";
+			$model = DevicePassword::model()->findByPk($_GET['Id']);
+			if(isset($model)&&$model->active==1)
+			{
+				echo $model->password;
+				$modelLog = new DevicePasswordLog;
+				$modelLog->Id_device_password = $model->Id;
+				$modelLog->event = 1;
+				$modelLog->save();
+			}			
 		}				
 	}
 	public function actionLock()
 	{
 		if(isset($_GET['Id']))
 		{
-			echo "pelicano";
-		}
+			$model = DevicePassword::model()->findByPk($_GET['Id']);
+			if(isset($model))
+			{
+				$modelLog = new DevicePasswordLog;
+				$modelLog->Id_device_password = $model->Id;
+				$modelLog->event = 0;
+				$modelLog->save();
+			}			
+		}				
 	}	
 }
