@@ -114,7 +114,7 @@ class SiteController extends Controller
 			$model = DevicePassword::model()->findByPk($_GET['Id']);
 			if(isset($model)&&$model->active==1)
 			{
-				echo $model->password;
+				echo PelicanoHelper::encrypt($model->password);
 				$modelLog = new DevicePasswordLog;
 				$modelLog->Id_device_password = $model->Id;
 				$modelLog->event = 1;
