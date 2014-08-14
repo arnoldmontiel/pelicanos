@@ -114,5 +114,11 @@ class SiteController extends Controller
 			echo "pelicano";
 		}				
 	}
-	
+	public function actionLock()
+	{
+		if(isset($_GET['Id']))
+		{
+			echo "pelicano";
+		}
+	}	
 }
