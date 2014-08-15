@@ -46,7 +46,7 @@
 							$fullName = "'$name'";
 							return '<a onclick="openConsumptionDetailByReseller('.$data->Id_reseller.','.$data->month.','.$data->year.');" class="btn btn-default"><i class="fa fa-eye"></i> Ver Detalles</a> 
 									<a onclick="registerResellerPayment('.$data->Id_reseller.', '.$data->month.', '.$data->year.', '.$fullName.');" class="btn btn-default"><i class="fa fa-check-square-o"></i> Registrar Pago</a> 
-									<a onclick="generateTicket();" class="btn btn-default"><i class="fa fa-print"></i> Imprimir Factura</a>';
+									<a onclick="generateTicket('.$data->Id_reseller.','.$data->month.','.$data->year.',2);" class="btn btn-default"><i class="fa fa-print"></i> Imprimir Factura</a>';
 						},
 						'type'=>'raw',
 						'htmlOptions'=>array("class"=>"align-right"),
