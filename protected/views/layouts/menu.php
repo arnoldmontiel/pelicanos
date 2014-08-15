@@ -71,6 +71,9 @@ function getPendingDevices()
           <?php if(Yii::app()->user->checkAccess('ConsumptionManage')):?>
           <li <?php if ($active=="consumption"){ echo 'class="active"';}?> ><a href="<?php echo Yii::app()->createUrl("consumption/index")?>"><i class="fa fa-database"></i> Consumos</a></li>
           <?php endif?>
+          <?php if(Yii::app()->user->checkAccess('ConsumptionManageRe')):?>
+          <li <?php if ($active=="consumption"){ echo 'class="active"';}?> ><a href="<?php echo Yii::app()->createUrl("consumption/indexRe")?>"><i class="fa fa-database"></i> Consumos</a></li>
+          <?php endif?>
           </ul>
           <ul class="nav navbar-nav navbar-right">
       <li class="dropdown">

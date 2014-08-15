@@ -65,6 +65,13 @@ class Consumption extends CActiveRecord
 		
 		$criteria->select = 'SUM(t.points) as total_points';
 		
+		$idReseller = User::getResellerId();
+		if(isset($idReseller))
+		{
+			$criteria->join = 'inner join customer c on (t.Id_customer = c.Id)';
+			$criteria->addCondition('c.Id_reseller = '. $idReseller);
+		}
+		
 		$model = Consumption::model()->find($criteria);
 		if(isset($model))
 			$points = $model->total_points;
@@ -211,6 +218,12 @@ class Consumption extends CActiveRecord
 		$criteria->compare('description',$this->description,true);
 		$criteria->compare('already_paid',0);
 		
+		if(isset($this->Id_reseller))
+		{
+			$criteria->join = 'inner join customer c on (t.Id_customer = c.Id)';
+			$criteria->addCondition('c.Id_reseller = '. $this->Id_reseller);
+		}
+		
 		$criteria->select = 't.Id_customer, t.date, SUM(t.points) as total_points, YEAR(t.date) as year ,MONTH(t.date) as month';		
 		$criteria->group = 't.Id_customer, YEAR(t.date),MONTH(t.date)';
 		
@@ -232,6 +245,12 @@ class Consumption extends CActiveRecord
 		$criteria->compare('date',$this->date,true);
 		$criteria->compare('description',$this->description,true);
 		$criteria->compare('already_paid',1);
+		
+		if(isset($this->Id_reseller))
+		{
+			$criteria->join = 'inner join customer c on (t.Id_customer = c.Id)';
+			$criteria->addCondition('c.Id_reseller = '. $this->Id_reseller);
+		}
 		
 		$criteria->select = 't.paid_date, t.Id_customer, t.date, SUM(t.points) as total_points, YEAR(t.date) as year ,MONTH(t.date) as month';		
 		$criteria->group = 't.Id_customer, YEAR(t.date),MONTH(t.date)';
