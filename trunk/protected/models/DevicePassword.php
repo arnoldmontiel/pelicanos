@@ -8,6 +8,8 @@
  * @property string $password
  * @property string $Id_device
  * @property integer $active
+ * @property string $password_os
+ * @property string $password_db
  *
  * The followings are the available model relations:
  * @property Device $idDevice
@@ -32,11 +34,11 @@ class DevicePassword extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('active', 'numerical', 'integerOnly'=>true),
-			array('password', 'length', 'max'=>255),
+			array('password, password_os, password_db', 'length', 'max'=>255),
 			array('Id_device', 'length', 'max'=>45),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('Id, password, Id_device, active', 'safe', 'on'=>'search'),
+			array('Id, password, Id_device, active, password_os, password_db', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -63,6 +65,8 @@ class DevicePassword extends CActiveRecord
 			'password' => 'Password',
 			'Id_device' => 'Id Device',
 			'active' => 'Active',
+			'password_os' => 'Password Os',
+			'password_db' => 'Password Db',
 		);
 	}
 
@@ -88,6 +92,8 @@ class DevicePassword extends CActiveRecord
 		$criteria->compare('password',$this->password,true);
 		$criteria->compare('Id_device',$this->Id_device,true);
 		$criteria->compare('active',$this->active);
+		$criteria->compare('password_os',$this->password_os,true);
+		$criteria->compare('password_db',$this->password_db,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
