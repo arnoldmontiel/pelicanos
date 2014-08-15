@@ -47,6 +47,19 @@ class ConsumptionController extends Controller
 		));
 	}
 
+	public function actionIndexRe()
+	{
+		$model = new Consumption('search');
+		$model->unsetAttributes();  // clear any default values
+		if(isset($_GET['Consumption']))
+			$model->attributes=$_GET['Consumption'];
+	
+		$model->Id_reseller = User::getResellerId();
+		$this->render('indexRe',array(
+				'model'=>$model,
+		));
+	}
+	
 	public function actionAjaxConsumptionDetail()
 	{
 		$idCustomer = $_POST['idCustomer'];
