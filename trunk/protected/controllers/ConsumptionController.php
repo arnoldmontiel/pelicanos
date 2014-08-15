@@ -127,9 +127,19 @@ class ConsumptionController extends Controller
 	
 	}
 	
-	public function actionGeneratePDF()
+	public function actionGeneratePDF($id, $month, $year, $type)
 	{
 	
+		$modelConsumptions=new Consumption('search');
+		$modelConsumptions->unsetAttributes();  // clear any default values
+		if($type == 1) //customer
+			$modelConsumptions->Id_customer = $id;
+		else
+			$modelConsumptions->Id_reseller = $id;
+		
+		$modelConsumptions->month = $month;
+		$modelConsumptions->year = $year;
+		
 		include('js/mpdf/mpdf.php');
 		ob_end_clean();
 
@@ -138,11 +148,14 @@ class ConsumptionController extends Controller
 		$stylesheet2 = file_get_contents('protected/views/layouts/estilos.php');
 		$mpdf->WriteHTML($stylesheet,1);
 		$mpdf->WriteHTML($stylesheet2,1);
-		$mpdf->WriteHTML(PelicanoHelper::generateTicketPDF(),2);
+		if($type == 1) //customer
+			$mpdf->WriteHTML(PelicanoHelper::generateTicketPDF($modelConsumptions),2);
+		else
+			$mpdf->WriteHTML(PelicanoHelper::generateTicketPDFByReseller($modelConsumptions),2);
 		$mpdf->Output();
 		
 	}
-	
+		
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.

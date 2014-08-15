@@ -97,10 +97,10 @@ function registerResellerPayment(idReseller, month, year, fullName)
 		
 }
 
-function generateTicket()
+function generateTicket(id, month, year, type)
 {
-	//var params = "&id="+id+"&version="+version;
-	window.open("<?php echo ConsumptionController::createUrl('GeneratePDF'); ?>", "_blank");
+	var params = "&id="+id+"&month="+month+"&year="+year+"&type="+type;
+	window.open("<?php echo ConsumptionController::createUrl('GeneratePDF'); ?>" + params, "_blank");
 	return false;	
 }
 
