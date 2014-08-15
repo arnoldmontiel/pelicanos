@@ -59,7 +59,48 @@ class PelicanoHelper {
 		
 		return $imageName;
 	}
-	static public function generateTicketPDF() {
+	static public function generateTicketPDF($model)
+	{
+		
+		$criteria=new CDbCriteria;
+		if(isset($model->Id_reseller))
+		{
+			$criteria->join = 'inner join customer c on (t.Id_customer = c.Id)';
+			$criteria->addCondition('c.Id_reseller = '. $model->Id_reseller);
+		}
+		else 
+			$criteria->addCondition('t.Id_customer = '. $model->Id_customer);
+		
+		$criteria->addCondition('MONTH(t.date) = '. $model->month);
+		$criteria->addCondition('YEAR(t.date) = '. $model->year);
+		
+		$modelConsumptions = Consumption::model()->findAll($criteria);
+		$bodyGrid = '<tbody>';
+		$count = 1; 
+		$acumPoints = 0;
+		foreach($modelConsumptions as $data)
+		{
+			$title = 'No Identificado';
+			
+			if(isset($data->nzb->myMovieDiscNzb->myMovieNzb))
+				$title = $data->nzb->myMovieDiscNzb->myMovieNzb->original_title;
+			
+			$bodyGrid .= '<tr>';
+				$bodyGrid .= '<td>' . $count . '</td>';
+				$bodyGrid .= '<td>' . $title . '</td>';
+				$bodyGrid .= '<td>' . $data->date . '</td>';
+				$bodyGrid .= '<td>' . $data->points . '</td>';
+			$bodyGrid .= '</tr>';
+			
+			$acumPoints = $acumPoints + $data->points;
+			$count ++;
+		}
+			$bodyGrid .= '<tr>';
+				$bodyGrid .= '<td colspan="3" class="align-right tdGrey">CONSUMOS '.$model->month.' '.$model->year.'</td>';
+				$bodyGrid .= '<td class="align-right tdGrey">'.$acumPoints.'</td>';
+			$bodyGrid .= '</tr>';
+		$bodyGrid .= '</tbody>';			
+		
 		return '<div class="container" id="screenReadOnly">
 						<div class="row facturaCabecera facturaBloque">
 							<div class="col-sm-12">
@@ -67,8 +108,8 @@ class PelicanoHelper {
 									<tbody>
 										<tr>
 											<td width="50%">		
-												<div class="facturaCliente">Juan Perez</div>
-												<div class="facturaPeriodo">Consumos Mayo 2015</div>
+												<div class="facturaCliente">'.$model->customer->fullName.'</div>
+												<div class="facturaPeriodo">Consumos '.$model->month.' '.$model->year.'</div>
 											</td>
 											<td width="50%" align="right">
 												<img src="images/logoBIG.jpg" width="200" height="56"/>
@@ -89,36 +130,111 @@ class PelicanoHelper {
 											<th class="align-right">Valor</th>
 										</tr>
 									</thead>
+									'.$bodyGrid.'
+								</table>
+							</div>
+						</div>
+						<div class="row budgetBloque">
+							<div class="col-sm-12">
+							<table class="tablaTOTALCont">
+								<tbody>
+									<tr>
+										<td class="halfSizeCell">&nbsp;</td>
+										<td class="halfSizeCell">
+											<table class="tablaTOTAL" width="400" cellpadding="5">
+												<tbody>
+													<tr>
+													<td colspan="2"><div class="titleTOTAL">TOTAL</div></td>
+													</tr>
+													<tr>
+													<td>200</td>
+													<td class="align-right">x $11.192</td>
+													</tr>
+													<tr>
+													<td colspan="2" class="align-right"><div class="valorTOTAL">$2233</div></td>
+													</tr>
+												</tbody>
+											</table>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							</div>
+						</div>
+					</div><!-- CIERRE CONTAINER -->';
+	}
+	
+	static public function generateTicketPDFByReseller($model)
+	{
+	
+		$modelReseller = Reseller::model()->findByPk($model->Id_reseller);
+		
+		$criteria=new CDbCriteria;
+		
+		$criteria->join = 'inner join customer c on (t.Id_customer = c.Id)';
+		$criteria->addCondition('c.Id_reseller = '. $model->Id_reseller);
+	
+		$criteria->addCondition('MONTH(t.date) = '. $model->month);
+		$criteria->addCondition('YEAR(t.date) = '. $model->year);
+		
+		$modelConsumptions = Consumption::model()->findAll($criteria);
+		
+		$bodyGrid = '<tbody>';
+		$count = 1;
+		$acumPoints = 0;
+		foreach($modelConsumptions as $data)
+		{
+			$customer = 'No Identificado';
+				
+			if(isset($data->customer))
+				$customer = $data->customer->fullName;
+				
+			$bodyGrid .= '<tr>';
+			$bodyGrid .= '<td>' . $count . '</td>';
+			$bodyGrid .= '<td>' . $customer . '</td>';
+			$bodyGrid .= '<td>' . $data->date . '</td>';
+			$bodyGrid .= '<td>' . $data->points . '</td>';
+			$bodyGrid .= '</tr>';
+				
+			$acumPoints = $acumPoints + $data->points;
+			$count++;
+		}
+		$bodyGrid .= '<tr>';
+		$bodyGrid .= '<td colspan="3" class="align-right tdGrey">CONSUMOS '.$model->month.' '.$model->year.'</td>';
+		$bodyGrid .= '<td class="align-right tdGrey">'.$acumPoints.'</td>';
+		$bodyGrid .= '</tr>';
+		$bodyGrid .= '</tbody>';
+	
+		return '<div class="container" id="screenReadOnly">
+						<div class="row facturaCabecera facturaBloque">
+							<div class="col-sm-12">
+								<table width="100%">
 									<tbody>
 										<tr>
-											<td>1</td>
-											<td>Pacific Rim</td>
-											<td>2014-05-08 00:00:00</td>
-											<td class="align-right">50</td>
-										</tr>
-										<tr>
-											<td>2</td>
-											<td>Juno</td>
-											<td>2014-05-08 00:00:00</td>
-											<td class="align-right">50</td>
-										</tr>
-										<tr>
-											<td>3</td>
-											<td>Borat</td>
-											<td>2014-05-08 00:00:00</td>
-											<td class="align-right">50</td>
-										</tr>
-										<tr>
-											<td>4</td>
-											<td>101 Dalmatas</td>
-											<td>2014-05-08 00:00:00</td>
-											<td class="align-right">50</td>
-										</tr>
-										<tr>
-											<td colspan="3" class="align-right tdGrey">CONSUMOS MAYO 2015</td>
-											<td class="align-right tdGrey">200</td>
+											<td width="50%">
+												<div class="facturaCliente">'.$modelReseller->description.'</div>
+												<div class="facturaPeriodo">Consumos '.$model->month.' '.$model->year.'</div>
+											</td>
+											<td width="50%" align="right">
+												<img src="images/logoBIG.jpg" width="200" height="56"/>
+											</td>
 										</tr>
 									</tbody>
+								</table>
+							</div>
+						</div>
+						<div class="row budgetBloque">
+							<div class="col-sm-12">
+								<table class="tablaPDF" cellpadding="5">
+									<thead>
+										<tr>
+											<th>#</th>
+											<th>Cliente</th>
+											<th>Fecha</th>
+											<th class="align-right">Valor</th>
+										</tr>
+									</thead>
+									'.$bodyGrid.'
 								</table>
 							</div>
 						</div>
