@@ -7,7 +7,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <!-- Bootstrap -->
 <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-<script type="text/javascript" src="js/bootstrap.min.js"></script>
 <!-- Font Awesome -->
 <link rel="stylesheet" href="css/font-awesome.min.css">
 <!-- Image Picker -->
