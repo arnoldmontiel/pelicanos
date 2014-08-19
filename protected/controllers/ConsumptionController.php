@@ -60,6 +60,11 @@ class ConsumptionController extends Controller
 		));
 	}
 	
+	public function actionAjaxConsumptionConfig()
+	{
+		$this->renderPartial('_consumptionConfig');
+	}
+	
 	public function actionAjaxConsumptionDetail()
 	{
 		$idCustomer = $_POST['idCustomer'];
