@@ -104,6 +104,21 @@ function generateTicket(id, month, year, type)
 	return false;	
 }
 
+function openConsumptionConfig()
+{
+	//var param = 'idReseller= '+idReseller + '&month='+month + '&year='+year; 
+	$.ajax({
+		type: 'POST',
+		url: "<?php echo ConsumptionController::createUrl('AjaxConsumptionConfig')?>"
+	}).success(function(data)
+	{		
+		$('#myModalConsumptionConfig').html(data);	
+		$('#myModalConsumptionConfig').modal({
+			show: true
+		})		
+	});
+	return false;	
+}
 </script>
 <div class="container" id="screenConsumos">
 	<div class="row">
@@ -116,7 +131,7 @@ function generateTicket(id, month, year, type)
 			<ul class="nav nav-tabs">
 				<li class="active"><a href="#tabReseller" data-toggle="tab">Resellers</a></li>
 				<li><a href="#tabClientes" data-toggle="tab">Clientes</a></li>
-				<li class="pull-right"><a href="#tabConfig" data-toggle="tab"><i
+				<li class="pull-right"><a onclick="openConsumptionConfig();" href="#tabConfig" data-toggle="tab"><i
 						class="fa fa-cog"></i> Configuraci&oacute;n</a></li>
 			</ul>
 			<div class="tab-content">

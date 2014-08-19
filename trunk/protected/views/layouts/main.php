@@ -44,6 +44,9 @@
 		style="display: hidden;"></div>
 	<div id="myModalConsumptionDetail" class="modal fade in" tabindex="-1"
 		role="dialog" aria-labelledby="myModalLabel" aria-hidden="false"
+		style="display: hidden;"></div>
+	<div id="myModalConsumptionConfig" class="modal fade in" tabindex="-1"
+		role="dialog" aria-labelledby="myModalLabel" aria-hidden="false"
 		style="display: hidden;"></div>		
 	<div id="myModalCambiarAfiche" class="modal fade in" tabindex="-1"
 		role="dialog" aria-labelledby="myModalLabel" aria-hidden="false"
