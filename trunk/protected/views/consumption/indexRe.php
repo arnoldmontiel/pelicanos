@@ -97,6 +97,49 @@ function registerResellerPayment(idReseller, month, year, fullName)
 		
 }
 
+function saveConsumptionConfig()
+{
+	var value = $('#ConsumptionConfig_value').val();
+	var username = $('#ConsumptionConfig_username').val();
+	var idCurrency = $('#ConsumptionConfig_Id_currency').val();
+
+	$('#save-consumption-config-btn').hide();					
+	$('#saved-consumption-config-btn').animate({opacity: 'show'},240);	
+
+	var param = 'value= '+value + '&username='+username + '&idCurrency='+idCurrency; 
+	$.ajax({
+		type: 'POST',
+		url: "<?php echo ConsumptionController::createUrl('AjaxSaveConsumptionConfig')?>",
+		data: param,
+	}).success(function(data)
+	{		
+		$('#old-value').val(value);
+		$('#old-currency').val(idCurrency);
+		
+		$('#save-consumption-config-btn').attr('disabled','disabled');
+		$('#saved-consumption-config-btn').animate({opacity: 'hide'},3000, function(){
+		$('#save-consumption-config-btn').show();
+			
+		});		
+	});
+	return false;	
+	
+}
+
+function checkChange()
+{
+	var value = $('#ConsumptionConfig_value').val();
+	var idCurrency = $('#ConsumptionConfig_Id_currency').val();
+
+	var oldValue = $('#old-value').val();
+	var oldCurrency = $('#old-currency').val();
+
+	if(oldValue != value || oldCurrency != idCurrency)
+		$('#save-consumption-config-btn').removeAttr('disabled');
+	else
+		$('#save-consumption-config-btn').attr('disabled','disabled');
+}
+
 function generateTicket(id, month, year, type)
 {
 	var params = "&id="+id+"&month="+month+"&year="+year+"&type="+type;
@@ -115,7 +158,7 @@ function generateTicket(id, month, year, type)
 		<div class="col-sm-12">
 			<ul class="nav nav-tabs">
 				<li class="active"><a href="#tabClientes" data-toggle="tab">Clientes</a></li>
-				<li class="pull-right"><a href="#tabConfig" data-toggle="tab"><i
+				<li><a href="#tabConfig" data-toggle="tab"><i
 						class="fa fa-cog"></i> Configuraci&oacute;n</a></li>
 			</ul>
 			<div class="tab-content">
@@ -145,6 +188,11 @@ function generateTicket(id, month, year, type)
 						</div>
 					</div>
 				</div>
+				<!-- /.tabClientes -->
+				<div class="tab-pane" id="tabConfig">
+					<?php echo $this->renderPartial('_tabConfig', array('modelConsumptionConfig'=>$modelConsumptionConfig)); ?>
+				</div>
+				<!-- /.tabConfig -->
 			</div>
 		</div>
 	</div>

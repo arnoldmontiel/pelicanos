@@ -97,6 +97,49 @@ function registerResellerPayment(idReseller, month, year, fullName)
 		
 }
 
+function saveConsumptionConfig()
+{
+	var value = $('#ConsumptionConfig_value').val();
+	var username = $('#ConsumptionConfig_username').val();
+	var idCurrency = $('#ConsumptionConfig_Id_currency').val();
+
+	$('#save-consumption-config-btn').hide();					
+	$('#saved-consumption-config-btn').animate({opacity: 'show'},240);	
+
+	var param = 'value= '+value + '&username='+username + '&idCurrency='+idCurrency; 
+	$.ajax({
+		type: 'POST',
+		url: "<?php echo ConsumptionController::createUrl('AjaxSaveConsumptionConfig')?>",
+		data: param,
+	}).success(function(data)
+	{		
+		$('#old-value').val(value);
+		$('#old-currency').val(idCurrency);
+		
+		$('#save-consumption-config-btn').attr('disabled','disabled');
+		$('#saved-consumption-config-btn').animate({opacity: 'hide'},3000, function(){
+		$('#save-consumption-config-btn').show();
+			
+		});		
+	});
+	return false;	
+	
+}
+
+function checkChange()
+{
+	var value = $('#ConsumptionConfig_value').val();
+	var idCurrency = $('#ConsumptionConfig_Id_currency').val();
+
+	var oldValue = $('#old-value').val();
+	var oldCurrency = $('#old-currency').val();
+
+	if(oldValue != value || oldCurrency != idCurrency)
+		$('#save-consumption-config-btn').removeAttr('disabled');
+	else
+		$('#save-consumption-config-btn').attr('disabled','disabled');
+}
+
 function generateTicket(id, month, year, type)
 {
 	var params = "&id="+id+"&month="+month+"&year="+year+"&type="+type;
@@ -104,21 +147,6 @@ function generateTicket(id, month, year, type)
 	return false;	
 }
 
-function openConsumptionConfig()
-{
-	//var param = 'idReseller= '+idReseller + '&month='+month + '&year='+year; 
-	$.ajax({
-		type: 'POST',
-		url: "<?php echo ConsumptionController::createUrl('AjaxConsumptionConfig')?>"
-	}).success(function(data)
-	{		
-		$('#myModalConsumptionConfig').html(data);	
-		$('#myModalConsumptionConfig').modal({
-			show: true
-		})		
-	});
-	return false;	
-}
 </script>
 <div class="container" id="screenConsumos">
 	<div class="row">
@@ -131,7 +159,7 @@ function openConsumptionConfig()
 			<ul class="nav nav-tabs">
 				<li class="active"><a href="#tabReseller" data-toggle="tab">Resellers</a></li>
 				<li><a href="#tabClientes" data-toggle="tab">Clientes</a></li>
-				<li><a onclick="openConsumptionConfig();" href="#tabConfig" data-toggle="tab"><i
+				<li><a href="#tabConfig" data-toggle="tab"><i
 						class="fa fa-cog"></i> Configuraci&oacute;n</a></li>
 			</ul>
 			<div class="tab-content">
@@ -192,40 +220,7 @@ function openConsumptionConfig()
 				</div>
 				<!-- /.tabClientes -->
 				<div class="tab-pane" id="tabConfig">
-					<table class="table table-striped table-bordered tablaIndividual">
-						<tr>
-							<td class="align-right">Valor del punto</td>
-							<td>
-								<form class="form-inline" role="form">
-									<div class="form-group">
-										<input type="text" class="form-control" placeholder="0">
-									</div>
-									<div class="form-group">
-										<select class="form-control">
-											<option>US Dollar</option>
-											<option>Soles</option>
-											<option>Peso Argentino</option>
-										</select>
-									</div>
-								</form>
-							</td>
-						</tr>
-						<tr>
-							<td class="align-right">&nbsp;</td>
-							<td class="bold">ATENCI&Oacute;N: Al modificar el valor solo se
-								veran afectadas las facturas y consumos pendientes.</td>
-						</tr>
-
-						<tr>
-							<td class="align-right">&nbsp;</td>
-							<td>
-								<button type="button" class="btn btn-primary">
-									<i class="fa fa-save"></i> Guardar
-								</button>
-							</td>
-						</tr>
-					</table>
-
+					<?php echo $this->renderPartial('_tabConfig', array('modelConsumptionConfig'=>$modelConsumptionConfig)); ?>
 				</div>
 				<!-- /.tabConfig -->
 			</div>

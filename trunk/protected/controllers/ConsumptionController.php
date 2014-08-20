@@ -42,8 +42,20 @@ class ConsumptionController extends Controller
 		if(isset($_GET['Consumption']))
 			$model->attributes=$_GET['Consumption'];
 		
+		$criteria = new CDbCriteria();
+		$criteria->addCondition('t.username = "'.Yii::app()->user->name.'"');
+		$criteria->order = 't.Id DESC';
+		
+		$modelConsumptionConfig = ConsumptionConfig::model()->find($criteria); 
+		if(!isset($modelConsumptionConfig))
+		{	
+			$modelConsumptionConfig = new ConsumptionConfig();
+			$modelConsumptionConfig->username = Yii::app()->user->name;
+			$modelConsumptionConfig->value = 0;
+		}
 		$this->render('index',array(
 				'model'=>$model,
+				'modelConsumptionConfig'=>$modelConsumptionConfig
 		));
 	}
 
@@ -55,14 +67,23 @@ class ConsumptionController extends Controller
 			$model->attributes=$_GET['Consumption'];
 	
 		$model->Id_reseller = User::getResellerId();
+		
+		$criteria = new CDbCriteria();
+		$criteria->addCondition('t.username = "'.Yii::app()->user->name.'"');
+		$criteria->order = 't.Id DESC';
+		
+		$modelConsumptionConfig = ConsumptionConfig::model()->find($criteria);
+		if(!isset($modelConsumptionConfig))
+		{
+			$modelConsumptionConfig = new ConsumptionConfig();
+			$modelConsumptionConfig->username = Yii::app()->user->name;
+			$modelConsumptionConfig->value = 0;
+		}
+		
 		$this->render('indexRe',array(
 				'model'=>$model,
+				'modelConsumptionConfig'=>$modelConsumptionConfig
 		));
-	}
-	
-	public function actionAjaxConsumptionConfig()
-	{
-		$this->renderPartial('_consumptionConfig');
 	}
 	
 	public function actionAjaxConsumptionDetail()
@@ -80,6 +101,19 @@ class ConsumptionController extends Controller
 		$modelConsumptions->month = $month;
 		$modelConsumptions->year = $year;
 		$this->renderPartial('_consumptionDetail',array('modelConsumptions'=>$modelConsumptions, 'month'=>$month, 'year'=>$year));
+	}
+	
+	public function actionAjaxSaveConsumptionConfig()
+	{
+		$value = $_POST['value'];
+		$username = $_POST['username'];
+		$idCurrency = $_POST['idCurrency'];
+		
+		$modelConsumptionConfig = new ConsumptionConfig();
+		$modelConsumptionConfig->value = $value;
+		$modelConsumptionConfig->Id_currency = $idCurrency;
+		$modelConsumptionConfig->username = $username;
+		$modelConsumptionConfig->save();
 	}
 	
 	public function actionAjaxConsumptionDetailByReseller()
