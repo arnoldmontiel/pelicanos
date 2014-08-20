@@ -51,7 +51,8 @@
 						'name'=>'Acciones',
 						'value'=>function($data){							
 							//return '<a onclick="openConsumptionDetail('.$data->Id_reseller.');" data-toggle="modal" class="btn btn-primary"><i class="fa fa-list"></i> Ver Detalle</a>';
-							return '<a onclick="openConsumptionDetail('.$data->Id_customer.','.$data->month.','.$data->year.');" class="btn btn-default"><i class="fa fa-eye"></i>  Ver Detalle</a>';
+							return '<a onclick="openConsumptionDetail('.$data->Id_customer.','.$data->month.','.$data->year.');" class="btn btn-default"><i class="fa fa-eye"></i>  Ver Detalle</a>
+									<a onclick="generateTicket('.$data->Id_customer.','.$data->month.','.$data->year.',1);" class="btn btn-default"><i class="fa fa-print"></i> Imprimir Factura</a>';
 						},
 						'type'=>'raw',
 						'htmlOptions'=>array("class"=>"align-right"),

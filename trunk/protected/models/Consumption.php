@@ -12,6 +12,7 @@
  * @property string $description
  * @property integer $already_paid
  * @property string $paid_date
+ * @property integer $Id_consumption_config
  *
  * The followings are the available model relations:
  * @property Customer $idCustomer
@@ -113,12 +114,12 @@ class Consumption extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('Id_nzb, Id_customer', 'required'),
-			array('Id_nzb, Id_customer, points, already_paid', 'numerical', 'integerOnly'=>true),
+			array('Id_nzb, Id_customer, points, already_paid, Id_consumption_config', 'numerical', 'integerOnly'=>true),
 			array('description', 'length', 'max'=>255),
 			array('date, paid_date', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('Id, Id_nzb, Id_customer, points, date, description, already_paid, reseller, total_points, Id_reseller, year, month, paid_date', 'safe', 'on'=>'search'),
+			array('Id, Id_nzb, Id_customer, points, date, description, already_paid, reseller, total_points, Id_reseller, year, month, paid_date, Id_consumption_config', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -132,6 +133,7 @@ class Consumption extends CActiveRecord
 		return array(
 			'customer' => array(self::BELONGS_TO, 'Customer', 'Id_customer'),
 			'nzb' => array(self::BELONGS_TO, 'Nzb', 'Id_nzb'),
+			'consumptionConfig' => array(self::BELONGS_TO, 'ConsumptionConfig', 'Id_consumption_config'),
 		);
 	}
 
