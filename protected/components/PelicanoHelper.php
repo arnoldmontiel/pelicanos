@@ -61,6 +61,7 @@ class PelicanoHelper {
 	}
 	static public function generateTicketPDF($model)
 	{
+		$monthName = date('F', mktime(0, 0, 0, $model->month));
 		
 		$criteria=new CDbCriteria;
 		if(isset($model->Id_reseller))
@@ -78,6 +79,7 @@ class PelicanoHelper {
 		$bodyGrid = '<tbody>';
 		$count = 1; 
 		$acumPoints = 0;
+		$idConsumptionConfig = null;
 		foreach($modelConsumptions as $data)
 		{
 			$title = 'No Identificado';
@@ -94,13 +96,32 @@ class PelicanoHelper {
 			
 			$acumPoints = $acumPoints + $data->points;
 			$count ++;
+			$idConsumptionConfig = $data->Id_consumption_config;
 		}
 			$bodyGrid .= '<tr>';
-				$bodyGrid .= '<td colspan="3" class="align-right tdGrey">CONSUMOS '.$model->month.' '.$model->year.'</td>';
+				$bodyGrid .= '<td colspan="3" class="align-right tdGrey">CONSUMOS '.$monthName.' '.$model->year.'</td>';
 				$bodyGrid .= '<td class="align-right tdGrey">'.$acumPoints.'</td>';
 			$bodyGrid .= '</tr>';
 		$bodyGrid .= '</tbody>';			
 		
+		$valuePerPoint = 0;
+		$currency = '';
+		if(!isset($idConsumptionConfig))
+		{
+			$criteria = new CDbCriteria();
+			$criteria->addCondition('t.username = "'.Yii::app()->user->name.'"');
+			$criteria->order = 't.Id DESC';
+			$modelConsumptionConfig = ConsumptionConfig::model()->find($criteria);
+		}
+		else
+			$modelConsumptionConfig = ConsumptionConfig::model()->findByPk($idConsumptionConfig);
+			
+		if(isset($modelConsumptionConfig))
+		{
+			$valuePerPoint = $modelConsumptionConfig->value;
+			$currency = $modelConsumptionConfig->currency->symbol;
+		}
+				
 		return '<div class="container" id="screenReadOnly">
 						<div class="row facturaCabecera facturaBloque">
 							<div class="col-sm-12">
@@ -109,7 +130,7 @@ class PelicanoHelper {
 										<tr>
 											<td width="50%">		
 												<div class="facturaCliente">'.$model->customer->fullName.'</div>
-												<div class="facturaPeriodo">Consumos '.$model->month.' '.$model->year.'</div>
+												<div class="facturaPeriodo">Consumos '.$monthName.' '.$model->year.'</div>
 											</td>
 											<td width="50%" align="right">
 												<img src="images/logoBIG.jpg" width="200" height="56"/>
@@ -147,11 +168,11 @@ class PelicanoHelper {
 													<td colspan="2"><div class="titleTOTAL">TOTAL</div></td>
 													</tr>
 													<tr>
-													<td>200</td>
-													<td class="align-right">x $11.192</td>
+													<td>'.$acumPoints.'</td>
+													<td class="align-right">x '.$currency.$valuePerPoint.'</td>
 													</tr>
 													<tr>
-													<td colspan="2" class="align-right"><div class="valorTOTAL">$2233</div></td>
+													<td colspan="2" class="align-right"><div class="valorTOTAL">'.$currency.$acumPoints * $valuePerPoint.'</div></td>
 													</tr>
 												</tbody>
 											</table>
@@ -167,6 +188,8 @@ class PelicanoHelper {
 	static public function generateTicketPDFByReseller($model)
 	{
 	
+		$monthName = date('F', mktime(0, 0, 0, $model->month));
+		
 		$modelReseller = Reseller::model()->findByPk($model->Id_reseller);
 		
 		$criteria=new CDbCriteria;
@@ -182,6 +205,7 @@ class PelicanoHelper {
 		$bodyGrid = '<tbody>';
 		$count = 1;
 		$acumPoints = 0;
+		$idConsumptionConfig = null;
 		foreach($modelConsumptions as $data)
 		{
 			$customer = 'No Identificado';
@@ -198,13 +222,33 @@ class PelicanoHelper {
 				
 			$acumPoints = $acumPoints + $data->points;
 			$count++;
+			$idConsumptionConfig = $data->Id_consumption_config;
 		}
 		$bodyGrid .= '<tr>';
-		$bodyGrid .= '<td colspan="3" class="align-right tdGrey">CONSUMOS '.$model->month.' '.$model->year.'</td>';
+		$bodyGrid .= '<td colspan="3" class="align-right tdGrey">CONSUMOS '.$monthName.' '.$model->year.'</td>';
 		$bodyGrid .= '<td class="align-right tdGrey">'.$acumPoints.'</td>';
 		$bodyGrid .= '</tr>';
 		$bodyGrid .= '</tbody>';
 	
+		$valuePerPoint = 0;
+		$currency = '';
+		if(!isset($idConsumptionConfig))
+		{
+			$criteria = new CDbCriteria();
+			$criteria->addCondition('t.username = "'.Yii::app()->user->name.'"');
+			$criteria->order = 't.Id DESC';
+			$modelConsumptionConfig = ConsumptionConfig::model()->find($criteria);
+		}
+		else
+			$modelConsumptionConfig = ConsumptionConfig::model()->findByPk($idConsumptionConfig);
+			
+		
+		if(isset($modelConsumptionConfig))
+		{
+			$valuePerPoint = $modelConsumptionConfig->value;
+			$currency = $modelConsumptionConfig->currency->symbol;
+		}
+		
 		return '<div class="container" id="screenReadOnly">
 						<div class="row facturaCabecera facturaBloque">
 							<div class="col-sm-12">
@@ -213,7 +257,7 @@ class PelicanoHelper {
 										<tr>
 											<td width="50%">
 												<div class="facturaCliente">'.$modelReseller->description.'</div>
-												<div class="facturaPeriodo">Consumos '.$model->month.' '.$model->year.'</div>
+												<div class="facturaPeriodo">Consumos '.$monthName.' '.$model->year.'</div>
 											</td>
 											<td width="50%" align="right">
 												<img src="images/logoBIG.jpg" width="200" height="56"/>
@@ -251,11 +295,11 @@ class PelicanoHelper {
 													<td colspan="2"><div class="titleTOTAL">TOTAL</div></td>
 													</tr>
 													<tr>
-													<td>200</td>
-													<td class="align-right">x $11.192</td>
+													<td>'.$acumPoints.'</td>
+													<td class="align-right">x '.$currency.$valuePerPoint.'</td>
 													</tr>
 													<tr>
-													<td colspan="2" class="align-right"><div class="valorTOTAL">$2233</div></td>
+													<td colspan="2" class="align-right"><div class="valorTOTAL">'.$currency.$acumPoints * $valuePerPoint.'</div></td>
 													</tr>
 												</tbody>
 											</table>
