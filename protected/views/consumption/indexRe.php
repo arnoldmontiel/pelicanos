@@ -35,7 +35,8 @@ function openConsumptionDetailByReseller(idReseller, month, year)
 
 function registerPayment(idCustomer, month, year, fullName)
 {
-	if(confirm("Registrar pago cliente " + fullName + " año: " + year + " mes: " + month))
+	var monthArr = new Array('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec');
+	if(confirm("Registrar pago cliente " + fullName + " año: " + year + " mes: " + monthArr[month -1]))
 	{
 		$.post("<?php echo ConsumptionController::createUrl('AjaxRegisterCustomerPayment'); ?>",
 				{
@@ -55,38 +56,6 @@ function registerPayment(idCustomer, month, year, fullName)
 						$("#points-paid-by-reseller").text(obj.pointsPaid);
 						$("#points-pending-by-reseller").text(obj.pointsPending);
 					}		
-					$.fn.yiiGridView.update('pending-customer-grid');
-					$.fn.yiiGridView.update('payment-customer-grid');
-					$.fn.yiiGridView.update('pending-reseller-grid');
-					$.fn.yiiGridView.update('payment-reseller-grid');
-				});
-	}
-	return false;
-		
-}
-
-function registerResellerPayment(idReseller, month, year, fullName)
-{
-	if(confirm("Registrar pago reseller " + fullName + " año: " + year + " mes: " + month))
-	{
-		$.post("<?php echo ConsumptionController::createUrl('AjaxRegisterResellerPayment'); ?>",
-				{
-					idReseller:idReseller,
-					year:year,
-					month:month
-				}
-			).success(
-				function(data){
-					var obj = jQuery.parseJSON(data);				
-					if(obj != null)
-					{
-						$("#qty-by-customer").text(obj.qtyByCustomer);
-						$("#qty-by-reseller").text(obj.qtyByReseller);
-						$("#points-paid-by-customer").text(obj.pointsPaid);
-						$("#points-pending-by-customer").text(obj.pointsPending);
-						$("#points-paid-by-reseller").text(obj.pointsPaid);
-						$("#points-pending-by-reseller").text(obj.pointsPending);
-					}
 					$.fn.yiiGridView.update('pending-customer-grid');
 					$.fn.yiiGridView.update('payment-customer-grid');
 					$.fn.yiiGridView.update('pending-reseller-grid');

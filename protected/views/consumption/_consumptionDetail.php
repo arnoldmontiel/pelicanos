@@ -6,8 +6,8 @@
       	</div>
       	<div class="modal-body">
       	<div class="row">
-      	<div class="col-sm-6"><h1 class="pageTitle"> mes <?php echo $month;?> </h1></div>
-      	<div class="col-sm-6 align-right totalConsumosMes">Total <span class="label label-info label-lg">20998</span></div>
+      	<div class="col-sm-6"><h1 class="pageTitle"> mes de <?php echo date('F', mktime(0, 0, 0, $month));?> </h1></div>
+      	<div class="col-sm-6 align-right totalConsumosMes">Total <span class="label label-info label-lg"><?php echo $modelConsumptions->getTotalPoints(); ?></span></div>
       	</div>
       		<?php			
 				$this->widget('zii.widgets.grid.CGridView', array(
