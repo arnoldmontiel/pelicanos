@@ -16,23 +16,6 @@ function openConsumptionDetail(idCustomer, month, year)
 	return false;	
 }
 
-function openConsumptionDetailByReseller(idReseller, month, year)
-{
-	var param = 'idReseller= '+idReseller + '&month='+month + '&year='+year; 
-	$.ajax({
-		type: 'POST',
-		url: "<?php echo ConsumptionController::createUrl('AjaxConsumptionDetailByReseller')?>",
-		data: param,
-	}).success(function(data)
-	{		
-		$('#myModalConsumptionDetail').html(data);	
-		$('#myModalConsumptionDetail').modal({
-			show: true
-		})		
-	});
-	return false;	
-}
-
 function registerPayment(idCustomer, month, year, fullName)
 {
 	var monthArr = new Array('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec');

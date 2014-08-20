@@ -50,7 +50,7 @@ class ConsumptionConfig extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'username0' => array(self::BELONGS_TO, 'User', 'username'),
-			'idCurrency' => array(self::BELONGS_TO, 'Currency', 'Id_currency'),
+			'currency' => array(self::BELONGS_TO, 'Currency', 'Id_currency'),
 		);
 	}
 

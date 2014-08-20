@@ -161,12 +161,22 @@ class ConsumptionController extends Controller
 		$month = $_POST['month'];
 		$year = $_POST['year'];
 	
-		$criteria=new CDbCriteria;
+		$criteria = new CDbCriteria();
+		$criteria->addCondition('t.username = "'.Yii::app()->user->name.'"');
+		$criteria->order = 't.Id DESC';
+		
+		$modelConsumptionConfig = ConsumptionConfig::model()->find($criteria);
+		$idConsumptionConfig = null;
+		if(isset($modelConsumptionConfig))
+			$idConsumptionConfig = $modelConsumptionConfig->Id;
+		
+		$criteria = new CDbCriteria;
 		$criteria->addCondition('Id_customer IN (select Id from customer where Id_reseller = '.$idReseller.') ');		
 		$criteria->addCondition('MONTH(date) = '.$month);
 		$criteria->addCondition('YEAR(date) = '.$year);
 	
-		Consumption::model()->updateAll(array('already_paid'=>1, 'paid_date'=>new CDbExpression('NOW()')),$criteria);
+		
+		Consumption::model()->updateAll(array('Id_consumption_config'=>$idConsumptionConfig, 'already_paid'=>1, 'paid_date'=>new CDbExpression('NOW()')),$criteria);
 		
 		CustomerDevice::model()->updateAll(array('need_update_consumption'=>1), 'Id_customer IN (select cu.Id from customer cu 
 											inner join consumption c on (c.Id_customer = cu.Id) where cu.Id_reseller = '.$idReseller.') ');
