@@ -53,6 +53,30 @@ class Consumption extends CActiveRecord
 		return Consumption::model()->count($criteria);
 	}
 	
+	public function getTotalPoints()
+	{
+		$points = 0;
+		$criteria=new CDbCriteria;
+	
+		$criteria->select = 'SUM(t.points) as total_points';
+		if(isset($this->Id_customer))
+			$criteria->addCondition('Id_customer = ' . $this->Id_customer);		
+		if(isset($this->Id_reseller))
+		{
+			$criteria->join = 'inner join customer c on (t.Id_customer = c.Id)';
+			$criteria->addCondition('c.Id_reseller = '. $this->Id_reseller);
+		}
+	
+		$criteria->addCondition('MONTH(t.date) = '. $this->month);
+		$criteria->addCondition('YEAR(t.date) = '. $this->year);
+		
+		$model = Consumption::model()->find($criteria);
+		if(isset($model))
+			$points = $model->total_points;
+	
+		return $points;
+	}
+	
 	static public function pointsAccumulated($paid = true)
 	{
 		$points = 0;

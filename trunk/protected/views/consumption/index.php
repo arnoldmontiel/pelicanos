@@ -35,7 +35,8 @@ function openConsumptionDetailByReseller(idReseller, month, year)
 
 function registerPayment(idCustomer, month, year, fullName)
 {
-	if(confirm("Registrar pago cliente " + fullName + " año: " + year + " mes: " + month))
+	var monthArr = new Array('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec');
+	if(confirm("Registrar pago cliente " + fullName + " año: " + year + " mes: " + monthArr[month - 1]))
 	{
 		$.post("<?php echo ConsumptionController::createUrl('AjaxRegisterCustomerPayment'); ?>",
 				{
@@ -67,7 +68,8 @@ function registerPayment(idCustomer, month, year, fullName)
 
 function registerResellerPayment(idReseller, month, year, fullName)
 {
-	if(confirm("Registrar pago reseller " + fullName + " año: " + year + " mes: " + month))
+	var monthArr = new Array('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec');
+	if(confirm("Registrar pago reseller " + fullName + " año: " + year + " mes: " + monthArr[month - 1]))
 	{
 		$.post("<?php echo ConsumptionController::createUrl('AjaxRegisterResellerPayment'); ?>",
 				{
