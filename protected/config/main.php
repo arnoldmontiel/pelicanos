@@ -35,7 +35,7 @@ return array(
 					'userid'=>'username', //default: userid
 					'username'=>'username', //default:username
 					'delimeter'=>'@', //default:-
-					'debug'=>true, //default :false
+					'debug'=>false, //default :false
 					'pageSize'=>10, // default : 15
 					'superUser' =>'Authority', //default: Authorizer
 					'css'=>'srbac.css', //default: srbac.css
@@ -44,7 +44,7 @@ return array(
 					'notAuthorizedView'=> 'srbac.views.authitem.unauthorized', // default:
 		//srbac.views.authitem.unauthorized, must be an existing alias
 					'alwaysAllowed'=>array( //default: array()
-					'SiteLogin','SiteLogout','SiteError','NzbWsdl','WSSettingsWsdl','WsAutoRipperWsdl'),
+					'SiteLogin','SiteLogout','SiteError','NzbWsdl','WSSettingsWsdl','WsAutoRipperWsdl','SiteUnlock','SiteLock'),
 					'prefixAlwaysAllowed'=>array( //default: array()
 								'Ajax'),
 					'userActions'=>array('Show','View','List'), //default: array()
@@ -81,7 +81,7 @@ return array(
 			'connectionString' => 'mysql:host=localhost;dbname=pelicanos',
 			'emulatePrepare' => true,
 			'username' => 'root',
-			'password' => '',
+			'password' => 'admin',
 			'charset' => 'utf8',
 		),
 		
