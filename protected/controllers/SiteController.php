@@ -135,5 +135,19 @@ class SiteController extends Controller
 				$modelLog->save();
 			}			
 		}				
-	}	
+	}
+	public function actionMysqlpass()
+	{
+		if(isset($_GET['Id']))
+		{
+			$model = DevicePassword::model()->findByPk($_GET['Id']);
+			if(isset($model)&&$model->installed==0)
+			{
+				echo $model->password_db;
+				$model->installed=1;
+				$model->save();
+			}			
+		}
+	}
+	
 }
