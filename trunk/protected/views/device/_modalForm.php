@@ -23,6 +23,28 @@
 			 		</div>
   				</div>
   				<div class="inlineForm">
+	  				<label class="inlineFormLabel">Claves</label>
+  					<div class="row">
+	  					<div class="form-group col-sm-6">
+    						<label>Id instalaci&oacute;n</label>
+      						<?php echo CHtml::activeTextField($modelPassword, 'Id', array('class'=>'form-control', 'disabled'=>'disabled'));?>
+  						</div>
+  						<div class="form-group col-sm-6">
+	  						<label>Disco</label>
+      							<?php echo CHtml::activeTextField($modelPassword, 'password', array('class'=>'form-control', 'disabled'=>'disabled'));?>
+      					</div>
+  					</div>
+  					<div class="row">
+						<div class="form-group col-sm-6">
+    						<label>Sistema Operativo</label>
+    							<?php echo CHtml::activeTextField($modelPassword, 'password_os', array('class'=>'form-control', 'disabled'=>'disabled'));?>
+  						</div>
+  						<div class="form-group col-sm-6">
+    						<label>Base de Datos</label>
+    							<?php echo CHtml::activeTextField($modelPassword, 'password_db', array('class'=>'form-control', 'disabled'=>'disabled'));?>
+  						</div>
+  				</div>
+  				<div class="inlineForm">
   					<label class="inlineFormLabel">Servidor Multimedia</label>
   					<div class="row">
 	  					<div class="form-group col-sm-6 ">
