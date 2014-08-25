@@ -59,6 +59,13 @@ class PelicanoHelper {
 		
 		return $imageName;
 	}
+	
+	static public function generatePassword( $length = 8 ) {
+		$chars = "abcdefghijklmnopqrstuvwxyz!@#%^&*()ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-=+;:,?";
+		$password = substr( str_shuffle( $chars ), 0, $length );
+		return $password;
+	}
+	
 	static public function generateTicketPDF($model)
 	{
 		$monthName = date('F', mktime(0, 0, 0, $model->month));
