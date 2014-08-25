@@ -666,12 +666,16 @@ class DeviceController extends Controller
 		if(isset($idCustomer) && isset($idDevice))
 		{
 			$modelDevice = Device::model()->findByPk($idDevice);
-			$modelPassword = new DevicePassword();
-			$modelPassword->Id_device = $idDevice;
-			$modelPassword->password = PelicanoHelper::generatePassword(15);
-			$modelPassword->password_os = PelicanoHelper::generatePassword(15);
-			$modelPassword->password_db = PelicanoHelper::generatePassword(15);
-			$modelPassword->save();
+			$modelPassword = DevicePassword::model()->findByAttributes(array('Id_device'=>$idDevice));
+			if(!isset($modelPassword))
+			{
+				$modelPassword = new DevicePassword();
+				$modelPassword->Id_device = $idDevice;
+				$modelPassword->password = PelicanoHelper::generatePassword(15);
+				$modelPassword->password_os = PelicanoHelper::generatePassword(15);
+				$modelPassword->password_db = PelicanoHelper::generatePassword(15);
+				$modelPassword->save();
+			}
 			echo $this->renderPartial('_modalForm', array('modelDevice'=>$modelDevice, 'idCustomer'=>$idCustomer, 'modelPassword'=>$modelPassword));
 		}
 	}
