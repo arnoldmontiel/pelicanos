@@ -644,7 +644,7 @@ class NzbController extends Controller
 																		'date'=>date("Y-m-d H:i:s",$item->change_state_date),
 																		'points'=>$model->points);
 								if($modelNewConsumption->save())
-									CustomerDevice::model()->updateAll(array('need_update_consumption'=>1),'Id_customer = '. $idCurrentDevice->Id_customer);
+									CustomerDevice::model()->updateAll(array('need_update_consumption'=>1),'Id_customer = '. $modelCustDevice->Id_customer);
 								
 								
 							}
