@@ -61,7 +61,7 @@ class PelicanoHelper {
 	}
 	
 	static public function generatePassword( $length = 8 ) {
-		$chars = "abcdefghijklmnopqrstuvwxyz!#%&ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/()=$";
+		$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 		$password = substr( str_shuffle( $chars ), 0, $length );
 		return $password;
 	}
