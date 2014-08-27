@@ -187,6 +187,8 @@ class DeviceController extends Controller
 		
 		$modelPlayerConfigs->Id_device = $idDevice;
 		
+		$modelPassword = DevicePassword::model()->findByAttributes(array('Id_device'=>$idDevice));
+		
 		$this->render('index',array(
 				'modelCustomerDevice'=>$modelCustomerDevice,
 				'modelDeviceTunelGrid'=>$modelDeviceTunelGrid,
@@ -195,6 +197,7 @@ class DeviceController extends Controller
 				'modelClientSetting'=>$modelClientSetting,
 				'modelSabNzbdConfigs'=>$modelSabNzbdConfigs,
 				'modelPlayerConfigs'=>$modelPlayerConfigs,
+				'modelPassword'=>$modelPassword,
 		));
 	}
 
@@ -616,8 +619,14 @@ class DeviceController extends Controller
 		foreach($modelPorts as $item)
 			$ddlPorts[] = array('Id'=>$item->Id, 'description'=>$item->description); 
 		
+		$modelPassword = DevicePassword::model()->findByAttributes(array('Id_device'=>$idDevice));
+		$jsonPassowrd = null;
+		if(isset($modelPassword))
+			$jsonPassowrd = json_encode($modelPassword->attributes);
+		
 		echo json_encode(array('ddlPort'=>$ddlPorts,
-								'modelDevice'=>json_encode($modelDevice->attributes), 
+								'modelDevice'=>json_encode($modelDevice->attributes),
+								'modelPassword'=>$jsonPassowrd,
 								'idDevice'=>$modelDevice->Id, 
 								'description'=>$modelDevice->description));
 	}

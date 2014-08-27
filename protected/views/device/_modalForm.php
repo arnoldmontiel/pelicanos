@@ -43,6 +43,7 @@
     						<label>Base de Datos</label>
     							<?php echo CHtml::activeTextField($modelPassword, 'password_db', array('class'=>'form-control', 'disabled'=>'disabled'));?>
   						</div>
+  					</div>
   				</div>
   				<div class="inlineForm">
   					<label class="inlineFormLabel">Servidor Multimedia</label>

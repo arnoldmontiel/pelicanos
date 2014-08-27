@@ -153,6 +153,14 @@ function portConfig(id)
 							else							
 								$("#Device_is_movie_tester").attr('checked',false)
 						}
+						var objPass = jQuery.parseJSON(obj.modelPassword);
+						if(objPass != null)
+						{
+							$("#DevicePassword_Id").val(objPass.Id);
+							$("#DevicePassword_password").val(objPass.password);
+							$("#DevicePassword_password_os").val(objPass.password_os);
+							$("#DevicePassword_password_db").val(objPass.password_db);
+						}
 					}					
 				}
 				$("#save-description").html("Guardar");
@@ -259,6 +267,7 @@ function addPort()
 		<?php echo $this->renderPartial('_modalPortConfig', array('modelPlayerConfigs'=>$modelPlayerConfigs,
 																 'modelSabNzbdConfigs'=>$modelSabNzbdConfigs, 
 																'modelDeviceTunelGrid'=>$modelDeviceTunelGrid, 
+																'modelPassword'=>$modelPassword,
 																'idDevice'=>''));?>
 	</div>
 	
