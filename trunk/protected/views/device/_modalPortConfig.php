@@ -13,7 +13,10 @@
 				<?php if($isAdmin):?>
 				<li><a  href="#tabSabnzbd" data-toggle="tab">Sabnzbd</a></li>
 				<?php endif;?>
-				<li><a  href="#tabPlayer" data-toggle="tab">Player</a></li>				
+				<li><a  href="#tabPlayer" data-toggle="tab">Player</a></li>
+				<?php if($isAdmin):?>
+				<li><a  href="#tabPasswords" data-toggle="tab">Claves</a></li>
+				<?php endif;?>		
 				<li class="pull-right"><div class="panel panel-default panelCliente sideIDLabel">
   <div class="panel-body">
    <div class="infoPanelCliente">
@@ -193,6 +196,13 @@
 				  	echo $this->renderPartial('_playerConfig', array( 'modelPlayerConfigs'=>$modelPlayerConfigs, 'idDevice'=>$modelDevice->Id));
 				  ?>
               </div><!-- tab-pane -->
+              <?php if($isAdmin):?>
+              <div class="tab-pane" id="tabPasswords">
+                <?php 
+				  	echo $this->renderPartial('_viewPassword', array( 'modelPassword'=>$modelPassword));
+				  ?>
+              </div><!-- tab-pane -->
+              <?php endif;?>
               </div><!-- tab-content -->
 			</div>
         	<div class="modal-footer">
