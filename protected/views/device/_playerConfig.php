@@ -99,7 +99,8 @@ function checkAddEnabled()
   
   $typeList = CHtml::listData(  array(
   										array('id'=>'0','value'=>'Dune'),
-  										array('id'=>'1','value'=>'Oppo')
+  										array('id'=>'1','value'=>'Oppo'),
+										array('id'=>'2','value'=>'Mede8er')
   									)
   								,'id','value');
   $fileProtocolList = CHtml::listData(  array(
@@ -149,7 +150,8 @@ function checkAddEnabled()
 					'value'=>function($data){
 							$typeList = CHtml::listData(  array(
 									array('id'=>'0','value'=>'Dune'),
-									array('id'=>'1','value'=>'Oppo')
+									array('id'=>'1','value'=>'Oppo'),
+									array('id'=>'1','value'=>'Mede8er')
 							)
 									,'id','value');
 							$value = CHtml::activeDropDownList($data, 'type', $typeList, array('class'=>'form-control', 'idconfig'=>$data->Id, 'disabled'=>'disabled', 'name'=>'type_'.$data->Id));
