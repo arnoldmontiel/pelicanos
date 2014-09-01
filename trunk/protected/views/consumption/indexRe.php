@@ -128,10 +128,10 @@ function generateTicket(id, month, year, type)
 						<div class="col-sm-9">
 							<div class="tab-content">
 								<div class="tab-pane active" id="tabClientesPendiente">
-									<?php echo $this->renderPartial('_tabPending',array('model'=>$model)); ?>
+									<?php echo $this->renderPartial('_tabPendingCustomerRe',array('model'=>$model)); ?>
 								</div>
 								<div class="tab-pane" id="tabClientesPagos">
-									<?php echo $this->renderPartial('_tabPayment',array('model'=>$model)); ?>
+									<?php echo $this->renderPartial('_tabPaymentCustomerRe',array('model'=>$model)); ?>
 								</div>
 								<div class="tab-pane" id="tabResellerHistorico">Secondo sed ac
 									orci quis tortor imperdiet venenatis. Duis elementum auctor
