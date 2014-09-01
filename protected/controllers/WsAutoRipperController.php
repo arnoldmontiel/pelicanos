@@ -19,7 +19,7 @@ class WsAutoRipperController extends Controller
 	}
 	
 	/**
-	 * Set file subtitles
+	 * Set file audio
 	 * @param integer id (auto_ripper Id)
 	 * @param string name
 	 * @param FileAudioRequest[]
@@ -34,18 +34,19 @@ class WsAutoRipperController extends Controller
 			foreach($fileAudioRequest as $item)
 			{
 				$modelAudioTrack = AudioTrack::model()->findByAttributes(array('language'=>$item->language,
-															'short_language'=>$item->short_language,
-															'type'=>$item->type,
-															'short_type'=>$item->short_type,
-															'type_extra'=>$item->type_extra,));
+															'name'=>$item->name,
+															'chanel'=>$item->chanel,
+															'layout'=>$item->layout,
+															'codec'=>$item->codec,));
+				
 				if(!isset($modelAudioTrack))
 				{
 					$modelAudioTrack = new AudioTrack();
 					$modelAudioTrack->language = $item->language;
-					$modelAudioTrack->short_language = $item->short_language;
-					$modelAudioTrack->type = $item->type;
-					$modelAudioTrack->short_type = $item->short_type;
-					$modelAudioTrack->type_extra = $item->type_extra;
+					$modelAudioTrack->name = $item->name;
+					$modelAudioTrack->chanel = $item->chanel;
+					$modelAudioTrack->layout = $item->layout;
+					$modelAudioTrack->codec = $item->codec;
 					$modelAudioTrack->save();
 				}
 				$modelFileAudio = AutoRipperFileAudioTrack::model()->findByAttributes(array('Id_audio_track'=>$modelAudioTrack->Id,
@@ -80,16 +81,14 @@ class WsAutoRipperController extends Controller
 			foreach($fileSubtitleRequest as $item)
 			{
 				$modelSubtitle = Subtitle::model()->findByAttributes(array('language'=>$item->language,
-																				'short_language'=>$item->short_language,
-																				'type'=>$item->type,
-																				'description'=>$item->description,));
+																				'codec'=>$item->codec,
+																				'forced'=>$item->forced,));
 				if(!isset($modelSubtitle))
 				{
-					$modelSubtitle = new AudioTrack();
+					$modelSubtitle = new Subtitle();
 					$modelSubtitle->language = $item->language;
-					$modelSubtitle->short_language = $item->short_language;
-					$modelSubtitle->type = $item->type;
-					$modelSubtitle->description = $item->description;
+					$modelSubtitle->codec = $item->codec;
+					$modelSubtitle->forced = $item->forced;
 					$modelSubtitle->save();
 				}
 				$modelFileSubtitle = AutoRipperFileSubtitle::model()->findByAttributes(array('Id_subtitle'=>$modelSubtitle->Id,
