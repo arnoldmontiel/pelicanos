@@ -92,30 +92,31 @@ class NzbController extends Controller
 			{
 				$nzbResponse->nzb->mkv_file_name = $modelNbz->autoRipperFile->label;
 				$nzbResponse->nzb->size = $modelNbz->autoRipperFile->size;
+				
+				//set audio track
+				$relAudioTracks = AutoRipperFileAudioTrack::model()->findAllByAttributes(array('Id_auto_ripper_file'=>$modelNbz->Id_auto_ripper_file));
+				foreach($relAudioTracks as $relAudioTrack)
+				{
+					$audioTrackSOAP = new AudioTrackSOAP();
+					$audioTrackSOAP->setAttributes($relAudioTrack->audioTrack);
+					$nzbResponse->nzb->AudioTrack[] = $audioTrackSOAP;
+				}
+				
+				//set subtitle
+				$relSubtitles = AutoRipperFileSubtitle::model()->findAllByAttributes(array('Id_auto_ripper_file'=>$modelNbz->Id_auto_ripper_file));
+				foreach($relSubtitles as $relSubtitle)
+				{
+					$subtitleSOAP = new SubtitleSOAP();
+					$subtitleSOAP->setAttributes($relSubtitle->subtitle);
+					$nzbResponse->nzb->Subtitle[] = $subtitleSOAP;
+				}
+				
 			}
 			if(isset($modelNbz->myMovieDiscNzb))
 			{
 				$nzbResponse->myMovieDisc->setAttributes($modelNbz->myMovieDiscNzb);
 				$nzbResponse->myMovie->setAttributes($modelNbz->myMovieDiscNzb->myMovieNzb);
 				$nzbResponse->myMovie->myMovieSerieHeader = self::getSerie($modelNbz->myMovieDiscNzb);
-				
-				//set audio track
-				$relAudioTracks = MyMovieNzbAudioTrack::model()->findAllByAttributes(array('Id_my_movie_nzb'=>$modelNbz->myMovieDiscNzb->Id_my_movie_nzb));
-				foreach($relAudioTracks as $relAudioTrack)
-				{
-					$audioTrackSOAP = new MyMovieAudioTrackSOAP();
-					$audioTrackSOAP->setAttributes($relAudioTrack->audioTrack);
-					$nzbResponse->myMovie->AudioTrack[] = $audioTrackSOAP;
-				}
-				
-				//set subtitle
-				$relSubtitles = MyMovieNzbSubtitle::model()->findAllByAttributes(array('Id_my_movie_nzb'=>$modelNbz->myMovieDiscNzb->Id_my_movie_nzb));
-				foreach($relSubtitles as $relSubtitle)
-				{
-					$subtitleSOAP = new MyMovieSubtitleSOAP();
-					$subtitleSOAP->setAttributes($relSubtitle->subtitle);
-					$nzbResponse->myMovie->Subtitle[] = $subtitleSOAP;
-				}
 				
 				//set person
 				$relPersons = MyMovieNzbPerson::model()->findAllByAttributes(array('Id_my_movie_nzb'=>$modelNbz->myMovieDiscNzb->Id_my_movie_nzb));
@@ -187,6 +188,24 @@ class NzbController extends Controller
 			{
 				$nzbResponse->nzb->mkv_file_name = $modelNbz->autoRipperFile->label;
 				$nzbResponse->nzb->size = $modelNbz->autoRipperFile->size;
+				
+				//set audio track
+				$relAudioTracks = AutoRipperFileAudioTrack::model()->findAllByAttributes(array('Id_auto_ripper_file'=>$modelNbz->Id_auto_ripper_file));
+				foreach($relAudioTracks as $relAudioTrack)
+				{
+					$audioTrackSOAP = new AudioTrackSOAP();
+					$audioTrackSOAP->setAttributes($relAudioTrack->audioTrack);
+					$nzbResponse->nzb->AudioTrack[] = $audioTrackSOAP;
+				}
+				
+				//set subtitle
+				$relSubtitles = AutoRipperFileSubtitle::model()->findAllByAttributes(array('Id_auto_ripper_file'=>$modelNbz->Id_auto_ripper_file));
+				foreach($relSubtitles as $relSubtitle)
+				{
+					$subtitleSOAP = new SubtitleSOAP();
+					$subtitleSOAP->setAttributes($relSubtitle->subtitle);
+					$nzbResponse->nzb->Subtitle[] = $subtitleSOAP;
+				}
 			}
 				
 			if(isset($modelNbz->myMovieDiscNzb))
@@ -195,25 +214,7 @@ class NzbController extends Controller
 				$nzbResponse->myMovie->setAttributes($modelNbz->myMovieDiscNzb->myMovieNzb);
 				$nzbResponse->myMovie->myMovieSerieHeader = self::getSerie($modelNbz->myMovieDiscNzb);
 	
-				//set audio track
-				$relAudioTracks = MyMovieNzbAudioTrack::model()->findAllByAttributes(array('Id_my_movie_nzb'=>$modelNbz->myMovieDiscNzb->Id_my_movie_nzb));
-				foreach($relAudioTracks as $relAudioTrack)
-				{
-					$audioTrackSOAP = new MyMovieAudioTrackSOAP();
-					$audioTrackSOAP->setAttributes($relAudioTrack->audioTrack);
-					$nzbResponse->myMovie->AudioTrack[] = $audioTrackSOAP;
-				}
-	
-				//set subtitle
-				$relSubtitles = MyMovieNzbSubtitle::model()->findAllByAttributes(array('Id_my_movie_nzb'=>$modelNbz->myMovieDiscNzb->Id_my_movie_nzb));
-				foreach($relSubtitles as $relSubtitle)
-				{
-					$subtitleSOAP = new MyMovieSubtitleSOAP();
-					$subtitleSOAP->setAttributes($relSubtitle->subtitle);
-					$nzbResponse->myMovie->Subtitle[] = $subtitleSOAP;
-				}
-	
-				//set subtitle
+				//set person
 				$relPersons = MyMovieNzbPerson::model()->findAllByAttributes(array('Id_my_movie_nzb'=>$modelNbz->myMovieDiscNzb->Id_my_movie_nzb));
 				foreach($relPersons as $relPerson)
 				{
@@ -989,111 +990,6 @@ class NzbController extends Controller
 		));
 	}
 	
-	public function actionSelectSpecification($id,$redirectActionPage)
-	{
-		$model = Nzb::model()->findByPk($id);
-		
-		$modelSubtitle = new Subtitle('search');
-		$modelSubtitle->unsetAttributes();  // clear any default values
-		
-		$modelAudioTrack = new AudioTrack('search');
-		$modelAudioTrack->unsetAttributes();  // clear any default values
-		
-		$modelPerson = new Person('search');
-		$modelPerson->unsetAttributes();  // clear any default values
-		
-		$modelNzbSubtitle = new MyMovieNzbSubtitle('search');
-		$modelNzbSubtitle->unsetAttributes();  // clear any default values
-		$modelNzbSubtitle->Id_my_movie_nzb = $model->myMovieDiscNzb->Id_my_movie_nzb;
-		
-		$modelNzbAudioTrack = new MyMovieNzbAudioTrack('search');
-		$modelNzbAudioTrack->unsetAttributes();  // clear any default values
-		$modelNzbAudioTrack->Id_my_movie_nzb = $model->myMovieDiscNzb->Id_my_movie_nzb;
-		
-		$modelNzbPerson = new MyMovieNzbPerson('search');
-		$modelNzbPerson->unsetAttributes();  // clear any default values
-		$modelNzbPerson->Id_my_movie_nzb = $model->myMovieDiscNzb->Id_my_movie_nzb;
-		
-		if(isset($_GET['Subtitle']))
-			$modelSubtitle->attributes=$_GET['Subtitle'];
-		
-		if(isset($_GET['AudioTrack']))
-			$modelAudioTrack->attributes=$_GET['AudioTrack'];
-		
-		if(isset($_GET['Person']))
-			$modelPerson->attributes=$_GET['Person'];
-		
-		if(isset($_GET['MyMovieNzbSubtitle']))
-			$modelNzbSubtitle->attributes=$_GET['MyMovieNzbSubtitle'];
-		
-		if(isset($_GET['MyMovieNzbAudioTrack']))
-			$modelNzbAudioTrack->attributes=$_GET['MyMovieNzbAudioTrack'];
-		
-		if(isset($_GET['MyMovieNzbPerson']))
-			$modelNzbPerson->attributes=$_GET['MyMovieNzbPerson'];
-		
-		$this->render('selectSpecification',array(
-						'model'=>$model,
-						'modelSubtitle'=>$modelSubtitle,
-						'modelAudioTrack'=>$modelAudioTrack,
-						'modelPerson'=>$modelPerson,
-						'modelNzbSubtitle'=>$modelNzbSubtitle,
-						'modelNzbAudioTrack'=>$modelNzbAudioTrack,
-						'modelNzbPerson'=>$modelNzbPerson,
-						'redirectActionPage'=>$redirectActionPage,
-		));
-	}
-	
-	public function actionUpdateSpecification($id)
-	{
-		$model = MyMovieNzb::model()->findByPk($id);
-	
-		$modelSubtitle = new Subtitle('search');
-		$modelSubtitle->unsetAttributes();  // clear any default values
-	
-		$modelAudioTrack = new AudioTrack('search');
-		$modelAudioTrack->unsetAttributes();  // clear any default values
-	
-		$modelPerson = new Person('search');
-		$modelPerson->unsetAttributes();  // clear any default values
-		
-		$modelNzbSubtitle = new MyMovieNzbSubtitle('search');
-		$modelNzbSubtitle->unsetAttributes();  // clear any default values
-		$modelNzbSubtitle->Id_my_movie_nzb = $id;
-	
-		$modelNzbAudioTrack = new MyMovieNzbAudioTrack('search');
-		$modelNzbAudioTrack->unsetAttributes();  // clear any default values
-		$modelNzbAudioTrack->Id_my_movie_nzb = $id;
-			
-		$modelNzbPerson = new MyMovieNzbPerson('search');
-		$modelNzbPerson->unsetAttributes();  // clear any default values
-		$modelNzbPerson->Id_my_movie_nzb = $id;
-		
-		if(isset($_GET['Subtitle']))
-			$modelSubtitle->attributes=$_GET['Subtitle'];
-	
-		if(isset($_GET['AudioTrack']))
-			$modelAudioTrack->attributes=$_GET['AudioTrack'];
-	
-		if(isset($_GET['MyMovieNzbSubtitle']))
-			$modelNzbSubtitle->attributes=$_GET['MyMovieNzbSubtitle'];
-	
-		if(isset($_GET['MyMovieNzbAudioTrack']))
-			$modelNzbAudioTrack->attributes=$_GET['MyMovieNzbAudioTrack'];
-	
-		if(isset($_GET['MyMovieNzbPerson']))
-			$modelNzbPerson->attributes=$_GET['MyMovieNzbPerson'];
-		
-		$this->render('updateSpecification',array(
-							'model'=>$model,
-							'modelSubtitle'=>$modelSubtitle,
-							'modelAudioTrack'=>$modelAudioTrack,
-							'modelPerson'=>$modelPerson,
-							'modelNzbSubtitle'=>$modelNzbSubtitle,
-							'modelNzbAudioTrack'=>$modelNzbAudioTrack,
-							'modelNzbPerson'=>$modelNzbPerson,
-		));
-	}
 	
 	public function actionCreateBox()
 	{
@@ -1368,24 +1264,6 @@ class NzbController extends Controller
 			}
 		}
 	}
-
-	public function actionAjaxSaveSubtitle()
-	{
-		$model = new Subtitle();
-		if(isset($_POST['Subtitle']))
-		{
-			$model->attributes = $_POST['Subtitle'];
-	
-			$modelSubtitleDB = Subtitle::model()->findByAttributes(array(
-														'language'=>$model->language,
-			));
-	
-			if(!isset($modelSubtitleDB))
-			{
-				$model->save();
-			}
-		}
-	}
 	
 	public function actionAjaxSavePerson()
 	{
@@ -1495,25 +1373,6 @@ class NzbController extends Controller
 		}
 	}
 	
-	public function actionAjaxAddSubtitle()
-	{
-		$idSubtitle = isset($_GET['idSubtitle'][0])?$_GET['idSubtitle'][0]:'';
-		$idMyMovieNzb = isset($_GET['idMyMovieNzb'])?$_GET['idMyMovieNzb']:'';
-			
-		if(!empty($idSubtitle)&&!empty($idMyMovieNzb))
-		{
-			$relationDB = MyMovieNzbSubtitle::model()->findByPk(array(
-												'Id_subtitle'=>(int) $idSubtitle,
-												'Id_my_movie_nzb'=>$idMyMovieNzb));
-			if(!isset($relationDB))
-			{
-				$model=new MyMovieNzbSubtitle();
-				$model->attributes = array('Id_subtitle'=>$idSubtitle,'Id_my_movie_nzb'=>$idMyMovieNzb);
-				$model->save();
-			}
-		}
-	}
-	
 	public function actionAjaxAddPerson()
 	{
 		$idPerson = isset($_GET['idPerson'][0])?$_GET['idPerson'][0]:'';
@@ -1579,21 +1438,7 @@ class NzbController extends Controller
 			}
 		}
 	}
-	
-	public function actionAjaxRemoveSubtitle()
-	{
-		$idSubtitle = isset($_GET['idSubtitle'])?$_GET['idSubtitle']:'';
-		$idMyMovieNzb = isset($_GET['idMyMovieNzb'])?$_GET['idMyMovieNzb']:'';
-			
-		if(!empty($idSubtitle)&&!empty($idMyMovieNzb))
-		{
-			$relationDB = MyMovieNzbSubtitle::model()->findByPk(array('Id_subtitle'=>(int) $idSubtitle,'Id_my_movie_nzb'=>$idMyMovieNzb));
-			if(isset($relationDB))
-			{
-				$relationDB->delete();
-			}
-		}
-	}
+
 	
 	public function actionAjaxRemovePerson()
 	{
@@ -1891,39 +1736,6 @@ class NzbController extends Controller
 		}
 	}
 	
-	/**
-	 * Find subtitle.
-	 */
-	public function actionFindSubtitle($id)
-	{
-		$model = new Osubtitle('search');
-		$modelNzb = Nzb::model()->findByPk($id);
-
-		$model->attributes = array('query'=>str_replace('.nzb','',$modelNzb->file_original_name));
-
-		if(isset($_POST['selectedRow']) && $_POST['selectedRow'] != "")
-		{
-			$this->downloadSubtitle($_POST['selectedRow'], $id);
-			$this->redirect(array('view','id'=>$id));
-		}
-
-		$modelOpenSubtitle = new OpenSubtitle('search');
-		$modelOpenSubtitle->unsetAttributes();
-		
-		if(isset($_GET['OpenSubtitle']))
-		{
-			$modelOpenSubtitle->attributes = $_GET['OpenSubtitle'];
-		}
-		
-			
-		$this->render('findSubtitle',array(
-				'model'=>$model,
-				'modelOpenSubtitle'=>$modelOpenSubtitle,
-				'modelNzb'=>$modelNzb
-		));
-	}
-
-	
 	public function actionAjaxChangeCreationState()
 	{
 		if(isset($_POST['Id_nzb'])&&$_POST['Id_creation_state'])
@@ -1937,120 +1749,6 @@ class NzbController extends Controller
 		
 	}
 	
-	public function actionAjaxDoSearchSubtitle()
-	{
-		$model = new Osubtitle('search');
-		
-		if($_POST['Osubtitle'] )
-		{
-			
-			$model->attributes = $_POST['Osubtitle'];
-			try {
-				$model->searchSubtitle();
-			} catch (Exception $e) {
-				throw new CHttpException('Searching Subtitle','Invalid request. The OpenSubtitle API is not working. Please try again');
-					
-			}
-		}
-	}
-	
-	public function actionUploadSubtitle($id)
-	{
-
-		$model=new Upload;
-		$modelNzb = Nzb::model()->findByPk($id);
-			
-		if(isset($_POST['Upload']))
-		{
-			$model->attributes=$_POST['Upload'];
-			$file=CUploadedFile::getInstance($model,'file');
-
-			if($model->validate())
-			{
-				$modelRelation = NzbDevice::model()->findAllByAttributes(array('Id_nzb'=>$id));
-
-				$transaction = $modelNzb->dbConnection->beginTransaction();
-				try {
-						
-					$subtFileName = str_replace('.nzb','',$modelNzb->file_name) . '.srt';
-						
-					$modelNzb->subt_url = '/subtitles/'.rawurlencode($subtFileName);
-					$modelNzb->subt_file_name = $subtFileName;
-					$modelNzb->subt_original_name = $file->getName();
-						
-					$this->saveFile($file, 'subtitles', $subtFileName);
-
-					if($modelNzb->save()){
-						if(!empty($modelRelation) )
-						{
-							foreach ($modelRelation as $modelRel){
-								$modelRel->need_update = 1;
-								$modelRel->save();
-							}
-						}
-						$transaction->commit();
-						$this->redirect(array('view','id'=>$id));
-					}
-						
-				} catch (Exception $e) {
-					$transaction->rollback();
-				}
-			}
-		}
-
-		$this->render('uploadSubtitle',array(
-					'model'=>$model,
-					'modelNzb'=>$modelNzb
-		));
-	}
-
-	public function downloadSubtitle($idOpenSubtitle, $idNzb)
-	{
-		$openSubtitle = OpenSubtitle::model()->findByPk($idOpenSubtitle);
-
-		try {
-			$zip = Osubtitle::downloadSubtitle($openSubtitle->IDSubtitleFile);
-		} catch (Exception $e) {
-			throw new CHttpException('Downloading subtitle','Invalid request. The OpenSubtitle API is not working. Please '. CHtml::link('try again',Yii::app()->request->getUrl()) .'.');
-		}
-
-		$nzb = Nzb::model()->findByPk($idNzb);
-		$subtFileName = str_replace('.nzb','',$nzb->file_name) . '.srt';
-		try {
-			$file = fopen('./subtitles/'.$subtFileName,'w+');
-			fwrite($file,gzinflate(substr(base64_decode($zip),10)));
-			fclose($file);
-		} catch (Exception $e) {
-			throw new CHttpException('','There was an error saving the file '. $openSubtitle->SubFileName);
-		}
-
-
-		$nzb->subt_url = '/subtitles/'.rawurlencode($subtFileName);
-		$nzb->subt_file_name = $subtFileName;
-		$nzb->subt_original_name = $openSubtitle->SubFileName;
-
-		$transaction = $nzb->dbConnection->beginTransaction();
-		try {
-			$nzb->save();
-				
-			$modelRelation = NzbDevice::model()->findAllByAttributes(array('Id_nzb'=>$idNzb));
-			if(!empty($modelRelation) )
-			{
-				foreach ($modelRelation as $modelRel){
-					$modelRel->need_update = 1;
-					$modelRel->save();
-				}
-			}
-				
-			OpenSubtitle::model()->deleteAllByAttributes(array('Id_user'=>Yii::app()->user->id));
-				
-			$transaction->commit();
-		} catch (Exception $e) {
-			$transaction->rollback();
-			throw new CHttpException('DB','There was an error saving the file '. $openSubtitle->SubFileName);
-		}
-
-	}
 
 	/**
 	 * Lists all models.
