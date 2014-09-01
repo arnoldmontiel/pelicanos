@@ -10,27 +10,27 @@ class FileAudioRequest
 	public $language;
 	
 	/**
-	* @var string short language
+	* @var string name
 	* @soap
 	*/
-	public $short_language;
+	public $name;
 	
 	/**
-	 * @var string type
+	 * @var string chanel
 	 * @soap
 	 */
-	public $type;
+	public $chanel;
 	
 	/**
-	 * @var string short type
+	 * @var string layout
 	 * @soap
 	 */
-	public $short_type;
+	public $layout;
 	
 	/**
-	 * @var string type extra
+	 * @var string codec
 	 * @soap
 	 */
-	public $type_extra;
+	public $codec;
 	
 }

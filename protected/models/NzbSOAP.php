@@ -113,4 +113,16 @@ class NzbSOAP
 	 * @soap
 	 */
 	public $already_downloaded;
+	
+	/**
+	 * @var SubtitleSOAP[]
+	 * @soap
+	 */
+	public $Subtitle;
+	
+	/**
+	 * @var AudioTrackSOAP[]
+	 * @soap
+	 */
+	public $AudioTrack;
 }

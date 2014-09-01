@@ -6,11 +6,10 @@
  * The followings are the available columns in table 'audio_track':
  * @property integer $Id
  * @property string $language
- * @property string $type
+ * @property string $name
  * @property string $chanel
- * @property string $short_language
- * @property string $short_type
- * @property string $type_extra
+ * @property string $layout
+ * @property string $codec
  *
  * The followings are the available model relations:
  * @property AutoRipperFileAudioTrack[] $autoRipperFileAudioTracks
@@ -26,7 +25,7 @@ class AudioTrack extends CActiveRecord
 	{
 		return 'audio_track';
 	}
-
+	
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -35,12 +34,10 @@ class AudioTrack extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('language, type, type_extra', 'length', 'max'=>45),
-			array('chanel', 'length', 'max'=>10),
-			array('short_language, short_type', 'length', 'max'=>4),
+			array('language, name, chanel, layout, codec', 'length', 'max'=>100),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('Id, language, type, chanel, short_language, short_type, type_extra', 'safe', 'on'=>'search'),
+			array('Id, language, name, chanel, layout, codec', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -94,11 +91,10 @@ class AudioTrack extends CActiveRecord
 
 		$criteria->compare('Id',$this->Id);
 		$criteria->compare('language',$this->language,true);
-		$criteria->compare('type',$this->type,true);
+		$criteria->compare('name',$this->name,true);
 		$criteria->compare('chanel',$this->chanel,true);
-		$criteria->compare('short_language',$this->short_language,true);
-		$criteria->compare('short_type',$this->short_type,true);
-		$criteria->compare('type_extra',$this->type_extra,true);
+		$criteria->compare('layout',$this->layout,true);
+		$criteria->compare('codec',$this->codec,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

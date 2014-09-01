@@ -6,9 +6,8 @@
  * The followings are the available columns in table 'subtitle':
  * @property integer $Id
  * @property string $language
- * @property string $short_language
- * @property string $description
- * @property string $type
+ * @property string $codec
+ * @property integer $forced
  *
  * The followings are the available model relations:
  * @property AutoRipperFile[] $autoRipperFiles
@@ -33,12 +32,11 @@ class Subtitle extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('language, type', 'length', 'max'=>45),
-			array('short_language', 'length', 'max'=>4),
-			array('description', 'length', 'max'=>100),
+			array('forced', 'numerical', 'integerOnly'=>true),
+			array('language, codec', 'length', 'max'=>100),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('Id, language, short_language, description, type', 'safe', 'on'=>'search'),
+			array('Id, language, forced, codec', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -90,9 +88,8 @@ class Subtitle extends CActiveRecord
 
 		$criteria->compare('Id',$this->Id);
 		$criteria->compare('language',$this->language,true);
-		$criteria->compare('short_language',$this->short_language,true);
-		$criteria->compare('description',$this->description,true);
-		$criteria->compare('type',$this->type,true);
+		$criteria->compare('codec',$this->codec,true);
+		$criteria->compare('forced',$this->forced,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
