@@ -10,21 +10,15 @@ class FileSubtitleRequest
 	public $language;
 	
 	/**
-	* @var string short language
+	* @var string codec
 	* @soap
 	*/
-	public $short_language;
+	public $codec;
 	
 	/**
-	 * @var string description
+	 * @var integer forced
 	 * @soap
 	 */
-	public $description;
-	
-	/**
-	 * @var string type
-	 * @soap
-	 */
-	public $type;
+	public $forced;
 	
 }
