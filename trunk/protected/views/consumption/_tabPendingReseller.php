@@ -12,10 +12,11 @@
 		'dataProvider'=>$model->searchPendingByReseller(),
 		'selectableRows' => 0,
 		'summaryText'=>'',	
+		'filter'=>$model,
 		'itemsCssClass' => 'table table-striped',
 		'columns'=>array(				
 				array(
-						'header'=>'Reseller',
+						'name'=>'reseller',
 						'value'=>function($data){
 							return $data->reseller;
 						},
@@ -40,7 +41,7 @@
 						'headerHtmlOptions'=>array("class"=>"align-right"),
 				),
 				array(
-						'name'=>'Acciones',
+						'header'=>'Acciones',
 						'value'=>function($data){							
 							$name = $data->reseller;
 							$fullName = "'$name'";
