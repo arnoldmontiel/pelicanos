@@ -21,6 +21,7 @@
 class Consumption extends CActiveRecord
 {
 	public $reseller;
+	public $customerName;
 	public $total_points;
 	public $Id_reseller;
 	public $year;
@@ -119,7 +120,7 @@ class Consumption extends CActiveRecord
 			array('date, paid_date', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('Id, Id_nzb, Id_customer, points, date, description, already_paid, reseller, total_points, Id_reseller, year, month, paid_date, Id_consumption_config', 'safe', 'on'=>'search'),
+			array('Id, Id_nzb, Id_customer, points, date, description, already_paid, reseller, total_points, Id_reseller, year, month, paid_date, Id_consumption_config, customerName', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -148,8 +149,10 @@ class Consumption extends CActiveRecord
 			'Id_customer' => 'Id Customer',
 			'points' => 'Points',
 			'date' => 'Date',
+			'customerName' => 'Cliente',
 			'description' => 'Description',
 			'already_paid' => 'Already Paid',
+			'reseller' => 'Reseller',
 		);
 	}
 
@@ -197,13 +200,30 @@ class Consumption extends CActiveRecord
 		$criteria->compare('date',$this->date,true);
 		$criteria->compare('description',$this->description,true);
 		$criteria->compare('already_paid',0);
+		
+		if(!empty($this->reseller))
+			$criteria->compare('r.description',$this->reseller, true);
+		
 		$criteria->select = 'r.Id as Id_reseller, r.description as reseller, t.date, SUM(t.points) as total_points, YEAR(t.date) as year ,MONTH(t.date) as month';
 		$criteria->join = 'inner join customer c on (t.Id_customer = c.Id)
 							inner join reseller r on (r.Id = c.Id_reseller)';
 		$criteria->group = 'r.Id, YEAR(t.date),MONTH(t.date)';		
 		
+		// Create a custom sort
+		$sort=new CSort;
+		$sort->attributes=array(
+				'reseller' => array(
+						'asc' => 'r.description',
+						'desc' => 'r.description DESC',
+				),
+				'*',
+		);
+	
+		$sort->defaultOrder = 't.date DESC';
+	
 		return new CActiveDataProvider($this, array(
 				'criteria'=>$criteria,
+				'sort'=>$sort,
 		));
 	}
 	
@@ -220,13 +240,30 @@ class Consumption extends CActiveRecord
 		$criteria->compare('date',$this->date,true);
 		$criteria->compare('description',$this->description,true);
 		$criteria->compare('already_paid',1);
+		
+		if(!empty($this->reseller))
+			$criteria->compare('r.description',$this->reseller, true);
+		
 		$criteria->select = 't.paid_date, r.Id as Id_reseller, r.description as reseller, t.date, SUM(t.points) as total_points, YEAR(t.date) as year ,MONTH(t.date) as month';
 		$criteria->join = 'inner join customer c on (t.Id_customer = c.Id)
 							inner join reseller r on (r.Id = c.Id_reseller)';
 		$criteria->group = 'r.Id, YEAR(t.date),MONTH(t.date)';
 		
+		// Create a custom sort
+		$sort=new CSort;
+		$sort->attributes=array(
+				'reseller' => array(
+						'asc' => 'r.description',
+						'desc' => 'r.description DESC',
+				),
+				'*',
+		);
+	
+		$sort->defaultOrder = 't.date DESC';
+	
 		return new CActiveDataProvider($this, array(
 				'criteria'=>$criteria,
+				'sort'=>$sort,
 		));
 	}
 	
@@ -244,17 +281,40 @@ class Consumption extends CActiveRecord
 		$criteria->compare('description',$this->description,true);
 		$criteria->compare('already_paid',0);
 		
-		if(isset($this->Id_reseller))
-		{
-			$criteria->join = 'inner join customer c on (t.Id_customer = c.Id)';
-			$criteria->addCondition('c.Id_reseller = '. $this->Id_reseller);
-		}
+		$criteria->join = 'inner join customer c on (t.Id_customer = c.Id)
+							inner join reseller r on (r.Id = c.Id_reseller)';
 		
-		$criteria->select = 't.Id_customer, t.date, SUM(t.points) as total_points, YEAR(t.date) as year ,MONTH(t.date) as month';		
+		if(isset($this->Id_reseller))		
+			$criteria->addCondition('c.Id_reseller = '. $this->Id_reseller);
+		
+		if(!empty($this->reseller))
+			$criteria->compare('r.description',$this->reseller, true);
+		
+		if(!empty($this->customerName))
+			$criteria->addCondition('concat(concat(name," "), last_name) like "%'.$this->customerName.'%"');
+		
+		$criteria->select = 'concat(concat(c.name," "), c.last_name) as customerName, t.Id_customer, t.date, SUM(t.points) as total_points, YEAR(t.date) as year ,MONTH(t.date) as month, r.description as reseller';		
 		$criteria->group = 't.Id_customer, YEAR(t.date),MONTH(t.date)';
 		
+		// Create a custom sort
+		$sort=new CSort;
+		$sort->attributes=array(
+				'reseller' => array(
+						'asc' => 'r.description',
+						'desc' => 'r.description DESC',
+				),
+				'customerName' => array(
+						'asc' => 'c.name',
+						'desc' => 'c.name DESC',
+				),
+				'*',
+		);
+	
+		$sort->defaultOrder = 't.date DESC';
+	
 		return new CActiveDataProvider($this, array(
 				'criteria'=>$criteria,
+				'sort'=>$sort,
 		));
 	}
 	
@@ -272,17 +332,40 @@ class Consumption extends CActiveRecord
 		$criteria->compare('description',$this->description,true);
 		$criteria->compare('already_paid',1);
 		
-		if(isset($this->Id_reseller))
-		{
-			$criteria->join = 'inner join customer c on (t.Id_customer = c.Id)';
-			$criteria->addCondition('c.Id_reseller = '. $this->Id_reseller);
-		}
+		$criteria->join = 'inner join customer c on (t.Id_customer = c.Id)
+							inner join reseller r on (r.Id = c.Id_reseller)';
 		
-		$criteria->select = 't.paid_date, t.Id_customer, t.date, SUM(t.points) as total_points, YEAR(t.date) as year ,MONTH(t.date) as month';		
+		if(isset($this->Id_reseller))
+			$criteria->addCondition('c.Id_reseller = '. $this->Id_reseller);
+		
+		if(!empty($this->reseller))
+			$criteria->compare('r.description',$this->reseller, true);
+		
+		if(!empty($this->customerName))
+			$criteria->addCondition('concat(concat(name," "), last_name) like "%'.$this->customerName.'%"');
+		
+		$criteria->select = 'concat(concat(c.name," "), c.last_name) as customerName, t.paid_date, t.Id_customer, t.date, SUM(t.points) as total_points, YEAR(t.date) as year ,MONTH(t.date) as month, r.description as reseller';		
 		$criteria->group = 't.Id_customer, YEAR(t.date),MONTH(t.date)';
 		
+		// Create a custom sort
+		$sort=new CSort;
+		$sort->attributes=array(
+				'reseller' => array(
+						'asc' => 'r.description',
+						'desc' => 'r.description DESC',
+				),
+				'customerName' => array(
+						'asc' => 'c.name',
+						'desc' => 'c.name DESC',
+				),
+				'*',
+		);
+	
+		$sort->defaultOrder = 't.date DESC';
+	
 		return new CActiveDataProvider($this, array(
 				'criteria'=>$criteria,
+				'sort'=>$sort,
 		));
 	}
 	

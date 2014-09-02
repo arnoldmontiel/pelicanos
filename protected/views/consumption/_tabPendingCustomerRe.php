@@ -11,13 +11,14 @@
 		'id'=>'pending-customer-grid',
 		'dataProvider'=>$model->searchPendingByCustomer(),
 		'selectableRows' => 0,
-		'summaryText'=>'',	
+		'summaryText'=>'',
+		'filter'=>$model,
 		'itemsCssClass' => 'table table-striped',
 		'columns'=>array(				
 				array(
-						'header'=>'Cliente',
+						'name'=>'customerName',						
 						'value'=>function($data){
-							return $data->customer->fullName;
+							return $data->customerName;
 						},
 						'type'=>'raw',
 				),
@@ -40,7 +41,7 @@
 						'headerHtmlOptions'=>array("class"=>"align-right"),
 				),
 				array(
-						'name'=>'Acciones',
+						'header'=>'Acciones',
 						'value'=>function($data){
 							$name = $data->customer->fullName;
 							$fullName = "'$name'";

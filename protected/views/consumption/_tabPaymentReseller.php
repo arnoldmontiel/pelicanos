@@ -11,11 +11,12 @@
 		'id'=>'payment-reseller-grid',
 		'dataProvider'=>$model->searchPaymentByReseller(),
 		'selectableRows' => 0,
-		'summaryText'=>'',	
+		'summaryText'=>'',
+		'filter'=>$model,
 		'itemsCssClass' => 'table table-striped',
 		'columns'=>array(				
 				array(
-						'header'=>'Reseller',
+						'name'=>'reseller',
 						'value'=>function($data){
 							return $data->reseller;
 						},
@@ -48,7 +49,7 @@
 						'headerHtmlOptions'=>array("class"=>"align-right"),
 				),
 				array(
-						'name'=>'Acciones',
+						'header'=>'Acciones',
 						'value'=>function($data){							
 							//return '<a onclick="openConsumptionDetail('.$data->Id_reseller.');" data-toggle="modal" class="btn btn-primary"><i class="fa fa-list"></i> Ver Detalle</a>';
 							return '<a onclick="openConsumptionDetailByReseller('.$data->Id_reseller.','.$data->month.','.$data->year.');" class="btn btn-default"><i class="fa fa-eye"></i> Ver Detalle</a>

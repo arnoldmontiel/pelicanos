@@ -12,19 +12,20 @@
 		'dataProvider'=>$model->searchPendingByCustomer(),
 		'selectableRows' => 0,
 		'summaryText'=>'',	
+		'filter'=>$model,
 		'itemsCssClass' => 'table table-striped',
 		'columns'=>array(		
 				array(
-						'header'=>'Reseller',
+						'name'=>'reseller',
 						'value'=>function($data){
-							return $data->customer->reseller->description;
+							return $data->reseller;
 						},
 						'type'=>'raw',
 				),
 				array(
-						'header'=>'Cliente',
+						'name'=>'customerName',						
 						'value'=>function($data){
-							return $data->customer->fullName;
+							return $data->customerName;
 						},
 						'type'=>'raw',
 				),
@@ -47,7 +48,7 @@
 						'headerHtmlOptions'=>array("class"=>"align-right"),
 				),
 				array(
-						'name'=>'Acciones',
+						'header'=>'Acciones',
 						'value'=>function($data){
 							$name = $data->customer->fullName;
 							$fullName = "'$name'";

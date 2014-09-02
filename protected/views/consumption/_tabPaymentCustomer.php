@@ -11,20 +11,21 @@
 		'id'=>'payment-customer-grid',
 		'dataProvider'=>$model->searchPaymentByCustomer(),
 		'selectableRows' => 0,
+		'filter'=>$model,
 		'summaryText'=>'',	
 		'itemsCssClass' => 'table table-striped',
 		'columns'=>array(		
 				array(
-						'header'=>'Reseller',
+						'name'=>'reseller',
 						'value'=>function($data){
-							return $data->customer->reseller->description;
+							return $data->reseller;
 						},
 						'type'=>'raw',
 				),
 				array(
-						'header'=>'Cliente',
+						'name'=>'customerName',						
 						'value'=>function($data){
-							return $data->customer->fullName;
+							return $data->customerName;
 						},
 						'type'=>'raw',
 				),
@@ -55,7 +56,7 @@
 						'headerHtmlOptions'=>array("class"=>"align-right"),
 				),
 				array(
-						'name'=>'Acciones',
+						'header'=>'Acciones',
 						'value'=>function($data){							
 							//return '<a onclick="openConsumptionDetail('.$data->Id_reseller.');" data-toggle="modal" class="btn btn-primary"><i class="fa fa-list"></i> Ver Detalle</a>';
 							return '<a onclick="openConsumptionDetail('.$data->Id_customer.','.$data->month.','.$data->year.');" class="btn btn-default"><i class="fa fa-eye"></i>  Ver Detalle</a>
