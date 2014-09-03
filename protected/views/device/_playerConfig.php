@@ -49,10 +49,10 @@ function removePlayer(idPlayer)
 
 function updatePlayer(id)
 {
-	$("#edit_"+id).addClass('hidden');
-	$("#remove_"+id).addClass('hidden');
-	$("#save_"+id).removeClass('hidden');
-	$("#cancel_"+id).removeClass('hidden');
+	$("#edit_player_"+id).addClass('hidden');
+	$("#remove_player_"+id).addClass('hidden');
+	$("#save_player_"+id).removeClass('hidden');
+	$("#cancel_player_"+id).removeClass('hidden');
 		
 	$(".mainEdit").addClass('disabled');
 	$("#player-config-grid :input[idconfig='"+id+"']").each(function(){
@@ -176,10 +176,10 @@ function checkAddEnabled()
   				),
   				array(  						
 						'value'=>function($data){
-  							return '<button id="edit_'.$data->Id.'" type="button" onclick="updatePlayer('.$data->Id.');" class="btn btn-default btn-sm btn50 noMargin mainEdit"><i class="fa fa-pencil"></i> Editar</button>
-									<button id="remove_'.$data->Id.'" type="button" onclick="removePlayer('.$data->Id.');" class="btn btn-default btn-sm btn50 noMargin mainEdit"><i class="fa fa-trash-o"></i> Borrar</button>
-  									<button id="save_'.$data->Id.'" type="button" onclick="savePlayer('.$data->Id.');" class="hidden btn btn-default btn-sm btn50 noMargin pull-left"><i class="fa fa-save"></i></button>
-  									<button id="cancel_'.$data->Id.'" type="button" onclick="cancelEdit('.$data->Id.');" class="hidden btn btn-default btn-sm btn50 noMargin pull-right"><i class="fa fa-times-circle"></i></button>';
+  							return '<button id="edit_player_'.$data->Id.'" type="button" onclick="updatePlayer('.$data->Id.');" class="btn btn-default btn-sm btn50 noMargin mainEdit"><i class="fa fa-pencil"></i> Editar</button>
+									<button id="remove_player_'.$data->Id.'" type="button" onclick="removePlayer('.$data->Id.');" class="btn btn-default btn-sm btn50 noMargin mainEdit"><i class="fa fa-trash-o"></i> Borrar</button>
+  									<button id="save_player_'.$data->Id.'" type="button" onclick="savePlayer('.$data->Id.');" class="hidden btn btn-default btn-sm btn50 noMargin pull-left"><i class="fa fa-save"></i></button>
+  									<button id="cancel_player_'.$data->Id.'" type="button" onclick="cancelEdit('.$data->Id.');" class="hidden btn btn-default btn-sm btn50 noMargin pull-right"><i class="fa fa-times-circle"></i></button>';
   						},
   						'type'=>'raw',
 						'htmlOptions'=>array("class"=>"align-right"),
