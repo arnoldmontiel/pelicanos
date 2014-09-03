@@ -156,7 +156,7 @@ class SiteController extends Controller
 			$model = DevicePassword::model()->findByPk($_GET['Id']);
 			if(isset($model)&&$model->installed==0)
 			{
-				echo $model->password_db.";".$model->password_so.";".$model->password;
+				echo $model->password_db.";".$model->password_os.";".$model->password;
 				$model->installed=1;
 				$model->save();
 			}
