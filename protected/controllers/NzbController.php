@@ -1960,6 +1960,10 @@ class NzbController extends Controller
 					}
 				}
 		
+				$parentalControl = ParentalControl::model()->findByPk($myMovie->Id_parental_control);
+				if(isset($parentalControl))
+					$myMovie->certification = $parentalControl->description;
+				
 				$myMovie->save();
 		
 				MarketCategoryNzb::model()->deleteAllByAttributes(array('Id_nzb'=>$_POST['idNzb']));
@@ -2179,7 +2183,10 @@ class NzbController extends Controller
 						$myMovie->genre = $myMovie->genre.", ".$genreVal;
 					}
 				}
-		
+				$parentalControl = ParentalControl::model()->findByPk($myMovie->Id_parental_control);
+				if(isset($parentalControl))
+					$myMovie->certification = $parentalControl->description;
+				
 				$myMovie->save();
 		
 				MarketCategoryNzb::model()->deleteAllByAttributes(array('Id_nzb'=>$_POST['idNzb']));
