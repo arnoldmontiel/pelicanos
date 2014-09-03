@@ -3118,6 +3118,27 @@ class NzbController extends Controller
 		);
 	}
 	
+	public function actionAjaxSearchMovieTMDB()
+	{
+		if(isset($_POST['title']))
+		{
+			$title = $_POST['title'];
+			$db = TMDBApi::getInstance();
+			$db->adult = true;  // return adult content
+			$db->paged = false; // merges all paged results into a single result automatically
+			//$db->debug = true;
+			if(isset($_POST['year'])&&$_POST['year']!="")
+			{
+				$results = $db->search('movie', array('query'=>$title,'year'=>$_POST['year']));
+			}
+			else
+			{
+				$results = $db->search('movie', array('query'=>$title));
+			}
+			$this->renderPartial('_searchVideosResult',array('movies'=>$results));
+		}
+	}
+	
 	public function actionAjaxOpenViewVideoInfo()
 	{
 		$idAutoRipper = (isset($_POST['idAutoripper']))?$_POST['idAutoripper']:null;
