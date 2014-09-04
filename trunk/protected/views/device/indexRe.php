@@ -147,6 +147,7 @@ function portConfig(id)
 							$("#Device_host_file_server_name").val(objDevice.host_file_server_name);							
 							$("#Device_tmdb_api_key").val(objDevice.tmdb_api_key);
 							$("#Device_tmdb_lang").val(objDevice.tmdb_lang);
+							$("#Device_disc_min_size_warning").val(objDevice.disc_min_size_warning);
 
 							if(objDevice.is_movie_tester == 1)
 								$("#Device_is_movie_tester").attr('checked',true);
