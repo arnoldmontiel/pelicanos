@@ -127,7 +127,7 @@ function portConfig(id)
 					for(var index = 0 ; index < obj.ddlPort.length; index++)
 						$('#internalPort').append( new Option(obj.ddlPort[index].description, obj.ddlPort[index].Id) );
 
-					for(var index = 0 ; index < 8000; index++)
+					for(var index = 0 ; index < 5000; index++)
 					{
 						if(obj.ddlExternalPort[index] != null)
 							$('#externalPort').append( new Option(obj.ddlExternalPort[index], obj.ddlExternalPort[index]) );

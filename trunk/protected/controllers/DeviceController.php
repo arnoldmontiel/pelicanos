@@ -619,7 +619,7 @@ class DeviceController extends Controller
 		foreach($modelPorts as $item)
 			$ddlPorts[] = array('Id'=>$item->Id, 'description'=>$item->description); 
 
-		$arr = range(2000, 9999);
+		$arr = range(5000, 9999);
 		$modelUsedPorts = DeviceTunneling::model()->findAll();
 
 		$arrUsedPorts = array();
