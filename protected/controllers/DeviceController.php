@@ -618,6 +618,15 @@ class DeviceController extends Controller
 		$ddlPorts = array();
 		foreach($modelPorts as $item)
 			$ddlPorts[] = array('Id'=>$item->Id, 'description'=>$item->description); 
+
+		$arr = range(2000, 9999);
+		$modelUsedPorts = DeviceTunneling::model()->findAll();
+
+		$arrUsedPorts = array();
+		foreach($modelUsedPorts as $item)
+				$arrUsedPorts[] = $item->external_port;
+		
+		$ddlExternalPorts = array_diff($arr, $arrUsedPorts);
 		
 		$modelPassword = DevicePassword::model()->findByAttributes(array('Id_device'=>$idDevice));
 		$jsonPassowrd = null;
@@ -625,6 +634,7 @@ class DeviceController extends Controller
 			$jsonPassowrd = json_encode($modelPassword->attributes);
 		
 		echo json_encode(array('ddlPort'=>$ddlPorts,
+								'ddlExternalPort'=>$ddlExternalPorts,
 								'modelDevice'=>json_encode($modelDevice->attributes),
 								'modelPassword'=>$jsonPassowrd,
 								'idDevice'=>$modelDevice->Id, 
