@@ -59,9 +59,12 @@ function saveAccount(id)
 function updateAccount(id)
 {
 	$("#edit_"+id).addClass('hidden');
+	$("#remove_"+id).addClass('hidden');
 	$("#save_"+id).removeClass('hidden');
 	$("#cancel_"+id).removeClass('hidden');
-	$(".btn100").addClass('disabled');
+
+	$(".mainEdit").addClass('disabled');
+
 	$("#sabnzbd-config-grid :input[idconfig='"+id+"']").each(function(){
     	$(this).removeAttr('disabled');
 	});
@@ -243,7 +246,8 @@ function validNumber(obj)
 				),
   				array(  						
   						'value'=>function($data){
-  							return '<button id="edit_'.$data->Id.'" type="button" onclick="updateAccount('.$data->Id.');" class="btn btn-default btn-sm btn100 noMargin"><i class="fa fa-pencil"></i> Editar</button>
+  							return '<button id="edit_'.$data->Id.'" type="button" onclick="updateAccount('.$data->Id.');" class="btn btn-default btn-sm btn50 noMargin mainEdit"><i class="fa fa-pencil"></i> Editar</button>
+  									<button id="remove_'.$data->Id.'" type="button" onclick="removeAccount('.$data->Id.');" class="btn btn-default btn-sm btn50 noMargin mainEdit"><i class="fa fa-trash-o"></i> Borrar</button>
   									<button id="save_'.$data->Id.'" type="button" onclick="saveAccount('.$data->Id.');" class="hidden btn btn-primary btn-sm btn50 noMargin pull-left"><i class="fa fa-save"></i></button>
   									<button id="cancel_'.$data->Id.'" type="button" onclick="cancelEditAccount('.$data->Id.');" class="hidden btn btn-default btn-sm btn50 noMargin pull-right"><i class="fa fa-times-circle"></i></button>';
   						},
