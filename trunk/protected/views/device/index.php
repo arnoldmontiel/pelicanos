@@ -118,6 +118,7 @@ function portConfig(id)
 				if(obj != null)
 				{					
 					$("#internalPort").html("");
+					$("#externalPort").html("");
 					if(obj.ddlPort.length == 0)
 						$('#btn-add-port').attr('disabled','disabled');
 					else
@@ -126,6 +127,13 @@ function portConfig(id)
 					for(var index = 0 ; index < obj.ddlPort.length; index++)
 						$('#internalPort').append( new Option(obj.ddlPort[index].description, obj.ddlPort[index].Id) );
 
+					for(var index = 0 ; index < 8000; index++)
+					{
+						if(obj.ddlExternalPort[index] != null)
+							$('#externalPort').append( new Option(obj.ddlExternalPort[index], obj.ddlExternalPort[index]) );
+						
+					}
+					
 					if(obj.modelDevice != null)
 					{
 						var objDevice = jQuery.parseJSON(obj.modelDevice);
@@ -219,7 +227,7 @@ function addPort()
 			function(data){				
 				$.fn.yiiGridView.update('device-tunel-grid');
 				$("#internalPort option:selected").remove();
-				$("#externalPort").val('');
+				$("#externalPort option:selected").remove();
 				if($('#internalPort option').length == 0)
 					$('#btn-add-port').attr('disabled','disabled');
 				else

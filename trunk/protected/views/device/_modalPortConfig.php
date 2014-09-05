@@ -31,7 +31,7 @@
          		<?php echo CHtml::hiddenField('Id_device', ''); ?>
   				<div class="form-group">
     				<label for="externalPort">Puertos Externos</label>
-    				<input onkeyup="validateNumber(this);" type="text" class="form-control" id="externalPort" placeholder="nnnn">
+    				<?php echo CHtml::dropDownList('externalPort', '', array(), array('Id'=>'externalPort'));?>
   				</div>
   				<div class="form-group">
     				<label for="internalPort">Puertos Disponibles</label>		
