@@ -277,6 +277,13 @@ class DeviceController extends Controller
 	{
 		$model = new DevicePlayer();
 		$model->attributes = $_POST['DevicePlayer'];
+		
+		if (strpos($model->url, 'http://') === false)
+			$model->url = 'http://'.$model->url;
+			
+		if(substr($model->url, -1, 1) != '/')
+			$model->url = $model->url.'/';
+		
 		if($model->save())
 		{
 			$modelCustomerDevice = CustomerDevice::model()->findByAttributes(array('Id_device'=>$model->Id_device));
@@ -285,6 +292,30 @@ class DeviceController extends Controller
 				$modelCustomerDevice->need_update = 1;
 				$modelCustomerDevice->save();
 			}
+		}
+	}
+		
+	public function actionAjaxRemoveSabnzbdAccount()
+	{
+		$idAccount = isset($_POST['idAccount'])?$_POST['idAccount']:null;
+	
+		if(isset($idAccount))
+		{
+			$modelSabmzbdConfig = SabnzbdConfig::model()->findByPk($idAccount);
+			if(isset($modelSabmzbdConfig))
+			{
+				$idDevice = $modelSabmzbdConfig->Id_device;
+				if($modelSabmzbdConfig->delete())
+				{
+					$modelCustomerDevice = CustomerDevice::model()->findByAttributes(array('Id_device'=>$idDevice));
+					if(isset($modelCustomerDevice))
+					{
+						$modelCustomerDevice->need_update = 1;
+						$modelCustomerDevice->save();
+					}
+				}
+			}
+				
 		}
 	}
 	

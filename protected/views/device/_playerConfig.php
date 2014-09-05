@@ -110,7 +110,7 @@ function checkAddEnabled()
 								,'id','value');
   ?>
   <td style="width:20%;"><?php echo CHtml::activeTextField($newModel, 'description',array('onkeyup'=>'checkAddEnabled()','class'=>'form-control', 'placeholder'=>"Description")); ?></td>
-  <td style="width:20%;"><?php echo CHtml::activeTextField($newModel, 'url',array('onkeyup'=>'checkAddEnabled()','class'=>'form-control', 'placeholder'=>"Url")); ?></td>
+  <td style="width:20%;"><?php echo CHtml::activeTextField($newModel, 'url',array('onkeyup'=>'checkAddEnabled()','class'=>'form-control', 'placeholder'=>"Url (ej. http://xxx.xxx.xxx.xxx/)")); ?></td>
   <td style="width:20%;"><?php echo CHtml::activeDropDownList($newModel, 'type', $typeList, array('class'=>'form-control')); ?></td>  
   <td style="width:20%;"><?php echo CHtml::activeDropDownList($newModel, 'file_protocol', $fileProtocolList, array('class'=>'form-control')); ?></td>
   <td class="align-right"><button id="btn-add-player" type="button" onclick="addNewPlayer();" class="btn btn-primary btn-sm noMargin disabled"><i class="fa fa-plus"></i> Agregar</button></td>
