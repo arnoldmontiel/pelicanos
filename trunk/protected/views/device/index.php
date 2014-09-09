@@ -6,7 +6,11 @@ setInterval(function() {
 }, 5 * 60 * 1000);
 
 setInterval(function() {
-	$('#myModalConfigPuertos').is(':visible')
+	$.fn.yiiGridView.update('customer-device-grid');
+},  60 * 1000);
+
+setInterval(function() {
+	if($('.myModalConfigPuertos').is(':visible'))
 	{
 		$.fn.yiiGridView.update('device-tunel-grid');
 	}
