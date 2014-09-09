@@ -310,7 +310,7 @@ class CustomerDevice extends CActiveRecord
 		$criteria->addCondition('(
 									(cs.last_update < DATE_SUB(NOW(), interval 30 Minute))
 									OR
-									( (cs.disc_total_space - cs.disc_used_space)*100/cs.disc_total_space <= s.disc_minimum_warning)
+									( (cs.disc_total_space - cs.disc_used_space)*100/cs.disc_total_space >= s.disc_minimum_warning)
 								)');
 		
 		
