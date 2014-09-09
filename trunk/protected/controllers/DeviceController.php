@@ -664,10 +664,17 @@ class DeviceController extends Controller
 		if(isset($modelPassword))
 			$jsonPassowrd = json_encode($modelPassword->attributes);
 		
+		$modelCustomerDevice = CustomerDevice::model()->findByAttributes(array('Id_device'=>$idDevice));
+		$modelCustomerUser = CustomerUsers::model()->findByAttributes(array('Id_customer'=>$modelCustomerDevice->Id_customer));
+		$jsonUser = null;
+		if(isset($modelCustomerUser))
+			$jsonUser = json_encode($modelCustomerUser->attributes);
+		
 		echo json_encode(array('ddlPort'=>$ddlPorts,
 								'ddlExternalPort'=>$ddlExternalPorts,
 								'modelDevice'=>json_encode($modelDevice->attributes),
 								'modelPassword'=>$jsonPassowrd,
+								'modelCustomerUser'=>$jsonUser,
 								'idDevice'=>$modelDevice->Id, 
 								'description'=>$modelDevice->description));
 	}
