@@ -53,6 +53,13 @@ function portConfig(id)
 							else							
 								$("#Device_is_movie_tester").attr('checked',false)
 						}
+
+						var objUser = jQuery.parseJSON(obj.modelCustomerUser);
+						if(objUser != null)
+						{
+							$("#CustomerUser_username").val(objUser.username);
+							$("#CustomerUser_password").val(objUser.password);
+						}
 					}						
 				}
 				$('#status-error').hide();		
