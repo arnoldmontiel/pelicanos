@@ -175,6 +175,20 @@
 		  					</div>
 	  					</div>
   					</div>
+  					
+  					<div class="inlineForm">
+						<label class="inlineFormLabel">Datos Usuario</label>
+					  	<div class="row">
+							<div class="form-group col-sm-6">
+					    		<label>Usuario</label>
+					      		<?php echo CHtml::textField('CustomerUser_username','',array('Id'=>'CustomerUser_username', 'class'=>'form-control', 'disabled'=>'disabled'));?>
+					  		</div>
+					  		<div class="form-group col-sm-6">
+						  		<label>Clave</label>
+						  		<?php echo CHtml::textField('CustomerUser_password','',array('Id'=>'CustomerUser_password', 'class'=>'form-control', 'disabled'=>'disabled'));?>
+					    	</div>
+						</div>
+					</div>
   					<div class="form-group">
     					<div class="col-sm-12">    	
     						<button id="btn-save-config" onclick="submitGeneralConfig();" type="button" class="btn btn-primary pull-right"><i class="fa fa-save"></i> <span id="save-description">Guardar</span>    						
