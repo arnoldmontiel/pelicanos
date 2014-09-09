@@ -10,7 +10,7 @@ setInterval(function() {
 },  60 * 1000);
 
 setInterval(function() {
-	if($('.myModalConfigPuertos').is(':visible'))
+	if($('#myModalPorts').is(':visible'))
 	{
 		$.fn.yiiGridView.update('device-tunel-grid');
 	}
