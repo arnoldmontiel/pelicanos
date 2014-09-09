@@ -5,6 +5,13 @@ setInterval(function() {
 	getAlerts();
 }, 5 * 60 * 1000);
 
+setInterval(function() {
+	$('#myModalConfigPuertos').is(':visible')
+	{
+		$.fn.yiiGridView.update('device-tunel-grid');
+	}
+},  15 * 1000);
+
 getPendingDevices();
 getAlerts();
 
