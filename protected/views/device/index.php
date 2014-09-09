@@ -169,6 +169,12 @@ function portConfig(id)
 							$("#DevicePassword_password_os").val(objPass.password_os);
 							$("#DevicePassword_password_db").val(objPass.password_db);
 						}
+						var objUser = jQuery.parseJSON(obj.modelCustomerUser);
+						if(objUser != null)
+						{
+							$("#CustomerUser_username").val(objUser.username);
+							$("#CustomerUser_password").val(objUser.password);
+						}
 					}					
 				}
 				$("#save-description").html("Guardar");
