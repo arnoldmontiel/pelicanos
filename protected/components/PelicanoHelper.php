@@ -42,6 +42,8 @@ class PelicanoHelper {
 			return round ( $a_kbytes / 1024, 2 ) . ' MB';
 		} elseif ($a_kbytes < 1073741824) {
 			return round ( $a_kbytes / 1048576, 2 ) . ' GB';
+		} elseif ($a_kbytes < 1099511627776) {
+			return round ( $a_kbytes / 1073741824, 2 ) . ' TB';
 		}
 	}
 	static public function getImageName($name, $posFix = "") {
