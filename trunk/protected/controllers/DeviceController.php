@@ -488,7 +488,15 @@ class DeviceController extends Controller
 		{
 			$modelDevice = Device::model()->findByPk($idDevice);			
 			$downloadedQty = NzbDevice::model()->countByAttributes(array('Id_device'=>$idDevice, 'Id_nzb_state'=>3)); //cuento los descargados
-			echo json_encode(array('idDevice'=>$modelDevice->Id, 'description'=>$modelDevice->description, 'downloadedQty'=>$downloadedQty));
+			
+			$modelError = new ErrorLog();
+			$modelError->Id_device = $idDevice;
+			$summaryError = array('spaceStatus'=>$modelError->spaceStatus(), 'nasStatus'=>$modelError->nasStatus(), 'playerStatus'=>$modelError->playerStatus());;
+			
+			echo json_encode(array('idDevice'=>$modelDevice->Id, 
+										'description'=>$modelDevice->description, 
+										'downloadedQty'=>$downloadedQty, 
+										'summaryError'=>$summaryError));
 		}
 	}
 	

@@ -1,28 +1,27 @@
 <div class="row"> 
   <div class="col-sm-12">
-  
-  <table class="table table-striped table-bordered tablaIndividual">
-<thead>
-<tr>
-<th>Tipo</th>
-<th>Estado Actual</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="width:20%">Espacio en NAS</td>
-<td><span class="label label-success">OK</span></td>
-</tr>
-<tr>
-<td style="width:20%">Error en NAS</td>
-<td><span class="label label-success">OK</span></td>
-</tr>
-<tr>
-<td style="width:20%">Error en Player</td>
-<td><span class="label label-success">OK</span></td>
-</tr>
-</tbody>
-</table>
+  	<table class="table table-striped table-bordered tablaIndividual">
+		<thead>
+			<tr>
+				<th>Tipo</th>
+				<th>Estado Actual</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td style="width:20%">Espacio en NAS</td>
+				<td id="space-summary"><span class="label label-danger">OK</span></td>
+			</tr>
+			<tr>
+				<td style="width:20%">Error en NAS</td>
+				<td id="nas-summary"><span class="label label-success">OK</span></td>
+			</tr>
+			<tr>
+				<td style="width:20%">Error en Player</td>
+				<td id="player-summary"><span class="label label-success">OK</span></td>
+			</tr>
+		</tbody>
+	</table>
   
   <div class=errorLogScroll>
    <?php 
