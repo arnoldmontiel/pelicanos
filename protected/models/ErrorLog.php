@@ -35,6 +35,54 @@ class ErrorLog extends CActiveRecord
 		);
 	}
 
+	public function spaceStatus()
+	{
+		$value = 1;
+		
+		$criteria = new CDbCriteria();
+		$criteria->addCondition('Id_device = "'.$this->Id_device.'"');
+		$criteria->addCondition('error_type = 3');
+		$criteria->order = 'Id DESC';
+		
+		$model = ErrorLog::model()->find($criteria);
+		if(isset($model))
+			$value = $model->has_error;
+		
+		return $value;
+	}
+	
+	public function nasStatus()
+	{
+		$value = 1;
+		
+		$criteria = new CDbCriteria();
+		$criteria->addCondition('Id_device = "'.$this->Id_device.'"');
+		$criteria->addCondition('error_type = 2');
+		$criteria->order = 'Id DESC';
+		
+		$model = ErrorLog::model()->find($criteria);
+		if(isset($model))
+			$value = $model->has_error;
+		
+		return $value;
+	}
+	
+	public function playerStatus()
+	{
+		$value = 1;
+		
+		$criteria = new CDbCriteria();
+		$criteria->addCondition('Id_device = "'.$this->Id_device.'"');
+		$criteria->addCondition('error_type = 1');
+		$criteria->order = 'Id DESC';
+		
+		$model = ErrorLog::model()->find($criteria);
+		if(isset($model))
+			$value = $model->has_error;
+		
+		return $value;
+	}
+	
 	/**
 	 * @return array relational rules.
 	 */
