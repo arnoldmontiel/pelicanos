@@ -189,20 +189,21 @@
 					    	</div>
 						</div>
 					</div>
-  					<div class="inlineForm">
-	  					<label class="inlineFormLabel">Teamviewer</label>
-	  					<div class="row">
-	  						<div class="form-group col-sm-6">
-		    					<label>Partner ID</label>
-		      						<?php echo CHtml::activeTextField($modelDevice, 'teamviewer_partner_id', array('class'=>'form-control', 'onkeyup'=>'changeSaveLabel();'));?>
-		  					</div>
-		  					<div class="form-group col-sm-6 ">
-		  						<label>Password</label>
-		      						<?php echo CHtml::activeTextField($modelDevice, 'teamviewer_password', array('class'=>'form-control', 'onkeyup'=>'checkPercentaje(this);changeSaveLabel();'));?>
+					<?php if($isAdmin):?>
+	  					<div class="inlineForm">
+		  					<label class="inlineFormLabel">Teamviewer</label>
+		  					<div class="row">
+		  						<div class="form-group col-sm-6">
+			    					<label>Partner ID</label>
+			      						<?php echo CHtml::activeTextField($modelDevice, 'teamviewer_partner_id', array('class'=>'form-control', 'onkeyup'=>'changeSaveLabel();'));?>
+			  					</div>
+			  					<div class="form-group col-sm-6 ">
+			  						<label>Password</label>
+			      						<?php echo CHtml::activeTextField($modelDevice, 'teamviewer_password', array('class'=>'form-control', 'onkeyup'=>'changeSaveLabel();'));?>
+			  					</div>
 		  					</div>
 	  					</div>
-
-  					</div>
+  					<?php endif;?>
 					<div class="form-group">
     					<div class="col-sm-12">    	
     						<button id="btn-save-config" onclick="submitGeneralConfig();" type="button" class="btn btn-primary pull-right"><i class="fa fa-save"></i> <span id="save-description">Guardar</span>    						
