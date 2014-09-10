@@ -1,5 +1,30 @@
 <div class="row"> 
   <div class="col-sm-12">
+  
+  <table class="table table-striped table-bordered tablaIndividual">
+<thead>
+<tr>
+<th>Tipo</th>
+<th>Estado Actual</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="width:20%">Espacio en NAS</td>
+<td><span class="label label-success">OK</span></td>
+</tr>
+<tr>
+<td style="width:20%">Error en NAS</td>
+<td><span class="label label-success">OK</span></td>
+</tr>
+<tr>
+<td style="width:20%">Error en Player</td>
+<td><span class="label label-success">OK</span></td>
+</tr>
+</tbody>
+</table>
+  
+  <div class=errorLogScroll>
    <?php 
 				$this->widget('zii.widgets.grid.CGridView', array(
 					'id'=>'error-log-grid',
@@ -9,6 +34,7 @@
 					'summaryText'=>'',
 					'columns'=>array(							
 							array(
+									'header'=>"Log Informe",
 									'name'=>'error_type',							
 									'value'=>function($data){
 										$value = 'Desconocido';
@@ -49,5 +75,6 @@
 							),
 					),
 				)); ?>
+				</div>
   </div>
   </div>

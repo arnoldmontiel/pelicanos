@@ -1349,9 +1349,11 @@ box-shadow: 0px 0px 2px rgba(0,0,0,0.8); background-color:rgba(0,0,0,0.5); paddi
   *border-left-color: #ffffff;
 }
 
+.errorLogScrol{ margin-top:20px;}
+
 /*tabsLeft agregado por Delfi para PSERVER*/
 
-#screenConsumos .table{margin:0px; margin-top: 5px;margin-left: -15px;}
+#screenConsumos .tableRightPanel{margin:0px; margin-top: 5px;margin-left: -15px;}
 .tabsLeftCustom.tabs-left > .nav-tabs{width:100%; margin-right:0px;}
 
 .tabs-left > .nav-tabs > li > a{border-radius:0px;font-family:'GudeaRegular', Arial, sans-serif; font-size:14px;}

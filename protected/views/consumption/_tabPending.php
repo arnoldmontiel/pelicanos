@@ -3,22 +3,21 @@
 		<h2 class="tabPanelTitle">Pendiente</h2>
 	</div>
 	<div class="col-sm-6 align-right">
-		<div class="tabPanelDescargas">Descargas Pendientes <span id="points-pending-by-reseller"><?php echo Consumption::pointsAccumulated(false);?></span></div>
+		<div class="tabPanelDescargas">Descargas Pendientes <span id="points-pending-by-customer"><?php echo Consumption::pointsAccumulated(false);?></span></div>
 	</div>
 </div>
 <?php			
 	$this->widget('zii.widgets.grid.CGridView', array(
-		'id'=>'pending-reseller-grid',
-		'dataProvider'=>$model->searchPendingByReseller(),
+		'id'=>'pending-customer-grid',
+		'dataProvider'=>$model->searchPendingByCustomer(),
 		'selectableRows' => 0,
 		'summaryText'=>'',	
-		'filter'=>$model,
 		'itemsCssClass' => 'table table-striped tableRightPanel',
 		'columns'=>array(				
 				array(
-						'name'=>'reseller',
+						'header'=>'Cliente',
 						'value'=>function($data){
-							return $data->reseller;
+							return $data->customer->fullName;
 						},
 						'type'=>'raw',
 				),
@@ -41,13 +40,13 @@
 						'headerHtmlOptions'=>array("class"=>"align-right"),
 				),
 				array(
-						'header'=>'Acciones',
-						'value'=>function($data){							
-							$name = $data->reseller;
+						'name'=>'Acciones',
+						'value'=>function($data){
+							$name = $data->customer->fullName;
 							$fullName = "'$name'";
-							return '<a onclick="openConsumptionDetailByReseller('.$data->Id_reseller.','.$data->month.','.$data->year.');" class="btn btn-default"><i class="fa fa-eye"></i> Ver Detalles</a> 
-									<a onclick="registerResellerPayment('.$data->Id_reseller.', '.$data->month.', '.$data->year.', '.$fullName.');" class="btn btn-default"><i class="fa fa-check-square-o"></i> Registrar Pago</a> 
-									<a onclick="generateTicket('.$data->Id_reseller.','.$data->month.','.$data->year.',2);" class="btn btn-default"><i class="fa fa-print"></i> Imprimir Factura</a>';
+							return '<a onclick="openConsumptionDetail('.$data->Id_customer.','.$data->month.','.$data->year.');" class="btn btn-default"><i class="fa fa-eye"></i> Ver Detalles</a> 
+									<a onclick="registerPayment('.$data->Id_customer.', '.$data->month.', '.$data->year.', '.$fullName.');" class="btn btn-default"><i class="fa fa-check-square-o"></i> Registrar Pago</a> 
+									<a onclick="generateTicket('.$data->Id_customer.','.$data->month.','.$data->year.',1);" class="btn btn-default"><i class="fa fa-print"></i> Imprimir Factura</a>';
 						},
 						'type'=>'raw',
 						'htmlOptions'=>array("class"=>"align-right"),
@@ -55,4 +54,4 @@
 				),
 			),
 		));		
-?>		'filter'=>$model,
+?>
