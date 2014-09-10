@@ -122,13 +122,13 @@ class Device extends CActiveRecord
 		return array(
 			array('Id', 'required'),
 			array('is_movie_tester, need_nas, disc_min_size_warning', 'numerical', 'integerOnly'=>true),
-			array('Id, tmdb_lang', 'length', 'max'=>45),
+			array('Id, tmdb_lang,teamviewer_partner_id,teamviewer_password', 'length', 'max'=>45),
 				array('sabnzb_api_key, sabnzb_api_url, host_name, path_shared, host_file_server, host_file_server_path, sabnzb_pwd_file_path, path_sabnzbd_download, host_file_server_user, host_file_server_passwd, host_file_server_name, tmdb_api_key', 'length', 'max'=>255),
 			array('michael_jackson', 'length', 'max'=>512),
 			array('description', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('Id, description, sabnzb_api_key, sabnzb_api_url, host_name, path_shared, host_file_server,  sabnzb_pwd_file_path, path_sabnzbd_download, is_movie_tester, host_file_server_user, host_file_server_passwd, michael_jackson, host_file_server_name, tmdb_api_key, tmdb_lang, need_nas, disc_min_size_warning', 'safe', 'on'=>'search'),
+			array('Id, description, sabnzb_api_key, sabnzb_api_url, host_name, path_shared, host_file_server,  sabnzb_pwd_file_path, path_sabnzbd_download, is_movie_tester, host_file_server_user, host_file_server_passwd, michael_jackson, host_file_server_name, tmdb_api_key, tmdb_lang, need_nas, disc_min_size_warning,teamviewer_partner_id,teamviewer_password', 'safe', 'on'=>'search'),
 		);
 	}
 
