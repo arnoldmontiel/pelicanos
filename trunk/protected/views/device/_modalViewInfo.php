@@ -13,7 +13,7 @@
 					<div class="panel panel-default panelCliente sideIDLabel">
   						<div class="panel-body">
    							<div class="infoPanelCliente">
-   								<div class="bold"><span id="device-desc"></span> (ID: <span id="download-device-id"></span>)</div>
+   								<div class="bold"><span id="download-device-desc"></span> (ID: <span id="download-device-id"></span>)</div>
   							</div>
   						</div>
 					</div>
