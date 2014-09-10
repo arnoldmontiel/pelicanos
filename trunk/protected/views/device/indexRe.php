@@ -90,6 +90,24 @@ function viewDeviceInfo(id)
 					$("#download-device-desc").text(obj.description);
 					$("#download-device-id").text(obj.idDevice);
 					$("#downloaded-qty").text(obj.downloadedQty);
+
+					if(obj.summaryError != null)
+					{
+						if(obj.summaryError.spaceStatus == 1)
+							$("#space-summary").html('<span class="label label-danger">Error</span>');
+						else
+							$("#space-summary").html('<span class="label label-success">OK</span>');
+
+						if(obj.summaryError.nasStatus == 1)
+							$("#nas-summary").html('<span class="label label-danger">Error</span>');
+						else
+							$("#nas-summary").html('<span class="label label-success">OK</span>');
+
+						if(obj.summaryError.playerStatus == 1)
+							$("#player-summary").html('<span class="label label-danger">Error</span>');
+						else
+							$("#player-summary").html('<span class="label label-success">OK</span>');
+					}
 				}		
 				$('#container-modal-addPort').hide();
 				$('#myModalGeneric').append($('#container-modal-viewDownload'));
