@@ -2610,6 +2610,8 @@ class NzbController extends Controller
 		try {
 			if($idState == 4)
 				$modelNzb->is_draft = 0;
+			if($idState == 3)
+				$modelNzb->deleted = 1;
 			$modelNzb->reject_note = $rejectNote;
 			$modelNzb->Id_creation_state = $idState;
 			$modelNzb->save();
@@ -2626,6 +2628,8 @@ class NzbController extends Controller
 			{
 				if($idState == 4)
 					$nzb->is_draft = 0;
+				if($idState == 3)
+					$nzb->deleted = 1;
 				$nzb->Id_creation_state = $idState;
 				$nzb->save();
 					
