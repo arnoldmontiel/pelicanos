@@ -363,28 +363,25 @@ class DeviceController extends Controller
 				$modelSabmzbdConfig->timeout = $_POST['timeout_'.$idSabnzbdConfig];
 				$modelSabmzbdConfig->username = $_POST['username_'.$idSabnzbdConfig];
 				
+				$modelSabmzbdConfig->ssl = 0;
 				if(isset($_POST['ssl_'.$idSabnzbdConfig]))
 				{
 					if($_POST['ssl_'.$idSabnzbdConfig] == 'on')
 						$modelSabmzbdConfig->ssl = 1;
-					else
-						$modelSabmzbdConfig->ssl = 0;
 				}
 				
+				$modelSabmzbdConfig->optional = 0;
 				if(isset($_POST['optional_'.$idSabnzbdConfig]))
 				{
 					if($_POST['optional_'.$idSabnzbdConfig] == 'on')
 						$modelSabmzbdConfig->optional = 1;
-					else
-						$modelSabmzbdConfig->optional = 0;
 				}
 				
+				$modelSabmzbdConfig->enable = 0;
 				if(isset($_POST['enable_'.$idSabnzbdConfig]))
 				{
 					if($_POST['enable_'.$idSabnzbdConfig] == 'on')
 						$modelSabmzbdConfig->enable = 1;
-					else
-						$modelSabmzbdConfig->enable = 0;
 				}
 				
 				if($modelSabmzbdConfig->save())
